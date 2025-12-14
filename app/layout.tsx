@@ -52,7 +52,7 @@ export default function RootLayout({
             "border border-purple-200 dark:border-purple-900 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400",
         },
         layout: {
-          socialButtonsPlacement: "bottom",
+          socialButtonsPlacement: "top",
           socialButtonsVariant: "iconButton",
         },
       }}

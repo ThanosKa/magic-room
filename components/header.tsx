@@ -19,7 +19,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700" />
+          <div className="h-8 w-8 rounded-lg bg-primary" />
           <span className="font-bold text-lg dark:text-white">Magic Room</span>
         </Link>
 
@@ -41,7 +41,7 @@ export function Header() {
               </Link>
               <Link
                 href="/pricing"
-                className="text-sm font-medium text-slate-600 hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400"
+                className="text-sm font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary"
               >
                 Buy Credits
               </Link>
@@ -55,7 +55,7 @@ export function Header() {
           {clerkUser && credits > 0 && (
             <Badge
               variant="secondary"
-              className="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200"
+              className="bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary"
             >
               {credits} Credits
             </Badge>
@@ -85,7 +85,7 @@ export function Header() {
                 </Button>
               </SignInButton>
               <SignUpButton mode="modal">
-                <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
+                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">
                   Sign Up
                 </Button>
               </SignUpButton>
