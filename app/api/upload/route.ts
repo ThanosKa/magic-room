@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
       .upload(fileName, buffer, {
         cacheControl: "3600",
         upsert: false,
+        contentType: file.type || 'image/jpeg', // Explicit MIME type
       });
 
     if (error) {

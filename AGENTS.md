@@ -26,13 +26,13 @@
 
 ## Key API Endpoints
 
-| Endpoint                  | Method | Purpose                        |
-| ------------------------- | ------ | ------------------------------ |
-| `/api/generate`           | POST   | Start new generation job       |
-| `/api/generate/[id]`      | GET    | Poll generation status         |
-| `/api/checkout`           | POST   | Create Stripe checkout session |
-| `/api/webhooks/clerk`     | POST   | Sync user creation to Supabase |
-| `/api/webhooks/stripe`    | POST   | Credit purchase confirmation   |
+| Endpoint               | Method | Purpose                        |
+| ---------------------- | ------ | ------------------------------ |
+| `/api/generate`        | POST   | Start new generation job       |
+| `/api/generate/[id]`   | GET    | Poll generation status         |
+| `/api/checkout`        | POST   | Create Stripe checkout session |
+| `/api/webhooks/clerk`  | POST   | Sync user creation to Supabase |
+| `/api/webhooks/stripe` | POST   | Credit purchase confirmation   |
 
 ## Privacy Guarantees
 
