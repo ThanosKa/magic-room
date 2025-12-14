@@ -40,7 +40,7 @@ export function Header() {
                 Generate
               </Link>
               <Link
-                href="/purchase"
+                href="/pricing"
                 className="text-sm font-medium text-slate-600 hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400"
               >
                 Buy Credits
@@ -96,4 +96,3 @@ export function Header() {
     </header>
   );
 }
-

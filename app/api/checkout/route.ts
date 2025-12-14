@@ -60,8 +60,8 @@ export async function POST(request: Request): Promise<Response> {
       user.id,
       packageId,
       pkg.stripePriceId,
-      `${appUrl}/purchase?success=true`,
-      `${appUrl}/purchase?success=false`,
+      `${appUrl}/pricing?success=true`,
+      `${appUrl}/pricing?success=false`,
       user.email
     );
 

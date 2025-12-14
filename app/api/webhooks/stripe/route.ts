@@ -34,6 +34,17 @@ export async function POST(request: Request): Promise<Response> {
     // Handle checkout.session.completed event
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
+      const paymentStatus = session.payment_status ?? "unpaid";
+      const isFreeCheckout = paymentStatus === "no_payment_required";
+      const isPaid = paymentStatus === "paid";
+      if (!isPaid && !isFreeCheckout) {
+        logger.warn(
+          { paymentStatus, sessionId: session.id },
+          "Checkout session completed but not paid; skipping credit grant"
+        );
+        return new Response("Session not paid", { status: 200 });
+      }
+
       const userId = session.client_reference_id ?? undefined;
       const packageId = session.metadata?.packageId ?? undefined;
 

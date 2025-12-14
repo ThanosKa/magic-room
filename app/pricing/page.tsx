@@ -53,9 +53,9 @@ const CREDIT_PACKAGES = [
 ];
 
 /**
- * Purchase page - buy credits
+ * Pricing page - buy credits
  */
-export default function PurchasePage() {
+export default function PricingPage() {
   const { user: clerkUser } = useUser();
   const { signIn } = useSignIn();
   const { credits, refreshUser } = useUserStore();
@@ -66,7 +66,7 @@ export default function PurchasePage() {
   const handlePurchase = async (packageId: string) => {
     // If not signed in, redirect to sign up
     if (!clerkUser) {
-      const redirectUrl = window.location.origin + "/purchase";
+      const redirectUrl = window.location.origin + "/pricing";
       window.location.href = `/sign-up?redirect_url=${encodeURIComponent(
         redirectUrl
       )}`;

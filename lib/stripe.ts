@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { logger } from "@/lib/logger";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
@@ -19,6 +20,7 @@ export async function createCheckoutSession(
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
+      allow_promotion_codes: true,
       line_items: [
         {
           price: stripePriceId,
@@ -38,7 +40,7 @@ export async function createCheckoutSession(
 
     return session;
   } catch (error) {
-    console.error("Error creating checkout session:", error);
+    logger.error({ err: error }, "Error creating checkout session");
     throw error;
   }
 }
@@ -48,7 +50,7 @@ export async function getCheckoutSession(sessionId: string) {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     return session;
   } catch (error) {
-    console.error("Error retrieving checkout session:", error);
+    logger.error({ err: error }, "Error retrieving checkout session");
     throw error;
   }
 }
@@ -59,10 +61,10 @@ export function verifyWebhookSignature(
   secret: string
 ): boolean {
   try {
-    const event = stripe.webhooks.constructEvent(body, signature, secret);
+    stripe.webhooks.constructEvent(body, signature, secret);
     return true;
   } catch (error) {
-    console.error("Webhook signature verification failed:", error);
+    logger.warn({ err: error }, "Webhook signature verification failed");
     return false;
   }
 }
