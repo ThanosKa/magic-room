@@ -11,7 +11,9 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-lg bg-primary" />
-              <span className="text-lg font-bold dark:text-white">Magic Room</span>
+              <span className="text-lg font-bold dark:text-white">
+                Magic Room
+              </span>
             </div>
             <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
               Bring your old photos back to life with AI-powered restoration.
@@ -19,7 +21,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+            <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
               Product
             </h3>
             <ul className="mt-4 space-y-2">
@@ -44,14 +46,14 @@ export function Footer() {
                   href="/generate"
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
-                  Magic Memory
+                  Generate
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+            <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
               Legal
             </h3>
             <ul className="mt-4 space-y-2">
@@ -60,7 +62,7 @@ export function Footer() {
                   href="/terms"
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
-                  Terms of Service
+                  Terms of service
                 </Link>
               </li>
               <li>
@@ -68,14 +70,14 @@ export function Footer() {
                   href="/privacy"
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
-                  Privacy Policy
+                  Privacy policy
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+            <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
               Connect
             </h3>
             <ul className="mt-4 space-y-2">

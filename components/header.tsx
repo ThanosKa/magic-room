@@ -18,16 +18,6 @@ export function Header() {
   const { theme, setTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navLinks = [
-    { href: "/", label: "Home" },
-    ...(clerkUser
-      ? [
-          { href: "/generate", label: "Generate" },
-          { href: "/pricing", label: "Buy Credits" },
-        ]
-      : []),
-  ];
-
   return (
     <>
       <AnnouncementBanner />
@@ -43,15 +33,24 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden gap-8 md:flex">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-primary"
-              >
-                {link.label}
-              </Link>
-            ))}
+            <Link
+              href="/"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-primary"
+            >
+              Home
+            </Link>
+            <Link
+              href="/generate"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-primary"
+            >
+              Generate
+            </Link>
+            <Link
+              href="/pricing"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-primary"
+            >
+              Pricing
+            </Link>
           </nav>
 
           {/* Right section */}
@@ -131,16 +130,27 @@ export function Header() {
 
                   {/* Mobile Navigation */}
                   <nav className="flex flex-col gap-3">
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setMobileOpen(false)}
-                        className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    <Link
+                      href="/"
+                      onClick={() => setMobileOpen(false)}
+                      className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
+                    >
+                      Home
+                    </Link>
+                    <Link
+                      href="/generate"
+                      onClick={() => setMobileOpen(false)}
+                      className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
+                    >
+                      Generate
+                    </Link>
+                    <Link
+                      href="/pricing"
+                      onClick={() => setMobileOpen(false)}
+                      className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
+                    >
+                      Pricing
+                    </Link>
                   </nav>
 
                   {/* Mobile Auth */}

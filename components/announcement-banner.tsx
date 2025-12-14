@@ -34,7 +34,7 @@ export function AnnouncementBanner() {
           <span className="text-base font-semibold tracking-tight sm:text-lg">
             Use code{" "}
             <span className="rounded-full bg-primary-foreground px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-primary shadow-sm sm:text-sm">
-              CREATE40
+              GENERATE40
             </span>{" "}
             for 40% off all pricing.
           </span>
