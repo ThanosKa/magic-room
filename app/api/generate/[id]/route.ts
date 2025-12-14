@@ -3,7 +3,7 @@ import {
   createTransaction,
   deleteImageFromStorage,
   getGenerationStatus,
-  getUserByClerkId,
+  ensureUserExists,
   hasRefundForPrediction,
   updateGenerationStatus,
   updateUserCredits,
@@ -59,7 +59,7 @@ export async function GET(
     }
 
     // Ownership check (service role bypasses RLS)
-    const user = await getUserByClerkId(userId);
+    const user = await ensureUserExists(userId);
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found" }), {
         status: 404,
@@ -126,7 +126,7 @@ export async function GET(
 
               if (!alreadyRefunded) {
                 const refundAmount = 1;
-                const latestUser = await getUserByClerkId(userId);
+                const latestUser = await ensureUserExists(userId);
                 if (latestUser) {
                   await updateUserCredits(
                     latestUser.id,

@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { getUserByClerkId } from "@/lib/supabase";
+import { ensureUserExists } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
 
 export async function GET(request: Request) {
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
       });
     }
 
-    const user = await getUserByClerkId(userId);
+    const user = await ensureUserExists(userId);
 
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found" }), {

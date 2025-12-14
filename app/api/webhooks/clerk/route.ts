@@ -1,6 +1,6 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { createUser } from "@/lib/supabase";
+import { createUser, getUserByClerkId } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET || "";
@@ -59,11 +59,37 @@ export async function POST(request: Request) {
     const primaryEmail = email_addresses?.[0]?.email_address || "";
 
     if (!primaryEmail) {
+      logger.warn({ clerkUserId: id }, "No email found in Clerk webhook");
       return new Response("No email found", { status: 400 });
     }
 
     try {
-      await createUser(id, primaryEmail, 1); // 1 free credit
+      // Check if user already exists (webhook retries are common)
+      const existingUser = await getUserByClerkId(id);
+      
+      if (existingUser) {
+        logger.info(
+          { clerkUserId: id, email: primaryEmail },
+          "User already exists, skipping creation"
+        );
+        return new Response("User already exists", { status: 200 });
+      }
+
+      // Create new user with 1 free credit
+      const newUser = await createUser(id, primaryEmail, 1);
+      
+      if (!newUser) {
+        logger.error(
+          { clerkUserId: id, email: primaryEmail },
+          "Failed to create user in Supabase"
+        );
+        return new Response("Error creating user", { status: 500 });
+      }
+
+      logger.info(
+        { clerkUserId: id, email: primaryEmail, userId: newUser.id },
+        "User created successfully via webhook"
+      );
       return new Response("User created successfully", { status: 200 });
     } catch (error) {
       logger.error(

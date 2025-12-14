@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { IGenerateRequest, IGenerateResponse } from "@/types";
 import {
-  getUserByClerkId,
+  ensureUserExists,
   deductCredits,
   createGeneration,
   createTransaction,
@@ -64,7 +64,7 @@ export async function POST(request: Request): Promise<Response> {
     const { imageUrl, roomType, theme, customPrompt, imagePath } = parsed.data;
 
     // 3. Get user and check credits
-    const user = await getUserByClerkId(userId);
+    const user = await ensureUserExists(userId);
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found" }), {
         status: 404,

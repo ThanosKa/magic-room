@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -24,7 +25,7 @@ export async function getUserByClerkId(clerkUserId: string) {
     .single();
 
   if (error) {
-    console.error("Error fetching user:", error);
+    logger.error({ err: error, clerkUserId }, "Error fetching user");
     return null;
   }
 
@@ -49,11 +50,70 @@ export async function createUser(
     .single();
 
   if (error) {
-    console.error("Error creating user:", error);
+    logger.error({ err: error, clerkUserId, email }, "Error creating user");
     return null;
   }
 
   return data;
+}
+
+/**
+ * Ensures a user exists in the database for the given Clerk user ID.
+ * In development mode, automatically creates the user from Clerk API if not found.
+ * In production, returns null if user doesn't exist (webhooks should handle creation).
+ */
+export async function ensureUserExists(clerkUserId: string) {
+  // Try to get existing user
+  let user = await getUserByClerkId(clerkUserId);
+
+  // If found, return it
+  if (user) {
+    return user;
+  }
+
+  // If not found and NOT in dev mode, return null (production should use webhooks)
+  if (process.env.NODE_ENV !== "development") {
+    logger.warn(
+      { clerkUserId },
+      "User not found in production - webhook may have failed"
+    );
+    return null;
+  }
+
+  // DEV MODE ONLY: Create user from Clerk API
+  logger.info({ clerkUserId }, "User not found in dev mode, creating from Clerk API");
+
+  try {
+    const { clerkClient } = await import("@clerk/nextjs/server");
+    const client = await clerkClient();
+    const clerkUser = await client.users.getUser(clerkUserId);
+    const email = clerkUser.emailAddresses[0]?.emailAddress;
+
+    if (!email) {
+      logger.error(
+        { clerkUserId },
+        "No email found for Clerk user - cannot create user"
+      );
+      return null;
+    }
+
+    logger.info({ clerkUserId, email }, "Creating user in dev mode");
+
+    // Create user with 1 free credit (matches webhook behavior)
+    const newUser = await createUser(clerkUserId, email, 1);
+
+    if (newUser) {
+      logger.info(
+        { clerkUserId, email, userId: newUser.id },
+        "User created successfully in dev mode"
+      );
+    }
+
+    return newUser;
+  } catch (error) {
+    logger.error({ err: error, clerkUserId }, "Dev mode user creation failed");
+    return null;
+  }
 }
 
 export async function updateUserCredits(userId: string, credits: number) {
@@ -65,7 +125,7 @@ export async function updateUserCredits(userId: string, credits: number) {
     .single();
 
   if (error) {
-    console.error("Error updating credits:", error);
+    logger.error({ err: error, userId, credits }, "Error updating credits");
     return null;
   }
 
@@ -80,7 +140,7 @@ export async function deductCredits(userId: string, amount: number) {
     .single();
 
   if (fetchError || !user) {
-    console.error("Error fetching user credits:", fetchError);
+    logger.error({ err: fetchError, userId }, "Error fetching user credits");
     return false;
   }
 
@@ -94,7 +154,7 @@ export async function deductCredits(userId: string, amount: number) {
     .eq("id", userId);
 
   if (error) {
-    console.error("Error deducting credits:", error);
+    logger.error({ err: error, userId, amount }, "Error deducting credits");
     return false;
   }
 
@@ -123,7 +183,10 @@ export async function createTransaction(
     .single();
 
   if (error) {
-    console.error("Error creating transaction:", error);
+    logger.error(
+      { err: error, userId, type, amount },
+      "Error creating transaction"
+    );
     return null;
   }
 
@@ -140,7 +203,10 @@ export async function hasRefundForPrediction(userId: string, predictionId: strin
     .limit(1);
 
   if (error) {
-    console.error("Error checking refund transaction:", error);
+    logger.error(
+      { err: error, userId, predictionId },
+      "Error checking refund transaction"
+    );
     return false;
   }
 
@@ -166,7 +232,10 @@ export async function createGeneration(
     .single();
 
   if (error) {
-    console.error("Error creating generation record:", error);
+    logger.error(
+      { err: error, userId, predictionId, imagePath },
+      "Error creating generation record"
+    );
     return null;
   }
 
@@ -203,7 +272,10 @@ export async function updateGenerationStatus(
     .single();
 
   if (updateError) {
-    console.error("Error updating generation status:", updateError);
+    logger.error(
+      { err: updateError, predictionId, status },
+      "Error updating generation status"
+    );
     return null;
   }
 
@@ -218,7 +290,7 @@ export async function getGenerationStatus(predictionId: string) {
     .single();
 
   if (error) {
-    console.error("Error fetching generation status:", error);
+    logger.error({ err: error, predictionId }, "Error fetching generation status");
     return null;
   }
 
@@ -229,7 +301,10 @@ export async function deleteImageFromStorage(bucketName: string, path: string) {
   const { error } = await supabase.storage.from(bucketName).remove([path]);
 
   if (error) {
-    console.error("Error deleting image from storage:", error);
+    logger.error(
+      { err: error, bucketName, path },
+      "Error deleting image from storage"
+    );
     return false;
   }
 

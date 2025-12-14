@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { CREDIT_PACKAGES } from "@/lib/constants";
 import { createCheckoutSession } from "@/lib/stripe";
-import { getUserByClerkId } from "@/lib/supabase";
+import { ensureUserExists } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
 
 const CheckoutSchema = z.object({
@@ -21,7 +21,7 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     // Get user to find their email
-    const user = await getUserByClerkId(userId);
+    const user = await ensureUserExists(userId);
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found" }), {
         status: 404,
