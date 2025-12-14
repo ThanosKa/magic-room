@@ -27,7 +27,6 @@ interface PredictionInput {
 export async function createPrediction(
   imageUrl: string,
   prompt: string,
-  webhookUrl: string,
   options?: {
     negativePrompt?: string;
     guidanceScale?: number;
@@ -48,8 +47,6 @@ export async function createPrediction(
     const prediction = await replicate.predictions.create({
       version: "b1f5a229d5d9a4de53b8e2a1d4e8e8e8", // lightning model version
       input,
-      webhook: webhookUrl,
-      webhook_events_filter: ["start", "completed"],
     });
 
     return prediction;

@@ -73,7 +73,6 @@ cp .env.example .env.local
 - **Replicate**
 
   - `REPLICATE_API_TOKEN` - Your API token
-  - `REPLICATE_WEBHOOK_SECRET` - Webhook secret from dashboard
 
 - **Stripe**
 
@@ -110,7 +109,6 @@ Create storage bucket:
 
 - **Clerk**: Point to `https://yourdomain.com/api/webhooks/clerk`
 - **Stripe**: Point to `https://yourdomain.com/api/webhooks/stripe`
-- **Replicate**: Point to `https://yourdomain.com/api/webhooks/replicate`
 
 For local development, use [Stripe CLI](https://stripe.com/docs/stripe-cli) to forward webhooks.
 
@@ -214,7 +212,7 @@ Each generation uses 1 credit.
 - ✅ Replicate outputs auto-expire (48 hours)
 - ✅ Rate limiting prevents abuse
 - ✅ Stripe never has access to uploaded images
-- ✅ All webhooks signature-verified
+- ✅ Clerk/Stripe webhooks signature-verified
 
 See [Privacy Policy](/privacy) and [Terms of Service](/terms) for details.
 
@@ -290,10 +288,9 @@ Ensure:
 - Use Stripe CLI for local testing: `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
 - Verify webhook signing secret matches `STRIPE_WEBHOOK_SECRET`
 
-**Replicate webhook not updating**
+**Replicate results not updating**
 
-- Check webhook URL is accessible from internet
-- Verify `REPLICATE_WEBHOOK_SECRET` matches dashboard
+- The app polls Replicate for status updates; ensure `/api/generate/[id]` requests are succeeding
 - Check Replicate prediction status in dashboard
 
 ## License

@@ -20,7 +20,7 @@
    - API validates auth + rate limits + credits
    - Calls Replicate with dynamic prompt
    - Deducts 1 credit from user balance
-4. **Generation Phase**: Replicate processes image → sends webhook when complete
+4. **Generation Phase**: Replicate processes image → frontend polls status until complete
 5. **Results Display**: Frontend polls status → displays 4-8 design variations
 6. **Privacy Cleanup**: Original image auto-deleted from Storage (2hr lifecycle)
 
@@ -33,15 +33,14 @@
 | `/api/checkout`           | POST   | Create Stripe checkout session |
 | `/api/webhooks/clerk`     | POST   | Sync user creation to Supabase |
 | `/api/webhooks/stripe`    | POST   | Credit purchase confirmation   |
-| `/api/webhooks/replicate` | POST   | Generation completion/failure  |
 
 ## Privacy Guarantees
 
 - **Ephemeral Processing**: Uploaded images stored max 2 hours
-- **Automatic Cleanup**: Storage lifecycle policy + webhook-triggered deletion
+- **Automatic Cleanup**: Storage lifecycle policy + polling-triggered deletion
 - **Replicate Output**: URLs expire after 48 hours (Replicate default)
 - **User Data**: Only email + credit balance retained post-generation
-- **No Logs**: Processing metadata deleted after webhook confirmation
+- **No Logs**: Processing metadata deleted after generation completion
 
 ## Design Model Details
 

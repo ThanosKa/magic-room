@@ -1,5 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
-import { getGenerationStatus } from "@/lib/supabase";
+import {
+  createTransaction,
+  deleteImageFromStorage,
+  getGenerationStatus,
+  getUserByClerkId,
+  hasRefundForPrediction,
+  updateGenerationStatus,
+  updateUserCredits,
+} from "@/lib/supabase";
 import { getPredictionStatus } from "@/lib/replicate";
 import { IStatusCheckResponse } from "@/types";
 import { logger } from "@/lib/logger";
@@ -18,6 +26,10 @@ function coerceStatus(value: unknown): IStatusCheckResponse["status"] {
     return value as IStatusCheckResponse["status"];
   }
   return "processing";
+}
+
+function isTerminal(status: IStatusCheckResponse["status"]): boolean {
+  return status === "succeeded" || status === "failed" || status === "canceled";
 }
 
 export async function GET(
@@ -46,6 +58,23 @@ export async function GET(
       });
     }
 
+    // Ownership check (service role bypasses RLS)
+    const user = await getUserByClerkId(userId);
+    if (!user) {
+      return new Response(JSON.stringify({ error: "User not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    if (generation.user_id !== user.id) {
+      // Avoid leaking that the generation exists
+      return new Response(JSON.stringify({ error: "Generation not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     // If status is still processing, optionally fetch from Replicate for real-time updates
     if (
       generation.status === "starting" ||
@@ -54,11 +83,73 @@ export async function GET(
       try {
         const prediction = await getPredictionStatus(generationId);
         if (prediction) {
+          const nextStatus = coerceStatus(prediction.status);
+          const nextOutputUrls = Array.isArray(prediction.output)
+            ? (prediction.output as string[])
+            : undefined;
+          const nextError =
+            typeof prediction.error === "string"
+              ? prediction.error
+              : prediction.error
+                ? JSON.stringify(prediction.error)
+                : undefined;
+
+          const transitionedToTerminal =
+            !isTerminal(generation.status) && isTerminal(nextStatus);
+
+          // Persist status/output/error so results survive refresh and side effects can be gated.
+          const updated = await updateGenerationStatus(
+            generationId,
+            nextStatus,
+            nextOutputUrls,
+            nextError
+          );
+
+          // Run side effects on first transition to terminal state.
+          if (transitionedToTerminal) {
+            if (nextStatus === "succeeded" && generation.image_path) {
+              try {
+                await deleteImageFromStorage("room-images", generation.image_path);
+              } catch (err) {
+                logger.warn(
+                  { err, generationId, imagePath: generation.image_path },
+                  "Failed to delete uploaded image from storage"
+                );
+              }
+            }
+
+            if (nextStatus === "failed") {
+              const alreadyRefunded = await hasRefundForPrediction(
+                user.id,
+                generationId
+              );
+
+              if (!alreadyRefunded) {
+                const refundAmount = 1;
+                const latestUser = await getUserByClerkId(userId);
+                if (latestUser) {
+                  await updateUserCredits(
+                    latestUser.id,
+                    latestUser.credits + refundAmount
+                  );
+                  await createTransaction(
+                    latestUser.id,
+                    "refund",
+                    refundAmount,
+                    undefined,
+                    { predictionId: generationId }
+                  );
+                }
+              }
+            }
+          }
+
           const response: IStatusCheckResponse = {
             id: generation.id,
-            status: coerceStatus(prediction.status),
-            outputUrls: prediction.output as string[] | undefined,
-            error: prediction.error as string | undefined,
+            status: updated?.status ? coerceStatus(updated.status) : nextStatus,
+            outputUrls:
+              (updated?.output_urls as string[] | undefined) ?? nextOutputUrls,
+            error: (updated?.error as string | undefined) ?? nextError,
           };
           return new Response(JSON.stringify(response), {
             status: 200,

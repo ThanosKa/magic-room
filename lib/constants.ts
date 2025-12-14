@@ -87,7 +87,6 @@ export const API_ENDPOINTS = {
   WEBHOOKS: {
     CLERK: "/api/webhooks/clerk",
     STRIPE: "/api/webhooks/stripe",
-    REPLICATE: "/api/webhooks/replicate",
   },
 } as const;
 

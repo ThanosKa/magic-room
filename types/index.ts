@@ -94,14 +94,6 @@ export interface ICheckoutResponse {
   error?: string;
 }
 
-// Replicate webhook types
-export interface IReplicateWebhookPayload {
-  id: string;
-  status: "starting" | "processing" | "succeeded" | "failed" | "canceled";
-  output?: string[];
-  error?: string | null;
-}
-
 // Stripe webhook types
 export interface IStripeWebhookEvent {
   type: string;
@@ -114,4 +106,4 @@ export interface IStripeWebhookEvent {
     };
   };
 }
-
+ 

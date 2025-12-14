@@ -130,6 +130,23 @@ export async function createTransaction(
   return data;
 }
 
+export async function hasRefundForPrediction(userId: string, predictionId: string) {
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("type", "refund")
+    .contains("metadata", { predictionId })
+    .limit(1);
+
+  if (error) {
+    console.error("Error checking refund transaction:", error);
+    return false;
+  }
+
+  return Array.isArray(data) && data.length > 0;
+}
+
 export async function createGeneration(
   userId: string,
   predictionId: string,

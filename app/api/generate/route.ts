@@ -97,11 +97,10 @@ export async function POST(request: Request): Promise<Response> {
 
     // 5. Build prompt and create Replicate prediction
     const prompt = buildDesignPrompt(roomType, theme, customPrompt);
-    const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/replicate`;
 
     let prediction;
     try {
-      prediction = await createPrediction(imageUrl, prompt, webhookUrl);
+      prediction = await createPrediction(imageUrl, prompt);
     } catch (error) {
       logger.error(
         { err: error, userId, roomType, theme },
