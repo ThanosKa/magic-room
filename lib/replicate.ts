@@ -25,19 +25,6 @@ interface PredictionInput {
   depth_strength?: number;
 }
 
-/**
- * Creates a Replicate prediction for interior design generation.
- *
- * Note: The rocketdigitalai/interior-design-sdxl-lightning model generates
- * exactly ONE output image per request (does not support multiple outputs).
- * To generate multiple variations, call this function multiple times with
- * different prompts or parameters.
- *
- * @param imageUrl - Public URL of the room image to transform
- * @param prompt - Design style description
- * @param options - Optional parameters (inference steps, guidance scale, etc.)
- * @returns Replicate prediction object with status and output
- */
 export async function createPrediction(
   imageUrl: string,
   prompt: string,

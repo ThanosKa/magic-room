@@ -13,7 +13,7 @@ import { AnnouncementBanner } from "@/components/announcement-banner";
 
 export function Header() {
   const { user: clerkUser } = useUser();
-  const { credits } = useUserStore();
+  const { credits, isLoading } = useUserStore();
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -25,9 +25,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-primary" />
-            <span className="font-bold text-lg">
-              Magic Room
-            </span>
+            <span className="font-bold text-lg">Magic Room</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -57,7 +55,9 @@ export function Header() {
             {/* Credits Badge - Desktop */}
             {clerkUser && (
               <div className="hidden sm:flex">
-                {credits > 0 ? (
+                {isLoading ? (
+                  <CreditsSkeleton />
+                ) : (
                   <Link
                     href="/pricing"
                     className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-primary/20"
@@ -65,13 +65,9 @@ export function Header() {
                     <Coins className="h-4 w-4 text-primary" />
                     <span className="text-primary">{credits} credits</span>
                   </Link>
-                ) : (
-                  <CreditsSkeleton />
                 )}
               </div>
             )}
-
-
 
             {/* Auth - Desktop */}
             {clerkUser ? (
