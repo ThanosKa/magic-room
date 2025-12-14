@@ -71,7 +71,11 @@ function GeneratePageContent() {
           setIsGenerating(false);
 
           if (data.status === "succeeded") {
-            toast.success("Design generation complete!");
+            toast.success(
+              `Generated ${
+                activeGeneration.outputUrls?.length || 1
+              } design variation!`
+            );
             // Refresh user credits
             if (clerkUser?.id) {
               refreshUser(clerkUser.id);

@@ -21,28 +21,47 @@ interface PredictionInput {
   prompt: string;
   negative_prompt?: string;
   guidance_scale?: number;
-  num_outputs?: number;
   num_inference_steps?: number;
+  depth_strength?: number;
 }
 
+/**
+ * Creates a Replicate prediction for interior design generation.
+ *
+ * Note: The rocketdigitalai/interior-design-sdxl-lightning model generates
+ * exactly ONE output image per request (does not support multiple outputs).
+ * To generate multiple variations, call this function multiple times with
+ * different prompts or parameters.
+ *
+ * @param imageUrl - Public URL of the room image to transform
+ * @param prompt - Design style description
+ * @param options - Optional parameters (inference steps, guidance scale, etc.)
+ * @returns Replicate prediction object with status and output
+ */
 export async function createPrediction(
   imageUrl: string,
   prompt: string,
   options?: {
     negativePrompt?: string;
     guidanceScale?: number;
-    numOutputs?: number;
     numInferenceSteps?: number;
+    depthStrength?: number;
   }
 ) {
   try {
+    // Model supports 4-8 inference steps (default 6). Clamp to valid range.
+    const numInferenceSteps = Math.min(
+      8,
+      Math.max(4, options?.numInferenceSteps ?? 6)
+    );
+
     const input: PredictionInput = {
       image: imageUrl,
       prompt: prompt,
       negative_prompt: options?.negativePrompt || NEGATIVE_PROMPT,
       guidance_scale: options?.guidanceScale || 7.5,
-      num_outputs: options?.numOutputs || 4,
-      num_inference_steps: options?.numInferenceSteps || 50,
+      num_inference_steps: numInferenceSteps,
+      depth_strength: options?.depthStrength ?? 0.8,
     };
 
     const prediction = await replicate.predictions.create({

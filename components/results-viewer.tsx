@@ -168,7 +168,7 @@ export function ResultsViewer({
       {/* Results Grid */}
       <div className="space-y-3">
         <h4 className="font-medium text-slate-700 dark:text-slate-300">
-          All Variations ({results.length})
+          Generated Design{results.length > 1 ? "s" : ""} ({results.length})
         </h4>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {results.map((url, index) => (
