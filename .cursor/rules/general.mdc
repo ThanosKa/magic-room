@@ -1,0 +1,155 @@
+---
+alwaysApply: true
+---
+# Magic Room - Code Style & Architecture Guidelines
+
+## TypeScript & Type Safety
+
+- **No `any` types**: Always use explicit types. Use `unknown` if truly unknown, then narrow.
+- **Strict Mode**: `strict: true` in tsconfig.json (non-negotiable)
+- **Exhaustive Checks**: Use type guards and discriminated unions for control flow
+- **Module Imports**: Always use absolute imports via `@/*` path alias
+
+## Naming Conventions
+
+- **Components**: PascalCase (e.g., `RoomUploader`, `DesignOptions`)
+- **Functions**: camelCase (e.g., `generatePrompt`, `fetchGenerationStatus`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `MAX_IMAGE_SIZE`, `CREDIT_PACKAGES`)
+- **Files**: kebab-case for utilities (e.g., `prompt-builder.ts`, `rate-limiter.ts`)
+- **Types/Interfaces**: PascalCase with `I` prefix for interfaces (e.g., `IDesignOptions`)
+
+## Component Structure
+
+1. **Imports** (external → internal)
+2. **Type Definitions** (interfaces, type aliases)
+3. **Component Logic** (hooks, state, handlers)
+4. **JSX Render**
+5. **Export** (default or named)
+
+```typescript
+import React from "react";
+import { useStore } from "@/stores/generation-store";
+import { Button } from "@/components/ui/button";
+
+interface RoomUploaderProps {
+  onUploadComplete?: (url: string) => void;
+}
+
+export const RoomUploader: React.FC<RoomUploaderProps> = ({
+  onUploadComplete,
+}) => {
+  // Implementation
+  return <div>Upload Component</div>;
+};
+```
+
+## API Route Patterns
+
+- **Request Validation**: Use Zod schemas for request body validation
+- **Auth**: Always check `auth()` from Clerk, return 401 if missing
+- **Error Responses**: Use proper HTTP status codes (400, 401, 403, 429, 500)
+- **Logging**: Log errors with context, never expose sensitive data
+
+```typescript
+// Zod schema at top of file
+const GenerateSchema = z.object({
+  imageUrl: z.string().url(),
+  roomType: z.enum(['living-room', 'bedroom', ...]),
+  theme: z.enum(['modern', 'minimalist', ...]),
+});
+
+export async function POST(request: Request) {
+  // 1. Validate auth
+  const { userId } = auth();
+  if (!userId) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
+  // 2. Validate input
+  const body = await request.json();
+  const parsed = GenerateSchema.safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: 'Invalid input', issues: parsed.error.issues }, { status: 400 });
+  }
+
+  // 3. Business logic
+  // ...
+
+  return Response.json({ success: true });
+}
+```
+
+## Zustand Store Pattern
+
+- **Single Responsibility**: Each store handles one domain (user, generation)
+- **Immutability**: Use immer middleware for nested state updates
+- **DevTools**: Integrate Zustand devtools for debugging
+
+```typescript
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
+
+interface UserStore {
+  credits: number;
+  userId: string | null;
+  setCredits: (credits: number) => void;
+  setUserId: (id: string) => void;
+}
+
+export const useUserStore = create<UserStore>()(
+  devtools((set) => ({
+    credits: 0,
+    userId: null,
+    setCredits: (credits) => set({ credits }),
+    setUserId: (userId) => set({ userId }),
+  }))
+);
+```
+
+## Styling Guidelines
+
+- **Tailwind First**: Prefer Tailwind utility classes over custom CSS
+- **Dark Mode**: Always include dark mode variants (`dark:`)
+- **Purple Theme**: Use CSS variables from theme config
+  - Primary: `#8B5CF6`
+  - Light: `#A855F7`
+  - Dark: `#7C3AED`
+- **Responsive**: Mobile-first approach (`sm:`, `md:`, `lg:`)
+
+## Error Handling
+
+- **User Feedback**: All errors should have a user-friendly message
+- **Retry Logic**: Implement exponential backoff for transient failures
+- **Logging**: Use structured logging (avoid console.log in production)
+- **Boundary Components**: Error boundaries for React component failures
+
+## Testing & QA
+
+- **API Routes**: Test with Stripe CLI and Clerk test tokens
+- **Webhooks**: Verify signature validation before processing
+- **Rate Limiting**: Load test with concurrent requests
+- **Privacy**: Verify files are deleted after generation
+
+## Performance Checklist
+
+- [ ] Images lazy-loaded with Next.js `Image` component
+- [ ] Modals use Code Splitting (dynamic imports)
+- [ ] API responses cached where appropriate
+- [ ] No N+1 queries in Supabase calls
+- [ ] Zustand selectors optimize re-renders
+
+## Tech Lead Code Review Checklist
+
+- [ ] All types properly annotated (no implicit `any`)
+- [ ] Error handling covers all failure modes
+- [ ] API routes validate input with Zod
+- [ ] Sensitive data (API keys, user IDs) never logged
+- [ ] Rate limiting enforced on user actions
+- [ ] Database queries use prepared statements (Supabase)
+- [ ] Clerk auth gates all protected routes
+- [ ] Privacy: Old files are deleted per schedule
+- [ ] Performance: No blocking operations in API routes
+- [ ] Tests: Critical paths have test coverage
+
+---
+
+**Author**: Magic Room Team
+**Last Updated**: December 2025

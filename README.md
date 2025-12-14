@@ -1,0 +1,296 @@
+# Magic Room - AI Interior Design Generator
+
+A privacy-first, AI-powered interior design web application that transforms room photos into beautiful design variations in seconds. Upload a photo, select your style preferences, and get 4-8 unique design options instantly.
+
+## Features
+
+- 🎨 **AI-Powered Design Generation** - Uses SDXL Lightning model for photorealistic results
+- 🔒 **Privacy First** - Images auto-deleted after processing, no data storage
+- ⚡ **Lightning Fast** - Get design variations in 30-60 seconds
+- 💳 **Flexible Credits System** - Buy what you need, use anytime
+- 🌓 **Dark Mode** - Beautiful purple-themed UI with light/dark mode support
+- 📱 **Fully Responsive** - Works seamlessly on desktop, tablet, and mobile
+
+## Tech Stack
+
+- **Frontend**: Next.js 16+ (App Router), React 19, TypeScript
+- **Styling**: Tailwind CSS v4, shadcn/ui, Framer Motion
+- **Authentication**: Clerk (Google OAuth)
+- **Database**: Supabase (PostgreSQL)
+- **Storage**: Supabase Storage (auto-deleting after 2 hours)
+- **AI Generation**: Replicate (interior-design-sdxl-lightning)
+- **Payments**: Stripe (credit packages)
+- **Rate Limiting**: Upstash Redis
+- **State Management**: Zustand
+- **Validation**: Zod
+- **Package Manager**: pnpm
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ (we recommend using `nvm`)
+- pnpm (install with `npm install -g pnpm`)
+- Accounts for:
+  - [Clerk](https://dashboard.clerk.com)
+  - [Supabase](https://supabase.com)
+  - [Replicate](https://replicate.com)
+  - [Stripe](https://dashboard.stripe.com)
+  - [Upstash](https://upstash.com)
+
+### Setup Instructions
+
+1. **Clone and install dependencies**
+
+```bash
+git clone <repository-url>
+cd magic-room
+pnpm install
+```
+
+2. **Set up environment variables**
+
+Copy `.env.example` to `.env.local` and fill in all values:
+
+```bash
+cp .env.example .env.local
+```
+
+**Required Environment Variables:**
+
+- **Clerk**
+  - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Public key from Clerk dashboard
+  - `CLERK_SECRET_KEY` - Secret key from Clerk dashboard
+  - `CLERK_WEBHOOK_SECRET` - From Clerk webhooks page
+
+- **Supabase**
+  - `NEXT_PUBLIC_SUPABASE_URL` - Project URL
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Anon/public key
+  - `SUPABASE_SERVICE_ROLE_KEY` - Service role key (keep secret!)
+
+- **Replicate**
+  - `REPLICATE_API_TOKEN` - Your API token
+  - `REPLICATE_WEBHOOK_SECRET` - Webhook secret from dashboard
+
+- **Stripe**
+  - `STRIPE_SECRET_KEY` - Secret API key
+  - `STRIPE_WEBHOOK_SECRET` - Signing secret for webhooks
+  - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - Publishable key
+
+- **Upstash Redis**
+  - `UPSTASH_REDIS_REST_URL` - REST endpoint
+  - `UPSTASH_REDIS_REST_TOKEN` - Authentication token
+
+- **App Config**
+  - `NEXT_PUBLIC_APP_URL` - App URL (http://localhost:3000 for local dev)
+
+3. **Set up Supabase**
+
+Create the database schema:
+
+```bash
+# In Supabase dashboard, run the SQL from supabase/schema.sql
+# Then seed the credit packages data from supabase/seed.sql
+```
+
+Create storage bucket:
+
+```bash
+# In Supabase Storage, create a bucket named "room-images"
+# Set it to public read access
+# Configure lifecycle policy to auto-delete after 2 hours
+```
+
+4. **Configure Webhooks**
+
+- **Clerk**: Point to `https://yourdomain.com/api/webhooks/clerk`
+- **Stripe**: Point to `https://yourdomain.com/api/webhooks/stripe`
+- **Replicate**: Point to `https://yourdomain.com/api/webhooks/replicate`
+
+For local development, use [Stripe CLI](https://stripe.com/docs/stripe-cli) to forward webhooks.
+
+5. **Start development server**
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Development Commands
+
+```bash
+# Start dev server with hot reload
+pnpm dev
+
+# Type checking
+pnpm type-check
+
+# Linting
+pnpm lint
+
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+## Project Structure
+
+```
+magic-room/
+├── app/                      # Next.js app directory
+│   ├── api/                  # API routes and webhooks
+│   ├── generate/             # Design generation page
+│   ├── purchase/             # Credit purchase page
+│   ├── privacy/              # Privacy policy
+│   ├── terms/                # Terms of service
+│   ├── layout.tsx            # Root layout
+│   ├── page.tsx              # Landing page
+│   └── globals.css           # Global styles
+├── components/               # React components
+│   ├── ui/                   # shadcn/ui components
+│   ├── header.tsx            # Navigation header
+│   ├── footer.tsx            # Footer
+│   ├── auth-guard.tsx        # Protected route wrapper
+│   ├── room-uploader.tsx     # Image upload
+│   ├── design-options.tsx    # Style selector
+│   ├── results-viewer.tsx    # Results display
+│   └── generation-loading.tsx # Loading states
+├── lib/                      # Utility functions
+│   ├── supabase.ts           # Server-side Supabase
+│   ├── supabase-client.ts    # Client-side Supabase
+│   ├── replicate.ts          # Replicate AI wrapper
+│   ├── redis.ts              # Rate limiting
+│   ├── stripe.ts             # Stripe client
+│   ├── constants.ts          # App constants
+│   └── utils.ts              # Helper functions
+├── stores/                   # Zustand state management
+│   ├── user-store.ts         # User state (credits, auth)
+│   └── generation-store.ts   # Generation state
+├── types/                    # TypeScript types
+│   └── index.ts              # All type definitions
+├── supabase/                 # Database scripts
+│   ├── schema.sql            # Database schema
+│   └── seed.sql              # Seed data
+├── .cursor/                  # Cursor AI configs
+├── proxy.ts                  # Clerk middleware
+├── components.json           # shadcn/ui config
+├── tailwind.config.ts        # Tailwind configuration
+├── tsconfig.json             # TypeScript config
+├── next.config.ts            # Next.js config
+└── package.json              # Dependencies
+```
+
+## How It Works
+
+1. **User Signs Up** - Google OAuth via Clerk, receives 1 free credit
+2. **Uploads Room Photo** - Drag-and-drop to Supabase Storage
+3. **Selects Design Preferences** - Room type, theme, optional custom prompt
+4. **Generates Designs** - 1 credit deducted, image sent to Replicate AI
+5. **Views Results** - 4-8 design variations in before/after slider
+6. **Downloads or Generates Again** - Full-res images available for download
+7. **Original Photo Deleted** - Auto-deleted from storage after processing
+
+## Credit Packages
+
+- **Free Trial**: 1 credit (on first signup)
+- **Starter Pack**: 30 credits for $9.99
+- **Pro Pack**: 150 credits for $19.99
+- **Ultimate Pack**: 300 credits for $29.99
+
+Each generation uses 1 credit.
+
+## Privacy & Security
+
+- ✅ Images never stored long-term (auto-delete 2 hours)
+- ✅ No personal data collection beyond what Clerk stores
+- ✅ Replicate outputs auto-expire (48 hours)
+- ✅ Rate limiting prevents abuse
+- ✅ Stripe never has access to uploaded images
+- ✅ All webhooks signature-verified
+
+See [Privacy Policy](/privacy) and [Terms of Service](/terms) for details.
+
+## Rate Limiting
+
+- Free users: 5 generations per hour
+- Paid users: 20 generations per hour
+- Per-IP fallback: 10 per hour
+
+Rate limits reset using Upstash Redis with 1-hour windows.
+
+## Error Handling
+
+- User-friendly error messages for all failures
+- Automatic credit refunds on generation failures
+- Retry logic for transient network errors
+- Global error boundary with recovery options
+
+## Testing Checklist
+
+Before deploying:
+
+- [ ] Auth flow works (sign up → free credit awarded)
+- [ ] Image upload and preview works
+- [ ] Generation creates Replicate prediction
+- [ ] Polling updates status correctly
+- [ ] Results display after generation completes
+- [ ] Download works for all variations
+- [ ] Credit packages appear on purchase page
+- [ ] Stripe checkout flow completes
+- [ ] Credits added after purchase
+- [ ] Original image deleted from storage
+- [ ] Rate limiting prevents abuse
+
+## Deployment
+
+### Vercel (Recommended)
+
+```bash
+vercel
+```
+
+Set environment variables in Vercel dashboard.
+
+### Other Platforms
+
+Ensure:
+- Node 18+ support
+- Environment variables configured
+- Webhooks point to production URLs
+- Supabase in production mode
+- Stripe in live mode (for production)
+
+## Troubleshooting
+
+**"Missing publishableKey" error**
+- Ensure `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` is set in `.env.local`
+
+**"Insufficient storage"**
+- Check Supabase Storage quota
+- Verify bucket lifecycle policy (should auto-delete after 2 hours)
+
+**"Rate limit exceeded"**
+- Wait 1 hour for Redis window to reset
+- Check Redis URL and token in `.env.local`
+
+**Stripe webhook not firing**
+- Use Stripe CLI for local testing: `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
+- Verify webhook signing secret matches `STRIPE_WEBHOOK_SECRET`
+
+**Replicate webhook not updating**
+- Check webhook URL is accessible from internet
+- Verify `REPLICATE_WEBHOOK_SECRET` matches dashboard
+- Check Replicate prediction status in dashboard
+
+## License
+
+MIT
+
+## Support
+
+- 📧 Email: [contact info placeholder]
+- 🐛 Issues: GitHub Issues
+- 💬 Discord: [link placeholder]
