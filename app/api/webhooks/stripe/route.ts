@@ -5,6 +5,8 @@ import {
   getUserByClerkId,
   createTransaction,
 } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
+import type Stripe from "stripe";
 
 export async function POST(request: Request): Promise<Response> {
   try {
@@ -12,42 +14,48 @@ export async function POST(request: Request): Promise<Response> {
     const signature = request.headers.get("stripe-signature");
 
     if (!signature) {
-      console.error("Missing Stripe signature");
+      logger.warn("Missing Stripe signature");
       return new Response("Missing signature", { status: 401 });
     }
 
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
 
-    let event;
+    let event: Stripe.Event;
     try {
       event = parseWebhookEvent(body, signature, webhookSecret);
     } catch (error) {
-      console.error("Webhook signature verification failed:", error);
+      logger.warn(
+        { err: error },
+        "Stripe webhook signature verification failed"
+      );
       return new Response("Invalid signature", { status: 401 });
     }
 
     // Handle checkout.session.completed event
     if (event.type === "checkout.session.completed") {
-      const session = event.data.object as any;
-      const userId = session.client_reference_id;
-      const packageId = session.metadata?.packageId;
+      const session = event.data.object as Stripe.Checkout.Session;
+      const userId = session.client_reference_id ?? undefined;
+      const packageId = session.metadata?.packageId ?? undefined;
 
       if (!userId || !packageId) {
-        console.error("Missing userId or packageId in metadata");
+        logger.warn(
+          { userId, packageId },
+          "Missing userId or packageId in Stripe session metadata"
+        );
         return new Response("Invalid session metadata", { status: 400 });
       }
 
       // Find the package to get credits
       const pkg = CREDIT_PACKAGES.find((p) => p.id === packageId);
       if (!pkg) {
-        console.error("Package not found:", packageId);
+        logger.warn({ packageId }, "Stripe package not found");
         return new Response("Package not found", { status: 404 });
       }
 
       // Get user and update credits
       const user = await getUserByClerkId(userId);
       if (!user) {
-        console.error("User not found:", userId);
+        logger.warn({ userId }, "Stripe webhook user not found");
         return new Response("User not found", { status: 404 });
       }
 
@@ -60,20 +68,25 @@ export async function POST(request: Request): Promise<Response> {
         user.id,
         "purchase",
         pkg.credits,
-        session.payment_intent,
+        typeof session.payment_intent === "string"
+          ? session.payment_intent
+          : undefined,
         {
           packageId,
           packageName: pkg.name,
-          stripePriceId: session.line_items?.data?.[0]?.price?.id,
+          stripePriceId: undefined,
         }
       );
 
-      console.log(`Credits added for user ${userId}: +${pkg.credits}`);
+      logger.info(
+        { userId, packageId, creditsAdded: pkg.credits },
+        "Credits added from Stripe checkout"
+      );
     }
 
     return new Response("Webhook processed", { status: 200 });
   } catch (error) {
-    console.error("Stripe webhook error:", error);
+    logger.error({ err: error }, "Stripe webhook error");
     return new Response("Webhook error", { status: 500 });
   }
 }

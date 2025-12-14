@@ -9,6 +9,7 @@ import {
 } from "@/lib/supabase";
 import { checkRateLimit } from "@/lib/redis";
 import { createPrediction, buildDesignPrompt } from "@/lib/replicate";
+import { logger } from "@/lib/logger";
 
 const GenerateSchema = z.object({
   imageUrl: z.string().url(),
@@ -102,7 +103,10 @@ export async function POST(request: Request): Promise<Response> {
     try {
       prediction = await createPrediction(imageUrl, prompt, webhookUrl);
     } catch (error) {
-      console.error("Replicate prediction error:", error);
+      logger.error(
+        { err: error, userId, roomType, theme },
+        "Replicate prediction error"
+      );
       return new Response(
         JSON.stringify({ error: "Failed to create prediction" }),
         {
@@ -140,11 +144,10 @@ export async function POST(request: Request): Promise<Response> {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Generate error:", error);
+    logger.error({ err: error }, "Generate route error");
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
 }
-

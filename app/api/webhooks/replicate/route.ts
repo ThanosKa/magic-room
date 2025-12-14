@@ -8,6 +8,7 @@ import {
   createTransaction,
   deleteImageFromStorage,
 } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 const webhookSecret = process.env.REPLICATE_WEBHOOK_SECRET || "";
 
@@ -31,14 +32,14 @@ export async function POST(request: Request): Promise<Response> {
     // Verify webhook signature
     const signature = request.headers.get("x-replicate-signature");
     if (!signature) {
-      console.error("Missing webhook signature");
+      logger.warn("Missing Replicate webhook signature");
       return new Response("Missing signature", { status: 401 });
     }
 
     const body = await request.text();
 
     if (!verifySignature(body, signature, webhookSecret)) {
-      console.error("Invalid webhook signature");
+      logger.warn("Invalid Replicate webhook signature");
       return new Response("Invalid signature", { status: 401 });
     }
 
@@ -48,7 +49,7 @@ export async function POST(request: Request): Promise<Response> {
     // Get the generation record to find the user and image path
     const generation = await getGenerationStatus(id);
     if (!generation) {
-      console.error("Generation not found:", id);
+      logger.warn({ generationId: id }, "Generation not found for webhook");
       return new Response("Generation not found", { status: 404 });
     }
 
@@ -61,7 +62,10 @@ export async function POST(request: Request): Promise<Response> {
       try {
         await deleteImageFromStorage("room-images", generation.image_path);
       } catch (err) {
-        console.error("Error deleting image from storage:", err);
+        logger.warn(
+          { err, generationId: id, imagePath: generation.image_path },
+          "Failed to delete uploaded image from storage"
+        );
         // Continue anyway - deletion is not critical
       }
     }
@@ -82,8 +86,7 @@ export async function POST(request: Request): Promise<Response> {
 
     return new Response("Webhook processed", { status: 200 });
   } catch (error) {
-    console.error("Webhook error:", error);
+    logger.error({ err: error }, "Replicate webhook error");
     return new Response("Webhook error", { status: 500 });
   }
 }
-

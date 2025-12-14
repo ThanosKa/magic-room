@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { getUserByClerkId } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 export async function GET(request: Request) {
   try {
@@ -26,11 +27,10 @@ export async function GET(request: Request) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error fetching user:", error);
+    logger.error({ err: error }, "Error fetching user");
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
 }
-

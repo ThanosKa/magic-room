@@ -2,6 +2,23 @@ import { auth } from "@clerk/nextjs/server";
 import { getGenerationStatus } from "@/lib/supabase";
 import { getPredictionStatus } from "@/lib/replicate";
 import { IStatusCheckResponse } from "@/types";
+import { logger } from "@/lib/logger";
+
+const VALID_STATUSES = new Set<IStatusCheckResponse["status"]>([
+  "starting",
+  "processing",
+  "succeeded",
+  "failed",
+  "canceled",
+]);
+
+function coerceStatus(value: unknown): IStatusCheckResponse["status"] {
+  if (typeof value !== "string") return "processing";
+  if (VALID_STATUSES.has(value as IStatusCheckResponse["status"])) {
+    return value as IStatusCheckResponse["status"];
+  }
+  return "processing";
+}
 
 export async function GET(
   request: Request,
@@ -39,7 +56,7 @@ export async function GET(
         if (prediction) {
           const response: IStatusCheckResponse = {
             id: generation.id,
-            status: prediction.status as any,
+            status: coerceStatus(prediction.status),
             outputUrls: prediction.output as string[] | undefined,
             error: prediction.error as string | undefined,
           };
@@ -49,7 +66,10 @@ export async function GET(
           });
         }
       } catch (error) {
-        console.error("Error fetching from Replicate:", error);
+        logger.warn(
+          { err: error, generationId },
+          "Error fetching generation status from Replicate"
+        );
         // Fall back to database status
       }
     }
@@ -66,11 +86,10 @@ export async function GET(
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Status check error:", error);
+    logger.error({ err: error }, "Status check route error");
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
 }
-

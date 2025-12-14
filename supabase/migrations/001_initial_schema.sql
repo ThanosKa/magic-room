@@ -1,5 +1,10 @@
+-- Migration: Initial Schema Setup
+-- Created: 2025-01-01
+-- Description: Creates core tables for Magic Room application
+
 -- Enable required extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
@@ -106,4 +111,3 @@ GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO service_role;
 
 -- Grant read-only permissions to authenticated users
 GRANT SELECT ON credit_packages TO authenticated;
-

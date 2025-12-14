@@ -3,6 +3,7 @@ import { z } from "zod";
 import { CREDIT_PACKAGES } from "@/lib/constants";
 import { createCheckoutSession } from "@/lib/stripe";
 import { getUserByClerkId } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 const CheckoutSchema = z.object({
   packageId: z.enum(["starter", "pro", "ultimate"]),
@@ -75,11 +76,10 @@ export async function POST(request: Request): Promise<Response> {
       }
     );
   } catch (error) {
-    console.error("Checkout error:", error);
+    logger.error({ err: error }, "Checkout route error");
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
 }
-
