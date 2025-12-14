@@ -17,12 +17,6 @@ export default function Home() {
       <section className="relative overflow-hidden bg-white pb-16 pt-24 dark:bg-slate-950 md:pb-32 md:pt-32">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center text-center">
-            {/* Pill Badge */}
-            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary dark:border-primary/30 dark:bg-primary/10 dark:text-primary">
-              <Sparkles className="mr-2 h-3.5 w-3.5" />
-              AI Interior Design Assistant
-            </div>
-
             <h1 className="mt-8 max-w-4xl text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-6xl lg:text-7xl">
               Transform Your Room in <br className="hidden md:block" />
               <span className="text-primary">Seconds</span>
