@@ -6,8 +6,7 @@ import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sun, Moon, Menu, Coins } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Menu, Coins } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CreditsSkeleton } from "@/components/ui/loading-states";
 import { AnnouncementBanner } from "@/components/announcement-banner";
@@ -15,18 +14,18 @@ import { AnnouncementBanner } from "@/components/announcement-banner";
 export function Header() {
   const { user: clerkUser } = useUser();
   const { credits } = useUserStore();
-  const { theme, setTheme } = useTheme();
+
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <>
       <AnnouncementBanner />
-      <header className="sticky top-0 z-40 w-full border-b border-slate-200/50 bg-white/80 backdrop-blur dark:border-slate-800/50 dark:bg-slate-950/80">
+      <header className="sticky top-0 z-40 w-full border-b border-slate-200/50 bg-white/80 backdrop-blur">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-primary" />
-            <span className="font-bold text-lg dark:text-white">
+            <span className="font-bold text-lg">
               Magic Room
             </span>
           </Link>
@@ -35,19 +34,19 @@ export function Header() {
           <nav className="hidden gap-8 md:flex">
             <Link
               href="/"
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-primary"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
             >
               Home
             </Link>
             <Link
               href="/generate"
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-primary"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
             >
               Generate
             </Link>
             <Link
               href="/pricing"
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-300 dark:hover:text-primary"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
             >
               Pricing
             </Link>
@@ -61,7 +60,7 @@ export function Header() {
                 {credits > 0 ? (
                   <Link
                     href="/pricing"
-                    className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30"
+                    className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-primary/20"
                   >
                     <Coins className="h-4 w-4 text-primary" />
                     <span className="text-primary">{credits} credits</span>
@@ -72,18 +71,7 @@ export function Header() {
               </div>
             )}
 
-            {/* Theme Toggle */}
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-md p-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </button>
+
 
             {/* Auth - Desktop */}
             {clerkUser ? (
