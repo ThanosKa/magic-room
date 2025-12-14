@@ -60,7 +60,8 @@ cluttered, amateur, watermark, text`;
 
 // Generation settings
 export const REPLICATE_MODEL = "rocketdigitalai/interior-design-sdxl-lightning";
-export const REPLICATE_MODEL_VERSION = "b1f5a229d5d9a4de53b8e2a1d4e8e8e8";
+export const REPLICATE_MODEL_VERSION =
+  "5d8da4e5c98fea03dcfbe3ec89e40cf0f4a0074a8930fa02aa0ee2aaf98c3d11";
 
 // Rate limiting
 export const RATE_LIMIT_FREE = 5; // requests per hour
@@ -89,4 +90,3 @@ export const API_ENDPOINTS = {
     STRIPE: "/api/webhooks/stripe",
   },
 } as const;
-

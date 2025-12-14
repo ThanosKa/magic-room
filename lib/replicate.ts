@@ -1,6 +1,7 @@
 import Replicate from "replicate";
 import {
   REPLICATE_MODEL,
+  REPLICATE_MODEL_VERSION,
   POSITIVE_PROMPT,
   NEGATIVE_PROMPT,
 } from "@/lib/constants";
@@ -45,7 +46,7 @@ export async function createPrediction(
     };
 
     const prediction = await replicate.predictions.create({
-      version: "b1f5a229d5d9a4de53b8e2a1d4e8e8e8", // lightning model version
+      version: REPLICATE_MODEL_VERSION,
       input,
     });
 
@@ -114,4 +115,3 @@ export function buildDesignPrompt(
 
   return fullPrompt;
 }
-
