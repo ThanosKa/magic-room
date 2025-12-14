@@ -15,56 +15,49 @@ export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Upload image to Supabase Storage
+// Upload image via server API endpoint (avoids RLS issues)
 export async function uploadImage(
   file: File,
   onProgress?: (progress: number) => void,
   bucketName: string = "room-images"
 ): Promise<{ url: string; path: string }> {
+  // Simulate progress updates during upload (client-side only)
+  const progressInterval = setInterval(() => {
+    if (onProgress) {
+      const simulatedProgress = Math.min(90, Math.random() * 80 + 10);
+      onProgress(simulatedProgress);
+    }
+  }, 200);
+
   try {
-    // Generate unique filename
-    const timestamp = Date.now();
-    const randomStr = Math.random().toString(36).substring(7);
-    const fileName = `${timestamp}-${randomStr}-${file.name}`;
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("bucket", bucketName);
 
-    // Simulate progress updates during upload
-    const progressInterval = setInterval(() => {
-      if (onProgress) {
-        const simulatedProgress = Math.min(90, Math.random() * 80 + 10);
-        onProgress(simulatedProgress);
-      }
-    }, 200);
-
-    // Upload to Supabase Storage
-    const { data, error } = await supabaseClient.storage
-      .from(bucketName)
-      .upload(fileName, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
 
     clearInterval(progressInterval);
 
-    if (error) {
-      console.error("Error uploading image:", error);
-      throw new Error(`Upload failed: ${error.message}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Upload failed");
     }
 
     if (onProgress) {
       onProgress(100);
     }
 
-    // Get public URL
-    const {
-      data: { publicUrl },
-    } = supabaseClient.storage.from(bucketName).getPublicUrl(data.path);
-
-    return {
-      url: publicUrl,
-      path: data.path,
-    };
+    const data = await response.json();
+    return { url: data.url, path: data.path };
   } catch (error) {
-    console.error("Unexpected error uploading image:", error);
+    clearInterval(progressInterval);
+    console.error(
+      "Upload error:",
+      error instanceof Error ? error.message : String(error)
+    );
     throw error;
   }
 }
