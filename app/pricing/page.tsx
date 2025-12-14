@@ -7,11 +7,26 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, Zap, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { PageTransition } from "@/components/page-transition";
 
 const CREDIT_PACKAGES = [
+  {
+    id: "free",
+    name: "Free Daily",
+    credits: 1,
+    price: 0,
+    priceId: null,
+    description: "Try it free every day",
+    features: [
+      "1 free credit daily",
+      "Access to all design themes",
+      "Full resolution images",
+    ],
+    popular: false,
+    free: true,
+  },
   {
     id: "starter",
     name: "Starter Pack",
@@ -101,43 +116,41 @@ export default function PricingPage() {
 
   return (
     <PageTransition>
-      <div className="container mx-auto px-4 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
-            Buy Credits
+            Simple, Transparent Pricing
           </h1>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
-            Choose the perfect package for your design needs
+            Choose the perfect plan for your design needs. Credits never expire.
           </p>
 
           {/* Current Credits Display */}
           {clerkUser && (
-            <div className="mt-6 inline-block rounded-full bg-purple-100 px-4 py-2 dark:bg-purple-900/30">
-              <p className="text-sm font-medium">
+            <div className="mt-6 inline-block rounded-full bg-primary/10 px-4 py-2 dark:bg-primary/20">
+              <p className="text-sm font-medium text-primary">
                 Current balance:{" "}
-                <span className="text-purple-600 dark:text-purple-400">
-                  {credits} credits
-                </span>
+                <span className="font-semibold">{credits} credits</span>
               </p>
             </div>
           )}
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
+        {/* Pricing Cards - 4 Column Grid */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-4">
           {CREDIT_PACKAGES.map((pkg) => (
             <Card
               key={pkg.id}
               className={`relative flex flex-col transition-all ${
                 pkg.popular
-                  ? "border-purple-500 shadow-lg ring-2 ring-purple-500/20 md:scale-105"
+                  ? "border-primary shadow-lg ring-2 ring-primary/20 lg:scale-105"
                   : "border-slate-200 dark:border-slate-700"
               }`}
             >
               {/* Popular Badge */}
               {pkg.popular && (
-                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 px-3 py-1">
+                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-3 py-1 font-semibold">
                   Most Popular
                 </Badge>
               )}
@@ -145,34 +158,38 @@ export default function PricingPage() {
               <div className="space-y-4 p-6">
                 {/* Title */}
                 <div>
-                  <h3 className="text-2xl font-bold">{pkg.name}</h3>
-                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                  <h3 className="text-xl font-bold md:text-2xl">{pkg.name}</h3>
+                  <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 md:text-sm">
                     {pkg.description}
                   </p>
                 </div>
 
                 {/* Credits & Price */}
                 <div className="space-y-2 border-y border-slate-200 py-4 dark:border-slate-700">
-                  <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">
+                  <p className="text-3xl font-bold text-primary md:text-4xl">
                     {pkg.credits}
                   </p>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 md:text-sm">
                     credits
                   </p>
                   <div className="pt-2">
-                    <p className="text-3xl font-bold">${pkg.price}</p>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      ${(pkg.price / pkg.credits).toFixed(3)} per credit
+                    <p className="text-2xl font-bold md:text-3xl">
+                      ${pkg.price}
                     </p>
+                    {!pkg.free && (
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
+                        ${(pkg.price / pkg.credits).toFixed(2)} per credit
+                      </p>
+                    )}
                   </div>
                 </div>
 
                 {/* Features */}
-                <ul className="space-y-3">
+                <ul className="space-y-2 flex-1">
                   {pkg.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                      <span className="text-sm text-slate-700 dark:text-slate-300">
+                    <li key={idx} className="flex items-start gap-2">
+                      <Check className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-xs text-slate-700 dark:text-slate-300 md:text-sm">
                         {feature}
                       </span>
                     </li>
@@ -180,33 +197,54 @@ export default function PricingPage() {
                 </ul>
 
                 {/* CTA Button */}
-                <Button
-                  onClick={() => handlePurchase(pkg.id)}
-                  disabled={isProcessing && selectedPackage === pkg.id}
-                  className={`w-full gap-2 ${
-                    pkg.popular
-                      ? "bg-purple-600 hover:bg-purple-700"
-                      : "bg-slate-200 text-slate-900 hover:bg-slate-300 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
-                  }`}
-                >
-                  {isProcessing && selectedPackage === pkg.id ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    "Buy Now"
-                  )}
-                </Button>
+                {pkg.free ? (
+                  <Button
+                    onClick={() => router.push("/generate")}
+                    variant="outline"
+                    className="w-full gap-2"
+                  >
+                    Get Started
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => handlePurchase(pkg.id)}
+                    disabled={isProcessing && selectedPackage === pkg.id}
+                    className={`w-full gap-2 ${
+                      pkg.popular
+                        ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                        : "bg-slate-200 text-slate-900 hover:bg-slate-300 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
+                    }`}
+                  >
+                    {isProcessing && selectedPackage === pkg.id ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="h-4 w-4" />
+                        Buy Now
+                      </>
+                    )}
+                  </Button>
+                )}
               </div>
             </Card>
           ))}
         </div>
 
         {/* FAQ Section */}
-        <div className="mt-16 max-w-2xl mx-auto">
-          <h2 className="text-2xl font-bold mb-8 text-center">Questions?</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+        <div className="mt-20">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+              Questions?
+            </h2>
+            <p className="mt-2 text-slate-600 dark:text-slate-400">
+              Find answers to common questions about Magic Room pricing and
+              credits.
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 mx-auto max-w-2xl">
             <div className="space-y-2 rounded-lg bg-slate-50 p-4 dark:bg-slate-900/50">
               <h3 className="font-semibold text-slate-900 dark:text-white">
                 How long do credits last?
@@ -250,16 +288,17 @@ export default function PricingPage() {
 
         {/* Bottom CTA */}
         {clerkUser && (
-          <div className="mt-12 text-center">
+          <div className="mt-16 text-center">
             <p className="mb-6 text-slate-600 dark:text-slate-400">
               Ready to create amazing designs?
             </p>
             <Button
               onClick={() => router.push("/generate")}
               size="lg"
-              className="bg-purple-600 hover:bg-purple-700"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-8"
             >
-              Start Creating →
+              Start Creating
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
         )}

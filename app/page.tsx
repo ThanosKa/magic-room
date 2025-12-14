@@ -17,7 +17,6 @@ export default function Home() {
       <section className="relative overflow-hidden bg-white pb-16 pt-24 dark:bg-slate-950 md:pb-32 md:pt-32">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center text-center">
-
             {/* Pill Badge */}
             <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary dark:border-primary/30 dark:bg-primary/10 dark:text-primary">
               <Sparkles className="mr-2 h-3.5 w-3.5" />
@@ -30,15 +29,28 @@ export default function Home() {
             </h1>
 
             <p className="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-              Upload a photo of your space and let our AI generate stunning design
-              variations. Privacy-first, instant results, and professional quality.
+              Upload a photo of your space and let our AI generate stunning
+              design variations. Privacy-first, instant results, and
+              professional quality.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Link href="/generate">
-                <Button size="lg" className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white">
+                <Button
+                  size="lg"
+                  className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white"
+                >
                   Generate Designs
                   <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/pricing">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-12 px-8 text-lg"
+                >
+                  View Pricing
                 </Button>
               </Link>
             </div>
@@ -80,9 +92,12 @@ export default function Home() {
               <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary">
                 <Lock className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Privacy First</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                Privacy First
+              </h3>
               <p className="mt-3 text-slate-600 dark:text-slate-400">
-                Your photos are automatically deleted after processing. We never store your personal data or images.
+                Your photos are automatically deleted after processing. We never
+                store your personal data or images.
               </p>
             </div>
 
@@ -90,9 +105,12 @@ export default function Home() {
               <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary">
                 <Zap className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Lightning Fast</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                Lightning Fast
+              </h3>
               <p className="mt-3 text-slate-600 dark:text-slate-400">
-                Get 4-8 stunning design variations in under 60 seconds. Powered by the latest SDXL Lightning models.
+                Get 4-8 stunning design variations in under 60 seconds. Powered
+                by the latest SDXL Lightning models.
               </p>
             </div>
 
@@ -100,9 +118,12 @@ export default function Home() {
               <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary">
                 <Wand2 className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Pro Quality</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                Pro Quality
+              </h3>
               <p className="mt-3 text-slate-600 dark:text-slate-400">
-                Photorealistic results that understand interior design principles, lighting, and spatial awareness.
+                Photorealistic results that understand interior design
+                principles, lighting, and spatial awareness.
               </p>
             </div>
           </div>
@@ -116,15 +137,24 @@ export default function Home() {
       <section className="border-t border-slate-200 bg-white py-24 dark:border-slate-800 dark:bg-slate-950">
         <div className="container px-4 text-center md:px-6">
           <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight md:text-4xl text-slate-900 dark:text-white">
-            Ready to Redesign Your Sace?
+            Ready to Redesign Your Space?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600 dark:text-slate-400">
             Join thousands of users transforming their homes with Magic Room.
           </p>
-          <div className="mt-10">
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Link href="/generate">
-              <Button size="lg" className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white">
-                Start Validating Now
+              <Button
+                size="lg"
+                className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white"
+              >
+                Start Creating Now
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/pricing">
+              <Button size="lg" variant="outline" className="h-12 px-8 text-lg">
+                View Pricing
               </Button>
             </Link>
           </div>
