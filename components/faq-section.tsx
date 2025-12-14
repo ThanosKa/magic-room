@@ -49,8 +49,8 @@ const faqs: FaqItem[] = [
 export function FAQSection() {
     return (
         <section className="py-20 md:py-32 bg-slate-50 dark:bg-slate-900/50">
-            <div className="container max-w-3xl px-4">
-                <h2 className="mb-4 text-3xl font-bold tracking-tight md:mb-11 md:text-4xl text-center md:text-left text-slate-900 dark:text-white">
+            <div className="container max-w-3xl px-4 text-center">
+                <h2 className="mb-4 text-3xl font-bold tracking-tight md:mb-11 md:text-4xl text-slate-900 dark:text-white">
                     Frequently asked questions
                 </h2>
                 <Accordion type="single" collapsible className="w-full">

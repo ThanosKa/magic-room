@@ -6,6 +6,7 @@ import { ThemeProviderComponent } from "@/components/theme-provider";
 import { ToastProvider } from "@/components/toast-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { AnnouncementBanner } from "@/components/announcement-banner";
 
 // Force dynamic rendering during development
 export const dynamic = "force-dynamic";
@@ -63,6 +64,7 @@ export default function RootLayout({
         >
           <ThemeProviderComponent>
             <div className="flex min-h-screen flex-col">
+              <AnnouncementBanner />
               <Header />
               <main className="flex-1">{children}</main>
               <Footer />
