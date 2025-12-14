@@ -20,8 +20,12 @@ interface RoomUploaderProps {
  * RoomUploader component handles drag-and-drop image uploads to Supabase Storage
  */
 export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
-  const { uploadedImageUrl, uploadedImagePath, setUploadedImage, clearUploadedImage } =
-    useGenerationStore();
+  const {
+    uploadedImageUrl,
+    uploadedImagePath,
+    setUploadedImage,
+    clearUploadedImage,
+  } = useGenerationStore();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -135,7 +139,9 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
             <Upload className="h-8 w-8 text-purple-600 dark:text-purple-400" />
             <div>
               <p className="font-semibold text-slate-900 dark:text-white">
-                {isDragActive ? "Drop your image here" : "Drag & drop your room photo"}
+                {isDragActive
+                  ? "Drop your image here"
+                  : "Drag & drop your room photo"}
               </p>
               <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                 or click to browse (JPG, PNG, WebP - max 10MB)
@@ -173,3 +179,4 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
     </div>
   );
 }
+

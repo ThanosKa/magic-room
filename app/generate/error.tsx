@@ -23,7 +23,10 @@ export default function GenerateError({
           {error.message || "An error occurred while processing your request"}
         </p>
         <div className="mt-6 flex gap-3">
-          <Button onClick={reset} className="flex-1 bg-purple-600 hover:bg-purple-700">
+          <Button
+            onClick={reset}
+            className="flex-1 bg-purple-600 hover:bg-purple-700"
+          >
             Try Again
           </Button>
           <Link href="/" className="flex-1">
@@ -36,3 +39,4 @@ export default function GenerateError({
     </div>
   );
 }
+

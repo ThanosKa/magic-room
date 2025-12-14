@@ -117,3 +117,4 @@ export function buildDesignPrompt(
 
   return fullPrompt;
 }
+

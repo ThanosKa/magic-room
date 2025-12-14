@@ -1,6 +1,8 @@
 ---
-alwaysApply: true
+globs: *.tsx,*.ts
+alwaysApply: false
 ---
+
 # Magic Room - Code Style & Architecture Guidelines
 
 ## TypeScript & Type Safety
@@ -120,36 +122,3 @@ export const useUserStore = create<UserStore>()(
 - **Retry Logic**: Implement exponential backoff for transient failures
 - **Logging**: Use structured logging (avoid console.log in production)
 - **Boundary Components**: Error boundaries for React component failures
-
-## Testing & QA
-
-- **API Routes**: Test with Stripe CLI and Clerk test tokens
-- **Webhooks**: Verify signature validation before processing
-- **Rate Limiting**: Load test with concurrent requests
-- **Privacy**: Verify files are deleted after generation
-
-## Performance Checklist
-
-- [ ] Images lazy-loaded with Next.js `Image` component
-- [ ] Modals use Code Splitting (dynamic imports)
-- [ ] API responses cached where appropriate
-- [ ] No N+1 queries in Supabase calls
-- [ ] Zustand selectors optimize re-renders
-
-## Tech Lead Code Review Checklist
-
-- [ ] All types properly annotated (no implicit `any`)
-- [ ] Error handling covers all failure modes
-- [ ] API routes validate input with Zod
-- [ ] Sensitive data (API keys, user IDs) never logged
-- [ ] Rate limiting enforced on user actions
-- [ ] Database queries use prepared statements (Supabase)
-- [ ] Clerk auth gates all protected routes
-- [ ] Privacy: Old files are deleted per schedule
-- [ ] Performance: No blocking operations in API routes
-- [ ] Tests: Critical paths have test coverage
-
----
-
-**Author**: Magic Room Team
-**Last Updated**: December 2025

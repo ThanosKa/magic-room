@@ -93,10 +93,21 @@ function GeneratePageContent() {
     }, 3000); // Poll every 3 seconds
 
     return () => clearInterval(pollInterval);
-  }, [isPolling, activeGeneration, clerkUser?.id, setActiveGeneration, setIsPolling, refreshUser]);
+  }, [
+    isPolling,
+    activeGeneration,
+    clerkUser?.id,
+    setActiveGeneration,
+    setIsPolling,
+    refreshUser,
+  ]);
 
   const handleGenerateDesigns = useCallback(
-    async (options: { roomType: RoomType; theme: Theme; customPrompt?: string }) => {
+    async (options: {
+      roomType: RoomType;
+      theme: Theme;
+      customPrompt?: string;
+    }) => {
       if (!uploadedImageUrl || !uploadedImagePath || credits < 1) {
         toast.error("Please upload an image and ensure you have credits");
         return;
@@ -136,18 +147,25 @@ function GeneratePageContent() {
 
         toast.success("Generation started! Generating your designs...");
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "Failed to generate designs";
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to generate designs";
         setError(errorMessage);
         setIsGenerating(false);
         toast.error(errorMessage);
       }
     },
-    [uploadedImageUrl, uploadedImagePath, credits, setActiveGeneration, setIsPolling]
+    [
+      uploadedImageUrl,
+      uploadedImagePath,
+      credits,
+      setActiveGeneration,
+      setIsPolling,
+    ]
   );
 
   const handleGenerateAgain = useCallback(() => {
     clearUploadedImage();
-    setActiveGeneration(undefined);
+    setActiveGeneration(null);
     setIsPolling(false);
     setIsGenerating(false);
     setError(null);
@@ -158,10 +176,7 @@ function GeneratePageContent() {
   if (isGenerating || isPolling) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <GenerationLoading
-          estimatedTime={45}
-          onCancel={handleGenerateAgain}
-        />
+        <GenerationLoading estimatedTime={45} onCancel={handleGenerateAgain} />
       </div>
     );
   }
@@ -171,7 +186,7 @@ function GeneratePageContent() {
     return (
       <div className="container mx-auto px-4 py-12">
         <ResultsViewer
-          originalImage={uploadedImageUrl}
+          originalImage={uploadedImageUrl || undefined}
           generationId={activeGeneration.id}
           results={activeGeneration.outputUrls}
           onGenerateAgain={handleGenerateAgain}
@@ -195,13 +210,15 @@ function GeneratePageContent() {
       <div className="grid gap-8 lg:grid-cols-3">
         {/* Upload Section */}
         <div className="lg:col-span-1">
-          <RoomUploader onUploadComplete={(url, path) => setUploadedImage(url, path)} />
+          <RoomUploader
+            onUploadComplete={(url, path) => setUploadedImage(url, path)}
+          />
         </div>
 
         {/* Options Section */}
         <div className="lg:col-span-1">
           <DesignOptions
-            imageUrl={uploadedImageUrl}
+            imageUrl={uploadedImageUrl || undefined}
             isLoading={isGenerating}
             credits={credits}
             onGenerate={handleGenerateDesigns}
@@ -211,11 +228,11 @@ function GeneratePageContent() {
         {/* Results Section */}
         <div className="lg:col-span-1">
           <ResultsViewer
-            originalImage={uploadedImageUrl}
+            originalImage={uploadedImageUrl || undefined}
             results={activeGeneration?.outputUrls || []}
             isLoading={false}
             isPolling={isPolling}
-            error={error}
+            error={error || undefined}
             onGenerateAgain={handleGenerateAgain}
           />
         </div>

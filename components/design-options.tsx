@@ -59,7 +59,10 @@ export function DesignOptions({
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
             Room Type
           </label>
-          <Select value={roomType} onValueChange={(value) => setRoomType(value as RoomType)}>
+          <Select
+            value={roomType}
+            onValueChange={(value) => setRoomType(value as RoomType)}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select room type" />
             </SelectTrigger>
@@ -152,9 +155,14 @@ export function DesignOptions({
 
       {credits > 0 && (
         <p className="text-center text-sm text-slate-600 dark:text-slate-400">
-          You have <span className="font-semibold text-purple-600 dark:text-purple-400">{credits}</span> credits remaining
+          You have{" "}
+          <span className="font-semibold text-purple-600 dark:text-purple-400">
+            {credits}
+          </span>{" "}
+          credits remaining
         </p>
       )}
     </div>
   );
 }
+

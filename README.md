@@ -59,25 +59,30 @@ cp .env.example .env.local
 **Required Environment Variables:**
 
 - **Clerk**
+
   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Public key from Clerk dashboard
   - `CLERK_SECRET_KEY` - Secret key from Clerk dashboard
   - `CLERK_WEBHOOK_SECRET` - From Clerk webhooks page
 
 - **Supabase**
+
   - `NEXT_PUBLIC_SUPABASE_URL` - Project URL
   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Anon/public key
   - `SUPABASE_SERVICE_ROLE_KEY` - Service role key (keep secret!)
 
 - **Replicate**
+
   - `REPLICATE_API_TOKEN` - Your API token
   - `REPLICATE_WEBHOOK_SECRET` - Webhook secret from dashboard
 
 - **Stripe**
+
   - `STRIPE_SECRET_KEY` - Secret API key
   - `STRIPE_WEBHOOK_SECRET` - Signing secret for webhooks
   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - Publishable key
 
 - **Upstash Redis**
+
   - `UPSTASH_REDIS_REST_URL` - REST endpoint
   - `UPSTASH_REDIS_REST_TOKEN` - Authentication token
 
@@ -257,6 +262,7 @@ Set environment variables in Vercel dashboard.
 ### Other Platforms
 
 Ensure:
+
 - Node 18+ support
 - Environment variables configured
 - Webhooks point to production URLs
@@ -266,21 +272,26 @@ Ensure:
 ## Troubleshooting
 
 **"Missing publishableKey" error**
+
 - Ensure `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` is set in `.env.local`
 
 **"Insufficient storage"**
+
 - Check Supabase Storage quota
 - Verify bucket lifecycle policy (should auto-delete after 2 hours)
 
 **"Rate limit exceeded"**
+
 - Wait 1 hour for Redis window to reset
 - Check Redis URL and token in `.env.local`
 
 **Stripe webhook not firing**
+
 - Use Stripe CLI for local testing: `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
 - Verify webhook signing secret matches `STRIPE_WEBHOOK_SECRET`
 
 **Replicate webhook not updating**
+
 - Check webhook URL is accessible from internet
 - Verify `REPLICATE_WEBHOOK_SECRET` matches dashboard
 - Check Replicate prediction status in dashboard

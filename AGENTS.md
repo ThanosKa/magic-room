@@ -6,7 +6,7 @@
 - **Styling**: Tailwind CSS v4, shadcn/ui components
 - **State Management**: Zustand (user credits, generation status)
 - **Database**: Supabase PostgreSQL + Storage
-- **Authentication**: Clerk (Google OAuth)
+- **Authentication**: Clerk
 - **AI Model**: Replicate (rocketdigitalai/interior-design-sdxl-lightning)
 - **Payments**: Stripe (checkout + webhooks)
 - **Rate Limiting**: Upstash Redis
@@ -93,50 +93,6 @@
 - Generation failure → Refund credit + error notification
 - Network timeout → Retry with exponential backoff
 
-## File Structure
+## Code Style & Stack
 
-```
-app/
-  layout.tsx           # Root layout with providers
-  page.tsx             # Landing page
-  generate/
-    page.tsx           # Generation interface
-  purchase/
-    page.tsx           # Credits store
-  api/
-    generate/
-      route.ts         # Start generation
-      [id]/route.ts    # Poll status
-    checkout/
-      route.ts         # Stripe checkout
-    webhooks/
-      clerk/route.ts   # User sync
-      stripe/route.ts  # Payment confirmation
-      replicate/route.ts # Generation updates
-components/
-  room-uploader.tsx    # Upload + crop component
-  design-options.tsx   # Room type/theme selector
-  results-viewer.tsx   # Before/after + grid display
-  credits-badge.tsx    # Header credits counter
-  theme-provider.tsx   # Light/dark mode
-  header.tsx           # Navigation
-  footer.tsx           # Links & attribution
-lib/
-  supabase.ts          # Server-side client
-  supabase-client.ts   # Client-side client
-  replicate.ts         # API wrapper
-  redis.ts             # Rate limiter
-  stripe.ts            # Checkout session
-  prompt-builder.ts    # Dynamic prompt generation
-  constants.ts         # Room types, themes, packages
-stores/
-  user-store.ts        # Zustand: credits, user info
-  generation-store.ts  # Zustand: active generation state
-types/
-  index.ts             # TypeScript interfaces
-```
-
----
-
-**Last Updated**: December 2025
-**Target Completion**: Full stack privacy-first SaaS within 2-week sprint
+- See `.cursor/rules/general.mdc` for full coding conventions

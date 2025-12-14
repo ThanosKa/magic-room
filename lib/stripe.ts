@@ -74,3 +74,4 @@ export function parseWebhookEvent(
 ) {
   return stripe.webhooks.constructEvent(body, signature, secret);
 }
+

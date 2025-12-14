@@ -106,3 +106,4 @@ GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO service_role;
 
 -- Grant read-only permissions to authenticated users
 GRANT SELECT ON credit_packages TO authenticated;
+

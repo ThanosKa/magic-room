@@ -5,13 +5,7 @@ import ReactCompareImage from "react-compare-image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Download,
-  RotateCcw,
-  AlertCircle,
-  Loader2,
-  Eye,
-} from "lucide-react";
+import { Download, RotateCcw, AlertCircle, Loader2, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 interface ResultsViewerProps {
@@ -76,8 +70,12 @@ export function ResultsViewer({
         <div className="flex gap-4">
           <AlertCircle className="h-6 w-6 flex-shrink-0 text-red-600 dark:text-red-400" />
           <div className="flex-1">
-            <h3 className="font-semibold text-red-900 dark:text-red-200">Generation Failed</h3>
-            <p className="mt-1 text-sm text-red-700 dark:text-red-300">{error}</p>
+            <h3 className="font-semibold text-red-900 dark:text-red-200">
+              Generation Failed
+            </h3>
+            <p className="mt-1 text-sm text-red-700 dark:text-red-300">
+              {error}
+            </p>
             <p className="mt-2 text-xs text-red-600 dark:text-red-400">
               Your credit has been refunded.
             </p>
@@ -123,7 +121,9 @@ export function ResultsViewer({
         {isPolling && (
           <div className="mt-4 flex items-center justify-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin text-purple-600" />
-            <span className="text-sm font-medium text-purple-600">Processing...</span>
+            <span className="text-sm font-medium text-purple-600">
+              Processing...
+            </span>
           </div>
         )}
       </Card>
@@ -139,7 +139,12 @@ export function ResultsViewer({
         {originalImage && selectedResult && (
           <Card className="overflow-hidden bg-slate-100 dark:bg-slate-900">
             <div className="relative w-full" style={{ aspectRatio: "1" }}>
-              <ReactCompareImage left={originalImage} right={selectedResult} />
+              <ReactCompareImage
+                leftImage={originalImage}
+                rightImage={selectedResult}
+                sliderLineWidth={2}
+                sliderLineColor="#8B5CF6"
+              />
             </div>
           </Card>
         )}
@@ -185,7 +190,7 @@ export function ResultsViewer({
               <Button
                 onClick={() => handleDownload(url, index)}
                 variant="outline"
-                size="xs"
+                size="sm"
                 className="w-full"
               >
                 <Download className="h-3 w-3" />

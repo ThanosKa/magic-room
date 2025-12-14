@@ -14,3 +14,4 @@ export function ThemeProviderComponent({ children }: ThemeProviderProps) {
     </ThemeProvider>
   );
 }
+

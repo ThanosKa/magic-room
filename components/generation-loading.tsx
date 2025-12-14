@@ -21,7 +21,10 @@ const STATUS_MESSAGES = [
 /**
  * GenerationLoading component displays loading state during design generation
  */
-export function GenerationLoading({ onCancel, estimatedTime = 45 }: GenerationLoadingProps) {
+export function GenerationLoading({
+  onCancel,
+  estimatedTime = 45,
+}: GenerationLoadingProps) {
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -111,7 +114,9 @@ export function GenerationLoading({ onCancel, estimatedTime = 45 }: GenerationLo
 
         {/* Tips */}
         <div className="space-y-2 rounded-lg bg-blue-50/50 px-4 py-3 dark:bg-blue-950/20">
-          <p className="text-xs font-medium text-blue-900 dark:text-blue-200">💡 Tips while you wait:</p>
+          <p className="text-xs font-medium text-blue-900 dark:text-blue-200">
+            💡 Tips while you wait:
+          </p>
           <ul className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
             <li>• You'll get 4-8 unique design variations</li>
             <li>• Each can be customized further</li>

@@ -46,11 +46,15 @@ export default function RootLayout({
             "border border-purple-200 dark:border-purple-900 bg-white dark:bg-slate-900 hover:bg-purple-50 dark:hover:bg-slate-800",
           formButtonPrimary:
             "bg-purple-600 hover:bg-purple-700 text-white rounded-md",
-          footerActionLink: "text-purple-600 dark:text-purple-400 hover:text-purple-700",
+          footerActionLink:
+            "text-purple-600 dark:text-purple-400 hover:text-purple-700",
           input:
             "border border-purple-200 dark:border-purple-900 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400",
         },
-        layout: "cards",
+        layout: {
+          socialButtonsPlacement: "bottom",
+          socialButtonsVariant: "iconButton",
+        },
       }}
     >
       <html lang="en" suppressHydrationWarning>

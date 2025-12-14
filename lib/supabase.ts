@@ -218,3 +218,4 @@ export async function deleteImageFromStorage(bucketName: string, path: string) {
 
   return true;
 }
+
