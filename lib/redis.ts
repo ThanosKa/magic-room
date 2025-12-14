@@ -1,9 +1,5 @@
 import { Redis } from "@upstash/redis";
-import {
-  RATE_LIMIT_FREE,
-  RATE_LIMIT_PAID,
-  RATE_LIMIT_WINDOW,
-} from "@/lib/constants";
+import { RATE_LIMIT, RATE_LIMIT_WINDOW } from "@/lib/constants";
 
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -24,13 +20,14 @@ interface RateLimitResult {
 }
 
 // Check rate limit for a user
-export async function checkRateLimit(
-  userId: string,
-  isPaid: boolean = false
-): Promise<RateLimitResult> {
+export async function checkRateLimit(userId: string): Promise<RateLimitResult> {
+  // Bypass in development
+  if (process.env.NODE_ENV === "development") {
+    return { success: true, remaining: -1 };
+  }
+
   try {
     const key = `rate-limit:${userId}`;
-    const limit = isPaid ? RATE_LIMIT_PAID : RATE_LIMIT_FREE;
 
     // Get current count
     const current = await redis.incr(key);
@@ -43,7 +40,7 @@ export async function checkRateLimit(
     // Get TTL for reset time
     const ttl = await redis.ttl(key);
 
-    if (current > limit) {
+    if (current > RATE_LIMIT) {
       const resetAt = Date.now() + ttl * 1000;
       return {
         success: false,
@@ -54,7 +51,7 @@ export async function checkRateLimit(
 
     return {
       success: true,
-      remaining: limit - current,
+      remaining: RATE_LIMIT - current,
     };
   } catch (error) {
     console.error("Rate limit check error:", error);
@@ -68,9 +65,13 @@ export async function checkRateLimit(
 
 // Check rate limit by IP (fallback for unauthenticated requests)
 export async function checkRateLimitByIp(ip: string): Promise<RateLimitResult> {
+  // Bypass in development
+  if (process.env.NODE_ENV === "development") {
+    return { success: true, remaining: -1 };
+  }
+
   try {
     const key = `rate-limit-ip:${ip}`;
-    const limit = RATE_LIMIT_FREE; // IP-based is always free tier
 
     const current = await redis.incr(key);
 
@@ -80,7 +81,7 @@ export async function checkRateLimitByIp(ip: string): Promise<RateLimitResult> {
 
     const ttl = await redis.ttl(key);
 
-    if (current > limit) {
+    if (current > RATE_LIMIT) {
       const resetAt = Date.now() + ttl * 1000;
       return {
         success: false,
@@ -91,7 +92,7 @@ export async function checkRateLimitByIp(ip: string): Promise<RateLimitResult> {
 
     return {
       success: true,
-      remaining: limit - current,
+      remaining: RATE_LIMIT - current,
     };
   } catch (error) {
     console.error("IP rate limit check error:", error);
@@ -115,20 +116,16 @@ export async function resetRateLimit(userId: string): Promise<boolean> {
 }
 
 // Get current rate limit status
-export async function getRateLimitStatus(
-  userId: string,
-  isPaid: boolean = false
-) {
+export async function getRateLimitStatus(userId: string) {
   try {
     const key = `rate-limit:${userId}`;
     const current = await redis.get<number>(key);
     const ttl = await redis.ttl(key);
-    const limit = isPaid ? RATE_LIMIT_PAID : RATE_LIMIT_FREE;
 
     return {
       current: current || 0,
-      limit,
-      remaining: Math.max(0, limit - (current || 0)),
+      limit: RATE_LIMIT,
+      remaining: Math.max(0, RATE_LIMIT - (current || 0)),
       resetsIn: ttl > 0 ? ttl : 0,
     };
   } catch (error) {
@@ -136,4 +133,3 @@ export async function getRateLimitStatus(
     return null;
   }
 }
-

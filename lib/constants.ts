@@ -63,10 +63,9 @@ export const REPLICATE_MODEL = "rocketdigitalai/interior-design-sdxl-lightning";
 export const REPLICATE_MODEL_VERSION =
   "5d8da4e5c98fea03dcfbe3ec89e40cf0f4a0074a8930fa02aa0ee2aaf98c3d11";
 
-// Rate limiting
-export const RATE_LIMIT_FREE = 5; // requests per hour
-export const RATE_LIMIT_PAID = 50; // requests per hour
-export const RATE_LIMIT_WINDOW = 3600; // seconds
+// Rate limiting - simple abuse prevention for credit-based model
+export const RATE_LIMIT = 100; // requests per hour (generous, prevents automation)
+export const RATE_LIMIT_WINDOW = 3600; // 1 hour window in seconds
 
 // File upload settings
 export const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB in bytes

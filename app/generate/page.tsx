@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
@@ -11,6 +11,9 @@ import { ResultsViewer } from "@/components/results-viewer";
 import { GenerationLoading } from "@/components/generation-loading";
 import { RoomType, Theme } from "@/types";
 import { toast } from "sonner";
+
+const MAX_POLL_ATTEMPTS = 40; // 2 minutes at 3s intervals (40 * 3 = 120s)
+const POLL_INTERVAL = 3000; // 3 seconds
 
 /**
  * Generate page - main interface for room design generation
@@ -41,60 +44,102 @@ function GeneratePageContent() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pollCount, setPollCount] = useState(0);
+  const generationIdRef = useRef<string | null>(null);
 
   // Note: User credits are fetched globally by UserDataProvider in layout
 
   // Poll generation status
   useEffect(() => {
-    if (!isPolling || !activeGeneration?.id) return;
+    if (!isPolling || !generationIdRef.current) return;
+
+    const generationId = generationIdRef.current;
+    console.log(`[Polling] Started for generation ID: ${generationId}`);
 
     const pollInterval = setInterval(async () => {
+      setPollCount((prev) => {
+        const nextCount = prev + 1;
+        console.log(
+          `[Polling] Attempt ${nextCount}/${MAX_POLL_ATTEMPTS} - Fetching status...`
+        );
+
+        // Check if exceeded max attempts
+        if (nextCount > MAX_POLL_ATTEMPTS) {
+          console.error(
+            `[Polling] Timeout: Exceeded ${MAX_POLL_ATTEMPTS} polling attempts (${
+              (MAX_POLL_ATTEMPTS * POLL_INTERVAL) / 1000
+            }s)`
+          );
+          clearInterval(pollInterval);
+          setIsPolling(false);
+          setIsGenerating(false);
+          setError("Generation timed out. Please try again.");
+          toast.error(
+            "Generation took too long. Your credit has been refunded."
+          );
+          return nextCount;
+        }
+
+        return nextCount;
+      });
+
       try {
-        const response = await fetch(`/api/generate/${activeGeneration.id}`);
-        if (!response.ok) throw new Error("Failed to fetch status");
+        const response = await fetch(`/api/generate/${generationId}`);
+        if (!response.ok) {
+          throw new Error(`API returned ${response.status}`);
+        }
 
         const data = await response.json();
+        console.log(
+          `[Polling] Status received:`,
+          data.status,
+          `- Output URLs: ${data.outputUrls?.length || 0}`
+        );
 
         // Update active generation with new status
         setActiveGeneration({
-          ...activeGeneration,
+          id: generationId,
           status: data.status,
           outputUrls: data.outputUrls || [],
           error: data.error,
         });
 
-        setPollCount((prev) => prev + 1);
-
         // Stop polling if generation is complete
         if (data.status === "succeeded" || data.status === "failed") {
+          clearInterval(pollInterval);
           setIsPolling(false);
           setIsGenerating(false);
 
           if (data.status === "succeeded") {
+            console.log(
+              `[Polling] Success! Generated ${
+                data.outputUrls?.length || 0
+              } variations`
+            );
             toast.success(
-              `Generated ${
-                activeGeneration.outputUrls?.length || 1
-              } design variation!`
+              `Generated ${data.outputUrls?.length || 1} design variation!`
             );
             // Refresh user credits
             if (clerkUser?.id) {
               refreshUser(clerkUser.id);
             }
           } else if (data.status === "failed") {
+            console.error(`[Polling] Generation failed:`, data.error);
             setError(data.error || "Generation failed");
             toast.error("Generation failed. Credit refunded.");
           }
         }
       } catch (err) {
-        console.error("Polling error:", err);
+        console.error(`[Polling] Error on attempt:`, err);
         // Continue polling even on error
       }
-    }, 3000); // Poll every 3 seconds
+    }, POLL_INTERVAL);
 
-    return () => clearInterval(pollInterval);
+    return () => {
+      clearInterval(pollInterval);
+      console.log(`[Polling] Cleanup - stopped polling`);
+    };
   }, [
     isPolling,
-    activeGeneration,
     clerkUser?.id,
     setActiveGeneration,
     setIsPolling,
@@ -117,6 +162,7 @@ function GeneratePageContent() {
       setPollCount(0);
 
       try {
+        console.log("[Generate] Starting generation with options:", options);
         const response = await fetch("/api/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -135,19 +181,23 @@ function GeneratePageContent() {
         }
 
         const data = await response.json();
+        console.log("[Generate] Received prediction ID:", data.predictionId);
 
         // Set active generation and start polling
         setActiveGeneration({
-          id: data.generationId,
+          id: data.predictionId,
           status: "starting",
           outputUrls: [],
         });
+        generationIdRef.current = data.predictionId;
+        setPollCount(0);
         setIsPolling(true);
 
         toast.success("Generation started! Generating your designs...");
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Failed to generate designs";
+        console.error("[Generate] Error:", errorMessage);
         setError(errorMessage);
         setIsGenerating(false);
         toast.error(errorMessage);
@@ -165,6 +215,7 @@ function GeneratePageContent() {
   const handleGenerateAgain = useCallback(() => {
     clearUploadedImage();
     setActiveGeneration(null);
+    generationIdRef.current = null;
     setIsPolling(false);
     setIsGenerating(false);
     setError(null);
@@ -175,7 +226,12 @@ function GeneratePageContent() {
   if (isGenerating || isPolling) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <GenerationLoading estimatedTime={45} onCancel={handleGenerateAgain} />
+        <GenerationLoading
+          estimatedTime={45}
+          pollCount={pollCount}
+          maxPolls={MAX_POLL_ATTEMPTS}
+          onCancel={handleGenerateAgain}
+        />
       </div>
     );
   }

@@ -8,6 +8,8 @@ import { Loader2, X } from "lucide-react";
 interface GenerationLoadingProps {
   onCancel?: () => void;
   estimatedTime?: number;
+  pollCount?: number;
+  maxPolls?: number;
 }
 
 const STATUS_MESSAGES = [
@@ -24,6 +26,8 @@ const STATUS_MESSAGES = [
 export function GenerationLoading({
   onCancel,
   estimatedTime = 45,
+  pollCount = 0,
+  maxPolls = 40,
 }: GenerationLoadingProps) {
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -37,16 +41,12 @@ export function GenerationLoading({
     return () => clearInterval(interval);
   }, []);
 
-  // Update progress bar
+  // Update progress bar based on actual poll count
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        const increment = Math.random() * 15;
-        return Math.min(prev + increment, 95);
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    // Use real poll count if available, otherwise use estimated progress
+    const realProgress = (pollCount / maxPolls) * 100;
+    setProgress(realProgress > 95 ? 95 : realProgress);
+  }, [pollCount, maxPolls]);
 
   // Update elapsed time
   useEffect(() => {
@@ -84,9 +84,14 @@ export function GenerationLoading({
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-right text-xs text-slate-600 dark:text-slate-400">
-            {Math.round(progress)}%
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-slate-600 dark:text-slate-400">
+              Poll attempt: {pollCount}/{maxPolls}
+            </p>
+            <p className="text-right text-xs text-slate-600 dark:text-slate-400">
+              {Math.round(progress)}%
+            </p>
+          </div>
         </div>
 
         {/* Estimated Time */}
