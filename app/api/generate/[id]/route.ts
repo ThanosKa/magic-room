@@ -91,8 +91,8 @@ export async function GET(
             typeof prediction.error === "string"
               ? prediction.error
               : prediction.error
-                ? JSON.stringify(prediction.error)
-                : undefined;
+              ? JSON.stringify(prediction.error)
+              : undefined;
 
           const transitionedToTerminal =
             !isTerminal(generation.status) && isTerminal(nextStatus);
@@ -109,7 +109,10 @@ export async function GET(
           if (transitionedToTerminal) {
             if (nextStatus === "succeeded" && generation.image_path) {
               try {
-                await deleteImageFromStorage("room-images", generation.image_path);
+                await deleteImageFromStorage(
+                  "room-images",
+                  generation.image_path
+                );
               } catch (err) {
                 logger.warn(
                   { err, generationId, imagePath: generation.image_path },

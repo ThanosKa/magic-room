@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     try {
       // Check if user already exists (webhook retries are common)
       const existingUser = await getUserByClerkId(id);
-      
+
       if (existingUser) {
         logger.info(
           { clerkUserId: id, email: primaryEmail },
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
 
       // Create new user with 1 free credit
       const newUser = await createUser(id, primaryEmail, 1);
-      
+
       if (!newUser) {
         logger.error(
           { clerkUserId: id, email: primaryEmail },

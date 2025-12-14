@@ -81,7 +81,10 @@ export async function ensureUserExists(clerkUserId: string) {
   }
 
   // DEV MODE ONLY: Create user from Clerk API
-  logger.info({ clerkUserId }, "User not found in dev mode, creating from Clerk API");
+  logger.info(
+    { clerkUserId },
+    "User not found in dev mode, creating from Clerk API"
+  );
 
   try {
     const { clerkClient } = await import("@clerk/nextjs/server");
@@ -193,7 +196,10 @@ export async function createTransaction(
   return data;
 }
 
-export async function hasRefundForPrediction(userId: string, predictionId: string) {
+export async function hasRefundForPrediction(
+  userId: string,
+  predictionId: string
+) {
   const { data, error } = await supabase
     .from("transactions")
     .select("id")
@@ -290,7 +296,10 @@ export async function getGenerationStatus(predictionId: string) {
     .single();
 
   if (error) {
-    logger.error({ err: error, predictionId }, "Error fetching generation status");
+    logger.error(
+      { err: error, predictionId },
+      "Error fetching generation status"
+    );
     return null;
   }
 
@@ -310,4 +319,3 @@ export async function deleteImageFromStorage(bucketName: string, path: string) {
 
   return true;
 }
-
