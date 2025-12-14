@@ -175,7 +175,7 @@ magic-room/
 ├── types/                    # TypeScript types
 │   └── index.ts              # All type definitions
 ├── supabase/                 # Database scripts
-│   ├── schema.sql            # Database schema
+│   ├── 001_initial_schema.sql# Database schema
 │   └── seed.sql              # Seed data
 ├── .cursor/                  # Cursor AI configs
 ├── proxy.ts                  # Clerk middleware
