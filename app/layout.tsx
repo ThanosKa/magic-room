@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { ThemeProviderComponent } from "@/components/theme-provider";
 import { ToastProvider } from "@/components/toast-provider";
+import { UserDataProvider } from "@/components/user-data-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
@@ -62,12 +63,14 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} flex flex-col antialiased`}
         >
           <ThemeProviderComponent>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-            <ToastProvider />
+            <UserDataProvider>
+              <div className="flex min-h-screen flex-col">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+              <ToastProvider />
+            </UserDataProvider>
           </ThemeProviderComponent>
         </body>
       </html>

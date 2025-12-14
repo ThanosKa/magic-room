@@ -1,34 +1,10 @@
-import pino, { type Logger, type LoggerOptions } from "pino";
+import pino from "pino";
 
-const DEFAULT_LOG_LEVEL = "info";
+const isDev = process.env.NODE_ENV !== "production";
 
-function buildLogger(): Logger {
-  const level = process.env.LOG_LEVEL ?? DEFAULT_LOG_LEVEL;
-  const isProd = process.env.NODE_ENV === "production";
-
-  const options: LoggerOptions = {
-    level,
-    base: {
-      service: "magic-room",
-      env: process.env.NODE_ENV ?? "development",
-    },
-    redact: {
-      paths: [
-        "req.headers.authorization",
-        "req.headers.cookie",
-        "headers.authorization",
-        "headers.cookie",
-      ],
-      remove: true,
-    },
-  };
-
-  if (isProd) {
-    return pino(options);
-  }
-
-  return pino({
-    ...options,
+export const logger = pino({
+  level: process.env.LOG_LEVEL || (isDev ? "debug" : "info"),
+  ...(isDev && {
     transport: {
       target: "pino-pretty",
       options: {
@@ -37,8 +13,22 @@ function buildLogger(): Logger {
         ignore: "pid,hostname",
       },
     },
-  });
-}
+  }),
+  redact: {
+    paths: [
+      "password",
+      "token",
+      "apiKey",
+      "secret",
+      "authorization",
+      "cookie",
+      "req.headers.authorization",
+      "req.headers.cookie",
+      "headers.authorization",
+      "headers.cookie",
+    ],
+    censor: "[REDACTED]",
+  },
+});
 
-export const logger = buildLogger();
-
+export default logger;

@@ -42,12 +42,7 @@ function GeneratePageContent() {
   const [error, setError] = useState<string | null>(null);
   const [pollCount, setPollCount] = useState(0);
 
-  // Refresh user credits on mount
-  useEffect(() => {
-    if (clerkUser?.id) {
-      refreshUser(clerkUser.id);
-    }
-  }, [clerkUser?.id, refreshUser]);
+  // Note: User credits are fetched globally by UserDataProvider in layout
 
   // Poll generation status
   useEffect(() => {
