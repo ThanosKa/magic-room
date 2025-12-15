@@ -142,7 +142,7 @@ export default function PricingPage() {
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
             Simple, transparent pricing
           </h1>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
+          <p className="mt-4 text-lg text-muted-foreground">
             Choose the plan that works best for you. Credits never expire.
           </p>
         </div>
@@ -165,7 +165,7 @@ export default function PricingPage() {
                 }`}
               >
                 {pkg.popular && (
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground">
                     Most popular
                   </Badge>
                 )}
@@ -176,18 +176,13 @@ export default function PricingPage() {
                       {pkg.priceDisplay}
                     </span>
                     {!pkg.free && (
-                      <span className="text-slate-600 dark:text-slate-400">
-                        {" "}
-                        one-time
-                      </span>
+                      <span className="text-muted-foreground"> one-time</span>
                     )}
                     {pkg.free && (
-                      <span className="text-slate-600 dark:text-slate-400">
-                        /day
-                      </span>
+                      <span className="text-muted-foreground">/day</span>
                     )}
                   </div>
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                  <p className="mt-2 text-sm text-muted-foreground">
                     {pkg.description}
                   </p>
                 </CardHeader>
@@ -209,7 +204,7 @@ export default function PricingPage() {
                     clerkUser ? (
                       <Button
                         variant="outline"
-                        className="w-full bg-transparent"
+                        className="w-full bg-transparent cursor-pointer"
                         onClick={() => router.push("/generate")}
                       >
                         Go to generate
@@ -219,7 +214,7 @@ export default function PricingPage() {
                         <Button
                           variant="outline"
                           size="default"
-                          className="w-full bg-transparent"
+                          className="w-full bg-transparent cursor-pointer"
                         >
                           Get started free
                         </Button>
@@ -227,7 +222,9 @@ export default function PricingPage() {
                     )
                   ) : clerkUser ? (
                     <Button
-                      className="w-full"
+                      className={`w-full cursor-pointer ${
+                        pkg.popular ? "bg-primary hover:bg-primary/90" : ""
+                      }`}
                       variant={pkg.popular ? "default" : "outline"}
                       onClick={() => handlePurchase(pkg.id)}
                       disabled={loading === pkg.id}
@@ -241,7 +238,9 @@ export default function PricingPage() {
                       <Button
                         variant={pkg.popular ? "default" : "outline"}
                         size="default"
-                        className="w-full"
+                        className={`w-full cursor-pointer ${
+                          pkg.popular ? "bg-primary hover:bg-primary/90" : ""
+                        }`}
                       >
                         {isLoaded ? "Sign up to purchase" : "Loading..."}
                       </Button>
