@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ROOM_TYPES, THEMES } from "@/lib/constants";
-import { Upload, Download, RefreshCw, Loader2 } from "lucide-react";
+import { Upload, Download, RefreshCw, Loader2, ImagePlus, Wand2 } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { fileToBase64 } from "@/lib/supabase-client";
 import { cn } from "@/lib/utils";
@@ -72,6 +72,9 @@ function GeneratePageContent() {
       }
 
       try {
+        // Crucial: Clear previous results when uploading new image
+        setActiveGeneration(null);
+
         const base64 = await fileToBase64(file);
         setUploadedImage(base64, "");
         setOriginalImage(base64); // Store original
@@ -80,13 +83,15 @@ function GeneratePageContent() {
         toast.error("Failed to process image");
       }
     },
-    [setUploadedImage]
+    [setUploadedImage, setActiveGeneration]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, open: openUpload } = useDropzone({
     onDrop,
     accept: { "image/*": [".jpeg", ".jpg", ".png", ".webp"] },
     maxFiles: 1,
+    noClick: true, // we trigger manually
+    noKeyboard: true
   });
 
   // Generate design - ALWAYS use originalImage
@@ -134,7 +139,7 @@ function GeneratePageContent() {
     }
   }, [originalImage, credits, roomType, theme, setActiveGeneration, clerkUser?.id, refreshUser]);
 
-  // Reset everything
+  // Reset entirely (Clear everything)
   const handleReset = useCallback(() => {
     clearUploadedImage();
     setActiveGeneration(null);
@@ -167,165 +172,202 @@ function GeneratePageContent() {
   const hasResult = activeGeneration?.status === "succeeded" && activeGeneration.outputUrls?.length;
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-12">
-      {/* Header */}
-      <div className="mb-10 text-center">
-        <h1 className="text-4xl font-bold tracking-tight">
-          Redesign your <span className="text-primary">room</span> in seconds
-        </h1>
-        <p className="mt-3 text-muted-foreground">
-          Upload a room, specify the room type, and select your room theme to redesign.
-        </p>
-      </div>
+    <div className="container mx-auto max-w-6xl px-4 py-8 lg:py-12">
+      <div className="grid gap-8 lg:grid-cols-[1fr_1.5fr] lg:gap-12">
 
-      <div className="grid gap-10 lg:grid-cols-2">
-        {/* Left Column - Controls */}
+        {/* LEFT COLUMN: Controls */}
         <div className="space-y-8">
-          {/* Credits Banner */}
-          {credits <= 0 && (
-            <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-center">
-              <p className="text-sm text-destructive">
-                You have no credits left.{" "}
-                <a href="/pricing" className="font-medium underline">
-                  Buy more here
-                </a>{" "}
-                to generate your room.
-              </p>
-            </div>
-          )}
-
-          {/* Upload Section */}
-          <div className="space-y-3">
-            <Label className="text-base font-medium">Upload a photo of your room</Label>
-            <div
-              {...getRootProps()}
-              className={cn(
-                "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors",
-                isDragActive
-                  ? "border-primary bg-primary/5"
-                  : "border-input hover:border-primary/50"
-              )}
-            >
-              <input {...getInputProps()} />
-              <Button className="mb-3">
-                <Upload className="mr-2 h-4 w-4" />
-                Upload an Image
-              </Button>
-              <p className="text-sm text-muted-foreground">
-                ...or drag and drop an image.
-              </p>
-            </div>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+              Design Studio
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+              Customize your room details below.
+            </p>
           </div>
 
-          {/* Room Type Select */}
-          <div className="space-y-3">
-            <Label className="text-base font-medium">Select Room Type</Label>
-            <Select value={roomType} onValueChange={(v) => setRoomType(v as RoomType)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(ROOM_TYPES).map(([key, label]) => (
-                  <SelectItem key={key} value={key}>
-                    {label}
-                  </SelectItem>
+          <div className="space-y-6 rounded-xl border bg-card p-6 shadow-sm">
+            {/* Room Type Select */}
+            <div className="space-y-3">
+              <Label className="text-base font-semibold">1. Room Type</Label>
+              <Select value={roomType} onValueChange={(v) => setRoomType(v as RoomType)}>
+                <SelectTrigger className="h-11">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(ROOM_TYPES).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Theme Selection */}
+            <div className="space-y-3">
+              <Label className="text-base font-semibold">2. Choose Style</Label>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {Object.entries(THEMES).map(([key, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => setTheme(key as Theme)}
+                    className={cn(
+                      "group relative flex flex-col overflow-hidden rounded-lg border-2 transition-all hover:border-primary/50",
+                      theme === key
+                        ? "border-primary bg-primary/5 ring-0"
+                        : "border-input bg-transparent"
+                    )}
+                  >
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+                      <Image
+                        src={THEME_IMAGES[key as Theme]}
+                        alt={label}
+                        fill
+                        className={cn(
+                          "object-cover transition-transform duration-300 group-hover:scale-110",
+                          theme !== key && "opacity-80 grayscale-[0.3]"
+                        )}
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                      />
+                      {theme === key && (
+                        <div className="absolute inset-0 bg-primary/10" />
+                      )}
+                    </div>
+                    <div className={cn(
+                      "w-full py-2 text-center text-xs font-medium transition-colors",
+                      theme === key ? "text-primary font-bold" : "text-muted-foreground"
+                    )}>
+                      {label}
+                    </div>
+                  </button>
                 ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Theme Selection with Images */}
-          <div className="space-y-3">
-            <Label className="text-base font-medium">Select Room Theme</Label>
-            <div className="grid grid-cols-3 gap-3">
-              {Object.entries(THEMES).map(([key, label]) => (
-                <button
-                  key={key}
-                  onClick={() => setTheme(key as Theme)}
-                  className={cn(
-                    "group relative flex flex-col items-center overflow-hidden rounded-lg border-2 transition-all",
-                    theme === key
-                      ? "border-primary ring-2 ring-primary ring-offset-2"
-                      : "border-input hover:border-primary/50"
-                  )}
-                >
-                  <div className="relative aspect-square w-full overflow-hidden">
-                    <Image
-                      src={THEME_IMAGES[key as Theme]}
-                      alt={label}
-                      fill
-                      className="object-cover"
-                      sizes="120px"
-                    />
-                  </div>
-                  <span className="py-2 text-xs font-medium">{label}</span>
-                </button>
-              ))}
+              </div>
             </div>
-          </div>
 
-          {/* Generate Button */}
-          <div className="flex items-center gap-4">
-            <Button
-              size="lg"
-              onClick={handleGenerate}
-              disabled={!uploadedImageUrl || isGenerating || credits < 1}
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                "Render designs"
-              )}
-            </Button>
-            <span className="text-sm text-muted-foreground">
-              Cost: <strong>1 credit</strong>
-            </span>
+            <div className="mt-4 flex items-center justify-between rounded-lg bg-muted/50 p-3">
+              <span className="text-sm font-medium">Available Credits</span>
+              <span className={cn("font-bold", credits > 0 ? "text-primary" : "text-destructive")}>
+                {credits} Credits
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Right Column - Preview */}
-        <div className="flex items-center justify-center rounded-xl border bg-muted/30 p-4">
-          {hasResult ? (
-            <div className="relative w-full overflow-hidden rounded-lg">
-              <img
-                src={activeGeneration.outputUrls![0]}
-                alt="Generated design"
-                className="w-full rounded-lg"
-              />
-              <div className="mt-4 flex gap-2">
-                <Button variant="outline" onClick={handleReset}>
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  Generate Again
-                </Button>
-                <Button onClick={handleDownload}>
-                  <Download className="mr-2 h-4 w-4" />
-                  Download
+        {/* RIGHT COLUMN: Visual Stage (Upload + Preview + Actions) */}
+        <div className="flex flex-col gap-6">
+
+          {/* Main Visual Area */}
+          <div className="relative w-full overflow-hidden rounded-2xl border bg-muted/20 shadow-sm min-h-[400px] flex flex-col">
+
+            {/* Case 1: Result is showing */}
+            {hasResult ? (
+              <div className="relative group w-full h-full">
+                <img
+                  src={activeGeneration.outputUrls![0]}
+                  alt="Generated design"
+                  className="w-full h-auto object-contain max-h-[70vh] bg-black/5"
+                />
+                <div className="absolute top-4 right-4 flex gap-2">
+                  <Button size="icon" variant="secondary" className="h-9 w-9 shadow-md" onClick={handleDownload}>
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ) : uploadedImageUrl ? (
+              /* Case 2: Image Uploaded (Preview) */
+              <div className="relative w-full h-full min-h-[300px] bg-black/5 flex items-center justify-center group">
+                <img
+                  src={uploadedImageUrl}
+                  alt="Uploaded room"
+                  className="w-full h-auto max-h-[60vh] object-contain"
+                />
+
+                {/* Simplified Re-upload overlay */}
+                <div className={cn(
+                  "absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity",
+                  !isGenerating && "group-hover:opacity-100"
+                )}>
+                  <Button variant="secondary" onClick={openUpload} className="gap-2">
+                    <Upload className="h-4 w-4" /> Change Image
+                  </Button>
+                </div>
+
+                {/* Loading Overlay */}
+                {isGenerating && (
+                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
+                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                    <p className="mt-4 animate-pulse font-medium text-primary">Creating magic...</p>
+                    <p className="text-sm text-muted-foreground">This may take up to 30 seconds</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Case 3: Empty State (Upload Zone) */
+              <div
+                {...getRootProps()}
+                className={cn(
+                  "flex-1 flex flex-col items-center justify-center p-10 text-center transition-all cursor-pointer border-2 border-dashed border-transparent hover:border-primary/20 hover:bg-muted/30",
+                  isDragActive && "border-primary bg-primary/5"
+                )}
+                onClick={openUpload}
+              >
+                <input {...getInputProps()} />
+                <div className="mb-6 rounded-full bg-muted p-6 transition-transform group-hover:scale-110">
+                  <ImagePlus className="h-10 w-10 text-muted-foreground" />
+                </div>
+                <h3 className="text-xl font-semibold">Upload your room</h3>
+                <p className="mt-2 max-w-sm text-muted-foreground">
+                  Drag & drop an image here, or click to browse.
+                  <br />We recommend high quality photos.
+                </p>
+                <Button variant="outline" className="mt-8 pointer-events-none">
+                  Select Image
                 </Button>
               </div>
-            </div>
-          ) : uploadedImageUrl ? (
-            <div className="relative w-full overflow-hidden rounded-lg">
-              <img
-                src={uploadedImageUrl}
-                alt="Uploaded room"
-                className="w-full rounded-lg"
-              />
-              {isGenerating && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="mt-3 text-sm font-medium">Generating your design...</p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
-              <div className="mb-4 h-16 w-16 rounded-lg bg-muted" />
-              <p className="text-sm">Upload an image to get started</p>
-            </div>
-          )}
+            )}
+          </div>
+
+          {/* Action Dock (Bottom of visuals) */}
+          <div className="flex items-center justify-end gap-3 rounded-xl border bg-card p-4 shadow-sm">
+            {hasResult ? (
+              <>
+                <Button variant="outline" size="lg" onClick={handleReset}>
+                  Upload New
+                </Button>
+                <Button variant="secondary" size="lg" onClick={handleGenerate} disabled={isGenerating || credits < 1}>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Regenerate same image
+                </Button>
+              </>
+            ) : (
+              // Generate Actions
+              uploadedImageUrl && (
+                <Button
+                  size="lg"
+                  className="w-full md:w-auto min-w-[200px] text-lg font-medium shadow-primary/25 shadow-lg"
+                  onClick={handleGenerate}
+                  disabled={isGenerating || credits < 1}
+                >
+                  {isGenerating ? (
+                    <>Generating...</>
+                  ) : (
+                    <>
+                      <Wand2 className="mr-2 h-5 w-5" />
+                      Generate Design
+                    </>
+                  )}
+                </Button>
+              )
+            )}
+
+            {!uploadedImageUrl && (
+              <div className="text-sm text-muted-foreground italic mr-auto">
+                ← Upload an image to start designing
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     </div>
