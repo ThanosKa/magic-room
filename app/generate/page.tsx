@@ -423,24 +423,34 @@ function GeneratePageContent() {
                 ) : (
                   // Generate Actions - only show when image is uploaded
                   uploadedImageUrl && (
-                    <Button
-                      size="lg"
-                      className="w-full md:w-auto min-w-[200px] h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white shadow-lg cursor-pointer ml-auto"
-                      onClick={handleGenerate}
-                      disabled={isGenerating || credits < 1}
-                    >
-                      {isGenerating ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Generating...
-                        </>
-                      ) : (
-                        <>
-                          <Wand2 className="mr-2 h-5 w-5" />
-                          Generate Design
-                        </>
-                      )}
-                    </Button>
+                    <div className="flex items-center gap-3 ml-auto">
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={handleReset}
+                        className="cursor-pointer"
+                      >
+                        Upload New
+                      </Button>
+                      <Button
+                        size="lg"
+                        className="min-w-[200px] h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white shadow-lg cursor-pointer"
+                        onClick={handleGenerate}
+                        disabled={isGenerating || credits < 1}
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            Generating...
+                          </>
+                        ) : (
+                          <>
+                            <Wand2 className="mr-2 h-5 w-5" />
+                            Generate Design
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   )
                 )}
               </div>
