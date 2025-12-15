@@ -145,16 +145,6 @@ export default function PricingPage() {
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
             Choose the plan that works best for you. Credits never expire.
           </p>
-
-          {/* Current Credits Display */}
-          {clerkUser && (
-            <div className="mt-6 inline-block rounded-full bg-primary/10 px-4 py-2 dark:bg-primary/20">
-              <p className="text-sm font-medium text-primary">
-                Current balance:{" "}
-                <span className="font-semibold">{credits} credits</span>
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Pricing Cards with Animation */}
@@ -262,23 +252,6 @@ export default function PricingPage() {
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Bottom CTA */}
-        {clerkUser && (
-          <div className="mt-16 text-center">
-            <p className="mb-6 text-slate-600 dark:text-slate-400">
-              Ready to create amazing designs?
-            </p>
-            <Button
-              onClick={() => router.push("/generate")}
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-8"
-            >
-              Start creating
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        )}
       </div>
     </PageTransition>
   );
