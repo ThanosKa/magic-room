@@ -6,13 +6,15 @@ import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
 import { AuthGuard } from "@/components/auth-guard";
 import { RoomType, Theme } from "@/types";
-import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -67,7 +69,7 @@ function GeneratePageContent() {
       if (!file) return;
 
       if (file.size > 10 * 1024 * 1024) {
-        toast.error("File is too large (max 10MB)");
+        // toast.error("File is too large (max 10MB)");
         return;
       }
 
@@ -78,9 +80,9 @@ function GeneratePageContent() {
         const base64 = await fileToBase64(file);
         setUploadedImage(base64, "");
         setOriginalImage(base64); // Store original
-        toast.success("Image uploaded!");
+        // toast.success("Image uploaded!");
       } catch {
-        toast.error("Failed to process image");
+        // toast.error("Failed to process image");
       }
     },
     [setUploadedImage, setActiveGeneration]
@@ -97,7 +99,7 @@ function GeneratePageContent() {
   // Generate design - ALWAYS use originalImage
   const handleGenerate = useCallback(async () => {
     if (!originalImage || credits < 1) {
-      toast.error("Please upload an image and ensure you have credits");
+      // toast.error("Please upload an image and ensure you have credits");
       return;
     }
 
@@ -127,13 +129,13 @@ function GeneratePageContent() {
           status: "succeeded",
           outputUrls: data.outputUrls,
         });
-        toast.success("Design generated!");
+        // toast.success("Design generated!");
         if (clerkUser?.id) refreshUser(clerkUser.id);
       } else {
         throw new Error(data.error || "No images generated");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to generate");
+      // toast.error(err instanceof Error ? err.message : "Failed to generate");
     } finally {
       setIsGenerating(false);
     }
@@ -163,9 +165,9 @@ function GeneratePageContent() {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
-      toast.success("Downloaded!");
+      // toast.success("Downloaded!");
     } catch {
-      toast.error("Failed to download");
+      // toast.error("Failed to download");
     }
   };
 
@@ -173,11 +175,20 @@ function GeneratePageContent() {
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8 lg:py-12">
-      <div className="grid gap-8 lg:grid-cols-[1fr_1.5fr] lg:gap-12">
+      {/* Credits at Top Center */}
+      <div className="mb-8 flex justify-center">
+        <div className="flex items-center gap-2 rounded-full border bg-background px-4 py-1.5 shadow-sm">
+          <span className="text-sm font-medium text-muted-foreground mr-1">Available Credits:</span>
+          <span className={cn("font-bold text-lg", credits > 0 ? "text-primary" : "text-destructive")}>
+            {credits}
+          </span>
+        </div>
+      </div>
 
+      <div className="grid gap-8 lg:grid-cols-[1fr_1.5fr] lg:gap-12">
         {/* LEFT COLUMN: Controls */}
         <div className="space-y-8">
-          <div>
+          <div className="text-center md:text-left">
             <h1 className="text-3xl font-bold tracking-tight text-foreground">
               Design Studio
             </h1>
@@ -186,20 +197,24 @@ function GeneratePageContent() {
             </p>
           </div>
 
+          {/* Controls Card */}
           <div className="space-y-6 rounded-xl border bg-card p-6 shadow-sm">
             {/* Room Type Select */}
             <div className="space-y-3">
               <Label className="text-base font-semibold">1. Room Type</Label>
               <Select value={roomType} onValueChange={(v) => setRoomType(v as RoomType)}>
-                <SelectTrigger className="h-11">
-                  <SelectValue />
+                <SelectTrigger className="h-11 cursor-pointer">
+                  <SelectValue placeholder="Select a room type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(ROOM_TYPES).map(([key, label]) => (
-                    <SelectItem key={key} value={key}>
-                      {label}
-                    </SelectItem>
-                  ))}
+                  <SelectGroup>
+                    <SelectLabel>Room Types</SelectLabel>
+                    {Object.entries(ROOM_TYPES).map(([key, label]) => (
+                      <SelectItem key={key} value={key} className="cursor-pointer">
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
@@ -213,7 +228,7 @@ function GeneratePageContent() {
                     key={key}
                     onClick={() => setTheme(key as Theme)}
                     className={cn(
-                      "group relative flex flex-col overflow-hidden rounded-lg border-2 transition-all hover:border-primary/50",
+                      "group relative flex flex-col overflow-hidden rounded-lg border-2 transition-all hover:border-primary/50 cursor-pointer",
                       theme === key
                         ? "border-primary bg-primary/5 ring-0"
                         : "border-input bg-transparent"
@@ -244,35 +259,21 @@ function GeneratePageContent() {
                 ))}
               </div>
             </div>
-
-            <div className="mt-4 flex items-center justify-between rounded-lg bg-muted/50 p-3">
-              <span className="text-sm font-medium">Available Credits</span>
-              <span className={cn("font-bold", credits > 0 ? "text-primary" : "text-destructive")}>
-                {credits} Credits
-              </span>
-            </div>
           </div>
         </div>
 
         {/* RIGHT COLUMN: Visual Stage (Upload + Preview + Actions) */}
         <div className="flex flex-col gap-6">
-
           {/* Main Visual Area */}
           <div className="relative w-full overflow-hidden rounded-2xl border bg-muted/20 shadow-sm min-h-[400px] flex flex-col">
-
             {/* Case 1: Result is showing */}
             {hasResult ? (
               <div className="relative group w-full h-full">
                 <img
-                  src={activeGeneration.outputUrls![0]}
+                  src={activeGeneration!.outputUrls![0]}
                   alt="Generated design"
                   className="w-full h-auto object-contain max-h-[70vh] bg-black/5"
                 />
-                <div className="absolute top-4 right-4 flex gap-2">
-                  <Button size="icon" variant="secondary" className="h-9 w-9 shadow-md" onClick={handleDownload}>
-                    <Download className="h-4 w-4" />
-                  </Button>
-                </div>
               </div>
             ) : uploadedImageUrl ? (
               /* Case 2: Image Uploaded (Preview) */
@@ -285,22 +286,13 @@ function GeneratePageContent() {
 
                 {/* Simplified Re-upload overlay */}
                 <div className={cn(
-                  "absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity",
+                  "absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity z-10",
                   !isGenerating && "group-hover:opacity-100"
                 )}>
-                  <Button variant="secondary" onClick={openUpload} className="gap-2">
+                  <Button variant="secondary" onClick={(e) => { e.stopPropagation(); openUpload(); }} className="gap-2 cursor-pointer pointer-events-auto">
                     <Upload className="h-4 w-4" /> Change Image
                   </Button>
                 </div>
-
-                {/* Loading Overlay */}
-                {isGenerating && (
-                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                    <p className="mt-4 animate-pulse font-medium text-primary">Creating magic...</p>
-                    <p className="text-sm text-muted-foreground">This may take up to 30 seconds</p>
-                  </div>
-                )}
               </div>
             ) : (
               /* Case 3: Empty State (Upload Zone) */
@@ -329,47 +321,76 @@ function GeneratePageContent() {
           </div>
 
           {/* Action Dock (Bottom of visuals) */}
-          <div className="flex items-center justify-end gap-3 rounded-xl border bg-card p-4 shadow-sm">
-            {hasResult ? (
-              <>
-                <Button variant="outline" size="lg" onClick={handleReset}>
-                  Upload New
-                </Button>
-                <Button variant="secondary" size="lg" onClick={handleGenerate} disabled={isGenerating || credits < 1}>
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  Regenerate same image
-                </Button>
-              </>
-            ) : (
-              // Generate Actions
-              uploadedImageUrl && (
-                <Button
-                  size="lg"
-                  className="w-full md:w-auto min-w-[200px] text-lg font-medium shadow-primary/25 shadow-lg"
-                  onClick={handleGenerate}
-                  disabled={isGenerating || credits < 1}
-                >
-                  {isGenerating ? (
-                    <>Generating...</>
-                  ) : (
-                    <>
-                      <Wand2 className="mr-2 h-5 w-5" />
-                      Generate Design
-                    </>
-                  )}
-                </Button>
-              )
-            )}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-end gap-3 rounded-xl border bg-card p-4 shadow-sm">
+              {hasResult ? (
+                <>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={handleReset}
+                    className="cursor-pointer"
+                  >
+                    Upload New
+                  </Button>
 
-            {!uploadedImageUrl && (
-              <div className="text-sm text-muted-foreground italic mr-auto">
-                ← Upload an image to start designing
-              </div>
-            )}
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    onClick={handleDownload}
+                    className="cursor-pointer"
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Download
+                  </Button>
+
+                  <Button
+                    size="lg"
+                    onClick={handleGenerate}
+                    disabled={isGenerating || credits < 1}
+                    className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white cursor-pointer"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="mr-2 h-4 w-4" />
+                        Regenerate
+                      </>
+                    )}
+                  </Button>
+                </>
+              ) : (
+                // Generate Actions
+                uploadedImageUrl && (
+                  <Button
+                    size="lg"
+                    className="w-full md:w-auto min-w-[200px] h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white shadow-lg cursor-pointer ml-auto"
+                    onClick={handleGenerate}
+                    disabled={isGenerating || credits < 1}
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Wand2 className="mr-2 h-5 w-5" />
+                        Generate Design
+                      </>
+                    )}
+                  </Button>
+                )
+              )}
+            </div>
           </div>
-
         </div>
       </div>
     </div>
   );
 }
+
