@@ -5,19 +5,15 @@ import { useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
 import { AuthGuard } from "@/components/auth-guard";
-import { RoomUploader } from "@/components/room-uploader";
-import { DesignOptions } from "@/components/design-options";
-import { ResultsViewer } from "@/components/results-viewer";
-import { GenerationLoading } from "@/components/generation-loading";
 import { RoomType, Theme } from "@/types";
 import { toast } from "sonner";
+import { MagicFileUpload } from "@/components/magic/file-upload";
+import { MagicOptionsPanel } from "@/components/magic/options-panel";
+import { MagicResultViewer } from "@/components/magic/result-viewer";
+import { MagicCard } from "@/components/magic/magic-card";
+import { Loader2, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
-/**
- * Generate page - main interface for room design generation
- * Protected by AuthGuard - requires user to be signed in
- * 
- * Uses OpenRouter with synchronous generation - no polling needed.
- */
 export default function GeneratePage() {
   return (
     <AuthGuard>
@@ -38,164 +34,133 @@ function GeneratePageContent() {
   } = useGenerationStore();
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [roomType, setRoomType] = useState<RoomType>("living-room");
+  const [theme, setTheme] = useState<Theme>("modern");
+  const [customPrompt, setCustomPrompt] = useState("");
 
-  const handleGenerateDesigns = useCallback(
-    async (options: {
-      roomType: RoomType;
-      theme: Theme;
-      customPrompt?: string;
-    }) => {
-      // uploadedImageUrl is now base64, no path needed
-      if (!uploadedImageUrl || credits < 1) {
-        toast.error("Please upload an image and ensure you have credits");
-        return;
+  const handleGenerateDesigns = useCallback(async () => {
+    if (!uploadedImageUrl || credits < 1) {
+      toast.error("Please upload an image and ensure you have credits");
+      return;
+    }
+
+    setIsGenerating(true);
+
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          base64Image: uploadedImageUrl,
+          roomType,
+          theme,
+          customPrompt: customPrompt.trim() || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to generate design");
       }
 
-      setIsGenerating(true);
-      setError(null);
+      const data = await response.json();
 
-      try {
-        // Show loading toast
-        const loadingToast = toast.loading(
-          "Generating your design... This may take up to 60 seconds."
-        );
-
-        // Call API with base64 image (no more imageUrl/imagePath)
-        const response = await fetch("/api/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            base64Image: uploadedImageUrl,
-            roomType: options.roomType,
-            theme: options.theme,
-            customPrompt: options.customPrompt,
-          }),
+      if (data.success && data.outputUrls && data.outputUrls.length > 0) {
+        setActiveGeneration({
+          id: data.predictionId,
+          status: "succeeded",
+          outputUrls: data.outputUrls,
         });
 
-        toast.dismiss(loadingToast);
+        toast.success("Design generated successfully!");
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to generate design");
+        if (clerkUser?.id) {
+          refreshUser(clerkUser.id);
         }
-
-        const data = await response.json();
-
-        // OpenRouter returns results synchronously
-        if (data.success && data.outputUrls && data.outputUrls.length > 0) {
-          setActiveGeneration({
-            id: data.predictionId,
-            status: "succeeded",
-            outputUrls: data.outputUrls,
-          });
-
-          toast.success(
-            `Generated ${data.outputUrls.length} design variation${data.outputUrls.length > 1 ? "s" : ""}!`
-          );
-
-          // Refresh user credits
-          if (clerkUser?.id) {
-            refreshUser(clerkUser.id);
-          }
-        } else {
-          throw new Error(data.error || "No images generated");
-        }
-      } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Failed to generate designs";
-        setError(errorMessage);
-        toast.error(errorMessage);
-      } finally {
-        setIsGenerating(false);
+      } else {
+        throw new Error(data.error || "No images generated");
       }
-    },
-    [uploadedImageUrl, credits, setActiveGeneration, clerkUser?.id, refreshUser]
-  );
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to generate";
+      toast.error(errorMessage);
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [uploadedImageUrl, credits, roomType, theme, customPrompt, setActiveGeneration, clerkUser?.id, refreshUser]);
 
   const handleGenerateAgain = useCallback(() => {
     clearUploadedImage();
     setActiveGeneration(null);
     setIsGenerating(false);
-    setError(null);
   }, [clearUploadedImage, setActiveGeneration]);
 
-  // Show loading state while generating
-  if (isGenerating) {
-    return (
-      <div className="container mx-auto px-4 py-12">
-        <GenerationLoading
-          estimatedTime={60}
-          onCancel={handleGenerateAgain}
-        />
-      </div>
-    );
-  }
-
-  // Show results if available
-  if (activeGeneration?.status === "succeeded" && activeGeneration.outputUrls) {
-    return (
-      <div className="container mx-auto px-4 py-12">
-        <ResultsViewer
-          originalImage={uploadedImageUrl || undefined}
-          generationId={activeGeneration.id}
-          results={activeGeneration.outputUrls}
-          onGenerateAgain={handleGenerateAgain}
-        />
-      </div>
-    );
-  }
-
-  // Main generation interface
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-          Create Your Perfect Design
-        </h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">
-          Upload a photo and let AI transform your space
-        </p>
-      </div>
+    <div className="flex h-[calc(100vh-4rem)] flex-col lg:flex-row bg-slate-50 dark:bg-black overflow-hidden sticky top-16">
+      {/* Left Sidebar - Options */}
+      <motion.div
+        initial={{ x: -20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        className="w-full border-b border-slate-200 lg:h-full lg:w-[400px] lg:border-b-0 lg:border-r dark:border-slate-800"
+      >
+        <MagicOptionsPanel
+          roomType={roomType}
+          setRoomType={setRoomType}
+          theme={theme}
+          setTheme={setTheme}
+          customPrompt={customPrompt}
+          setCustomPrompt={setCustomPrompt}
+          onGenerate={handleGenerateDesigns}
+          isGenerating={isGenerating}
+          credits={credits}
+          disabled={!uploadedImageUrl}
+          className="h-full"
+        />
+      </motion.div>
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        {/* Upload Section */}
-        <div className="lg:col-span-1">
-          <RoomUploader
-            onUploadComplete={(base64) => setUploadedImage(base64, "")}
-          />
+      {/* Right Canvas - Upload/Result */}
+      <main className="relative flex-1 bg-slate-100 p-4 lg:p-8 dark:bg-black">
+        <div className="h-full w-full max-w-6xl mx-auto flex items-center justify-center">
+          {activeGeneration?.status === "succeeded" && activeGeneration.outputUrls ? (
+            // Result State
+            <MagicResultViewer
+              originalImage={uploadedImageUrl || undefined}
+              resultImage={activeGeneration.outputUrls[0]}
+              onGenerateAgain={handleGenerateAgain}
+              className="h-full max-h-[800px] w-full"
+            />
+          ) : (
+            // Upload/Preview State
+            <MagicCard className="h-full max-h-[800px] w-full items-center justify-center p-8 lg:p-12">
+              {isGenerating ? (
+                <div className="flex flex-col items-center gap-6 text-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 animate-ping rounded-full bg-purple-200 opacity-75 dark:bg-purple-900" />
+                    <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-slate-50 shadow-xl dark:bg-slate-900">
+                      <Sparkles className="h-10 w-10 animate-pulse text-purple-600" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                      Transforming your room...
+                    </h3>
+                    <p className="text-slate-500 dark:text-slate-400">
+                      Our AI is analyzing your space and applying the {theme} style.
+                      <br />This usually takes about 30 seconds.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full max-w-2xl">
+                  <MagicFileUpload
+                    onFileSelect={(base64) => setUploadedImage(base64, "")}
+                    className={uploadedImageUrl ? "h-full" : ""}
+                  />
+                </div>
+              )}
+            </MagicCard>
+          )}
         </div>
-
-        {/* Options Section */}
-        <div className="lg:col-span-1">
-          <DesignOptions
-            imageUrl={uploadedImageUrl || undefined}
-            isLoading={isGenerating}
-            credits={credits}
-            onGenerate={handleGenerateDesigns}
-          />
-        </div>
-
-        {/* Results Section */}
-        <div className="lg:col-span-1">
-          <ResultsViewer
-            originalImage={uploadedImageUrl || undefined}
-            results={activeGeneration?.outputUrls || []}
-            isLoading={false}
-            error={error || undefined}
-            onGenerateAgain={handleGenerateAgain}
-          />
-        </div>
-      </div>
-
-      {/* Mobile Responsive Layout */}
-      <style jsx>{`
-        @media (max-width: 1024px) {
-          .grid {
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
+      </main>
     </div>
   );
 }
