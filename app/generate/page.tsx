@@ -68,6 +68,7 @@ function GeneratePageContent() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [roomType, setRoomType] = useState<RoomType>("living-room");
   const [theme, setTheme] = useState<Theme>("modern");
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   // File upload
   const onDrop = useCallback(
@@ -300,7 +301,12 @@ function GeneratePageContent() {
           >
             {/* Case 1: Result is showing */}
             {hasResult ? (
-              <div className="relative group w-full h-full">
+              <div
+                className="relative group w-full h-full cursor-pointer"
+                onClick={() =>
+                  setFullscreenImage(activeGeneration!.outputUrls![0])
+                }
+              >
                 <img
                   src={activeGeneration!.outputUrls![0]}
                   alt="Generated design"
@@ -317,7 +323,10 @@ function GeneratePageContent() {
               </div>
             ) : uploadedImageUrl ? (
               /* Case 2: Image Uploaded (Preview) */
-              <div className="relative w-full h-full min-h-[300px] bg-black/5 flex items-center justify-center group">
+              <div
+                className="relative w-full h-full min-h-[300px] bg-black/5 flex items-center justify-center group cursor-pointer"
+                onClick={() => setFullscreenImage(uploadedImageUrl)}
+              >
                 <img
                   src={uploadedImageUrl}
                   alt="Uploaded room"
@@ -331,22 +340,6 @@ function GeneratePageContent() {
                       <Loader2 className="h-12 w-12 animate-spin text-white" />
                       <p className="text-white font-medium">Loading...</p>
                     </div>
-                  </div>
-                )}
-
-                {/* Change Image overlay - only when not generating */}
-                {!isGenerating && (
-                  <div
-                    className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
-                    onClick={openUpload}
-                  >
-                    <Button
-                      variant="secondary"
-                      size="lg"
-                      className="gap-2 pointer-events-none"
-                    >
-                      <Upload className="h-4 w-4" /> Change Image
-                    </Button>
                   </div>
                 )}
               </div>
@@ -445,7 +438,7 @@ function GeneratePageContent() {
                           </>
                         ) : (
                           <>
-                            <Wand2 className="mr-2 h-5 w-5" />
+                            {/* <Wand2 className="mr-2 h-5 w-5" /> */}
                             Generate Design
                           </>
                         )}
@@ -458,6 +451,21 @@ function GeneratePageContent() {
           )}
         </div>
       </div>
+
+      {/* Fullscreen Image Modal */}
+      {fullscreenImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          onClick={() => setFullscreenImage(null)}
+        >
+          <img
+            src={fullscreenImage}
+            alt="Fullscreen view"
+            className="max-w-full max-h-[90vh] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }
