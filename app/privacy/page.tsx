@@ -1,10 +1,9 @@
 import React from "react";
+import { Metadata } from "next";
 import { PageTransition } from "@/components/page-transition";
+import { privacyMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Privacy Policy - Magic Room",
-  description: "Magic Room privacy policy and data protection information",
-};
+export const metadata: Metadata = privacyMetadata();
 
 export default function PrivacyPage() {
   return (

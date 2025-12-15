@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /generate
+
+Sitemap: https://magicroom.app/sitemap.xml

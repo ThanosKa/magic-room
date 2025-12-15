@@ -1,10 +1,9 @@
 import React from "react";
+import { Metadata } from "next";
 import { PageTransition } from "@/components/page-transition";
+import { termsMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Terms of Service - Magic Room",
-  description: "Magic Room terms of service and user agreement",
-};
+export const metadata: Metadata = termsMetadata();
 
 export default function TermsPage() {
   return (

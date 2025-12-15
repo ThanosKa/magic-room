@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
@@ -7,8 +7,16 @@ import { ToastProvider } from "@/components/toast-provider";
 import { UserDataProvider } from "@/components/user-data-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  OG_IMAGE,
+  TWITTER_HANDLE,
+} from "@/lib/seo/config";
+import { organizationSchema, softwareApplicationSchema } from "@/lib/seo/schema";
 
-// Force dynamic rendering during development
 export const dynamic = "force-dynamic";
 
 const geistSans = Geist({
@@ -21,11 +29,60 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#7C3AED",
+};
+
 export const metadata: Metadata = {
-  title: "Magic Room - AI Interior Design",
-  description: "Privacy-first AI room redesign assistant powered by SDXL",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} - AI Interior Design`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: "/favicon.ico",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} - AI Interior Design`,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: OG_IMAGE.url,
+        width: OG_IMAGE.width,
+        height: OG_IMAGE.height,
+        alt: OG_IMAGE.alt,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
+    title: `${SITE_NAME} - AI Interior Design`,
+    description: SITE_DESCRIPTION,
+    images: [OG_IMAGE.url],
   },
 };
 
