@@ -19,7 +19,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ROOM_TYPES, THEMES } from "@/lib/constants";
-import { Upload, Download, RefreshCw, Loader2, ImagePlus, Wand2 } from "lucide-react";
+import {
+  Upload,
+  Download,
+  RefreshCw,
+  Loader2,
+  ImagePlus,
+  Wand2,
+} from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { fileToBase64 } from "@/lib/supabase-client";
 import { cn } from "@/lib/utils";
@@ -88,12 +95,17 @@ function GeneratePageContent() {
     [setUploadedImage, setActiveGeneration]
   );
 
-  const { getRootProps, getInputProps, isDragActive, open: openUpload } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    open: openUpload,
+  } = useDropzone({
     onDrop,
     accept: { "image/*": [".jpeg", ".jpg", ".png", ".webp"] },
     maxFiles: 1,
     noClick: true, // we trigger manually
-    noKeyboard: true
+    noKeyboard: true,
   });
 
   // Generate design - ALWAYS use originalImage
@@ -139,7 +151,15 @@ function GeneratePageContent() {
     } finally {
       setIsGenerating(false);
     }
-  }, [originalImage, credits, roomType, theme, setActiveGeneration, clerkUser?.id, refreshUser]);
+  }, [
+    originalImage,
+    credits,
+    roomType,
+    theme,
+    setActiveGeneration,
+    clerkUser?.id,
+    refreshUser,
+  ]);
 
   // Reset entirely (Clear everything)
   const handleReset = useCallback(() => {
@@ -171,27 +191,26 @@ function GeneratePageContent() {
     }
   };
 
-  const hasResult = activeGeneration?.status === "succeeded" && activeGeneration.outputUrls?.length;
+  const hasResult =
+    activeGeneration?.status === "succeeded" &&
+    activeGeneration.outputUrls?.length;
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8 lg:py-12">
-      {/* Credits at Top Center */}
-      <div className="mb-8 flex justify-center">
-        <div className="flex items-center gap-2 rounded-full border bg-background px-4 py-1.5 shadow-sm">
-          <span className="text-sm font-medium text-muted-foreground mr-1">Available Credits:</span>
-          <span className={cn("font-bold text-lg", credits > 0 ? "text-primary" : "text-destructive")}>
-            {credits}
-          </span>
-        </div>
+      {/* Headline */}
+      <div className="mb-8 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
+          Redesign your <span className="text-primary">room</span> in seconds
+        </h1>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_1.5fr] lg:gap-12">
         {/* LEFT COLUMN: Controls */}
         <div className="space-y-8">
           <div className="text-center md:text-left">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
               Design Studio
-            </h1>
+            </h2>
             <p className="mt-2 text-muted-foreground">
               Customize your room details below.
             </p>
@@ -202,15 +221,21 @@ function GeneratePageContent() {
             {/* Room Type Select */}
             <div className="space-y-3">
               <Label className="text-base font-semibold">1. Room Type</Label>
-              <Select value={roomType} onValueChange={(v) => setRoomType(v as RoomType)}>
+              <Select
+                value={roomType}
+                onValueChange={(v) => setRoomType(v as RoomType)}
+              >
                 <SelectTrigger className="h-11 cursor-pointer">
                   <SelectValue placeholder="Select a room type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Room Types</SelectLabel>
                     {Object.entries(ROOM_TYPES).map(([key, label]) => (
-                      <SelectItem key={key} value={key} className="cursor-pointer">
+                      <SelectItem
+                        key={key}
+                        value={key}
+                        className="cursor-pointer"
+                      >
                         {label}
                       </SelectItem>
                     ))}
@@ -249,10 +274,14 @@ function GeneratePageContent() {
                         <div className="absolute inset-0 bg-primary/10" />
                       )}
                     </div>
-                    <div className={cn(
-                      "w-full py-2 text-center text-xs font-medium transition-colors",
-                      theme === key ? "text-primary font-bold" : "text-muted-foreground"
-                    )}>
+                    <div
+                      className={cn(
+                        "w-full py-2 text-center text-xs font-medium transition-colors",
+                        theme === key
+                          ? "text-primary font-bold"
+                          : "text-muted-foreground"
+                      )}
+                    >
                       {label}
                     </div>
                   </button>
@@ -265,7 +294,10 @@ function GeneratePageContent() {
         {/* RIGHT COLUMN: Visual Stage (Upload + Preview + Actions) */}
         <div className="flex flex-col gap-6">
           {/* Main Visual Area */}
-          <div className="relative w-full overflow-hidden rounded-2xl border bg-muted/20 shadow-sm min-h-[400px] flex flex-col">
+          <div
+            {...getRootProps()}
+            className="relative w-full overflow-hidden rounded-2xl border bg-muted/20 shadow-sm min-h-[400px] flex flex-col"
+          >
             {/* Case 1: Result is showing */}
             {hasResult ? (
               <div className="relative group w-full h-full">
@@ -274,6 +306,14 @@ function GeneratePageContent() {
                   alt="Generated design"
                   className="w-full h-auto object-contain max-h-[70vh] bg-black/5"
                 />
+                {isGenerating && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-20">
+                    <div className="flex flex-col items-center gap-4">
+                      <Loader2 className="h-12 w-12 animate-spin text-white" />
+                      <p className="text-white font-medium">Loading...</p>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : uploadedImageUrl ? (
               /* Case 2: Image Uploaded (Preview) */
@@ -284,20 +324,35 @@ function GeneratePageContent() {
                   className="w-full h-auto max-h-[60vh] object-contain"
                 />
 
-                {/* Simplified Re-upload overlay */}
-                <div className={cn(
-                  "absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity z-10",
-                  !isGenerating && "group-hover:opacity-100"
-                )}>
-                  <Button variant="secondary" onClick={(e) => { e.stopPropagation(); openUpload(); }} className="gap-2 cursor-pointer pointer-events-auto">
-                    <Upload className="h-4 w-4" /> Change Image
-                  </Button>
-                </div>
+                {/* Loading overlay during generation */}
+                {isGenerating && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-20">
+                    <div className="flex flex-col items-center gap-4">
+                      <Loader2 className="h-12 w-12 animate-spin text-white" />
+                      <p className="text-white font-medium">Loading...</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Change Image overlay - only when not generating */}
+                {!isGenerating && (
+                  <div
+                    className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
+                    onClick={openUpload}
+                  >
+                    <Button
+                      variant="secondary"
+                      size="lg"
+                      className="gap-2 pointer-events-none"
+                    >
+                      <Upload className="h-4 w-4" /> Change Image
+                    </Button>
+                  </div>
+                )}
               </div>
             ) : (
               /* Case 3: Empty State (Upload Zone) */
               <div
-                {...getRootProps()}
                 className={cn(
                   "flex-1 flex flex-col items-center justify-center p-10 text-center transition-all cursor-pointer border-2 border-dashed border-transparent hover:border-primary/20 hover:bg-muted/30",
                   isDragActive && "border-primary bg-primary/5"
@@ -311,7 +366,8 @@ function GeneratePageContent() {
                 <h3 className="text-xl font-semibold">Upload your room</h3>
                 <p className="mt-2 max-w-sm text-muted-foreground">
                   Drag & drop an image here, or click to browse.
-                  <br />We recommend high quality photos.
+                  <br />
+                  We recommend high quality photos.
                 </p>
                 <Button variant="outline" className="mt-8 pointer-events-none">
                   Select Image
@@ -320,77 +376,78 @@ function GeneratePageContent() {
             )}
           </div>
 
-          {/* Action Dock (Bottom of visuals) */}
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-end gap-3 rounded-xl border bg-card p-4 shadow-sm">
-              {hasResult ? (
-                <>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={handleReset}
-                    className="cursor-pointer"
-                  >
-                    Upload New
-                  </Button>
+          {/* Action Dock - Only render when there's content */}
+          {(uploadedImageUrl || hasResult) && (
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-end gap-3 p-4">
+                {hasResult ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={handleReset}
+                      className="cursor-pointer"
+                    >
+                      Upload New
+                    </Button>
 
-                  <Button
-                    variant="secondary"
-                    size="lg"
-                    onClick={handleDownload}
-                    className="cursor-pointer"
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download
-                  </Button>
+                    <Button
+                      variant="secondary"
+                      size="lg"
+                      onClick={handleDownload}
+                      className="cursor-pointer"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      Download
+                    </Button>
 
-                  <Button
-                    size="lg"
-                    onClick={handleGenerate}
-                    disabled={isGenerating || credits < 1}
-                    className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white cursor-pointer"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Generating...
-                      </>
-                    ) : (
-                      <>
-                        <RefreshCw className="mr-2 h-4 w-4" />
-                        Regenerate
-                      </>
-                    )}
-                  </Button>
-                </>
-              ) : (
-                // Generate Actions
-                uploadedImageUrl && (
-                  <Button
-                    size="lg"
-                    className="w-full md:w-auto min-w-[200px] h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white shadow-lg cursor-pointer ml-auto"
-                    onClick={handleGenerate}
-                    disabled={isGenerating || credits < 1}
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Generating...
-                      </>
-                    ) : (
-                      <>
-                        <Wand2 className="mr-2 h-5 w-5" />
-                        Generate Design
-                      </>
-                    )}
-                  </Button>
-                )
-              )}
+                    <Button
+                      size="lg"
+                      onClick={handleGenerate}
+                      disabled={isGenerating || credits < 1}
+                      className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white cursor-pointer"
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <RefreshCw className="mr-2 h-4 w-4" />
+                          Regenerate
+                        </>
+                      )}
+                    </Button>
+                  </>
+                ) : (
+                  // Generate Actions - only show when image is uploaded
+                  uploadedImageUrl && (
+                    <Button
+                      size="lg"
+                      className="w-full md:w-auto min-w-[200px] h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white shadow-lg cursor-pointer ml-auto"
+                      onClick={handleGenerate}
+                      disabled={isGenerating || credits < 1}
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <Wand2 className="mr-2 h-5 w-5" />
+                          Generate Design
+                        </>
+                      )}
+                    </Button>
+                  )
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
-
