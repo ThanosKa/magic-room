@@ -8,26 +8,24 @@ import { Loader2, X } from "lucide-react";
 interface GenerationLoadingProps {
   onCancel?: () => void;
   estimatedTime?: number;
-  pollCount?: number;
-  maxPolls?: number;
 }
 
 const STATUS_MESSAGES = [
-  "Uploading image...",
-  "Starting generation...",
+  "Sending to AI...",
   "Processing your design...",
+  "Transforming the room...",
   "Almost done...",
   "Finalizing results...",
 ];
 
 /**
- * GenerationLoading component displays loading state during design generation
+ * GenerationLoading component displays loading state during design generation.
+ * 
+ * Updated for synchronous OpenRouter flow - no more polling.
  */
 export function GenerationLoading({
   onCancel,
-  estimatedTime = 45,
-  pollCount = 0,
-  maxPolls = 40,
+  estimatedTime = 60,
 }: GenerationLoadingProps) {
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -37,24 +35,23 @@ export function GenerationLoading({
   useEffect(() => {
     const interval = setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % STATUS_MESSAGES.length);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
-  // Update progress bar based on actual poll count
-  useEffect(() => {
-    // Use real poll count if available, otherwise use estimated progress
-    const realProgress = (pollCount / maxPolls) * 100;
-    setProgress(realProgress > 95 ? 95 : realProgress);
-  }, [pollCount, maxPolls]);
-
-  // Update elapsed time
+  // Smooth progress animation based on elapsed time
   useEffect(() => {
     const interval = setInterval(() => {
       setElapsedTime((prev) => prev + 1);
+      // Smooth progress that slows down as it approaches 95%
+      setProgress((prev) => {
+        const targetProgress = Math.min(95, (elapsedTime / estimatedTime) * 100);
+        // Ease towards target
+        return prev + (targetProgress - prev) * 0.1;
+      });
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [elapsedTime, estimatedTime]);
 
   const remainingTime = Math.max(0, estimatedTime - elapsedTime);
   const minutes = Math.floor(remainingTime / 60);
@@ -86,7 +83,7 @@ export function GenerationLoading({
           </div>
           <div className="flex items-center justify-between">
             <p className="text-xs text-slate-600 dark:text-slate-400">
-              Poll attempt: {pollCount}/{maxPolls}
+              Processing with AI
             </p>
             <p className="text-right text-xs text-slate-600 dark:text-slate-400">
               {Math.round(progress)}%
@@ -123,9 +120,9 @@ export function GenerationLoading({
             💡 Tips while you wait:
           </p>
           <ul className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
-            <li>• You'll get 4-8 unique design variations</li>
-            <li>• Each can be customized further</li>
-            <li>• All results are automatically saved</li>
+            <li>• AI is analyzing your room layout</li>
+            <li>• Results will appear automatically</li>
+            <li>• You can generate more variations after</li>
           </ul>
         </div>
       </div>

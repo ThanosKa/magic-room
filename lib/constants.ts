@@ -51,18 +51,6 @@ export const CREDIT_PACKAGES: ICreditPackage[] = [
   },
 ];
 
-// Prompt engineering constants
-export const POSITIVE_PROMPT = `beautiful interior design, professional photography, well-lit, 
-detailed textures, high quality, realistic, modern aesthetic, clean composition`;
-
-export const NEGATIVE_PROMPT = `blurry, distorted, ugly, deformed, low quality, poorly lit, 
-cluttered, amateur, watermark, text`;
-
-// Generation settings
-export const REPLICATE_MODEL = "rocketdigitalai/interior-design-sdxl-lightning";
-export const REPLICATE_MODEL_VERSION =
-  "5d8da4e5c98fea03dcfbe3ec89e40cf0f4a0074a8930fa02aa0ee2aaf98c3d11";
-
 // Rate limiting - simple abuse prevention for credit-based model
 export const RATE_LIMIT = 100; // requests per hour (generous, prevents automation)
 export const RATE_LIMIT_WINDOW = 3600; // 1 hour window in seconds

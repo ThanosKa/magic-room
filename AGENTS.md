@@ -5,53 +5,52 @@
 - **Frontend**: Next.js 15 (App Router), React 19, TypeScript
 - **Styling**: Tailwind CSS v4, shadcn/ui components
 - **State Management**: Zustand (user credits, generation status)
-- **Database**: Supabase PostgreSQL + Storage
+- **Database**: Supabase PostgreSQL
 - **Authentication**: Clerk
-- **AI Model**: Replicate (rocketdigitalai/interior-design-sdxl-lightning)
+- **AI Model**: OpenRouter (google/gemini-2.5-flash-image)
 - **Payments**: Stripe (checkout + webhooks)
 - **Rate Limiting**: Upstash Redis
-- **Hosting**: Vercel (Next.js API routes, Edge Functions)
+- **Hosting**: Vercel (Next.js API routes)
 
 ## Data Flow
 
-1. **Upload Phase**: User uploads room image → Supabase Storage (`room-images` bucket)
+1. **Upload Phase**: User selects room image → converted to base64 client-side
 2. **Design Configuration**: User selects room type, theme, optional custom prompt
 3. **Processing Phase**:
    - API validates auth + rate limits + credits
-   - Calls Replicate with dynamic prompt
+   - Calls OpenRouter with base64 image + prompt (synchronous)
    - Deducts 1 credit from user balance
-4. **Generation Phase**: Replicate processes image → frontend polls status until complete
-5. **Results Display**: Frontend polls status → displays 4-8 design variations
-6. **Privacy Cleanup**: Original image auto-deleted from Storage (2hr lifecycle)
+4. **Generation Phase**: OpenRouter processes image → returns results immediately (no polling)
+5. **Results Display**: Frontend displays generated design variations
+6. **Privacy**: Images processed in-memory only, never stored
 
 ## Key API Endpoints
 
 | Endpoint               | Method | Purpose                        |
 | ---------------------- | ------ | ------------------------------ |
-| `/api/generate`        | POST   | Start new generation job       |
-| `/api/generate/[id]`   | GET    | Poll generation status         |
+| `/api/generate`        | POST   | Generate design (synchronous)  |
+| `/api/generate/[id]`   | GET    | Get cached generation status   |
 | `/api/checkout`        | POST   | Create Stripe checkout session |
 | `/api/webhooks/clerk`  | POST   | Sync user creation to Supabase |
 | `/api/webhooks/stripe` | POST   | Credit purchase confirmation   |
 
 ## Privacy Guarantees
 
-- **Ephemeral Processing**: Uploaded images stored max 2 hours
-- **Automatic Cleanup**: Storage lifecycle policy + polling-triggered deletion
-- **Replicate Output**: URLs expire after 48 hours (Replicate default)
-- **User Data**: Only email + credit balance retained post-generation
-- **No Logs**: Processing metadata deleted after generation completion
+- **No Image Storage**: Images are sent as base64, processed in-memory only
+- **Ephemeral Processing**: No bucket uploads, images never touch servers
+- **Secure Transit**: All data transmitted over encrypted HTTPS
+- **User Data**: Only email + credit balance retained
+- **No Training**: Your images are not used to train AI models
 
 ## Design Model Details
 
-**Model**: `rocketdigitalai/interior-design-sdxl-lightning`
+**Model**: `google/gemini-2.5-flash-image` via OpenRouter
 
-- **Speed**: ~30-60 seconds per generation (lightning variant)
-- **Variations**: Generates 4-8 unique design variations per prompt
-- **Quality**: SDXL-based photorealistic output
-- **Layout Preservation**: Built-in ControlNet maintains room structure
-- **Input**: Room image + text prompt
-- **Output**: 4-8 PNG/JPEG URLs (public, 48hr expiry)
+- **Speed**: Synchronous response (~30-60 seconds)
+- **Quality**: Google Gemini multimodal output
+- **Input**: Base64 image + text prompt
+- **Output**: Generated image(s) as base64 data URLs
+- **Provider**: OpenRouter API
 
 ## Core User Flows
 
@@ -63,12 +62,12 @@
 
 ### Design Generation
 
-1. Upload image (10MB max) via drag-and-drop
+1. Select image via drag-and-drop (converted to base64)
 2. Select room type + design theme
 3. Optional: Add custom details in prompt box
 4. Click "Generate Designs" (requires ≥1 credit)
-5. Real-time polling shows generation progress
-6. Results display with before/after slider + grid
+5. Wait 30-60 seconds for AI processing
+6. Results display with before/after slider
 
 ### Credit Purchase
 
@@ -79,9 +78,8 @@
 
 ## Rate Limiting
 
-- **Free Users**: 5 generations per hour
-- **Paid Users**: 50 generations per hour
-- **Enforcement**: Upstash Redis key-value store (per IP + user ID)
+- **All Users**: 100 generations per hour (abuse prevention)
+- **Enforcement**: Upstash Redis key-value store (per user ID)
 - **Response**: 429 Too Many Requests if exceeded
 
 ## Error Handling
@@ -89,8 +87,8 @@
 - Invalid image format → User-friendly toast
 - Insufficient credits → Prompt to purchase
 - Rate limit exceeded → Backoff with retry suggestion
-- Generation failure → Refund credit + error notification
-- Network timeout → Retry with exponential backoff
+- Generation failure → Automatic credit refund + error notification
+- Network timeout → Error notification
 
 ## Code Style & Stack
 

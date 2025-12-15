@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useGenerationStore } from "@/stores/generation-store";
-import { uploadImage } from "@/lib/supabase-client";
+import { fileToBase64 } from "@/lib/supabase-client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Upload, X, CheckCircle } from "lucide-react";
@@ -13,23 +13,24 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FORMATS = { "image/*": [".jpeg", ".jpg", ".png", ".webp"] };
 
 interface RoomUploaderProps {
-  onUploadComplete?: (url: string, path: string) => void;
+  onUploadComplete?: (base64: string) => void;
 }
 
 /**
- * RoomUploader component handles drag-and-drop image uploads to Supabase Storage
+ * RoomUploader component handles drag-and-drop image selection.
+ * Images are converted to base64 for direct use with OpenRouter API.
+ * No bucket upload needed - images stay local until generation.
  */
 export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
   const {
     uploadedImageUrl,
-    uploadedImagePath,
     setUploadedImage,
     clearUploadedImage,
   } = useGenerationStore();
-  const [isUploading, setIsUploading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  const handleUpload = useCallback(
+  const handleFileSelect = useCallback(
     async (file: File) => {
       // Validate file size
       if (file.size > MAX_FILE_SIZE) {
@@ -44,27 +45,26 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
       }
 
       try {
-        setIsUploading(true);
+        setIsProcessing(true);
         setUploadProgress(0);
-        toast.loading("Uploading image...");
+        toast.loading("Processing image...");
 
-        // Upload to Supabase Storage
-        const { url, path } = await uploadImage(file, (progress) => {
+        // Convert to base64 (no upload to bucket needed)
+        const base64 = await fileToBase64(file, (progress) => {
           setUploadProgress(progress);
         });
 
-        // Store in Zustand
-        setUploadedImage(url, path);
-        onUploadComplete?.(url, path);
+        // Store in Zustand (base64 as URL, empty path since no bucket)
+        setUploadedImage(base64, "");
+        onUploadComplete?.(base64);
 
         toast.dismiss();
-        toast.success("Image uploaded successfully!");
+        toast.success("Image ready for generation!");
       } catch (error) {
         toast.dismiss();
-        console.error("Upload error:", error);
-        toast.error("Failed to upload image. Please try again.");
+        toast.error("Failed to process image. Please try again.");
       } finally {
-        setIsUploading(false);
+        setIsProcessing(false);
         setUploadProgress(0);
       }
     },
@@ -74,17 +74,17 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
-        handleUpload(acceptedFiles[0]);
+        handleFileSelect(acceptedFiles[0]);
       }
     },
-    [handleUpload]
+    [handleFileSelect]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: ACCEPTED_FORMATS,
     maxFiles: 1,
-    disabled: isUploading,
+    disabled: isProcessing,
   });
 
   const handleRemove = () => {
@@ -116,7 +116,7 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
           {/* Remove button */}
           <button
             onClick={handleRemove}
-            disabled={isUploading}
+            disabled={isProcessing}
             className="absolute right-2 top-2 rounded-full bg-red-500/90 p-2 text-white hover:bg-red-600 disabled:opacity-50"
             aria-label="Remove image"
           >
@@ -127,11 +127,10 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
         // Drag and drop area
         <Card
           {...getRootProps()}
-          className={`relative cursor-pointer border-2 border-dashed p-8 text-center transition-colors ${
-            isDragActive
+          className={`relative cursor-pointer border-2 border-dashed p-8 text-center transition-colors ${isDragActive
               ? "border-purple-500 bg-purple-50 dark:bg-purple-950/30"
               : "border-slate-300 bg-slate-50 hover:border-purple-400 dark:border-slate-700 dark:bg-slate-900/50"
-          } ${isUploading ? "pointer-events-none opacity-50" : ""}`}
+            } ${isProcessing ? "pointer-events-none opacity-50" : ""}`}
         >
           <input {...getInputProps()} />
 
@@ -149,7 +148,7 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
             </div>
           </div>
 
-          {isUploading && uploadProgress > 0 && (
+          {isProcessing && uploadProgress > 0 && (
             <div className="mt-4 w-full">
               <div className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
                 <div
@@ -158,7 +157,7 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
                 />
               </div>
               <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">
-                {uploadProgress}% uploaded
+                {uploadProgress}% processed
               </p>
             </div>
           )}
@@ -170,7 +169,7 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
           variant="outline"
           size="sm"
           onClick={handleRemove}
-          disabled={isUploading}
+          disabled={isProcessing}
           className="w-full"
         >
           Change Image
@@ -179,4 +178,3 @@ export function RoomUploader({ onUploadComplete }: RoomUploaderProps) {
     </div>
   );
 }
-

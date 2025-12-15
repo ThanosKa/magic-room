@@ -1,14 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import {
-  createTransaction,
-  deleteImageFromStorage,
   getGenerationStatus,
   ensureUserExists,
-  hasRefundForPrediction,
-  updateGenerationStatus,
-  updateUserCredits,
 } from "@/lib/supabase";
-import { getPredictionStatus } from "@/lib/replicate";
 import { IStatusCheckResponse } from "@/types";
 import { logger } from "@/lib/logger";
 
@@ -28,10 +22,13 @@ function coerceStatus(value: unknown): IStatusCheckResponse["status"] {
   return "processing";
 }
 
-function isTerminal(status: IStatusCheckResponse["status"]): boolean {
-  return status === "succeeded" || status === "failed" || status === "canceled";
-}
-
+/**
+ * GET handler for checking generation status.
+ * 
+ * With OpenRouter (synchronous), generations complete immediately.
+ * This endpoint now just returns the cached status from database.
+ * No more polling to external AI service needed.
+ */
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -53,7 +50,7 @@ export async function GET(
     const { id: generationId } = await params;
     logger.info({ generationId }, "[StatusCheck] Checking status");
 
-    // Try to get status from database first
+    // Get status from database
     const generation = await getGenerationStatus(generationId);
     logger.info(
       { generationId, status: generation?.status },
@@ -68,7 +65,7 @@ export async function GET(
       });
     }
 
-    // Ownership check (service role bypasses RLS)
+    // Ownership check
     const user = await ensureUserExists(userId);
     if (!user) {
       logger.error({ userId }, "[StatusCheck] User not found");
@@ -87,131 +84,9 @@ export async function GET(
       });
     }
 
-    // If status is still processing, optionally fetch from Replicate for real-time updates
-    if (
-      generation.status === "starting" ||
-      generation.status === "processing"
-    ) {
-      try {
-        logger.info(
-          { generationId, dbStatus: generation.status },
-          "[StatusCheck] Fetching from Replicate"
-        );
-        const predictionStartTime = Date.now();
-        const prediction = await getPredictionStatus(generationId);
-        const predictionDuration = Date.now() - predictionStartTime;
-
-        if (prediction) {
-          const nextStatus = coerceStatus(prediction.status);
-          // Handle both single string output and array of strings
-          const nextOutputUrls = prediction.output
-            ? Array.isArray(prediction.output)
-              ? (prediction.output as string[])
-              : [prediction.output as string]
-            : undefined;
-          const nextError =
-            typeof prediction.error === "string"
-              ? prediction.error
-              : prediction.error
-              ? JSON.stringify(prediction.error)
-              : undefined;
-
-          logger.info(
-            {
-              generationId,
-              currentStatus: generation.status,
-              newStatus: nextStatus,
-              outputs: nextOutputUrls?.length || 0,
-              duration: predictionDuration,
-            },
-            "[StatusCheck] Replicate status received"
-          );
-
-          const transitionedToTerminal =
-            !isTerminal(generation.status) && isTerminal(nextStatus);
-
-          // Persist status/output/error so results survive refresh and side effects can be gated.
-          const updated = await updateGenerationStatus(
-            generationId,
-            nextStatus,
-            nextOutputUrls,
-            nextError
-          );
-
-          // Run side effects on first transition to terminal state.
-          if (transitionedToTerminal) {
-            if (nextStatus === "succeeded" && generation.image_path) {
-              try {
-                await deleteImageFromStorage(
-                  "room-images",
-                  generation.image_path
-                );
-              } catch (err) {
-                logger.warn(
-                  { err, generationId, imagePath: generation.image_path },
-                  "Failed to delete uploaded image from storage"
-                );
-              }
-            }
-
-            if (nextStatus === "failed") {
-              const alreadyRefunded = await hasRefundForPrediction(
-                user.id,
-                generationId
-              );
-
-              if (!alreadyRefunded) {
-                const refundAmount = 1;
-                const latestUser = await ensureUserExists(userId);
-                if (latestUser) {
-                  await updateUserCredits(
-                    latestUser.id,
-                    latestUser.credits + refundAmount
-                  );
-                  await createTransaction(
-                    latestUser.id,
-                    "refund",
-                    refundAmount,
-                    undefined,
-                    { predictionId: generationId }
-                  );
-                }
-              }
-            }
-          }
-
-          const response: IStatusCheckResponse = {
-            id: generation.id,
-            status: updated?.status ? coerceStatus(updated.status) : nextStatus,
-            outputUrls:
-              (updated?.output_urls as string[] | undefined) ?? nextOutputUrls,
-            error: (updated?.error as string | undefined) ?? nextError,
-          };
-          logger.info(
-            {
-              generationId,
-              status: response.status,
-              totalDuration: Date.now() - startTime,
-            },
-            "[StatusCheck] Response sent"
-          );
-          return new Response(JSON.stringify(response), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          });
-        }
-      } catch (error) {
-        logger.warn(
-          { err: error, generationId },
-          "[StatusCheck] Error fetching from Replicate"
-        );
-        // Fall back to database status
-      }
-    }
-
     const response: IStatusCheckResponse = {
       id: generation.id,
-      status: generation.status,
+      status: coerceStatus(generation.status),
       outputUrls: generation.output_urls as string[] | undefined,
       error: generation.error as string | undefined,
     };
@@ -222,7 +97,7 @@ export async function GET(
         status: response.status,
         totalDuration: Date.now() - startTime,
       },
-      "[StatusCheck] Response sent (cached)"
+      "[StatusCheck] Response sent"
     );
 
     return new Response(JSON.stringify(response), {

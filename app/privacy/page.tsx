@@ -59,7 +59,7 @@ export default function PrivacyPage() {
               <li>To provide and maintain our services</li>
               <li>To process your payments and manage credits</li>
               <li>To authenticate your account via Clerk</li>
-              <li>To generate design variations using Replicate AI</li>
+              <li>To generate design variations using Google Gemini AI via OpenRouter</li>
               <li>To improve our service quality and user experience</li>
               <li>To comply with legal obligations</li>
               <li>To send account notifications and support communications</li>
@@ -82,12 +82,12 @@ export default function PrivacyPage() {
                 Storage are automatically deleted after 2 hours
               </li>
               <li>
-                <strong>Processing</strong>: Images are sent to Replicate AI for
-                processing only
+                <strong>Processing</strong>: Images are sent directly to
+                OpenRouter/Gemini AI for processing (in-memory only)
               </li>
               <li>
-                <strong>Results</strong>: Generated design images auto-expire
-                after 48 hours from Replicate
+                <strong>Results</strong>: Generated designs are returned as
+                base64 data (temporary, session-based)
               </li>
               <li>
                 <strong>No Backup</strong>: We do not maintain backups of your
@@ -139,18 +139,28 @@ export default function PrivacyPage() {
             </p>
 
             <h3 className="mt-4 text-lg font-semibold text-slate-800 dark:text-slate-100">
-              4.3 Replicate (AI Processing)
+              4.3 OpenRouter & Google (AI Processing)
             </h3>
             <p>
-              Your room images are sent to Replicate for AI processing.
-              Replicate has strict policies on image handling. See{" "}
+              Your room images are sent to OpenRouter, which routes them to
+              Google's Gemini AI for processing. Images are processed in-memory
+              and not stored. See{" "}
               <a
-                href="https://replicate.com/privacy"
+                href="https://openrouter.ai/privacy"
                 className="text-purple-600 underline dark:text-purple-400"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Replicate's Privacy Policy
+                OpenRouter's Privacy Policy
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://policies.google.com/privacy"
+                className="text-purple-600 underline dark:text-purple-400"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Google's Privacy Policy
               </a>
             </p>
 

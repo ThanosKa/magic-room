@@ -3,13 +3,11 @@ import { IGenerationResult } from "@/types";
 
 interface GenerationStore {
   activeGeneration: IGenerationResult | null;
-  isPolling: boolean;
   uploadedImageUrl: string | null;
   uploadedImagePath: string | null;
 
   // Actions
   setActiveGeneration: (generation: IGenerationResult | null) => void;
-  setIsPolling: (polling: boolean) => void;
   setUploadedImage: (url: string, path: string) => void;
   clearUploadedImage: () => void;
 
@@ -18,14 +16,20 @@ interface GenerationStore {
   reset: () => void;
 }
 
+/**
+ * Generation store for managing upload and generation state.
+ * 
+ * Simplified for OpenRouter synchronous flow:
+ * - Removed isPolling state (no polling needed)
+ * - uploadedImageUrl is now base64 data URL
+ * - uploadedImagePath is empty (no bucket upload)
+ */
 export const useGenerationStore = create<GenerationStore>((set) => ({
   activeGeneration: null,
-  isPolling: false,
   uploadedImageUrl: null,
   uploadedImagePath: null,
 
   setActiveGeneration: (generation) => set({ activeGeneration: generation }),
-  setIsPolling: (polling) => set({ isPolling: polling }),
   setUploadedImage: (url, path) =>
     set({ uploadedImageUrl: url, uploadedImagePath: path }),
   clearUploadedImage: () =>
@@ -42,10 +46,8 @@ export const useGenerationStore = create<GenerationStore>((set) => ({
   reset: () => {
     set({
       activeGeneration: null,
-      isPolling: false,
       uploadedImageUrl: null,
       uploadedImagePath: null,
     });
   },
 }));
-

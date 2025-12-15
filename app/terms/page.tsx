@@ -253,10 +253,11 @@ export default function TermsPage() {
               10. Third-Party Services
             </h2>
             <p>
-              We use third-party services (Clerk, Supabase, Replicate, Stripe,
-              Upstash) to provide this Service. We are not responsible for their
-              actions, policies, or failures. Your use of these services is
-              governed by their respective terms and privacy policies.
+              We use third-party services (Clerk, Supabase, OpenRouter, Google,
+              Stripe, Upstash) to provide this Service. We are not responsible
+              for their actions, policies, or failures. Your use of these
+              services is governed by their respective terms and privacy
+              policies.
             </p>
           </section>
 

@@ -15,7 +15,54 @@ export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Upload image via server API endpoint (avoids RLS issues)
+/**
+ * Convert a File to base64 data URL for direct use with OpenRouter API.
+ * This eliminates the need for bucket storage uploads.
+ * 
+ * @param file - The image file to convert
+ * @param onProgress - Optional progress callback (0-100)
+ * @returns Promise resolving to base64 data URL
+ */
+export async function fileToBase64(
+  file: File,
+  onProgress?: (progress: number) => void
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onloadstart = () => {
+      onProgress?.(0);
+    };
+
+    reader.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const progress = Math.round((event.loaded / event.total) * 100);
+        onProgress?.(progress);
+      }
+    };
+
+    reader.onload = () => {
+      onProgress?.(100);
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+      } else {
+        reject(new Error("Failed to read file as base64"));
+      }
+    };
+
+    reader.onerror = () => {
+      reject(new Error("Failed to read file"));
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * @deprecated Use fileToBase64 instead - bucket upload is no longer needed with OpenRouter
+ * 
+ * Upload image via server API endpoint (avoids RLS issues)
+ */
 export async function uploadImage(
   file: File,
   onProgress?: (progress: number) => void,
@@ -54,10 +101,6 @@ export async function uploadImage(
     return { url: data.url, path: data.path };
   } catch (error) {
     clearInterval(progressInterval);
-    console.error(
-      "Upload error:",
-      error instanceof Error ? error.message : String(error)
-    );
     throw error;
   }
 }

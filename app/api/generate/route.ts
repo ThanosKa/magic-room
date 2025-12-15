@@ -1,18 +1,19 @@
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { IGenerateRequest, IGenerateResponse } from "@/types";
+import { IGenerateResponse } from "@/types";
 import {
   ensureUserExists,
   deductCredits,
   createGeneration,
   createTransaction,
+  updateGenerationStatus,
 } from "@/lib/supabase";
 import { checkRateLimit } from "@/lib/redis";
-import { createPrediction, buildDesignPrompt } from "@/lib/replicate";
+import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
 import { logger } from "@/lib/logger";
 
 const GenerateSchema = z.object({
-  imageUrl: z.string().url(),
+  base64Image: z.string().min(1, "Image is required"),
   roomType: z.enum([
     "living-room",
     "bedroom",
@@ -33,24 +34,26 @@ const GenerateSchema = z.object({
     "luxury",
   ]),
   customPrompt: z.string().optional(),
-  imagePath: z.string(),
 });
 
 export async function POST(request: Request): Promise<Response> {
   const startTime = Date.now();
+  let generationId: string | null = null;
+  let userId: string | null = null;
+
   try {
     logger.info({}, "[Generate] POST request received");
 
     // 1. Verify authentication
-    const { userId } = await auth();
-    if (!userId) {
+    const { userId: clerkUserId } = await auth();
+    if (!clerkUserId) {
       logger.warn({}, "[Generate] Unauthorized - no userId");
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { "Content-Type": "application/json" },
       });
     }
-    logger.info({ userId }, "[Generate] User authenticated");
+    logger.info({ userId: clerkUserId }, "[Generate] User authenticated");
 
     // 2. Parse and validate input
     const body = await request.json();
@@ -70,22 +73,23 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
-    const { imageUrl, roomType, theme, customPrompt, imagePath } = parsed.data;
+    const { base64Image, roomType, theme, customPrompt } = parsed.data;
     logger.info(
       { roomType, theme, hasCustomPrompt: !!customPrompt },
       "[Generate] Request validated"
     );
 
     // 3. Get user and check credits
-    const user = await ensureUserExists(userId);
+    const user = await ensureUserExists(clerkUserId);
     if (!user) {
-      logger.error({ userId }, "[Generate] User not found");
+      logger.error({ userId: clerkUserId }, "[Generate] User not found");
       return new Response(JSON.stringify({ error: "User not found" }), {
         status: 404,
         headers: { "Content-Type": "application/json" },
       });
     }
 
+    userId = user.id;
     logger.info({ credits: user.credits }, "[Generate] User loaded");
 
     if (user.credits < 1) {
@@ -118,37 +122,10 @@ export async function POST(request: Request): Promise<Response> {
     }
     logger.info({}, "[Generate] Rate limit check passed");
 
-    // 5. Build prompt and create Replicate prediction
-    const prompt = buildDesignPrompt(roomType, theme, customPrompt);
-    logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
-
-    let prediction;
-    try {
-      const predictionStartTime = Date.now();
-      prediction = await createPrediction(imageUrl, prompt);
-      const predictionDuration = Date.now() - predictionStartTime;
-      logger.info(
-        { predictionId: prediction.id, duration: predictionDuration },
-        "[Generate] Prediction created"
-      );
-    } catch (error) {
-      logger.error(
-        { err: error, userId, roomType, theme },
-        "[Generate] Replicate prediction error"
-      );
-      return new Response(
-        JSON.stringify({ error: "Failed to create prediction" }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    // 6. Deduct credit and create generation record
+    // 5. Deduct credit BEFORE calling OpenRouter (to prevent abuse)
     const creditDeducted = await deductCredits(user.id, 1);
     if (!creditDeducted) {
-      logger.error({ userId }, "[Generate] Failed to deduct credits");
+      logger.error({ userId: user.id }, "[Generate] Failed to deduct credits");
       return new Response(
         JSON.stringify({ error: "Failed to deduct credits" }),
         {
@@ -163,22 +140,68 @@ export async function POST(request: Request): Promise<Response> {
     await createTransaction(user.id, "usage", 1);
     logger.info({}, "[Generate] Transaction recorded");
 
-    // Create generation record
-    await createGeneration(user.id, prediction.id, imagePath);
+    // 6. Create generation record with unique ID (for tracking)
+    generationId = `gen_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    await createGeneration(user.id, generationId, "base64-inline");
+    logger.info({ generationId }, "[Generate] Generation record created");
+
+    // 7. Build prompt and call OpenRouter (synchronous - blocks until complete)
+    const prompt = buildDesignPrompt(roomType, theme, customPrompt);
+    logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
+
+    const generationStartTime = Date.now();
+    const result = await generateDesign(base64Image, prompt);
+    const generationDuration = Date.now() - generationStartTime;
+
     logger.info(
-      { generationId: prediction.id },
-      "[Generate] Generation record created"
+      {
+        generationId,
+        duration: generationDuration,
+        imagesCount: result.images.length,
+        success: result.success
+      },
+      "[Generate] OpenRouter generation complete"
     );
+
+    // 8. Handle generation result
+    if (!result.success || result.images.length === 0) {
+      // Refund the credit since generation failed
+      await createTransaction(user.id, "refund", 1, undefined, { generationId });
+      const latestUser = await ensureUserExists(clerkUserId);
+      if (latestUser) {
+        const { updateUserCredits } = await import("@/lib/supabase");
+        await updateUserCredits(latestUser.id, latestUser.credits + 1);
+      }
+
+      await updateGenerationStatus(generationId, "failed", undefined, result.error || "No images generated");
+
+      logger.warn({ generationId, error: result.error }, "[Generate] Generation failed - credit refunded");
+
+      return new Response(
+        JSON.stringify({
+          error: result.error || "Failed to generate images",
+          success: false
+        }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Update generation status to succeeded with output URLs
+    await updateGenerationStatus(generationId, "succeeded", result.images);
 
     const totalDuration = Date.now() - startTime;
     logger.info(
-      { predictionId: prediction.id, totalDuration },
+      { generationId, totalDuration, imagesCount: result.images.length },
       "[Generate] Request complete"
     );
 
-    const response: IGenerateResponse = {
+    const response: IGenerateResponse & { outputUrls?: string[] } = {
       success: true,
-      predictionId: prediction.id,
+      predictionId: generationId,
+      outputUrls: result.images,
     };
 
     return new Response(JSON.stringify(response), {
@@ -187,7 +210,22 @@ export async function POST(request: Request): Promise<Response> {
     });
   } catch (error) {
     const totalDuration = Date.now() - startTime;
-    logger.error({ err: error, totalDuration }, "[Generate] Route error");
+    logger.error({ err: error, totalDuration, generationId }, "[Generate] Route error");
+
+    // If we have a generation ID and userId, try to refund
+    if (generationId && userId) {
+      try {
+        await updateGenerationStatus(generationId, "failed", undefined,
+          error instanceof Error ? error.message : "Internal error");
+        await createTransaction(userId, "refund", 1, undefined, { generationId });
+        const { updateUserCredits, getUserByClerkId } = await import("@/lib/supabase");
+        // Note: userId here is the Supabase user.id, not clerkUserId
+        // We'll refund based on the already-fetched user
+      } catch (refundError) {
+        logger.error({ err: refundError, generationId }, "[Generate] Failed to process refund");
+      }
+    }
+
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
