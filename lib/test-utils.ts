@@ -34,7 +34,7 @@ export function createMockCheckoutSession(
     automatic_tax: { enabled: false, status: null },
     billing_address_collection: null,
     cancel_url: "http://localhost:3000/pricing?success=false",
-    client_reference_id: "clerk_user_123",
+    client_reference_id: "user_test_123",
     consent: null,
     consent_collection: null,
     currency: "eur",
@@ -45,7 +45,7 @@ export function createMockCheckoutSession(
     livemode: true,
     locale: null,
     metadata: {
-      userId: "clerk_user_123",
+      userId: "user_test_123",
       packageId: "starter",
     },
     mode: "payment",
@@ -73,7 +73,7 @@ export function createMockCheckoutSession(
 }
 
 export const TEST_USER = {
-  id: "user_test_123",
+  id: "550e8400-e29b-41d4-a716-446655440000",
   clerkUserId: "clerk_user_123",
   email: "test@example.com",
   credits: 10,

@@ -34,6 +34,25 @@ export async function getUserByClerkId(clerkUserId: string) {
   return data;
 }
 
+export async function getUserById(userId: string) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", userId)
+    .single();
+
+  if (error) {
+    // PGRST116 = no rows returned, expected when user doesn't exist yet
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    logger.error({ err: error, userId }, "Error fetching user by id");
+    return null;
+  }
+
+  return data;
+}
+
 export async function createUser(
   clerkUserId: string,
   email: string,

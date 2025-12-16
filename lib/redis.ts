@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { RATE_LIMIT, RATE_LIMIT_WINDOW } from "@/lib/constants";
+import { logger } from "./logger";
 
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -135,6 +136,41 @@ interface WebhookDeduplicationResult {
   message: string;
 }
 
+export async function isWebhookProcessed(
+  webhookType: "stripe" | "clerk",
+  eventId: string
+): Promise<boolean> {
+  try {
+    const key = `webhook:${webhookType}:${eventId}`;
+    const exists = await redis.exists(key);
+    return exists === 1;
+  } catch (error) {
+    logger.warn(
+      { err: error, webhookType, eventId },
+      "Redis error checking webhook status; allowing processing"
+    );
+    // On Redis error, allow processing (fail open for webhook safety)
+    return false;
+  }
+}
+
+export async function markWebhookProcessed(
+  webhookType: "stripe" | "clerk",
+  eventId: string
+): Promise<boolean> {
+  try {
+    const key = `webhook:${webhookType}:${eventId}`;
+    await redis.setex(key, WEBHOOK_DEDUP_TTL, "1");
+    return true;
+  } catch (error) {
+    logger.error(
+      { err: error, webhookType, eventId },
+      "Redis error marking webhook as processed"
+    );
+    return false;
+  }
+}
+
 export async function checkAndMarkWebhookProcessed(
   webhookType: "stripe" | "clerk",
   eventId: string
@@ -159,7 +195,10 @@ export async function checkAndMarkWebhookProcessed(
       message: `Webhook ${webhookType}:${eventId} marked for processing`,
     };
   } catch (error) {
-    console.error("Error checking webhook deduplication:", error);
+    logger.warn(
+      { err: error, webhookType, eventId },
+      "Redis error checking webhook deduplication; allowing processing"
+    );
     // On Redis error, allow processing (fail open for webhook safety)
     return {
       isProcessed: false,
