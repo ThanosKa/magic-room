@@ -29,8 +29,7 @@
 ## 📸 Screenshots
 
 <div align="center">
-  <img src="./public/images/room-before.png" alt="Before design" width="45%" />
-  <img src="./public/images/room-after.png" alt="After design" width="45%" />
+  <img src="./public/hero.png" alt="Magic room hero section" width="90%" />
 </div>
 
 ---
@@ -120,20 +119,20 @@ Quick preview: Upload room photo → Select design theme → AI generates variat
 
 ## Built With
 
-| Category          | Technology                                              |
-| ----------------- | ------------------------------------------------------- |
-| Framework         | Next.js 15 (App Router)                                 |
-| Language          | TypeScript (strict)                                     |
-| Styling           | Tailwind CSS v4 + shadcn/ui                             |
-| State Management  | Zustand                                                 |
-| Auth              | Clerk                                                   |
-| Database          | Supabase (PostgreSQL)                                   |
-| AI Model          | Google Gemini 2.5 Flash (via OpenRouter)                |
-| Rate Limiting     | Upstash Redis                                           |
-| Payments          | Stripe                                                  |
-| Validation        | Zod                                                     |
-| Logging           | Pino                                                    |
-| Hosting           | Vercel                                                  |
+| Category         | Technology                               |
+| ---------------- | ---------------------------------------- |
+| Framework        | Next.js 15 (App Router)                  |
+| Language         | TypeScript (strict)                      |
+| Styling          | Tailwind CSS v4 + shadcn/ui              |
+| State Management | Zustand                                  |
+| Auth             | Clerk                                    |
+| Database         | Supabase (PostgreSQL)                    |
+| AI Model         | Google Gemini 2.5 Flash (via OpenRouter) |
+| Rate Limiting    | Upstash Redis                            |
+| Payments         | Stripe                                   |
+| Validation       | Zod                                      |
+| Logging          | Pino                                     |
+| Hosting          | Vercel                                   |
 
 ## Getting Started
 
@@ -270,6 +269,7 @@ pnpm start
 ## CI
 
 `.github/workflows/ci.yml` runs automated checks on every push and pull request:
+
 - ESLint for code quality
 - TypeScript type checking
 - Vitest test suite execution
