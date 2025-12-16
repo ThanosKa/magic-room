@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { PageTransition } from "@/components/animated-card";
 import { HeroComparison } from "@/components/hero-comparison";
-import { FeatureTabs } from "@/components/feature-tabs";
+import { FeaturesSection } from "@/components/features-section";
 import { FAQSection } from "@/components/faq-section";
 
 export default function HomeContent() {
@@ -60,7 +60,7 @@ export default function HomeContent() {
                 <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[1000px] w-[1000px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 opacity-50 blur-3xl dark:bg-primary/10" />
             </section>
 
-            <FeatureTabs />
+            <FeaturesSection />
 
             <FAQSection />
 
