@@ -2,9 +2,10 @@ import { parseWebhookEvent } from "@/lib/stripe";
 import { CREDIT_PACKAGES } from "@/lib/constants";
 import {
   updateUserCredits,
-  getUserByClerkId,
+  ensureUserExists,
   createTransaction,
 } from "@/lib/supabase";
+import { checkAndMarkWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import type Stripe from "stripe";
 
@@ -29,6 +30,13 @@ export async function POST(request: Request): Promise<Response> {
         "Stripe webhook signature verification failed"
       );
       return new Response("Invalid signature", { status: 401 });
+    }
+
+    // Check for duplicate webhook processing
+    const dedupResult = await checkAndMarkWebhookProcessed("stripe", event.id);
+    if (dedupResult.isProcessed) {
+      logger.info({ eventId: event.id }, "Duplicate Stripe webhook, skipping");
+      return new Response("Webhook already processed", { status: 200 });
     }
 
     if (event.type === "checkout.session.completed") {
@@ -61,9 +69,12 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Package not found", { status: 404 });
       }
 
-      const user = await getUserByClerkId(userId);
+      const user = await ensureUserExists(userId);
       if (!user) {
-        logger.warn({ userId }, "Stripe webhook user not found");
+        logger.error(
+          { userId },
+          "Stripe webhook: user not found and could not be created"
+        );
         return new Response("User not found", { status: 404 });
       }
 

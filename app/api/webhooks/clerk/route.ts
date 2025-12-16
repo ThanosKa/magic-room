@@ -6,6 +6,7 @@ import {
   updateUser,
   deleteUser,
 } from "@/lib/supabase";
+import { checkAndMarkWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET || "";
@@ -105,6 +106,13 @@ export async function POST(request: Request) {
   } catch (err) {
     logger.warn({ err }, "Clerk webhook verification failed");
     return new Response("Webhook verification failed", { status: 400 });
+  }
+
+  // Check for duplicate webhook processing using svix-id
+  const dedupResult = await checkAndMarkWebhookProcessed("clerk", svixId);
+  if (dedupResult.isProcessed) {
+    logger.info({ eventId: svixId }, "Duplicate Clerk webhook, skipping");
+    return new Response("Webhook already processed", { status: 200 });
   }
 
   // Handle user.created event
@@ -225,11 +233,11 @@ export async function POST(request: Request) {
       const existingUser = await getUserByClerkId(id);
 
       if (!existingUser) {
-        logger.warn(
+        logger.info(
           { clerkUserId: id },
-          "User not found for deletion in Supabase"
+          "User already deleted or never created in Supabase"
         );
-        return new Response("User not found", { status: 404 });
+        return new Response("User already deleted", { status: 200 });
       }
 
       const deleted = await deleteUser(id);

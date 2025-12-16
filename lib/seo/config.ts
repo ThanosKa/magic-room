@@ -14,7 +14,7 @@ export const SITE_KEYWORDS = [
 ];
 
 export const OG_IMAGE = {
-    url: `${SITE_URL}/og-image.png`,
+    url: `${SITE_URL}/opengraph-image.png`,
     width: 1200,
     height: 630,
     alt: "Magic Room - AI Interior Design",

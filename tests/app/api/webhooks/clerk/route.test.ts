@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "@/app/api/webhooks/clerk/route";
 import * as supabaseLib from "@/lib/supabase";
+import * as redisLib from "@/lib/redis";
 
 const verifyMock = vi.hoisted(() =>
   vi.fn<(payload: string, headers: Record<string, string>) => unknown>()
@@ -32,6 +33,14 @@ vi.mock("@/lib/supabase", async () => {
     getUserByClerkId: vi.fn(),
     updateUser: vi.fn(),
     deleteUser: vi.fn(),
+  };
+});
+
+vi.mock("@/lib/redis", async () => {
+  const actual = await vi.importActual("@/lib/redis");
+  return {
+    ...actual,
+    checkAndMarkWebhookProcessed: vi.fn(),
   };
 });
 
@@ -118,6 +127,10 @@ describe("Clerk Webhook Route", () => {
         });
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
         vi.mocked(supabaseLib.createUser).mockResolvedValue(TEST_USER);
@@ -155,6 +168,10 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
 
@@ -179,6 +196,10 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(400);
@@ -201,6 +222,10 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
         vi.mocked(supabaseLib.createUser).mockResolvedValue(null);
@@ -229,6 +254,10 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.updateUser).mockResolvedValue({
@@ -263,6 +292,10 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.updateUser).mockResolvedValue({
@@ -298,6 +331,10 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
 
@@ -323,6 +360,10 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.updateUser).mockResolvedValue(null);
@@ -349,6 +390,10 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.deleteUser).mockResolvedValue(true);
@@ -358,7 +403,7 @@ describe("Clerk Webhook Route", () => {
         expect(supabaseLib.deleteUser).toHaveBeenCalledWith(TEST_CLERK_USER_ID);
       });
 
-      it("should return 404 if user not found", async () => {
+      it("should return 200 if user not found (idempotent deletion)", async () => {
         await mockSvixHeaders({
           "svix-id": "msg_test",
           "svix-timestamp": "1234567890",
@@ -373,12 +418,16 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
-        expect(response.status).toBe(404);
-        expect(await response.text()).toBe("User not found");
+        expect(response.status).toBe(200);
+        expect(await response.text()).toBe("User already deleted");
       });
 
       it("should handle deletion error", async () => {
@@ -396,6 +445,10 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.deleteUser).mockResolvedValue(false);
@@ -403,6 +456,32 @@ describe("Clerk Webhook Route", () => {
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(500);
         expect(await response.text()).toBe("Error deleting user");
+      });
+
+      it("should reject duplicate deletion webhooks (idempotency)", async () => {
+        await mockSvixHeaders({
+          "svix-id": "msg_duplicate",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
+
+        const eventPayload = {
+          type: "user.deleted",
+          data: {
+            id: TEST_CLERK_USER_ID,
+          },
+        };
+
+        verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: true,
+          message: "Webhook already processed",
+        });
+
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
+        expect(response.status).toBe(200);
+        // Verify that no deletion was attempted (webhook was skipped)
+        expect(supabaseLib.deleteUser).not.toHaveBeenCalled();
       });
     });
 
@@ -420,9 +499,42 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
+      });
+    });
+
+    describe("webhook deduplication", () => {
+      it("should skip duplicate Clerk webhooks", async () => {
+        await mockSvixHeaders({
+          "svix-id": "msg_duplicate_1",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
+
+        const eventPayload = {
+          type: "user.created",
+          data: {
+            id: TEST_CLERK_USER_ID,
+            email_addresses: [{ email_address: TEST_EMAIL }],
+          },
+        };
+
+        verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: true,
+          message: "Webhook already processed",
+        });
+
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
+        expect(response.status).toBe(200);
+        // Verify that no user was created (webhook was skipped)
+        expect(supabaseLib.createUser).not.toHaveBeenCalled();
       });
     });
   });

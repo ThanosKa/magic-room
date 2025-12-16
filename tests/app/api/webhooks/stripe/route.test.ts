@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "@/app/api/webhooks/stripe/route";
 import * as supabaseLib from "@/lib/supabase";
 import * as stripeLib from "@/lib/stripe";
+import * as redisLib from "@/lib/redis";
 import { createMockStripeWebhookEvent, createMockCheckoutSession, TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
 import type Stripe from "stripe";
 
@@ -9,7 +10,7 @@ vi.mock("@/lib/supabase", async () => {
   const actual = await vi.importActual("@/lib/supabase");
   return {
     ...actual,
-    getUserByClerkId: vi.fn(),
+    ensureUserExists: vi.fn(),
     updateUserCredits: vi.fn(),
     createTransaction: vi.fn(),
   };
@@ -19,6 +20,13 @@ vi.mock("@/lib/stripe", async () => {
   return {
     ...actual,
     parseWebhookEvent: vi.fn(),
+  };
+});
+vi.mock("@/lib/redis", async () => {
+  const actual = await vi.importActual("@/lib/redis");
+  return {
+    ...actual,
+    checkAndMarkWebhookProcessed: vi.fn(),
   };
 });
 vi.mock("@/lib/logger", () => ({
@@ -89,7 +97,11 @@ describe("Stripe Webhook Route", () => {
       } as Stripe.Event;
 
       vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
-      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER );
+      vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+        isProcessed: false,
+        message: "New webhook",
+      });
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER );
       vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue({
         ...TEST_USER,
         credits: TEST_USER.credits + TEST_PACKAGES.starter.credits,
@@ -140,7 +152,11 @@ describe("Stripe Webhook Route", () => {
       } as Stripe.Event;
 
       vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
-      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER );
+      vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+        isProcessed: false,
+        message: "New webhook",
+      });
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER );
       vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue({
         ...TEST_USER,
         credits: TEST_USER.credits + TEST_PACKAGES.growth.credits,
@@ -240,7 +256,7 @@ describe("Stripe Webhook Route", () => {
       expect(response.status).toBe(400);
     });
 
-    it("should handle user not found", async () => {
+    it("should handle user not found and not created", async () => {
       const session = createMockCheckoutSession({
         payment_status: "paid",
         client_reference_id: TEST_USER.clerkUserId,
@@ -266,7 +282,11 @@ describe("Stripe Webhook Route", () => {
       } as Stripe.Event;
 
       vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
-      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
+      vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+        isProcessed: false,
+        message: "New webhook",
+      });
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(null);
 
       const body = JSON.stringify(event);
       const request = new Request("http://localhost:3000/api/webhooks/stripe", {
@@ -298,6 +318,10 @@ describe("Stripe Webhook Route", () => {
       } as Stripe.Event;
 
       vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+        isProcessed: false,
+        message: "New webhook",
+      });
 
       const body = JSON.stringify(event);
       const request = new Request("http://localhost:3000/api/webhooks/stripe", {
@@ -311,6 +335,107 @@ describe("Stripe Webhook Route", () => {
       const response = await POST(request);
       expect(response.status).toBe(200);
       expect(supabaseLib.updateUserCredits).not.toHaveBeenCalled();
+    });
+
+    it("should reject duplicate webhook events (idempotency)", async () => {
+      const session = createMockCheckoutSession({
+        payment_status: "paid",
+        client_reference_id: TEST_USER.clerkUserId,
+        metadata: {
+          userId: TEST_USER.clerkUserId,
+          packageId: "starter",
+        },
+      });
+
+      const event: Stripe.Event = {
+        id: "evt_duplicate_test",
+        object: "event",
+        api_version: "2024-06-20",
+        created: Math.floor(Date.now() / 1000),
+        data: {
+          object: session,
+          previous_attributes: {},
+        },
+        livemode: true,
+        pending_webhooks: 1,
+        request: { id: "req_test", idempotency_key: null },
+        type: "checkout.session.completed",
+      } as Stripe.Event;
+
+      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+        isProcessed: true,
+        message: "Webhook already processed",
+      });
+
+      const body = JSON.stringify(event);
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "test_signature",
+        },
+        body,
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(200);
+      // Verify that no credits were updated (webhook was skipped)
+      expect(supabaseLib.updateUserCredits).not.toHaveBeenCalled();
+    });
+
+    it("should handle race condition: Stripe webhook before Clerk webhook creates user", async () => {
+      const session = createMockCheckoutSession({
+        payment_status: "paid",
+        client_reference_id: TEST_USER.clerkUserId,
+        metadata: {
+          userId: TEST_USER.clerkUserId,
+          packageId: "starter",
+        },
+      });
+
+      const event: Stripe.Event = {
+        id: "evt_race_condition",
+        object: "event",
+        api_version: "2024-06-20",
+        created: Math.floor(Date.now() / 1000),
+        data: {
+          object: session,
+          previous_attributes: {},
+        },
+        livemode: true,
+        pending_webhooks: 1,
+        request: { id: "req_test", idempotency_key: null },
+        type: "checkout.session.completed",
+      } as Stripe.Event;
+
+      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+        isProcessed: false,
+        message: "New webhook",
+      });
+      // ensureUserExists creates the user if it doesn't exist
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
+      vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue({
+        ...TEST_USER,
+        credits: TEST_USER.credits + TEST_PACKAGES.starter.credits,
+      });
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({});
+
+      const body = JSON.stringify(event);
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "test_signature",
+        },
+        body,
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(200);
+      // ensureUserExists should have been called to handle the race condition
+      expect(supabaseLib.ensureUserExists).toHaveBeenCalledWith(TEST_USER.clerkUserId);
+      // Credits should still be added even if user didn't exist initially
+      expect(supabaseLib.updateUserCredits).toHaveBeenCalled();
     });
   });
 });

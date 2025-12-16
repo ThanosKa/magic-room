@@ -23,6 +23,10 @@ export async function getUserByClerkId(clerkUserId: string) {
     .single();
 
   if (error) {
+    // PGRST116 = no rows returned, expected when user doesn't exist yet
+    if (error.code === "PGRST116") {
+      return null;
+    }
     logger.error({ err: error, clerkUserId }, "Error fetching user");
     return null;
   }
