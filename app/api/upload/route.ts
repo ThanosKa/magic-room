@@ -9,7 +9,6 @@ if (!supabaseUrl || !supabaseServiceKey) {
   throw new Error("Missing Supabase environment variables in upload API");
 }
 
-// Server-side Supabase client with service role
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
@@ -28,7 +27,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    // Generate unique filename
     const timestamp = Date.now();
     const randomStr = Math.random().toString(36).substring(7);
     const fileName = `${timestamp}-${randomStr}-${file.name}`;
@@ -38,17 +36,15 @@ export async function POST(request: NextRequest) {
       "Starting file upload to Supabase"
     );
 
-    // Convert File to Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Upload to Supabase Storage using service role
     const { data, error } = await supabase.storage
       .from(bucketName)
       .upload(fileName, buffer, {
         cacheControl: "3600",
         upsert: false,
-        contentType: file.type || 'image/jpeg', // Explicit MIME type
+        contentType: file.type || 'image/jpeg',
       });
 
     if (error) {
@@ -68,7 +64,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get public URL
     const { data: publicUrlData } = supabase.storage
       .from(bucketName)
       .getPublicUrl(data.path);

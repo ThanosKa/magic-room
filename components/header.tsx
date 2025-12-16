@@ -22,13 +22,11 @@ export function Header() {
       <AnnouncementBanner />
       <header className="sticky top-0 z-40 w-full border-b border-slate-200/50 bg-white/80 backdrop-blur">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-primary" />
             <span className="font-bold text-lg">Magic Room</span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden gap-8 md:flex">
             <Link
               href="/"
@@ -50,9 +48,7 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Right section */}
           <div className="flex items-center gap-3">
-            {/* Credits Badge - Desktop */}
             {clerkUser && (
               <div className="hidden sm:flex">
                 {isLoading ? (
@@ -69,7 +65,6 @@ export function Header() {
               </div>
             )}
 
-            {/* Auth - Desktop */}
             {clerkUser ? (
               <div className="hidden md:flex">
                 <UserButton />
@@ -92,7 +87,6 @@ export function Header() {
               </div>
             )}
 
-            {/* Mobile Menu */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild className="md:hidden">
                 <Button variant="ghost" size="icon">
@@ -102,7 +96,6 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-80 max-w-[90vw] px-4">
                 <div className="flex flex-col gap-6 pt-6">
-                  {/* Mobile Credits */}
                   {clerkUser && (
                     <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2 dark:bg-primary/20">
                       <Coins className="h-4 w-4 text-primary" />
@@ -112,7 +105,6 @@ export function Header() {
                     </div>
                   )}
 
-                  {/* Mobile Navigation */}
                   <nav className="flex flex-col gap-3">
                     <Link
                       href="/"
@@ -137,7 +129,6 @@ export function Header() {
                     </Link>
                   </nav>
 
-                  {/* Mobile Auth */}
                   {clerkUser ? (
                     <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 dark:border-slate-800">
                       <UserButton />

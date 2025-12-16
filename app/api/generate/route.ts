@@ -44,7 +44,6 @@ export async function POST(request: Request): Promise<Response> {
   try {
     logger.info({}, "[Generate] POST request received");
 
-    // 1. Verify authentication
     const { userId: clerkUserId } = await auth();
     if (!clerkUserId) {
       logger.warn({}, "[Generate] Unauthorized - no userId");
@@ -55,7 +54,6 @@ export async function POST(request: Request): Promise<Response> {
     }
     logger.info({ userId: clerkUserId }, "[Generate] User authenticated");
 
-    // 2. Parse and validate input
     const body = await request.json();
     const parsed = GenerateSchema.safeParse(body);
 
@@ -79,7 +77,6 @@ export async function POST(request: Request): Promise<Response> {
       "[Generate] Request validated"
     );
 
-    // 3. Get user and check credits
     const user = await ensureUserExists(clerkUserId);
     if (!user) {
       logger.error({ userId: clerkUserId }, "[Generate] User not found");
@@ -100,7 +97,6 @@ export async function POST(request: Request): Promise<Response> {
       });
     }
 
-    // 4. Check rate limiting (simple abuse prevention)
     const rateLimitResult = await checkRateLimit(user.id);
     if (!rateLimitResult.success) {
       logger.warn(
@@ -122,7 +118,6 @@ export async function POST(request: Request): Promise<Response> {
     }
     logger.info({}, "[Generate] Rate limit check passed");
 
-    // 5. Deduct credit BEFORE calling OpenRouter (to prevent abuse)
     const creditDeducted = await deductCredits(user.id, 1);
     if (!creditDeducted) {
       logger.error({ userId: user.id }, "[Generate] Failed to deduct credits");
@@ -136,16 +131,13 @@ export async function POST(request: Request): Promise<Response> {
     }
     logger.info({}, "[Generate] Credit deducted");
 
-    // Create transaction record
     await createTransaction(user.id, "usage", 1);
     logger.info({}, "[Generate] Transaction recorded");
 
-    // 6. Create generation record with unique ID (for tracking)
     generationId = `gen_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     await createGeneration(user.id, generationId, "base64-inline");
     logger.info({ generationId }, "[Generate] Generation record created");
 
-    // 7. Build prompt and call OpenRouter (synchronous - blocks until complete)
     const prompt = buildDesignPrompt(roomType, theme, customPrompt);
     logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
 
@@ -163,9 +155,7 @@ export async function POST(request: Request): Promise<Response> {
       "[Generate] OpenRouter generation complete"
     );
 
-    // 8. Handle generation result
     if (!result.success || result.images.length === 0) {
-      // Refund the credit since generation failed
       await createTransaction(user.id, "refund", 1, undefined, { generationId });
       const latestUser = await ensureUserExists(clerkUserId);
       if (latestUser) {
@@ -189,7 +179,6 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
-    // Update generation status to succeeded with output URLs
     await updateGenerationStatus(generationId, "succeeded", result.images);
 
     const totalDuration = Date.now() - startTime;
@@ -212,15 +201,12 @@ export async function POST(request: Request): Promise<Response> {
     const totalDuration = Date.now() - startTime;
     logger.error({ err: error, totalDuration, generationId }, "[Generate] Route error");
 
-    // If we have a generation ID and userId, try to refund
     if (generationId && userId) {
       try {
         await updateGenerationStatus(generationId, "failed", undefined,
           error instanceof Error ? error.message : "Internal error");
         await createTransaction(userId, "refund", 1, undefined, { generationId });
         const { updateUserCredits, getUserByClerkId } = await import("@/lib/supabase");
-        // Note: userId here is the Supabase user.id, not clerkUserId
-        // We'll refund based on the already-fetched user
       } catch (refundError) {
         logger.error({ err: refundError, generationId }, "[Generate] Failed to process refund");
       }

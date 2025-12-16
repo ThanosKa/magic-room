@@ -31,7 +31,6 @@ export async function POST(request: Request): Promise<Response> {
       return new Response("Invalid signature", { status: 401 });
     }
 
-    // Handle checkout.session.completed event
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const paymentStatus = session.payment_status ?? "unpaid";
@@ -56,25 +55,21 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Invalid session metadata", { status: 400 });
       }
 
-      // Find the package to get credits
       const pkg = CREDIT_PACKAGES.find((p) => p.id === packageId);
       if (!pkg) {
         logger.warn({ packageId }, "Stripe package not found");
         return new Response("Package not found", { status: 404 });
       }
 
-      // Get user and update credits
       const user = await getUserByClerkId(userId);
       if (!user) {
         logger.warn({ userId }, "Stripe webhook user not found");
         return new Response("User not found", { status: 404 });
       }
 
-      // Add credits to user
       const newCredits = user.credits + pkg.credits;
       await updateUserCredits(user.id, newCredits);
 
-      // Create transaction record
       await createTransaction(
         user.id,
         "purchase",

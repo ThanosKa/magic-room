@@ -22,13 +22,6 @@ function coerceStatus(value: unknown): IStatusCheckResponse["status"] {
   return "processing";
 }
 
-/**
- * GET handler for checking generation status.
- * 
- * With OpenRouter (synchronous), generations complete immediately.
- * This endpoint now just returns the cached status from database.
- * No more polling to external AI service needed.
- */
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -37,7 +30,6 @@ export async function GET(
   try {
     logger.info({}, "[StatusCheck] GET request received");
 
-    // Verify authentication
     const { userId } = await auth();
     if (!userId) {
       logger.warn({}, "[StatusCheck] Unauthorized");
@@ -50,7 +42,6 @@ export async function GET(
     const { id: generationId } = await params;
     logger.info({ generationId }, "[StatusCheck] Checking status");
 
-    // Get status from database
     const generation = await getGenerationStatus(generationId);
     logger.info(
       { generationId, status: generation?.status },
@@ -65,7 +56,6 @@ export async function GET(
       });
     }
 
-    // Ownership check
     const user = await ensureUserExists(userId);
     if (!user) {
       logger.error({ userId }, "[StatusCheck] User not found");
@@ -77,7 +67,6 @@ export async function GET(
 
     if (generation.user_id !== user.id) {
       logger.warn({ generationId, userId }, "[StatusCheck] Ownership mismatch");
-      // Avoid leaking that the generation exists
       return new Response(JSON.stringify({ error: "Generation not found" }), {
         status: 404,
         headers: { "Content-Type": "application/json" },

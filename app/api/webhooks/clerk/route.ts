@@ -28,7 +28,6 @@ function isClerkUserCreatedEvent(
 }
 
 export async function POST(request: Request) {
-  // Verify webhook signature
   const headerPayload = await headers();
   const svixId = headerPayload.get("svix-id");
   const svixTimestamp = headerPayload.get("svix-timestamp");
@@ -53,7 +52,6 @@ export async function POST(request: Request) {
     return new Response("Webhook verification failed", { status: 400 });
   }
 
-  // Handle user.created event
   if (isClerkUserCreatedEvent(evt)) {
     const { id, email_addresses } = evt.data;
     const primaryEmail = email_addresses?.[0]?.email_address || "";
@@ -64,7 +62,6 @@ export async function POST(request: Request) {
     }
 
     try {
-      // Check if user already exists (webhook retries are common)
       const existingUser = await getUserByClerkId(id);
 
       if (existingUser) {
@@ -75,7 +72,6 @@ export async function POST(request: Request) {
         return new Response("User already exists", { status: 200 });
       }
 
-      // Create new user with 1 free credit
       const newUser = await createUser(id, primaryEmail, 1);
 
       if (!newUser) {

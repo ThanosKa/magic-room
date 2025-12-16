@@ -11,7 +11,6 @@ const CheckoutSchema = z.object({
 
 export async function POST(request: Request): Promise<Response> {
   try {
-    // Verify authentication
     const { userId } = await auth();
     if (!userId) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -20,7 +19,6 @@ export async function POST(request: Request): Promise<Response> {
       });
     }
 
-    // Get user to find their email
     const user = await ensureUserExists(userId);
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found" }), {
@@ -29,7 +27,6 @@ export async function POST(request: Request): Promise<Response> {
       });
     }
 
-    // Parse and validate input
     const body = await request.json();
     const parsed = CheckoutSchema.safeParse(body);
 
@@ -45,7 +42,6 @@ export async function POST(request: Request): Promise<Response> {
 
     const { packageId } = parsed.data;
 
-    // Find the package
     const pkg = CREDIT_PACKAGES.find((p) => p.id === packageId);
     if (!pkg) {
       return new Response(JSON.stringify({ error: "Package not found" }), {
@@ -54,7 +50,6 @@ export async function POST(request: Request): Promise<Response> {
       });
     }
 
-    // Create Stripe checkout session
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const session = await createCheckoutSession(
       user.id,
