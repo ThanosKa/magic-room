@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "@/app/api/checkout/route";
 import * as supabaseLib from "@/lib/supabase";
 import * as stripeLib from "@/lib/stripe";
-import { TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
+import { TEST_USER } from "@/lib/test-utils";
 
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
@@ -133,7 +133,6 @@ describe("Checkout Route", () => {
       const response = await POST(request);
       expect(response.status).toBe(200);
 
-      const data = await response.json();
       expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith(
         TEST_USER.id,
         "growth",
@@ -160,7 +159,6 @@ describe("Checkout Route", () => {
       const response = await POST(request);
       expect(response.status).toBe(200);
 
-      const data = await response.json();
       expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith(
         TEST_USER.id,
         "premium",

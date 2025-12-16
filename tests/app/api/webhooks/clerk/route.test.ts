@@ -8,7 +8,7 @@ const verifyMock = vi.hoisted(() =>
 
 vi.mock("svix", () => {
   class WebhookMock {
-    constructor(_secret: string) {}
+    constructor() {}
 
     verify(payload: string, headers: Record<string, string>) {
       return verifyMock(payload, headers);
