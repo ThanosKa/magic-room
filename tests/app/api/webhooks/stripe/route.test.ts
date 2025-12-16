@@ -205,6 +205,7 @@ describe("Stripe Webhook Route", () => {
     it("should handle missing userId in metadata", async () => {
       const session = createMockCheckoutSession({
         payment_status: "paid",
+        client_reference_id: undefined, // Missing userId (from client_reference_id)
         metadata: {
           packageId: "starter",
         },
