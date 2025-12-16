@@ -56,7 +56,7 @@ export async function createUser(
 }
 
 export async function ensureUserExists(clerkUserId: string) {
-  let user = await getUserByClerkId(clerkUserId);
+  const user = await getUserByClerkId(clerkUserId);
 
   if (user) {
     return user;

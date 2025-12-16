@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Zap, Lock, ArrowRight, Wand2 } from "lucide-react";
 import { PageTransition } from "@/components/animated-card";
@@ -9,7 +8,6 @@ import { BeforeAfterSlider } from "@/components/before-after-slider";
 import { FAQSection } from "@/components/faq-section";
 
 export default function HomeContent() {
-    const { user } = useUser();
 
     return (
         <PageTransition>

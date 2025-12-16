@@ -134,7 +134,7 @@ function GeneratePageContent() {
             } else {
                 throw new Error(data.error || "No images generated");
             }
-        } catch (err) {
+        } catch {
         } finally {
             setIsGenerating(false);
         }

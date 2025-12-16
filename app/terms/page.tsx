@@ -16,8 +16,8 @@ export default function TermsPage() {
               Last Updated: December 2024
             </h2>
             <p>
-              These Terms of Service ("Terms") govern your use of Magic Room
-              ("Service"). By accessing or using Magic Room, you agree to be
+              These Terms of Service (&ldquo;Terms&rdquo;) govern your use of Magic Room
+              (&ldquo;Service&rdquo;). By accessing or using Magic Room, you agree to be
               bound by these Terms. If you do not agree to all of these Terms,
               please do not use the Service.
             </p>
@@ -74,7 +74,7 @@ export default function TermsPage() {
                 Use the Service for commercial purposes without authorization
               </li>
               <li>
-                Upload content that is illegal, explicit, or violates others'
+                Upload content that is illegal, explicit, or violates others&apos;
                 rights
               </li>
             </ul>
@@ -184,8 +184,8 @@ export default function TermsPage() {
               6. Limitation of Liability
             </h2>
             <p>
-              TO THE MAXIMUM EXTENT PERMITTED BY LAW, MAGIC ROOM IS PROVIDED "AS
-              IS" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED.
+              TO THE MAXIMUM EXTENT PERMITTED BY LAW, MAGIC ROOM IS PROVIDED &ldquo;AS
+              IS&rdquo; WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED.
             </p>
             <p className="mt-4">IN NO EVENT SHALL WE BE LIABLE FOR:</p>
             <ul className="list-inside list-disc space-y-2">

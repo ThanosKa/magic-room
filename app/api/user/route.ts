@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { ensureUserExists } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const { userId } = await auth();
 

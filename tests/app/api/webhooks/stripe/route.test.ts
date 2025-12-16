@@ -89,12 +89,12 @@ describe("Stripe Webhook Route", () => {
       } as Stripe.Event;
 
       vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
-      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER as any);
+      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER );
       vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue({
         ...TEST_USER,
         credits: TEST_USER.credits + TEST_PACKAGES.starter.credits,
-      } as any);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+      });
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} );
 
       const body = JSON.stringify(event);
       const request = new Request("http://localhost:3000/api/webhooks/stripe", {
@@ -140,12 +140,12 @@ describe("Stripe Webhook Route", () => {
       } as Stripe.Event;
 
       vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
-      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER as any);
+      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER );
       vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue({
         ...TEST_USER,
         credits: TEST_USER.credits + TEST_PACKAGES.growth.credits,
-      } as any);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+      } );
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} );
 
       const body = JSON.stringify(event);
       const request = new Request("http://localhost:3000/api/webhooks/stripe", {

@@ -206,7 +206,6 @@ export async function POST(request: Request): Promise<Response> {
         await updateGenerationStatus(generationId, "failed", undefined,
           error instanceof Error ? error.message : "Internal error");
         await createTransaction(userId, "refund", 1, undefined, { generationId });
-        const { updateUserCredits, getUserByClerkId } = await import("@/lib/supabase");
       } catch (refundError) {
         logger.error({ err: refundError, generationId }, "[Generate] Failed to process refund");
       }

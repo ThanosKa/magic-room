@@ -19,7 +19,7 @@ export function createMockStripeWebhookEvent(
       id: "req_test",
       idempotency_key: null,
     },
-    type: eventType as any,
+    type: eventType as Stripe.Event.Type,
   } as Stripe.Event;
 }
 

@@ -16,7 +16,6 @@ import {
   OG_IMAGE,
   TWITTER_HANDLE,
 } from "@/lib/seo/config";
-import { organizationSchema, softwareApplicationSchema } from "@/lib/seo/schema";
 
 export const dynamic = "force-dynamic";
 

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Menu, Coins } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CreditsSkeleton } from "@/components/ui/loading-states";

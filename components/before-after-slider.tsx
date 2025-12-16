@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { MoveHorizontal } from "lucide-react";
 
@@ -27,11 +27,11 @@ export function BeforeAfterSlider({
         setIsResizing(true);
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = useCallback(() => {
         setIsResizing(false);
-    };
+    }, []);
 
-    const handleMouseMove = (e: React.MouseEvent | MouseEvent) => {
+    const handleMouseMove = useCallback((e: React.MouseEvent | MouseEvent) => {
         if (!isResizing || !containerRef.current) return;
 
         const rect = containerRef.current.getBoundingClientRect();
@@ -39,9 +39,9 @@ export function BeforeAfterSlider({
         const percentage = (x / rect.width) * 100;
 
         setSliderPosition(percentage);
-    };
+    }, [isResizing]);
 
-    const handleTouchMove = (e: React.TouchEvent | TouchEvent) => {
+    const handleTouchMove = useCallback((e: React.TouchEvent | TouchEvent) => {
         if (!isResizing || !containerRef.current) return;
 
         const rect = containerRef.current.getBoundingClientRect();
@@ -50,23 +50,23 @@ export function BeforeAfterSlider({
         const percentage = (x / rect.width) * 100;
 
         setSliderPosition(percentage);
-    };
+    }, [isResizing]);
 
     useEffect(() => {
         if (isResizing) {
             window.addEventListener("mousemove", handleMouseMove);
             window.addEventListener("mouseup", handleMouseUp);
-            window.addEventListener("touchmove", handleTouchMove as any);
+            window.addEventListener("touchmove", handleTouchMove);
             window.addEventListener("touchend", handleMouseUp);
         }
 
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
-            window.removeEventListener("touchmove", handleTouchMove as any);
+            window.removeEventListener("touchmove", handleTouchMove);
             window.removeEventListener("touchend", handleMouseUp);
         };
-    }, [isResizing]);
+    }, [isResizing, handleMouseMove, handleTouchMove, handleMouseUp]);
 
     return (
         <div

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { useUserStore } from "@/stores/user-store";
 import { useRouter } from "next/navigation";
 import { SignUpButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,7 @@ import {
     CardHeader,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Loader2 } from "lucide-react";
+import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { PageTransition } from "@/components/page-transition";
 import { motion } from "framer-motion";
@@ -98,7 +97,6 @@ const cardVariants = {
 
 export default function PricingContent() {
     const { user: clerkUser, isLoaded } = useUser();
-    const { credits } = useUserStore();
     const router = useRouter();
     const [loading, setLoading] = useState<string | null>(null);
 

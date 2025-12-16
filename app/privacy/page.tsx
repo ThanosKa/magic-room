@@ -16,7 +16,7 @@ export default function PrivacyPage() {
               Last Updated: December 2024
             </h2>
             <p>
-              Magic Room ("we," "us," "our," or "Company") is committed to
+              Magic Room (&ldquo;we,&rdquo; &ldquo;us,&rdquo; &ldquo;our,&rdquo; or &ldquo;Company&rdquo;) is committed to
               protecting your privacy. This Privacy Policy explains how we
               collect, use, disclose, and safeguard your information when you
               use our website and services.
@@ -117,7 +117,7 @@ export default function PrivacyPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Clerk's Privacy Policy
+                Clerk&apos;s Privacy Policy
               </a>
             </p>
 
@@ -133,7 +133,7 @@ export default function PrivacyPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Supabase's Privacy Policy
+                Supabase&apos;s Privacy Policy
               </a>
             </p>
 
@@ -142,7 +142,7 @@ export default function PrivacyPage() {
             </h3>
             <p>
               Your room images are sent to OpenRouter, which routes them to
-              Google's Gemini AI for processing. Images are processed in-memory
+              Google&apos;s Gemini AI for processing. Images are processed in-memory
               and not stored. See{" "}
               <a
                 href="https://openrouter.ai/privacy"
@@ -150,7 +150,7 @@ export default function PrivacyPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                OpenRouter's Privacy Policy
+                OpenRouter&apos;s Privacy Policy
               </a>{" "}
               and{" "}
               <a
@@ -159,7 +159,7 @@ export default function PrivacyPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Google's Privacy Policy
+                Google&apos;s Privacy Policy
               </a>
             </p>
 
@@ -175,7 +175,7 @@ export default function PrivacyPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Stripe's Privacy Policy
+                Stripe&apos;s Privacy Policy
               </a>
             </p>
 
@@ -191,7 +191,7 @@ export default function PrivacyPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Upstash's Privacy Policy
+                Upstash&apos;s Privacy Policy
               </a>
             </p>
           </section>

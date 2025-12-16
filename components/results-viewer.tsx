@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ReactCompareImage from "react-compare-image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -29,13 +29,6 @@ export function ResultsViewer({
   const [selectedResult, setSelectedResult] = useState<string | null>(
     results.length > 0 ? results[0] : null
   );
-  const [zoomImage, setZoomImage] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (results.length > 0 && !selectedResult) {
-      setSelectedResult(results[0]);
-    }
-  }, [results, selectedResult]);
 
   const handleDownload = async (imageUrl: string, index: number) => {
     try {
