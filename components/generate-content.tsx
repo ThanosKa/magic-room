@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
@@ -27,7 +28,6 @@ import {
 import { useDropzone } from "react-dropzone";
 import { fileToBase64 } from "@/lib/supabase-client";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 const THEME_IMAGES: Record<Theme, string> = {
     modern: "/themes/theme_modern.png",
@@ -281,9 +281,11 @@ function GeneratePageContent() {
                                     setFullscreenImage(activeGeneration!.outputUrls![0])
                                 }
                             >
-                                <img
+                                <Image
                                     src={activeGeneration!.outputUrls![0]}
                                     alt="Generated design"
+                                    width={800}
+                                    height={600}
                                     className="w-full h-auto object-contain max-h-[70vh] bg-black/5"
                                 />
                                 {isGenerating && (
@@ -300,9 +302,11 @@ function GeneratePageContent() {
                                 className="relative w-full h-full min-h-[300px] bg-black/5 flex items-center justify-center group cursor-pointer"
                                 onClick={() => setFullscreenImage(uploadedImageUrl)}
                             >
-                                <img
+                                <Image
                                     src={uploadedImageUrl}
                                     alt="Uploaded room"
+                                    width={800}
+                                    height={600}
                                     className="w-full h-auto max-h-[60vh] object-contain"
                                 />
 
@@ -425,9 +429,11 @@ function GeneratePageContent() {
                     className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
                     onClick={() => setFullscreenImage(null)}
                 >
-                    <img
+                    <Image
                         src={fullscreenImage}
                         alt="Fullscreen view"
+                        width={1024}
+                        height={768}
                         className="max-w-full max-h-[90vh] object-contain"
                         onClick={(e) => e.stopPropagation()}
                     />

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import ReactCompareImage from "react-compare-image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -170,9 +171,11 @@ export function ResultsViewer({
                     : "border-slate-200 hover:border-purple-400 dark:border-slate-700"
                 }`}
               >
-                <img
+                <Image
                   src={url}
                   alt={`Design variation ${index + 1}`}
+                  width={300}
+                  height={300}
                   className="h-full w-full object-cover"
                 />
               </button>
