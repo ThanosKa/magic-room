@@ -1,12 +1,8 @@
 import { logger } from "@/lib/logger";
 
-// OpenRouter model for image generation
 export const OPENROUTER_MODEL = "google/gemini-2.5-flash-image";
 
-// OpenRouter API endpoint
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
-
-// Positive and negative prompt constants for design generation
 export const POSITIVE_PROMPT = `beautiful interior design, professional photography, well-lit, 
 detailed textures, high quality, realistic, modern aesthetic, clean composition`;
 
@@ -36,13 +32,6 @@ interface OpenRouterResponse {
     };
 }
 
-/**
- * Generate interior design variations using OpenRouter (Google Gemini 2.5 Flash Image)
- * 
- * @param base64Image - The room image as a base64 data URL (e.g., "data:image/jpeg;base64,...")
- * @param prompt - The design prompt describing the desired transformation
- * @returns GenerationResult with generated images as base64 data URLs
- */
 export async function generateDesign(
     base64Image: string,
     prompt: string
@@ -125,7 +114,6 @@ export async function generateDesign(
             throw new Error(data.error.message || "OpenRouter API error");
         }
 
-        // Extract generated images from response
         const choice = data.choices?.[0];
         if (!choice) {
             logger.error({ data, duration }, "[OpenRouter] No choices in response");
@@ -135,15 +123,12 @@ export async function generateDesign(
         const images: string[] = [];
         let textResponse: string | undefined;
 
-        // Handle different response formats
         const message = choice.message;
 
-        // Extract text content if available
         if (typeof message.content === "string") {
             textResponse = message.content;
         }
 
-        // Extract images from the images array (OpenRouter format)
         if (message.images && Array.isArray(message.images)) {
             for (const img of message.images) {
                 if (img.image_url?.url) {
@@ -152,7 +137,6 @@ export async function generateDesign(
             }
         }
 
-        // Also check content array for images (alternative format)
         if (Array.isArray(message.content)) {
             for (const item of message.content) {
                 if (item.type === "image_url" && item.image_url?.url) {
@@ -177,7 +161,6 @@ export async function generateDesign(
                 { response: JSON.stringify(data).substring(0, 500), duration },
                 "[OpenRouter] No images in response"
             );
-            // Return error but don't throw - let caller handle
             return {
                 success: false,
                 images: [],
@@ -204,9 +187,6 @@ export async function generateDesign(
     }
 }
 
-/**
- * Build optimized prompt based on room type and theme
- */
 export function buildDesignPrompt(
     roomType: string,
     theme: string,

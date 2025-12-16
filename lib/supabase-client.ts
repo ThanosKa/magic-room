@@ -7,7 +7,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase environment variables");
 }
 
-// Client-side Supabase client with limited permissions
 export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
@@ -15,14 +14,6 @@ export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-/**
- * Convert a File to base64 data URL for direct use with OpenRouter API.
- * This eliminates the need for bucket storage uploads.
- * 
- * @param file - The image file to convert
- * @param onProgress - Optional progress callback (0-100)
- * @returns Promise resolving to base64 data URL
- */
 export async function fileToBase64(
   file: File,
   onProgress?: (progress: number) => void
@@ -58,17 +49,11 @@ export async function fileToBase64(
   });
 }
 
-/**
- * @deprecated Use fileToBase64 instead - bucket upload is no longer needed with OpenRouter
- * 
- * Upload image via server API endpoint (avoids RLS issues)
- */
 export async function uploadImage(
   file: File,
   onProgress?: (progress: number) => void,
   bucketName: string = "room-images"
 ): Promise<{ url: string; path: string }> {
-  // Simulate progress updates during upload (client-side only)
   const progressInterval = setInterval(() => {
     if (onProgress) {
       const simulatedProgress = Math.min(90, Math.random() * 80 + 10);
@@ -105,7 +90,6 @@ export async function uploadImage(
   }
 }
 
-// Get public URL for an uploaded file
 export function getPublicUrl(
   path: string,
   bucketName: string = "room-images"

@@ -8,7 +8,6 @@ if (!supabaseUrl || !supabaseServiceKey) {
   throw new Error("Missing Supabase environment variables");
 }
 
-// Server-side client with service role permissions
 export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
@@ -16,7 +15,6 @@ export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   },
 });
 
-// Helper functions for common operations
 export async function getUserByClerkId(clerkUserId: string) {
   const { data, error } = await supabase
     .from("users")
@@ -57,21 +55,13 @@ export async function createUser(
   return data;
 }
 
-/**
- * Ensures a user exists in the database for the given Clerk user ID.
- * In development mode, automatically creates the user from Clerk API if not found.
- * In production, returns null if user doesn't exist (webhooks should handle creation).
- */
 export async function ensureUserExists(clerkUserId: string) {
-  // Try to get existing user
   let user = await getUserByClerkId(clerkUserId);
 
-  // If found, return it
   if (user) {
     return user;
   }
 
-  // If not found and NOT in dev mode, return null (production should use webhooks)
   if (process.env.NODE_ENV !== "development") {
     logger.warn(
       { clerkUserId },
@@ -80,7 +70,6 @@ export async function ensureUserExists(clerkUserId: string) {
     return null;
   }
 
-  // DEV MODE ONLY: Create user from Clerk API
   logger.info(
     { clerkUserId },
     "User not found in dev mode, creating from Clerk API"
@@ -102,7 +91,6 @@ export async function ensureUserExists(clerkUserId: string) {
 
     logger.info({ clerkUserId, email }, "Creating user in dev mode");
 
-    // Create user with 1 free credit (matches webhook behavior)
     const newUser = await createUser(clerkUserId, email, 1);
 
     if (newUser) {
