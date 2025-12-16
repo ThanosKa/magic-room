@@ -4,9 +4,7 @@ import { IGenerateResponse } from "@/types";
 import {
   ensureUserExists,
   deductCredits,
-  createGeneration,
   createTransaction,
-  updateGenerationStatus,
 } from "@/lib/supabase";
 import { checkRateLimit } from "@/lib/redis";
 import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
@@ -40,7 +38,6 @@ const GenerateSchema = z.object({
 export async function POST(request: Request): Promise<Response> {
   const startTime = Date.now();
   let generationId: string | null = null;
-  let userId: string | null = null;
 
   try {
     logger.info({}, "[Generate] POST request received");
@@ -88,7 +85,6 @@ export async function POST(request: Request): Promise<Response> {
       });
     }
 
-    userId = user.id;
     logger.info({ credits: user.credits, required: creditCost }, "[Generate] User loaded");
 
     if (user.credits < creditCost) {
@@ -137,8 +133,6 @@ export async function POST(request: Request): Promise<Response> {
     logger.info({}, "[Generate] Transaction recorded");
 
     generationId = `gen_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-    await createGeneration(user.id, generationId, "base64-inline");
-    logger.info({ generationId }, "[Generate] Generation record created");
 
     const prompt = buildDesignPrompt(roomType, theme, quality, customPrompt);
     logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
@@ -165,8 +159,6 @@ export async function POST(request: Request): Promise<Response> {
         await updateUserCredits(latestUser.id, latestUser.credits + creditCost);
       }
 
-      await updateGenerationStatus(generationId, "failed", undefined, result.error || "No images generated");
-
       logger.warn({ generationId, error: result.error, creditCost }, "[Generate] Generation failed - credits refunded");
 
       return new Response(
@@ -180,8 +172,6 @@ export async function POST(request: Request): Promise<Response> {
         }
       );
     }
-
-    await updateGenerationStatus(generationId, "succeeded", result.images);
 
     const totalDuration = Date.now() - startTime;
     logger.info(
@@ -202,15 +192,6 @@ export async function POST(request: Request): Promise<Response> {
   } catch (error) {
     const totalDuration = Date.now() - startTime;
     logger.error({ err: error, totalDuration, generationId }, "[Generate] Route error");
-
-    if (generationId && userId) {
-      try {
-        await updateGenerationStatus(generationId, "failed", undefined,
-          error instanceof Error ? error.message : "Internal error");
-      } catch (refundError) {
-        logger.error({ err: refundError, generationId }, "[Generate] Failed to process refund");
-      }
-    }
 
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,

@@ -18,9 +18,7 @@ vi.mock("@/lib/supabase", async () => {
     ...actual,
     ensureUserExists: vi.fn(),
     deductCredits: vi.fn(),
-    createGeneration: vi.fn(),
     createTransaction: vi.fn(),
-    updateGenerationStatus: vi.fn(),
     updateUserCredits: vi.fn(),
   };
 });
@@ -76,9 +74,7 @@ describe("Generate Route - Quality Feature", () => {
     it("should deduct 1 credit for standard quality generation", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -108,9 +104,7 @@ describe("Generate Route - Quality Feature", () => {
     it("should use gemini-2.5-flash-image model for standard quality", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -140,9 +134,7 @@ describe("Generate Route - Quality Feature", () => {
     it("should default to standard quality if not specified", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -170,9 +162,7 @@ describe("Generate Route - Quality Feature", () => {
     it("should deduct 2 credits for premium quality generation", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -202,9 +192,7 @@ describe("Generate Route - Quality Feature", () => {
     it("should use gemini-3-pro-image-preview model for premium quality", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -261,9 +249,7 @@ describe("Generate Route - Quality Feature", () => {
     it("should refund 1 credit when standard quality generation fails", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue(TEST_USER);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
@@ -302,9 +288,7 @@ describe("Generate Route - Quality Feature", () => {
     it("should refund 2 credits when premium quality generation fails", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue(TEST_USER);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({

@@ -80,13 +80,6 @@ export interface IGenerateResponse {
   error?: string;
 }
 
-export interface IStatusCheckResponse {
-  id: string;
-  status: "starting" | "processing" | "succeeded" | "failed" | "canceled";
-  outputUrls?: string[];
-  error?: string;
-}
-
 export interface ICheckoutResponse {
   url?: string;
   sessionId?: string;
