@@ -31,6 +31,16 @@ vi.mock("@/lib/logger", () => ({
 
 const { auth } = await import("@clerk/nextjs/server");
 
+type AuthResult = Awaited<ReturnType<typeof auth>>;
+function mockAuth(userId: string | null) {
+  vi.mocked(auth).mockResolvedValue({ userId } as AuthResult);
+}
+
+type CheckoutSession = Awaited<ReturnType<typeof stripeLib.createCheckoutSession>>;
+function mockCheckoutSession(id: string, url: string): CheckoutSession {
+  return { id, url } as unknown as CheckoutSession;
+}
+
 describe("Checkout Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -38,7 +48,7 @@ describe("Checkout Route", () => {
 
   describe("POST /api/checkout", () => {
     it("should return 401 when user is not authenticated", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: null } as unknown as any);
+      mockAuth(null);
 
       const request = new Request("http://localhost:3000/api/checkout", {
         method: "POST",
@@ -51,7 +61,7 @@ describe("Checkout Route", () => {
     });
 
     it("should return 404 when user is not found in database", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
+      mockAuth(TEST_USER.clerkUserId);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(null);
 
       const request = new Request("http://localhost:3000/api/checkout", {
@@ -65,8 +75,8 @@ describe("Checkout Route", () => {
     });
 
     it("should return 400 for invalid packageId", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
-      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
+      mockAuth(TEST_USER.clerkUserId);
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
 
       const request = new Request("http://localhost:3000/api/checkout", {
         method: "POST",
@@ -79,12 +89,11 @@ describe("Checkout Route", () => {
     });
 
     it("should create checkout session for valid starter package", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
-      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
-      vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue({
-        id: "cs_test_123",
-        url: "https://checkout.stripe.com/...",
-      } as any);
+      mockAuth(TEST_USER.clerkUserId);
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
+      vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue(
+        mockCheckoutSession("cs_test_123", "https://checkout.stripe.com/...")
+      );
 
       const request = new Request("http://localhost:3000/api/checkout", {
         method: "POST",
@@ -109,12 +118,11 @@ describe("Checkout Route", () => {
     });
 
     it("should create checkout session for valid growth package", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
-      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
-      vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue({
-        id: "cs_test_456",
-        url: "https://checkout.stripe.com/...",
-      } as any);
+      mockAuth(TEST_USER.clerkUserId);
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
+      vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue(
+        mockCheckoutSession("cs_test_456", "https://checkout.stripe.com/...")
+      );
 
       const request = new Request("http://localhost:3000/api/checkout", {
         method: "POST",
@@ -137,12 +145,11 @@ describe("Checkout Route", () => {
     });
 
     it("should create checkout session for valid premium package", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
-      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
-      vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue({
-        id: "cs_test_789",
-        url: "https://checkout.stripe.com/...",
-      } as any);
+      mockAuth(TEST_USER.clerkUserId);
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
+      vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue(
+        mockCheckoutSession("cs_test_789", "https://checkout.stripe.com/...")
+      );
 
       const request = new Request("http://localhost:3000/api/checkout", {
         method: "POST",
@@ -165,8 +172,8 @@ describe("Checkout Route", () => {
     });
 
     it("should handle Stripe session creation errors", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
-      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
+      mockAuth(TEST_USER.clerkUserId);
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(stripeLib.createCheckoutSession).mockRejectedValue(new Error("Stripe API error"));
 
       const request = new Request("http://localhost:3000/api/checkout", {
@@ -183,8 +190,8 @@ describe("Checkout Route", () => {
     });
 
     it("should handle missing Content-Type header", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
-      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
+      mockAuth(TEST_USER.clerkUserId);
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
 
       const request = new Request("http://localhost:3000/api/checkout", {
         method: "POST",
@@ -196,8 +203,8 @@ describe("Checkout Route", () => {
     });
 
     it("should reject old package IDs (pro, ultimate)", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
-      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
+      mockAuth(TEST_USER.clerkUserId);
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
 
       const request = new Request("http://localhost:3000/api/checkout", {
         method: "POST",

@@ -1,14 +1,31 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "@/app/api/webhooks/clerk/route";
 import * as supabaseLib from "@/lib/supabase";
-import { Webhook } from "svix";
 
-vi.mock("svix");
+const verifyMock = vi.hoisted(() =>
+  vi.fn<(payload: string, headers: Record<string, string>) => unknown>()
+);
+
+vi.mock("svix", () => {
+  class WebhookMock {
+    constructor(_secret: string) {}
+
+    verify(payload: string, headers: Record<string, string>) {
+      return verifyMock(payload, headers);
+    }
+  }
+
+  return { Webhook: WebhookMock };
+});
+
 vi.mock("next/headers", () => ({
   headers: vi.fn(),
 }));
+
 vi.mock("@/lib/supabase", async () => {
-  const actual = await vi.importActual("@/lib/supabase");
+  const actual = await vi.importActual<typeof import("@/lib/supabase")>(
+    "@/lib/supabase"
+  );
   return {
     ...actual,
     createUser: vi.fn(),
@@ -17,6 +34,7 @@ vi.mock("@/lib/supabase", async () => {
     deleteUser: vi.fn(),
   };
 });
+
 vi.mock("@/lib/logger", () => ({
   logger: {
     error: vi.fn(),
@@ -38,89 +56,50 @@ const TEST_USER = {
   updated_at: "2025-01-01T00:00:00Z",
 };
 
-async function createMockRequest(
-  body: string,
-  svixHeaders: Record<string, string>
-): Promise<Request> {
+function createRequest(body: string): Request {
   return new Request("http://localhost:3000/api/webhooks/clerk", {
     method: "POST",
-    headers: {
-      "svix-id": svixHeaders["svix-id"] || "msg_test",
-      "svix-timestamp": svixHeaders["svix-timestamp"] || "1234567890",
-      "svix-signature": svixHeaders["svix-signature"] || "v1,test_signature",
-      ...svixHeaders,
-    },
     body,
   });
+}
+
+async function mockSvixHeaders(values: Record<string, string>) {
+  const { headers } = await import("next/headers");
+  vi.mocked(headers).mockResolvedValue(new Headers(values));
 }
 
 describe("Clerk Webhook Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    verifyMock.mockReset();
   });
 
   describe("POST /api/webhooks/clerk", () => {
     it("should reject request without svix headers", async () => {
-      const { headers } = await import("next/headers");
-      vi.mocked(headers).mockResolvedValue(new Map());
+      await mockSvixHeaders({});
 
-      const request = new Request(
-        "http://localhost:3000/api/webhooks/clerk",
-        {
-          method: "POST",
-          body: JSON.stringify({}),
-        }
-      );
-
-      const response = await POST(request);
+      const response = await POST(createRequest(JSON.stringify({})));
       expect(response.status).toBe(400);
       expect(await response.text()).toBe("Missing svix headers");
     });
 
     it("should reject request with invalid signature", async () => {
-      const { headers } = await import("next/headers");
-      vi.mocked(headers).mockResolvedValue(
-        new Map([
-          ["svix-id", "msg_test"],
-          ["svix-timestamp", "1234567890"],
-          ["svix-signature", "v1,invalid"],
-        ])
-      );
+      await mockSvixHeaders({
+        "svix-id": "msg_test",
+        "svix-timestamp": "1234567890",
+        "svix-signature": "v1,invalid",
+      });
 
-      const mockWebhook = vi.mocked(Webhook).mock.instances[0] || {};
-      const mockVerify = vi
-        .fn()
-        .mockImplementation(() => {
-          throw new Error("Invalid signature");
-        });
-      vi.mocked(Webhook).mockImplementation(() => ({
-        verify: mockVerify,
-      } as any));
+      verifyMock.mockImplementation(() => {
+        throw new Error("Invalid signature");
+      });
 
-      const request = await createMockRequest(
-        JSON.stringify({ type: "user.created" }),
-        {
-          "svix-id": "msg_test",
-          "svix-timestamp": "1234567890",
-          "svix-signature": "v1,invalid",
-        }
-      );
-
-      const response = await POST(request);
+      const response = await POST(createRequest(JSON.stringify({})));
       expect(response.status).toBe(400);
     });
 
     describe("user.created event", () => {
       it("should create new user with metadata", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
-
         const eventPayload = {
           type: "user.created",
           data: {
@@ -132,25 +111,19 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
+
+        verifyMock.mockReturnValue(eventPayload);
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
-        vi.mocked(supabaseLib.createUser).mockResolvedValue(TEST_USER as any);
-        vi.mocked(supabaseLib.updateUser).mockResolvedValue(TEST_USER as any);
+        vi.mocked(supabaseLib.createUser).mockResolvedValue(TEST_USER);
+        vi.mocked(supabaseLib.updateUser).mockResolvedValue(TEST_USER);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
         expect(supabaseLib.createUser).toHaveBeenCalledWith(
           TEST_CLERK_USER_ID,
@@ -167,14 +140,11 @@ describe("Clerk Webhook Route", () => {
       });
 
       it("should skip creation if user already exists", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "user.created",
@@ -184,38 +154,21 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
-        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(
-          TEST_USER as any
-        );
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
         expect(supabaseLib.createUser).not.toHaveBeenCalled();
       });
 
       it("should return 400 if no email found", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "user.created",
@@ -225,34 +178,19 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(400);
         expect(await response.text()).toBe("No email found");
       });
 
       it("should handle creation error", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "user.created",
@@ -262,24 +200,12 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
         vi.mocked(supabaseLib.createUser).mockResolvedValue(null);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(500);
         expect(await response.text()).toBe("Error creating user");
       });
@@ -287,14 +213,11 @@ describe("Clerk Webhook Route", () => {
 
     describe("user.updated event", () => {
       it("should update user email only", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const newEmail = "newemail@example.com";
         const eventPayload = {
@@ -305,29 +228,15 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
-        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(
-          TEST_USER as any
-        );
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.updateUser).mockResolvedValue({
           ...TEST_USER,
           email: newEmail,
-        } as any);
+        });
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
         expect(supabaseLib.updateUser).toHaveBeenCalledWith(
           TEST_CLERK_USER_ID,
@@ -336,14 +245,11 @@ describe("Clerk Webhook Route", () => {
       });
 
       it("should update user name and profile image", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "user.updated",
@@ -356,30 +262,16 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
-        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(
-          TEST_USER as any
-        );
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.updateUser).mockResolvedValue({
           ...TEST_USER,
           name: "Updated Name",
           profile_image_url: "https://example.com/newavatar.jpg",
-        } as any);
+        });
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
         expect(supabaseLib.updateUser).toHaveBeenCalledWith(
           TEST_CLERK_USER_ID,
@@ -391,14 +283,11 @@ describe("Clerk Webhook Route", () => {
       });
 
       it("should return 404 if user not found", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "user.updated",
@@ -408,36 +297,21 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(404);
         expect(await response.text()).toBe("User not found");
       });
 
       it("should handle update error", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "user.updated",
@@ -448,26 +322,12 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
-        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(
-          TEST_USER as any
-        );
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.updateUser).mockResolvedValue(null);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(500);
         expect(await response.text()).toBe("Error updating user");
       });
@@ -475,14 +335,11 @@ describe("Clerk Webhook Route", () => {
 
     describe("user.deleted event", () => {
       it("should delete user successfully", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "user.deleted",
@@ -491,39 +348,22 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
-        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(
-          TEST_USER as any
-        );
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.deleteUser).mockResolvedValue(true);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
         expect(supabaseLib.deleteUser).toHaveBeenCalledWith(TEST_CLERK_USER_ID);
       });
 
       it("should return 404 if user not found", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "user.deleted",
@@ -532,36 +372,21 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
         vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(404);
         expect(await response.text()).toBe("User not found");
       });
 
       it("should handle deletion error", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "user.deleted",
@@ -570,26 +395,12 @@ describe("Clerk Webhook Route", () => {
           },
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
-        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(
-          TEST_USER as any
-        );
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER);
         vi.mocked(supabaseLib.deleteUser).mockResolvedValue(false);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(500);
         expect(await response.text()).toBe("Error deleting user");
       });
@@ -597,35 +408,20 @@ describe("Clerk Webhook Route", () => {
 
     describe("unknown event types", () => {
       it("should return 200 for unknown event type", async () => {
-        const { headers } = await import("next/headers");
-        vi.mocked(headers).mockResolvedValue(
-          new Map([
-            ["svix-id", "msg_test"],
-            ["svix-timestamp", "1234567890"],
-            ["svix-signature", "v1,test"],
-          ])
-        );
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
 
         const eventPayload = {
           type: "email.verification_requested",
           data: {},
         };
 
-        const mockVerify = vi.fn().mockReturnValue(eventPayload);
-        vi.mocked(Webhook).mockImplementation(() => ({
-          verify: mockVerify,
-        } as any));
+        verifyMock.mockReturnValue(eventPayload);
 
-        const request = await createMockRequest(
-          JSON.stringify(eventPayload),
-          {
-            "svix-id": "msg_test",
-            "svix-timestamp": "1234567890",
-            "svix-signature": "v1,test",
-          }
-        );
-
-        const response = await POST(request);
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
       });
     });
