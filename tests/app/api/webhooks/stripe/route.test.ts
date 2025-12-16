@@ -5,7 +5,6 @@ import * as stripeLib from "@/lib/stripe";
 import { createMockStripeWebhookEvent, createMockCheckoutSession, TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
 import type Stripe from "stripe";
 
-// Mock the modules
 vi.mock("@/lib/supabase", async () => {
   const actual = await vi.importActual("@/lib/supabase");
   return {

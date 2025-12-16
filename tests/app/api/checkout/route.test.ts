@@ -4,7 +4,6 @@ import * as supabaseLib from "@/lib/supabase";
 import * as stripeLib from "@/lib/stripe";
 import { TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
 
-// Mock the modules
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
 }));
@@ -192,7 +191,6 @@ describe("Checkout Route", () => {
         body: JSON.stringify({ packageId: "starter" }),
       });
 
-      // This should not throw
       const response = await POST(request);
       expect(response.status).toBeGreaterThanOrEqual(200);
     });

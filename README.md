@@ -1,281 +1,340 @@
-# Magic Room - AI Interior Design Generator
+<div align="center">
 
-A privacy-first, AI-powered interior design web application that transforms room photos into beautiful design variations in seconds. Upload a photo, select your style preferences, and get unique design options instantly.
+<h1>🏠 Magic Room 🏠</h1>
+
+[![Next.js 15](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript 5](https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind v4](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![shadcn/ui](https://img.shields.io/badge/shadcn/ui-Radix-8A3FFC?style=for-the-badge)](https://ui.shadcn.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Clerk](https://img.shields.io/badge/Clerk-6C47FF?style=for-the-badge&logo=clerk&logoColor=white)](https://clerk.com/)
+[![OpenRouter](https://img.shields.io/badge/OpenRouter-000000?style=for-the-badge&logo=openai&logoColor=white)](https://openrouter.ai/)
+[![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white)](https://stripe.com/)
+[![Upstash Redis](https://img.shields.io/badge/Upstash_Redis-00E9A3?style=for-the-badge&logo=redis&logoColor=white)](https://upstash.com/)
+[![pnpm](https://img.shields.io/badge/pnpm-FFCF00?style=for-the-badge&logo=pnpm&logoColor=black)](https://pnpm.io/)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/ThanosKa/magic-room?style=for-the-badge&logo=github)](https://github.com/ThanosKa/magic-room/stargazers)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge)](CONTRIBUTING.md)
+
+<p>AI-powered interior design assistant that transforms your room photos into stunning design variations using Google's Gemini Vision model. Upload a room image, choose your style, and get professional design suggestions instantly.</p>
+
+[Report Bug](https://github.com/ThanosKa/magic-room/issues/new?template=bug_report.md) · [Request Feature](https://github.com/ThanosKa/magic-room/issues/new?template=feature_request.md) · [Discussions](https://github.com/ThanosKa/magic-room/discussions)
+
+</div>
+
+---
+
+## 📸 Screenshots
+
+<div align="center">
+  <img src="./public/images/room-before.png" alt="Before design" width="45%" />
+  <img src="./public/images/room-after.png" alt="After design" width="45%" />
+</div>
+
+---
+
+## Table of Contents
+
+- [About](#about)
+- [Features](#features)
+  - [SEO and Performance](#seo-and-performance)
+  - [Enhanced UX](#enhanced-ux)
+- [Demo](#demo)
+- [How It Works](#how-it-works)
+- [Built With](#built-with)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Environment Setup](#environment-setup)
+  - [Database Setup](#database-setup)
+  - [Run Locally](#run-locally)
+  - [Testing](#testing)
+  - [SEO Check](#seo-check)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Architecture](#architecture)
+- [Deployment](#deployment)
+  - [Deploy to Vercel](#deploy-to-vercel)
+  - [Manual Deploy](#manual-deploy)
+  - [Production Checklist](#production-checklist)
+- [CI](#ci)
+- [Contributing](#contributing)
+- [Security](#security)
+- [Acknowledgments](#acknowledgments)
+- [Star History](#star-history)
+- [Contact](#contact)
+- [Support](#support)
+- [License](#license)
+- [Back to Top](#back-to-top)
+
+---
+
+## About
+
+Magic Room is an AI-powered interior design assistant that helps anyone transform their living spaces. Upload a photo of your room, select a design theme, and get instant professional design suggestions powered by Google's Gemini Vision model. With a transparent credit system, secure authentication, and privacy-first approach, redesigning your space has never been easier.
 
 ## Features
 
-- **AI-Powered Design Generation** - Uses Google Gemini AI for stunning results
-- **Privacy First** - Images processed in-memory only, never stored
-- **Fast Generation** - Get design variations in 30-60 seconds
-- **Flexible Credits System** - Buy what you need, use anytime
-- **Light Theme** - Beautiful purple-themed UI
-- **Fully Responsive** - Works seamlessly on desktop, tablet, and mobile
+- **Instant AI Design Generation**: Upload any room photo and get multiple design variations in seconds
+- **Multiple Design Themes**: Choose from Bohemian, Industrial, Minimalist, Modern, Scandinavian, and Tropical styles
+- **Credit-Based System**: Start with free credits, purchase packs that never expire
+- **Before/After Comparison**: Interactive slider to compare original and redesigned rooms
+- **Privacy-First**: Images processed in-memory only, never stored on servers
+- **Real-Time Generation**: Synchronous processing with live status updates
+- **Design History**: View and revisit all your previous design generations
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-## Tech Stack
+### SEO and Performance
 
-- **Frontend**: Next.js 16+ (App Router), React 19, TypeScript
-- **Styling**: Tailwind CSS v4, shadcn/ui, Framer Motion
-- **Authentication**: Clerk (Google OAuth)
-- **Database**: Supabase (PostgreSQL)
-- **AI Generation**: OpenRouter (google/gemini-2.5-flash-image)
-- **Payments**: Stripe (credit packages)
-- **Rate Limiting**: Upstash Redis
-- **State Management**: Zustand
-- **Validation**: Zod
-- **Package Manager**: pnpm
+- Next.js Metadata API for dynamic Open Graph and Twitter cards
+- Core Web Vitals optimization for fast loading
+- SEO audit script (`pnpm seo:audit`) for content quality checks
+- Optimized images and Tailwind v4 for minimal bundle size
+- App Router for improved performance and SEO
+
+### Enhanced UX
+
+- Smooth page transitions and loading states
+- Drag-and-drop image upload with validation
+- Animated buttons and interactive elements
+- Accessible forms with keyboard navigation
+- Clear progress indicators during AI processing
+- Responsive layouts for all screen sizes
+
+## Demo
+
+- Run locally with `pnpm dev` at `http://localhost:3000`
+- Deploy to Vercel with one-click deployment and configure environment variables
+
+Quick preview: Upload room photo → Select design theme → AI generates variations → Compare with slider → Download results
+
+## How It Works
+
+1. User uploads a room image via drag-and-drop (converted to base64 client-side)
+2. User selects room type and design theme, optionally adds custom prompt
+3. System validates authentication and credit balance
+4. Image is sent to OpenRouter's Google Gemini Vision model for processing
+5. AI generates design variations and returns results immediately
+6. Credits are deducted and generation metadata is stored
+7. User can compare designs with before/after slider and download results
+
+## Built With
+
+| Category          | Technology                                              |
+| ----------------- | ------------------------------------------------------- |
+| Framework         | Next.js 15 (App Router)                                 |
+| Language          | TypeScript (strict)                                     |
+| Styling           | Tailwind CSS v4 + shadcn/ui                             |
+| State Management  | Zustand                                                 |
+| Auth              | Clerk                                                   |
+| Database          | Supabase (PostgreSQL)                                   |
+| AI Model          | Google Gemini 2.5 Flash (via OpenRouter)                |
+| Rate Limiting     | Upstash Redis                                           |
+| Payments          | Stripe                                                  |
+| Validation        | Zod                                                     |
+| Logging           | Pino                                                    |
+| Hosting           | Vercel                                                  |
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ (we recommend using `nvm`)
-- pnpm (install with `npm install -g pnpm`)
-- Accounts for:
-  - [Clerk](https://dashboard.clerk.com)
-  - [Supabase](https://supabase.com)
-  - [OpenRouter](https://openrouter.ai)
-  - [Stripe](https://dashboard.stripe.com)
-  - [Upstash](https://upstash.com)
+- Node.js 20+
+- pnpm
+- Accounts: Clerk, Supabase, Stripe, OpenRouter, Upstash Redis
 
-### Setup Instructions
-
-1. **Clone and install dependencies**
+### Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/ThanosKa/magic-room.git
 cd magic-room
 pnpm install
 ```
 
-2. **Set up environment variables**
-
-Copy `.env.example` to `.env.local` and fill in all values:
+### Environment Setup
 
 ```bash
 cp .env.example .env.local
+# Fill in the following variables:
+# Clerk: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY
+# Supabase: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY
+# Stripe: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY, STRIPE_PRICE_IDS
+# OpenRouter: OPENROUTER_API_KEY
+# Upstash Redis: UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
+# App: NEXT_PUBLIC_APP_URL
 ```
 
-**Required Environment Variables:**
+### Database Setup
 
-- **Clerk**
-
-  - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Public key from Clerk dashboard
-  - `CLERK_SECRET_KEY` - Secret key from Clerk dashboard
-  - `CLERK_WEBHOOK_SECRET` - From Clerk webhooks page
-
-- **Supabase**
-
-  - `NEXT_PUBLIC_SUPABASE_URL` - Project URL
-  - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Anon/public key
-  - `SUPABASE_SERVICE_ROLE_KEY` - Service role key (keep secret!)
-
-- **OpenRouter**
-
-  - `OPENROUTER_API_KEY` - Your API key from https://openrouter.ai/settings/keys
-
-- **Stripe**
-
-  - `STRIPE_SECRET_KEY` - Secret API key
-  - `STRIPE_WEBHOOK_SECRET` - Signing secret for webhooks
-  - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - Publishable key
-
-- **Upstash Redis**
-
-  - `UPSTASH_REDIS_REST_URL` - REST endpoint
-  - `UPSTASH_REDIS_REST_TOKEN` - Authentication token
-
-- **App Config**
-  - `NEXT_PUBLIC_APP_URL` - App URL (http://localhost:3000 for local dev)
-
-3. **Set up Supabase**
-
-Create the database schema:
+Run the Supabase migrations:
 
 ```bash
-# In Supabase dashboard, run the SQL from supabase/migrations/001_initial_schema.sql
-# Then seed the credit packages data from supabase/seed.sql
+# Apply migrations from supabase/migrations/
+# Or run the SQL files in order through your Supabase dashboard
 ```
 
-4. **Configure Webhooks**
-
-- **Clerk**: Point to `https://yourdomain.com/api/webhooks/clerk`
-- **Stripe**: Point to `https://yourdomain.com/api/webhooks/stripe`
-
-For local development, use [Stripe CLI](https://stripe.com/docs/stripe-cli) to forward webhooks.
-
-5. **Start development server**
+### Run Locally
 
 ```bash
 pnpm dev
+# Visit http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+### Testing
 
-## Development Commands
+- `pnpm lint` — ESLint quality checks
+- `pnpm type-check` — TypeScript compilation check
+- `pnpm test:run` — Run Vitest test suite
+- `pnpm test:coverage` — Run tests with coverage report
+
+### SEO Check
 
 ```bash
-# Start dev server with hot reload
+# Terminal 1
 pnpm dev
 
-# Type checking
-pnpm type-check
-
-# Linting
-pnpm lint
-
-# Build for production
-pnpm build
-
-# Start production server
-pnpm start
+# Terminal 2
+pnpm seo:audit
 ```
+
+Optionally target a deployed URL:
+
+```bash
+NEXT_PUBLIC_APP_URL=https://your-domain.com pnpm seo:audit
+```
+
+## Usage
+
+1. Sign up or sign in with Clerk authentication
+2. Upload a photo of your room via drag-and-drop
+3. Select your room type and preferred design theme
+4. Optionally add custom design instructions
+5. Click "Generate Designs" (requires available credits)
+6. Wait 30-60 seconds for AI processing
+7. Compare results with the before/after slider
+8. Download your favorite design variations
+9. View your design history in your account
 
 ## Project Structure
 
 ```
 magic-room/
-├── app/                      # Next.js app directory
-│   ├── api/                  # API routes and webhooks
-│   ├── generate/             # Design generation page
-│   ├── purchase/             # Credit purchase page
-│   ├── privacy/              # Privacy policy
-│   ├── terms/                # Terms of service
-│   ├── layout.tsx            # Root layout
-│   ├── page.tsx              # Landing page
-│   └── globals.css           # Global styles
-├── components/               # React components
-│   ├── ui/                   # shadcn/ui components
-│   ├── header.tsx            # Navigation header
-│   ├── footer.tsx            # Footer
-│   ├── auth-guard.tsx        # Protected route wrapper
-│   ├── room-uploader.tsx     # Image selection (base64)
-│   ├── design-options.tsx    # Style selector
-│   ├── results-viewer.tsx    # Results display
-│   └── generation-loading.tsx # Loading states
-├── lib/                      # Utility functions
-│   ├── supabase.ts           # Server-side Supabase
-│   ├── supabase-client.ts    # Client-side utilities
-│   ├── openrouter.ts         # OpenRouter AI client
-│   ├── redis.ts              # Rate limiting
-│   ├── stripe.ts             # Stripe client
-│   ├── constants.ts          # App constants
-│   └── utils.ts              # Helper functions
-├── stores/                   # Zustand state management
-│   ├── user-store.ts         # User state (credits, auth)
-│   └── generation-store.ts   # Generation state
-├── types/                    # TypeScript types
-│   └── index.ts              # All type definitions
-├── supabase/                 # Database scripts
-│   ├── migrations/           # Database migrations
-│   └── seed.sql              # Seed data
-├── components.json           # shadcn/ui config
-├── tsconfig.json             # TypeScript config
-├── next.config.ts            # Next.js config
-└── package.json              # Dependencies
+├── app/                    # Next.js App Router pages and API routes
+│   ├── api/               # API endpoints (generate, checkout, webhooks)
+│   ├── generate/          # Main generation page
+│   └── pricing/           # Pricing page
+├── components/            # Reusable UI components
+│   ├── ui/               # shadcn/ui components
+│   └── ...               # Custom components
+├── lib/                  # Utility libraries and configurations
+│   ├── openrouter.ts     # AI model integration
+│   ├── stripe.ts         # Payment processing
+│   └── supabase.ts       # Database client
+├── stores/               # Zustand state management
+├── supabase/             # Database migrations and seed data
+├── tests/                # Test files
+└── .github/              # GitHub configuration
 ```
 
-## How It Works
+## Architecture
 
-1. **User Signs Up** - Google OAuth via Clerk, receives 1 free credit
-2. **Selects Room Photo** - Drag-and-drop, converted to base64 locally
-3. **Selects Design Preferences** - Room type, theme, optional custom prompt
-4. **Generates Designs** - 1 credit deducted, image sent to OpenRouter/Gemini AI
-5. **Views Results** - Design variation(s) displayed instantly
-6. **Downloads or Generates Again** - Full-res images available for download
-7. **Privacy Preserved** - Images never stored, processed in-memory only
-
-## Credit Packages
-
-- **Free Trial**: 1 credit (on first signup)
-- **Starter Pack**: 30 credits for $9.99
-- **Pro Pack**: 150 credits for $19.99
-- **Ultimate Pack**: 300 credits for $29.99
-
-Each generation uses 1 credit.
-
-## Privacy & Security
-
-- Images never stored (processed in-memory as base64)
-- No personal data collection beyond what Clerk stores
-- Rate limiting prevents abuse
-- Stripe never has access to uploaded images
-- Clerk/Stripe webhooks signature-verified
-
-See [Privacy Policy](/privacy) and [Terms of Service](/terms) for details.
-
-## Rate Limiting
-
-- All users: 100 generations per hour (abuse prevention)
-- Rate limits reset using Upstash Redis with 1-hour windows.
-
-## Error Handling
-
-- User-friendly error messages for all failures
-- Automatic credit refunds on generation failures
-- Global error boundary with recovery options
-
-## Testing Checklist
-
-Before deploying:
-
-- [ ] Auth flow works (sign up → free credit awarded)
-- [ ] Image upload and preview works
-- [ ] Generation completes with OpenRouter
-- [ ] Results display after generation completes
-- [ ] Download works for variations
-- [ ] Credit packages appear on purchase page
-- [ ] Stripe checkout flow completes
-- [ ] Credits added after purchase
-- [ ] Rate limiting prevents abuse
+- **App Router**: Next.js 15 App Router for routing and API endpoints
+- **Authentication**: Clerk middleware for session management
+- **Credit System**: Atomic operations in Supabase with non-expiring credits
+- **AI Processing**: Synchronous OpenRouter API calls with Google Gemini Vision
+- **Privacy**: Images processed in-memory only, no persistent storage
+- **Rate Limiting**: Upstash Redis for abuse prevention (100 generations/hour per user)
+- **State Management**: Zustand for client-side state (credits, generation status)
+- **Validation**: Zod schemas for type-safe API validation
+- **Logging**: Structured logging with Pino
 
 ## Deployment
 
-### Vercel (Recommended)
+### Deploy to Vercel
+
+The easiest way to deploy Magic Room is with Vercel:
+
+1. Push your code to GitHub
+2. Import the project in Vercel
+3. Add all environment variables from `.env.local`
+4. Update `NEXT_PUBLIC_APP_URL` to your production domain
+5. Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FThanosKa%2Fmagic-room)
+
+### Manual Deploy
+
+Build locally and run on Node 20+:
 
 ```bash
-vercel
+pnpm build
+pnpm start
 ```
 
-Set environment variables in Vercel dashboard.
+### Production Checklist
 
-### Other Platforms
+- [ ] Configure production environment variables
+- [ ] Set up Supabase connection pooling
+- [ ] Configure Clerk production instance and webhooks
+- [ ] Enable Stripe live mode with webhook endpoints
+- [ ] Set up Upstash Redis production instance
+- [ ] Configure custom domain and SSL
+- [ ] Enable error tracking and monitoring
+- [ ] Test all payment flows and webhooks
+- [ ] Verify AI model integration works in production
 
-Ensure:
+## CI
 
-- Node 18+ support
-- Environment variables configured
-- Webhooks point to production URLs
-- Supabase in production mode
-- Stripe in live mode (for production)
+`.github/workflows/ci.yml` runs automated checks on every push and pull request:
+- ESLint for code quality
+- TypeScript type checking
+- Vitest test suite execution
+- Uses Node.js 20 and pnpm for consistency
 
-## Troubleshooting
+## Contributing
 
-**"Missing publishableKey" error**
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) and follow our [Code of Conduct](CODE_OF_CONDUCT.md). Use the issue templates for bugs and features, and the PR template when submitting changes.
 
-- Ensure `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` is set in `.env.local`
+## Security
 
-**"Rate limit exceeded"**
+Report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md). Do not file public issues for security concerns.
 
-- Wait 1 hour for Redis window to reset
-- Check Redis URL and token in `.env.local`
+## Acknowledgments
 
-**Stripe webhook not firing**
+- [Google Gemini](https://gemini.google.com/) for the AI vision model
+- [OpenRouter](https://openrouter.ai/) for API access
+- [shadcn/ui](https://ui.shadcn.com) for beautiful UI components
+- [Vercel](https://vercel.com) for hosting and deployment
+- [Next.js](https://nextjs.org/) for the framework
 
-- Use Stripe CLI for local testing: `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
-- Verify webhook signing secret matches `STRIPE_WEBHOOK_SECRET`
+## Star History
 
-**OpenRouter generation failing**
+<div align="center">
 
-- Verify `OPENROUTER_API_KEY` is set correctly
-- Check OpenRouter dashboard for API errors
-- Ensure your account has credits
+[![Star History Chart](https://api.star-history.com/svg?repos=ThanosKa/magic-room&type=Date)](https://star-history.com/#ThanosKa/magic-room&Date)
 
-## License
+</div>
 
-MIT
+## Contact
+
+- GitHub Issues: [Open an issue](https://github.com/ThanosKa/magic-room/issues)
+- X: [@KazakisThanos](https://x.com/KazakisThanos)
+- Email: kazakis.th@gmail.com
 
 ## Support
 
-- Email: kazakis.th@gmail.com
-- Issues: GitHub Issues
-- Discord: [link placeholder]
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/thaka)
+
+## License
+
+Licensed under Apache License 2.0. See [LICENSE](LICENSE).
+
+---
+
+<div id="back-to-top" align="center">
+
+[Back to Top](#readme)
+
+</div>

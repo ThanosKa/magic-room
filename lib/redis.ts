@@ -19,9 +19,7 @@ interface RateLimitResult {
   resetAt?: number;
 }
 
-// Check rate limit for a user
 export async function checkRateLimit(userId: string): Promise<RateLimitResult> {
-  // Bypass in development
   if (process.env.NODE_ENV === "development") {
     return { success: true, remaining: -1 };
   }
@@ -29,15 +27,12 @@ export async function checkRateLimit(userId: string): Promise<RateLimitResult> {
   try {
     const key = `rate-limit:${userId}`;
 
-    // Get current count
     const current = await redis.incr(key);
 
-    // Set expiration on first request
     if (current === 1) {
       await redis.expire(key, RATE_LIMIT_WINDOW);
     }
 
-    // Get TTL for reset time
     const ttl = await redis.ttl(key);
 
     if (current > RATE_LIMIT) {
@@ -55,7 +50,6 @@ export async function checkRateLimit(userId: string): Promise<RateLimitResult> {
     };
   } catch (error) {
     console.error("Rate limit check error:", error);
-    // Allow on error to prevent blocking
     return {
       success: true,
       remaining: -1,
@@ -63,9 +57,7 @@ export async function checkRateLimit(userId: string): Promise<RateLimitResult> {
   }
 }
 
-// Check rate limit by IP (fallback for unauthenticated requests)
 export async function checkRateLimitByIp(ip: string): Promise<RateLimitResult> {
-  // Bypass in development
   if (process.env.NODE_ENV === "development") {
     return { success: true, remaining: -1 };
   }
@@ -103,7 +95,6 @@ export async function checkRateLimitByIp(ip: string): Promise<RateLimitResult> {
   }
 }
 
-// Reset rate limit for a user (useful for admin operations)
 export async function resetRateLimit(userId: string): Promise<boolean> {
   try {
     const key = `rate-limit:${userId}`;
@@ -115,7 +106,6 @@ export async function resetRateLimit(userId: string): Promise<boolean> {
   }
 }
 
-// Get current rate limit status
 export async function getRateLimitStatus(userId: string) {
   try {
     const key = `rate-limit:${userId}`;
