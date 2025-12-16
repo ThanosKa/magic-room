@@ -13,6 +13,8 @@ export default defineConfig({
             STRIPE_SECRET_KEY: "sk_test_mock_key",
             STRIPE_WEBHOOK_SECRET: "whsec_test_mock_secret",
             NEXT_PUBLIC_OPENROUTER_API_KEY: "test-openrouter-key",
+            UPSTASH_REDIS_REST_URL: "https://test-redis.upstash.io",
+            UPSTASH_REDIS_REST_TOKEN: "test-redis-token",
         },
     },
     resolve: {
