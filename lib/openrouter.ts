@@ -198,6 +198,7 @@ export function buildDesignPrompt(
     quality: "standard" | "premium" = "standard",
     customPrompt?: string
 ): string {
+    void quality; // Parameter used for type safety but not needed in prompt construction
     const roomDescriptions: Record<string, string> = {
         "living-room": "a modern living room with comfortable seating",
         bedroom: "a relaxing bedroom with a stylish bed",

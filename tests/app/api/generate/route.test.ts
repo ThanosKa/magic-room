@@ -5,6 +5,9 @@ import * as redisLib from "@/lib/redis";
 import * as openrouterLib from "@/lib/openrouter";
 import { auth } from "@clerk/nextjs/server";
 
+type AuthResult = Awaited<ReturnType<typeof auth>>;
+type Transaction = Awaited<ReturnType<typeof supabaseLib.createTransaction>>;
+
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
 }));
@@ -61,7 +64,7 @@ const TEST_BASE64_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA
 describe("Generate Route - Quality Feature", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(auth).mockReturnValue({ userId: TEST_USER.clerkUserId } as any);
+    vi.mocked(auth).mockReturnValue({ userId: TEST_USER.clerkUserId } as AuthResult);
     vi.mocked(redisLib.checkRateLimit).mockResolvedValue({
       success: true,
       remaining: 99,
@@ -74,7 +77,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
       vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
@@ -106,7 +109,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
       vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
@@ -138,7 +141,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
       vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
@@ -168,7 +171,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
       vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
@@ -200,7 +203,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
       vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
@@ -259,7 +262,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
       vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue(TEST_USER);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
@@ -300,7 +303,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createGeneration).mockResolvedValue(undefined);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
       vi.mocked(supabaseLib.updateGenerationStatus).mockResolvedValue(undefined);
       vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue(TEST_USER);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
@@ -383,7 +386,7 @@ describe("Generate Route - Quality Feature", () => {
     });
 
     it("should reject unauthorized requests", async () => {
-      vi.mocked(auth).mockReturnValue({ userId: null } as any);
+      vi.mocked(auth).mockReturnValue({ userId: null } as AuthResult);
 
       const request = new Request("http://localhost:3000/api/generate", {
         method: "POST",

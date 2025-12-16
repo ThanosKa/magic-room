@@ -13,7 +13,7 @@ export default function NotFound() {
             Page not found
           </h2>
           <p className="mx-auto max-w-[600px] text-slate-500 dark:text-slate-400 md:text-xl">
-            Sorry, we couldn’t find the page you’re looking for. It might have been removed or doesn't exist.
+            Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have been removed or doesn&apos;t exist.
           </p>
         </div>
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
