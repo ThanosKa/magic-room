@@ -64,7 +64,7 @@ const TEST_BASE64_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA
 describe("Generate Route - Quality Feature", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(auth).mockReturnValue({ userId: TEST_USER.clerkUserId } as AuthResult);
+    vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as AuthResult);
     vi.mocked(redisLib.checkRateLimit).mockResolvedValue({
       success: true,
       remaining: 99,
@@ -386,7 +386,7 @@ describe("Generate Route - Quality Feature", () => {
     });
 
     it("should reject unauthorized requests", async () => {
-      vi.mocked(auth).mockReturnValue({ userId: null } as AuthResult);
+      vi.mocked(auth).mockResolvedValue({ userId: null } as AuthResult);
 
       const request = new Request("http://localhost:3000/api/generate", {
         method: "POST",
