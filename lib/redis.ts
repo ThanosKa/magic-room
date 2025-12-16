@@ -19,13 +19,15 @@ interface RateLimitResult {
   resetAt?: number;
 }
 
-export async function checkRateLimit(userId: string): Promise<RateLimitResult> {
+export async function checkRateLimit(
+  userId: string
+): Promise<RateLimitResult> {
   if (process.env.NODE_ENV === "development") {
-    return { success: true, remaining: -1 };
+    return { success: true, remaining: RATE_LIMIT };
   }
 
   try {
-    const key = `rate-limit:${userId}`;
+    const key = `rate_limit:${userId}`;
 
     const current = await redis.incr(key);
 
@@ -34,9 +36,9 @@ export async function checkRateLimit(userId: string): Promise<RateLimitResult> {
     }
 
     const ttl = await redis.ttl(key);
+    const resetAt = Date.now() + ttl * 1000;
 
     if (current > RATE_LIMIT) {
-      const resetAt = Date.now() + ttl * 1000;
       return {
         success: false,
         remaining: 0,
@@ -47,12 +49,13 @@ export async function checkRateLimit(userId: string): Promise<RateLimitResult> {
     return {
       success: true,
       remaining: RATE_LIMIT - current,
+      resetAt,
     };
   } catch (error) {
-    console.error("Rate limit check error:", error);
+    console.error("Redis error:", error);
     return {
       success: true,
-      remaining: -1,
+      remaining: RATE_LIMIT,
     };
   }
 }

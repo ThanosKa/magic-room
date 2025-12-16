@@ -17,9 +17,12 @@ export type Theme =
   | "vintage"
   | "luxury";
 
+export type Quality = "standard" | "premium";
+
 export interface IDesignOptions {
   roomType: RoomType;
   theme: Theme;
+  quality: Quality;
   customPrompt?: string;
   imageUrl: string;
 }
@@ -67,6 +70,7 @@ export interface IGenerateRequest {
   imageUrl: string;
   roomType: RoomType;
   theme: Theme;
+  quality?: Quality;
   customPrompt?: string;
 }
 

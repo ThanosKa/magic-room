@@ -6,7 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
 import { AuthGuard } from "@/components/auth-guard";
-import { RoomType, Theme } from "@/types";
+import { RoomType, Theme, Quality } from "@/types";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -62,6 +62,7 @@ function GeneratePageContent() {
     const [originalImage, setOriginalImage] = useState<string | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [roomType, setRoomType] = useState<RoomType>("living-room");
+    const [quality, setQuality] = useState<Quality>("standard");
     const [theme, setTheme] = useState<Theme>("modern");
     const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
@@ -100,7 +101,8 @@ function GeneratePageContent() {
     });
 
     const handleGenerate = useCallback(async () => {
-        if (!originalImage || credits < 1) {
+        const requiredCredits = quality === "premium" ? 2 : 1;
+        if (!originalImage || credits < requiredCredits) {
             return;
         }
 
@@ -114,6 +116,7 @@ function GeneratePageContent() {
                     base64Image: originalImage,
                     roomType,
                     theme,
+                    quality,
                 }),
             });
 
@@ -143,6 +146,7 @@ function GeneratePageContent() {
         credits,
         roomType,
         theme,
+        quality,
         setActiveGeneration,
         clerkUser?.id,
         refreshUser,
@@ -224,7 +228,29 @@ function GeneratePageContent() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label className="text-base font-semibold">2. Choose Style</Label>
+                            <Label className="text-base font-semibold">2. Quality</Label>
+                            <Select
+                                value={quality}
+                                onValueChange={(v) => setQuality(v as Quality)}
+                            >
+                                <SelectTrigger className="h-11 cursor-pointer">
+                                    <SelectValue placeholder="Select quality" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="standard" className="cursor-pointer">
+                                            Standard Quality • 1 credit
+                                        </SelectItem>
+                                        <SelectItem value="premium" className="cursor-pointer">
+                                            Premium Quality • 2 credits
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="space-y-3">
+                            <Label className="text-base font-semibold">3. Choose Style</Label>
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                                 {Object.entries(THEMES).map(([key, label]) => (
                                     <button
@@ -371,7 +397,7 @@ function GeneratePageContent() {
                                         <Button
                                             size="lg"
                                             onClick={handleGenerate}
-                                            disabled={isGenerating || credits < 1}
+                                            disabled={isGenerating || credits < (quality === "premium" ? 2 : 1)}
                                             className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white cursor-pointer"
                                         >
                                             {isGenerating ? (
@@ -402,7 +428,7 @@ function GeneratePageContent() {
                                                 size="lg"
                                                 className="min-w-[200px] h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white shadow-lg cursor-pointer"
                                                 onClick={handleGenerate}
-                                                disabled={isGenerating || credits < 1}
+                                                disabled={isGenerating || credits < (quality === "premium" ? 2 : 1)}
                                             >
                                                 {isGenerating ? (
                                                     <>

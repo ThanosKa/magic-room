@@ -4,7 +4,7 @@ import { Lock, Zap, Wand2 } from "lucide-react";
 
 export function FeaturesSection() {
     return (
-        <section className="bg-slate-50 py-24 dark:bg-slate-900/50">
+        <section className="bg-slate-50 py-16 dark:bg-slate-900/50">
             <div className="container px-4 md:px-6">
                 <div className="mb-16 text-center">
                     <h2 className="text-3xl font-bold tracking-tight md:text-4xl text-slate-900 dark:text-white">
@@ -37,8 +37,8 @@ export function FeaturesSection() {
                             Lightning Fast
                         </h3>
                         <p className="mt-3 text-slate-600 dark:text-slate-400">
-                            Get 4-8 stunning design variations in under 60 seconds. Powered
-                            by the latest SDXL Lightning models.
+                            Get stunning design variations in under 60 seconds. Powered
+                            by Google Gemini 2.5 Flash.
                         </p>
                     </div>
 

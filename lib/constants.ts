@@ -21,6 +21,23 @@ export const THEMES: Record<Theme, string> = {
   luxury: "Luxury",
 };
 
+export const QUALITY_OPTIONS = {
+  standard: {
+    id: "standard" as const,
+    label: "Standard Quality",
+    description: "Quick generation",
+    credits: 1,
+    model: "google/gemini-2.5-flash-image"
+  },
+  premium: {
+    id: "premium" as const,
+    label: "Premium Quality",
+    description: "Higher quality redesign",
+    credits: 2,
+    model: "google/gemini-3-pro-image-preview"
+  }
+} as const;
+
 export const CREDIT_PACKAGES: ICreditPackage[] = [
   {
     id: "starter",

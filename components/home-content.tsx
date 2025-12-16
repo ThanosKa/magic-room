@@ -12,7 +12,7 @@ export default function HomeContent() {
 
     return (
         <PageTransition>
-            <section className="relative overflow-hidden bg-white pb-16 pt-8 dark:bg-slate-950 md:pb-32 md:pt-12">
+            <section className="relative overflow-hidden bg-white pb-12 pt-8 dark:bg-slate-950 md:pb-20 md:pt-12">
                 <div className="container px-4 md:px-6">
                     <div className="flex flex-col items-center text-center">
                         <h1 className="mt-8 max-w-4xl text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-6xl lg:text-7xl">
@@ -64,7 +64,7 @@ export default function HomeContent() {
 
             <FAQSection />
 
-            <section className="border-t border-slate-200 bg-white py-24 dark:border-slate-800 dark:bg-slate-950">
+            <section className="border-t border-slate-200 bg-white py-16 dark:border-slate-800 dark:bg-slate-950">
                 <div className="container px-4 text-center md:px-6">
                     <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight md:text-4xl text-slate-900 dark:text-white">
                         Ready to Redesign Your Space?

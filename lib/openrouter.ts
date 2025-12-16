@@ -1,6 +1,7 @@
 import { logger } from "@/lib/logger";
 
 export const OPENROUTER_MODEL = "google/gemini-2.5-flash-image";
+export const OPENROUTER_MODEL_PREMIUM = "google/gemini-3-pro-image-preview";
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 export const POSITIVE_PROMPT = `beautiful interior design, professional photography, well-lit, 
@@ -34,7 +35,8 @@ interface OpenRouterResponse {
 
 export async function generateDesign(
     base64Image: string,
-    prompt: string
+    prompt: string,
+    quality: "standard" | "premium" = "standard"
 ): Promise<GenerationResult> {
     const apiKey = process.env.OPENROUTER_API_KEY;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -44,9 +46,12 @@ export async function generateDesign(
         throw new Error("Missing OpenRouter API key");
     }
 
+    const selectedModel = quality === "premium" ? OPENROUTER_MODEL_PREMIUM : OPENROUTER_MODEL;
+
     logger.info(
         {
-            model: OPENROUTER_MODEL,
+            model: selectedModel,
+            quality,
             promptLength: prompt.length,
             imageSize: base64Image.length
         },
@@ -65,7 +70,7 @@ export async function generateDesign(
                 "X-Title": "Magic Room", // Shows in OpenRouter dashboard
             },
             body: JSON.stringify({
-                model: OPENROUTER_MODEL,
+                model: selectedModel,
                 messages: [
                     {
                         role: "user",
@@ -190,6 +195,7 @@ export async function generateDesign(
 export function buildDesignPrompt(
     roomType: string,
     theme: string,
+    quality: "standard" | "premium" = "standard",
     customPrompt?: string
 ): string {
     const roomDescriptions: Record<string, string> = {

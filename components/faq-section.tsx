@@ -18,7 +18,7 @@ const faqs: FaqItem[] = [
     id: "item-1",
     question: "How does Magic Room work?",
     answer:
-      "Magic Room uses advanced AI models (SDXL Lightning) to analyze your uploaded room photo and generate professional interior design variations while maintaining your room's original structure and layout.",
+      "Magic Room uses advanced AI models (Google Gemini 2.5 Flash) to analyze your uploaded room photo and generate professional interior design variations while maintaining your room's original structure and layout.",
   },
   {
     id: "item-2",
@@ -48,7 +48,7 @@ const faqs: FaqItem[] = [
 
 export function FAQSection() {
   return (
-    <section className="py-20 md:py-32 bg-slate-50 dark:bg-slate-900/50">
+    <section className="py-16 md:py-20 bg-slate-50 dark:bg-slate-900/50">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center md:mb-16">
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl text-slate-900 dark:text-white">

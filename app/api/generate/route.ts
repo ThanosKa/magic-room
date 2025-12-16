@@ -33,6 +33,7 @@ const GenerateSchema = z.object({
     "vintage",
     "luxury",
   ]),
+  quality: z.enum(["standard", "premium"]).default("standard"),
   customPrompt: z.string().optional(),
 });
 
@@ -71,9 +72,10 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
-    const { base64Image, roomType, theme, customPrompt } = parsed.data;
+    const { base64Image, roomType, theme, quality, customPrompt } = parsed.data;
+    const creditCost = quality === "premium" ? 2 : 1;
     logger.info(
-      { roomType, theme, hasCustomPrompt: !!customPrompt },
+      { roomType, theme, quality, creditCost, hasCustomPrompt: !!customPrompt },
       "[Generate] Request validated"
     );
 
@@ -87,10 +89,10 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     userId = user.id;
-    logger.info({ credits: user.credits }, "[Generate] User loaded");
+    logger.info({ credits: user.credits, required: creditCost }, "[Generate] User loaded");
 
-    if (user.credits < 1) {
-      logger.warn({ credits: user.credits }, "[Generate] Insufficient credits");
+    if (user.credits < creditCost) {
+      logger.warn({ credits: user.credits, required: creditCost }, "[Generate] Insufficient credits");
       return new Response(JSON.stringify({ error: "Insufficient credits" }), {
         status: 402,
         headers: { "Content-Type": "application/json" },
@@ -118,7 +120,7 @@ export async function POST(request: Request): Promise<Response> {
     }
     logger.info({}, "[Generate] Rate limit check passed");
 
-    const creditDeducted = await deductCredits(user.id, 1);
+    const creditDeducted = await deductCredits(user.id, creditCost);
     if (!creditDeducted) {
       logger.error({ userId: user.id }, "[Generate] Failed to deduct credits");
       return new Response(
@@ -129,20 +131,20 @@ export async function POST(request: Request): Promise<Response> {
         }
       );
     }
-    logger.info({}, "[Generate] Credit deducted");
+    logger.info({ creditCost }, "[Generate] Credits deducted");
 
-    await createTransaction(user.id, "usage", 1);
+    await createTransaction(user.id, "usage", creditCost);
     logger.info({}, "[Generate] Transaction recorded");
 
     generationId = `gen_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     await createGeneration(user.id, generationId, "base64-inline");
     logger.info({ generationId }, "[Generate] Generation record created");
 
-    const prompt = buildDesignPrompt(roomType, theme, customPrompt);
+    const prompt = buildDesignPrompt(roomType, theme, quality, customPrompt);
     logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
 
     const generationStartTime = Date.now();
-    const result = await generateDesign(base64Image, prompt);
+    const result = await generateDesign(base64Image, prompt, quality);
     const generationDuration = Date.now() - generationStartTime;
 
     logger.info(
@@ -156,16 +158,16 @@ export async function POST(request: Request): Promise<Response> {
     );
 
     if (!result.success || result.images.length === 0) {
-      await createTransaction(user.id, "refund", 1, undefined, { generationId });
+      await createTransaction(user.id, "refund", creditCost, undefined, { generationId });
       const latestUser = await ensureUserExists(clerkUserId);
       if (latestUser) {
         const { updateUserCredits } = await import("@/lib/supabase");
-        await updateUserCredits(latestUser.id, latestUser.credits + 1);
+        await updateUserCredits(latestUser.id, latestUser.credits + creditCost);
       }
 
       await updateGenerationStatus(generationId, "failed", undefined, result.error || "No images generated");
 
-      logger.warn({ generationId, error: result.error }, "[Generate] Generation failed - credit refunded");
+      logger.warn({ generationId, error: result.error, creditCost }, "[Generate] Generation failed - credits refunded");
 
       return new Response(
         JSON.stringify({
@@ -205,7 +207,6 @@ export async function POST(request: Request): Promise<Response> {
       try {
         await updateGenerationStatus(generationId, "failed", undefined,
           error instanceof Error ? error.message : "Internal error");
-        await createTransaction(userId, "refund", 1, undefined, { generationId });
       } catch (refundError) {
         logger.error({ err: refundError, generationId }, "[Generate] Failed to process refund");
       }

@@ -11,7 +11,7 @@ const FAQ_ITEMS = [
   {
     question: "How does Magic Room work?",
     answer:
-      "Magic Room uses advanced AI models (SDXL Lightning) to analyze your uploaded room photo and generate professional interior design variations while maintaining your room's original structure and layout.",
+      "Magic Room uses advanced AI models (Google Gemini 2.5 Flash) to analyze your uploaded room photo and generate professional interior design variations while maintaining your room's original structure and layout.",
   },
   {
     question: "Is it free to use?",
