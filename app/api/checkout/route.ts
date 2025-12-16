@@ -6,7 +6,7 @@ import { ensureUserExists } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
 
 const CheckoutSchema = z.object({
-  packageId: z.enum(["starter", "pro", "ultimate"]),
+  packageId: z.enum(["starter", "growth", "premium"]),
 });
 
 export async function POST(request: Request): Promise<Response> {

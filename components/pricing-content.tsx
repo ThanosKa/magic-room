@@ -42,7 +42,6 @@ const CREDIT_PACKAGES = [
         credits: 30,
         price: 9.99,
         priceDisplay: "€9.99",
-        priceId: "price_starter_placeholder",
         description: "Best for occasional use",
         features: [
             "30 design generations",
@@ -58,7 +57,6 @@ const CREDIT_PACKAGES = [
         credits: 150,
         price: 19.99,
         priceDisplay: "€19.99",
-        priceId: "price_growth_placeholder",
         description: "Best for regular users",
         features: [
             "150 design generations",
@@ -74,7 +72,6 @@ const CREDIT_PACKAGES = [
         credits: 300,
         price: 29.99,
         priceDisplay: "€29.99",
-        priceId: "price_premium_placeholder",
         description: "Best for professionals",
         features: [
             "300 design generations",

@@ -9,17 +9,17 @@ export const metadata: Metadata = pricingMetadata();
 
 const CREDIT_PACKAGES_SCHEMA = [
   {
-    name: "Magic Room Starter Pack",
+    name: "Magic Room Starter",
     description: "30 AI interior design generations. Credits never expire.",
     price: 9.99,
   },
   {
-    name: "Magic Room Growth Pack",
+    name: "Magic Room Growth",
     description: "150 AI interior design generations. Priority support included.",
     price: 19.99,
   },
   {
-    name: "Magic Room Premium Pack",
+    name: "Magic Room Premium",
     description: "300 AI interior design generations. 24/7 priority support.",
     price: 29.99,
   },

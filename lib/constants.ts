@@ -23,30 +23,30 @@ export const THEMES: Record<Theme, string> = {
   luxury: "Luxury",
 };
 
-// Credit packages (insert into Supabase after creating Stripe products)
+// Credit packages (Stripe products created and linked)
 export const CREDIT_PACKAGES: ICreditPackage[] = [
   {
     id: "starter",
-    name: "Starter Pack",
+    name: "Starter",
     credits: 30,
     priceCents: 999,
-    stripePriceId: "price_starter_placeholder",
+    stripePriceId: process.env.STRIPE_PRICE_STARTER || "",
     active: true,
   },
   {
-    id: "pro",
-    name: "Pro Pack",
+    id: "growth",
+    name: "Growth",
     credits: 150,
     priceCents: 1999,
-    stripePriceId: "price_pro_placeholder",
+    stripePriceId: process.env.STRIPE_PRICE_GROWTH || "",
     active: true,
   },
   {
-    id: "ultimate",
-    name: "Ultimate Pack",
+    id: "premium",
+    name: "Premium",
     credits: 300,
     priceCents: 2999,
-    stripePriceId: "price_ultimate_placeholder",
+    stripePriceId: process.env.STRIPE_PRICE_PREMIUM || "",
     active: true,
   },
 ];

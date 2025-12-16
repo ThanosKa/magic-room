@@ -1,0 +1,303 @@
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { POST } from "./route";
+import * as supabaseLib from "@/lib/supabase";
+import * as stripeLib from "@/lib/stripe";
+import { createMockStripeWebhookEvent, createMockCheckoutSession, TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
+import type Stripe from "stripe";
+
+// Mock the modules
+vi.mock("@/lib/supabase");
+vi.mock("@/lib/stripe");
+vi.mock("@/lib/logger", () => ({
+  logger: {
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+  },
+}));
+
+describe("Stripe Webhook Route", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("POST /api/webhooks/stripe", () => {
+    it("should reject request without signature", async () => {
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        body: JSON.stringify({}),
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(401);
+    });
+
+    it("should reject request with invalid signature", async () => {
+      const mockEvent = createMockStripeWebhookEvent("checkout.session.completed", createMockCheckoutSession());
+      vi.mocked(stripeLib.parseWebhookEvent).mockImplementation(() => {
+        throw new Error("Invalid signature");
+      });
+
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "invalid_signature",
+        },
+        body: JSON.stringify(mockEvent),
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(401);
+    });
+
+    it("should handle checkout.session.completed event with paid status", async () => {
+      const session = createMockCheckoutSession({
+        payment_status: "paid",
+        client_reference_id: TEST_USER.clerkUserId,
+        metadata: {
+          userId: TEST_USER.clerkUserId,
+          packageId: "starter",
+        },
+      });
+
+      const event: Stripe.Event = {
+        id: "evt_test",
+        object: "event",
+        api_version: "2024-06-20",
+        created: Math.floor(Date.now() / 1000),
+        data: {
+          object: session,
+          previous_attributes: {},
+        },
+        livemode: true,
+        pending_webhooks: 1,
+        request: { id: "req_test", idempotency_key: null },
+        type: "checkout.session.completed",
+      } as Stripe.Event;
+
+      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER as any);
+      vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue({
+        ...TEST_USER,
+        credits: TEST_USER.credits + TEST_PACKAGES.starter.credits,
+      } as any);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+
+      const body = JSON.stringify(event);
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "test_signature",
+        },
+        body,
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(200);
+      expect(supabaseLib.updateUserCredits).toHaveBeenCalledWith(
+        TEST_USER.id,
+        TEST_USER.credits + TEST_PACKAGES.starter.credits
+      );
+      expect(supabaseLib.createTransaction).toHaveBeenCalled();
+    });
+
+    it("should handle checkout.session.completed with no_payment_required", async () => {
+      const session = createMockCheckoutSession({
+        payment_status: "no_payment_required",
+        client_reference_id: TEST_USER.clerkUserId,
+        metadata: {
+          userId: TEST_USER.clerkUserId,
+          packageId: "growth",
+        },
+      });
+
+      const event: Stripe.Event = {
+        id: "evt_test",
+        object: "event",
+        api_version: "2024-06-20",
+        created: Math.floor(Date.now() / 1000),
+        data: {
+          object: session,
+          previous_attributes: {},
+        },
+        livemode: true,
+        pending_webhooks: 1,
+        request: { id: "req_test", idempotency_key: null },
+        type: "checkout.session.completed",
+      } as Stripe.Event;
+
+      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(TEST_USER as any);
+      vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue({
+        ...TEST_USER,
+        credits: TEST_USER.credits + TEST_PACKAGES.growth.credits,
+      } as any);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as any);
+
+      const body = JSON.stringify(event);
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "test_signature",
+        },
+        body,
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(200);
+    });
+
+    it("should reject unpaid checkout.session.completed", async () => {
+      const session = createMockCheckoutSession({
+        payment_status: "unpaid",
+        client_reference_id: TEST_USER.clerkUserId,
+        metadata: {
+          userId: TEST_USER.clerkUserId,
+          packageId: "starter",
+        },
+      });
+
+      const event: Stripe.Event = {
+        id: "evt_test",
+        object: "event",
+        api_version: "2024-06-20",
+        created: Math.floor(Date.now() / 1000),
+        data: {
+          object: session,
+          previous_attributes: {},
+        },
+        livemode: true,
+        pending_webhooks: 1,
+        request: { id: "req_test", idempotency_key: null },
+        type: "checkout.session.completed",
+      } as Stripe.Event;
+
+      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+
+      const body = JSON.stringify(event);
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "test_signature",
+        },
+        body,
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(200);
+      expect(supabaseLib.updateUserCredits).not.toHaveBeenCalled();
+    });
+
+    it("should handle missing userId in metadata", async () => {
+      const session = createMockCheckoutSession({
+        payment_status: "paid",
+        metadata: {
+          packageId: "starter",
+        },
+      });
+
+      const event: Stripe.Event = {
+        id: "evt_test",
+        object: "event",
+        api_version: "2024-06-20",
+        created: Math.floor(Date.now() / 1000),
+        data: {
+          object: session,
+          previous_attributes: {},
+        },
+        livemode: true,
+        pending_webhooks: 1,
+        request: { id: "req_test", idempotency_key: null },
+        type: "checkout.session.completed",
+      } as Stripe.Event;
+
+      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+
+      const body = JSON.stringify(event);
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "test_signature",
+        },
+        body,
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(400);
+    });
+
+    it("should handle user not found", async () => {
+      const session = createMockCheckoutSession({
+        payment_status: "paid",
+        client_reference_id: TEST_USER.clerkUserId,
+        metadata: {
+          userId: TEST_USER.clerkUserId,
+          packageId: "starter",
+        },
+      });
+
+      const event: Stripe.Event = {
+        id: "evt_test",
+        object: "event",
+        api_version: "2024-06-20",
+        created: Math.floor(Date.now() / 1000),
+        data: {
+          object: session,
+          previous_attributes: {},
+        },
+        livemode: true,
+        pending_webhooks: 1,
+        request: { id: "req_test", idempotency_key: null },
+        type: "checkout.session.completed",
+      } as Stripe.Event;
+
+      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
+
+      const body = JSON.stringify(event);
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "test_signature",
+        },
+        body,
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(404);
+    });
+
+    it("should handle unknown event types gracefully", async () => {
+      const event: Stripe.Event = {
+        id: "evt_test",
+        object: "event",
+        api_version: "2024-06-20",
+        created: Math.floor(Date.now() / 1000),
+        data: {
+          object: {},
+          previous_attributes: {},
+        },
+        livemode: true,
+        pending_webhooks: 1,
+        request: { id: "req_test", idempotency_key: null },
+        type: "customer.created",
+      } as Stripe.Event;
+
+      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+
+      const body = JSON.stringify(event);
+      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
+        method: "POST",
+        headers: {
+          "stripe-signature": "test_signature",
+        },
+        body,
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(200);
+      expect(supabaseLib.updateUserCredits).not.toHaveBeenCalled();
+    });
+  });
+});
+
