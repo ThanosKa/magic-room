@@ -83,7 +83,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
-                  href="#"
+                  href="https://github.com/ThanosKa/magic-room"
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
                   GitHub
@@ -91,7 +91,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="https://x.com/KazakisThanos"
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
                   Twitter / X
@@ -99,7 +99,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="mailto:support@magicroom.ai"
+                  href="mailto:kazakis.th@gmail.com"
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
                   Support

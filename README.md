@@ -4,12 +4,12 @@ A privacy-first, AI-powered interior design web application that transforms room
 
 ## Features
 
-- 🎨 **AI-Powered Design Generation** - Uses Google Gemini AI for stunning results
-- 🔒 **Privacy First** - Images processed in-memory only, never stored
-- ⚡ **Fast Generation** - Get design variations in 30-60 seconds
-- 💳 **Flexible Credits System** - Buy what you need, use anytime
-- 🌓 **Light Theme** - Beautiful purple-themed UI
-- 📱 **Fully Responsive** - Works seamlessly on desktop, tablet, and mobile
+- **AI-Powered Design Generation** - Uses Google Gemini AI for stunning results
+- **Privacy First** - Images processed in-memory only, never stored
+- **Fast Generation** - Get design variations in 30-60 seconds
+- **Flexible Credits System** - Buy what you need, use anytime
+- **Light Theme** - Beautiful purple-themed UI
+- **Fully Responsive** - Works seamlessly on desktop, tablet, and mobile
 
 ## Tech Stack
 
@@ -195,11 +195,11 @@ Each generation uses 1 credit.
 
 ## Privacy & Security
 
-- ✅ Images never stored (processed in-memory as base64)
-- ✅ No personal data collection beyond what Clerk stores
-- ✅ Rate limiting prevents abuse
-- ✅ Stripe never has access to uploaded images
-- ✅ Clerk/Stripe webhooks signature-verified
+- Images never stored (processed in-memory as base64)
+- No personal data collection beyond what Clerk stores
+- Rate limiting prevents abuse
+- Stripe never has access to uploaded images
+- Clerk/Stripe webhooks signature-verified
 
 See [Privacy Policy](/privacy) and [Terms of Service](/terms) for details.
 
@@ -276,6 +276,6 @@ MIT
 
 ## Support
 
-- 📧 Email: [contact info placeholder]
-- 🐛 Issues: GitHub Issues
-- 💬 Discord: [link placeholder]
+- Email: kazakis.th@gmail.com
+- Issues: GitHub Issues
+- Discord: [link placeholder]

@@ -1,4 +1,4 @@
-export const SITE_URL = "https://magicroom.app";
+export const SITE_URL = "https://magic-room.dev";
 export const SITE_NAME = "Magic Room";
 export const SITE_DESCRIPTION =
     "Transform your room in seconds with AI-powered interior design. Upload a photo and get stunning design variations instantly.";

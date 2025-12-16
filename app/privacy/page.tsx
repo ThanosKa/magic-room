@@ -228,10 +228,10 @@ export default function PrivacyPage() {
             <p className="mt-4">
               To exercise these rights, contact us at{" "}
               <a
-                href="mailto:privacy@magicroom.app"
+                href="mailto:kazakis.th@gmail.com"
                 className="text-purple-600 dark:text-purple-400"
               >
-                privacy@magicroom.app
+                kazakis.th@gmail.com
               </a>
             </p>
           </section>
@@ -284,7 +284,7 @@ export default function PrivacyPage() {
               <p>
                 <strong>Magic Room Privacy Team</strong>
               </p>
-              <p>Email: privacy@magicroom.app</p>
+              <p>Email: kazakis.th@gmail.com</p>
             </div>
           </section>
         </div>

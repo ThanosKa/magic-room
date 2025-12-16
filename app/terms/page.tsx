@@ -127,10 +127,10 @@ export default function TermsPage() {
               purchases. Refund requests must be made within 7 days of purchase.
               To request a refund, contact{" "}
               <a
-                href="mailto:support@magicroom.app"
+                href="mailto:kazakis.th@gmail.com"
                 className="text-purple-600 dark:text-purple-400"
               >
-                support@magicroom.app
+                kazakis.th@gmail.com
               </a>{" "}
               with your order details.
             </p>
@@ -302,7 +302,7 @@ export default function TermsPage() {
               <p>
                 <strong>Magic Room Legal Team</strong>
               </p>
-              <p>Email: legal@magicroom.app</p>
+              <p>Email: kazakis.th@gmail.com</p>
             </div>
           </section>
 
