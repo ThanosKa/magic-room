@@ -123,6 +123,59 @@ export async function updateUserCredits(userId: string, credits: number) {
   return data;
 }
 
+export async function updateUser(
+  clerkUserId: string,
+  updates: {
+    email?: string;
+    name?: string;
+    profileImageUrl?: string;
+  }
+) {
+  const updateData: Record<string, unknown> = {};
+
+  if (updates.email !== undefined) {
+    updateData.email = updates.email;
+  }
+  if (updates.name !== undefined) {
+    updateData.name = updates.name;
+  }
+  if (updates.profileImageUrl !== undefined) {
+    updateData.profile_image_url = updates.profileImageUrl;
+  }
+
+  const { data, error } = await supabase
+    .from("users")
+    .update(updateData)
+    .eq("clerk_user_id", clerkUserId)
+    .select()
+    .single();
+
+  if (error) {
+    logger.error(
+      { err: error, clerkUserId, updates },
+      "Error updating user"
+    );
+    return null;
+  }
+
+  return data;
+}
+
+export async function deleteUser(clerkUserId: string) {
+  const { error } = await supabase
+    .from("users")
+    .delete()
+    .eq("clerk_user_id", clerkUserId);
+
+  if (error) {
+    logger.error({ err: error, clerkUserId }, "Error deleting user");
+    return false;
+  }
+
+  logger.info({ clerkUserId }, "User deleted successfully");
+  return true;
+}
+
 export async function deductCredits(userId: string, amount: number) {
   const { data: user, error: fetchError } = await supabase
     .from("users")

@@ -38,7 +38,7 @@ describe("Checkout Route", () => {
 
   describe("POST /api/checkout", () => {
     it("should return 401 when user is not authenticated", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: null } as any);
+      vi.mocked(auth).mockResolvedValue({ userId: null } as unknown as any);
 
       const request = new Request("http://localhost:3000/api/checkout", {
         method: "POST",
@@ -51,7 +51,7 @@ describe("Checkout Route", () => {
     });
 
     it("should return 404 when user is not found in database", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as any);
+      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(null);
 
       const request = new Request("http://localhost:3000/api/checkout", {
@@ -65,7 +65,7 @@ describe("Checkout Route", () => {
     });
 
     it("should return 400 for invalid packageId", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as any);
+      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
 
       const request = new Request("http://localhost:3000/api/checkout", {
@@ -79,7 +79,7 @@ describe("Checkout Route", () => {
     });
 
     it("should create checkout session for valid starter package", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as any);
+      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
       vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue({
         id: "cs_test_123",
@@ -109,7 +109,7 @@ describe("Checkout Route", () => {
     });
 
     it("should create checkout session for valid growth package", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as any);
+      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
       vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue({
         id: "cs_test_456",
@@ -137,7 +137,7 @@ describe("Checkout Route", () => {
     });
 
     it("should create checkout session for valid premium package", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as any);
+      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
       vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue({
         id: "cs_test_789",
@@ -165,7 +165,7 @@ describe("Checkout Route", () => {
     });
 
     it("should handle Stripe session creation errors", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as any);
+      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
       vi.mocked(stripeLib.createCheckoutSession).mockRejectedValue(new Error("Stripe API error"));
 
@@ -183,7 +183,7 @@ describe("Checkout Route", () => {
     });
 
     it("should handle missing Content-Type header", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as any);
+      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
 
       const request = new Request("http://localhost:3000/api/checkout", {
@@ -196,7 +196,7 @@ describe("Checkout Route", () => {
     });
 
     it("should reject old package IDs (pro, ultimate)", async () => {
-      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as any);
+      vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as unknown as any);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER as any);
 
       const request = new Request("http://localhost:3000/api/checkout", {

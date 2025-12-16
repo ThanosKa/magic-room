@@ -38,6 +38,8 @@ export interface IUser {
   clerkUserId: string;
   email: string;
   credits: number;
+  name?: string;
+  profileImageUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
