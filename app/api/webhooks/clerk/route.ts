@@ -108,13 +108,6 @@ export async function POST(request: Request) {
     return new Response("Webhook verification failed", { status: 400 });
   }
 
-  // Check for duplicate webhook processing using svix-id
-  const dedupResult = await checkAndMarkWebhookProcessed("clerk", svixId);
-  if (dedupResult.isProcessed) {
-    logger.info({ eventId: svixId }, "Duplicate Clerk webhook, skipping");
-    return new Response("Webhook already processed", { status: 200 });
-  }
-
   // Handle user.created event
   if (isClerkUserCreatedEvent(evt)) {
     const { id, email_addresses, first_name, last_name, image_url } = evt.data;
@@ -133,6 +126,8 @@ export async function POST(request: Request) {
           { clerkUserId: id, email: primaryEmail },
           "User already exists, skipping creation"
         );
+        // Mark as processed since this is duplicate
+        await checkAndMarkWebhookProcessed("clerk", svixId);
         return new Response("User already exists", { status: 200 });
       }
 
@@ -154,6 +149,9 @@ export async function POST(request: Request) {
           profileImageUrl: image_url || undefined,
         });
       }
+
+      // Mark as processed AFTER successful database operations
+      await checkAndMarkWebhookProcessed("clerk", svixId);
 
       logger.info(
         { clerkUserId: id, email: primaryEmail, userId: newUser.id },
@@ -198,7 +196,7 @@ export async function POST(request: Request) {
 
         if (!updatedUser) {
           logger.error(
-            { clerkUserId: id, updates },
+            { clerkUserId: id, updates, err: "updateUser returned null" },
             "Failed to update user in Supabase"
           );
           return new Response("Error updating user", { status: 500 });
@@ -214,6 +212,9 @@ export async function POST(request: Request) {
           "User update event with no changes to sync"
         );
       }
+
+      // Mark as processed AFTER successful database operations
+      await checkAndMarkWebhookProcessed("clerk", svixId);
 
       return new Response("User updated successfully", { status: 200 });
     } catch (error) {
@@ -237,6 +238,8 @@ export async function POST(request: Request) {
           { clerkUserId: id },
           "User already deleted or never created in Supabase"
         );
+        // Mark as processed since this is idempotent
+        await checkAndMarkWebhookProcessed("clerk", svixId);
         return new Response("User already deleted", { status: 200 });
       }
 
@@ -246,6 +249,9 @@ export async function POST(request: Request) {
         logger.error({ clerkUserId: id }, "Failed to delete user in Supabase");
         return new Response("Error deleting user", { status: 500 });
       }
+
+      // Mark as processed AFTER successful database operations
+      await checkAndMarkWebhookProcessed("clerk", svixId);
 
       logger.info({ clerkUserId: id }, "User deleted successfully via webhook");
       return new Response("User deleted successfully", { status: 200 });

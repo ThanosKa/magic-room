@@ -35,7 +35,7 @@ export async function POST(request: Request): Promise<Response> {
     // Check for duplicate webhook processing
     const dedupResult = await checkAndMarkWebhookProcessed("stripe", event.id);
     if (dedupResult.isProcessed) {
-      logger.info({ eventId: event.id }, "Duplicate Stripe webhook, skipping");
+      logger.info({ eventId: event.id, eventType: event.type }, "Duplicate Stripe webhook, skipping");
       return new Response("Webhook already processed", { status: 200 });
     }
 
@@ -57,7 +57,7 @@ export async function POST(request: Request): Promise<Response> {
 
       if (!userId || !packageId) {
         logger.warn(
-          { userId, packageId },
+          { userId, packageId, sessionId: session.id },
           "Missing userId or packageId in Stripe session metadata"
         );
         return new Response("Invalid session metadata", { status: 400 });
@@ -65,23 +65,31 @@ export async function POST(request: Request): Promise<Response> {
 
       const pkg = CREDIT_PACKAGES.find((p) => p.id === packageId);
       if (!pkg) {
-        logger.warn({ packageId }, "Stripe package not found");
+        logger.warn({ packageId, sessionId: session.id }, "Stripe package not found");
         return new Response("Package not found", { status: 404 });
       }
 
       const user = await ensureUserExists(userId);
       if (!user) {
         logger.error(
-          { userId },
+          { userId, sessionId: session.id },
           "Stripe webhook: user not found and could not be created"
         );
         return new Response("User not found", { status: 404 });
       }
 
       const newCredits = user.credits + pkg.credits;
-      await updateUserCredits(user.id, newCredits);
+      const creditsUpdateResult = await updateUserCredits(user.id, newCredits);
 
-      await createTransaction(
+      if (!creditsUpdateResult) {
+        logger.error(
+          { userId: user.id, newCredits, sessionId: session.id },
+          "Failed to update user credits"
+        );
+        return new Response("Failed to update credits", { status: 500 });
+      }
+
+      const transactionResult = await createTransaction(
         user.id,
         "purchase",
         pkg.credits,
@@ -95,15 +103,28 @@ export async function POST(request: Request): Promise<Response> {
         }
       );
 
+      if (!transactionResult) {
+        logger.warn(
+          { userId: user.id, packageId, sessionId: session.id },
+          "Failed to record transaction (credits still added)"
+        );
+      }
+
       logger.info(
-        { userId, packageId, creditsAdded: pkg.credits },
+        { userId: user.id, packageId, creditsAdded: pkg.credits, sessionId: session.id },
         "Credits added from Stripe checkout"
       );
     }
 
     return new Response("Webhook processed", { status: 200 });
   } catch (error) {
-    logger.error({ err: error }, "Stripe webhook error");
+    logger.error(
+      {
+        err: error,
+        errorMessage: error instanceof Error ? error.message : String(error),
+      },
+      "Stripe webhook error"
+    );
     return new Response("Webhook error", { status: 500 });
   }
 }

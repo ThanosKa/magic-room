@@ -52,7 +52,16 @@ export async function createUser(
     .single();
 
   if (error) {
-    logger.error({ err: error, clerkUserId, email }, "Error creating user");
+    logger.error(
+      {
+        err: error,
+        errorCode: error.code,
+        errorMessage: error.message,
+        clerkUserId,
+        email,
+      },
+      "Error creating user"
+    );
     return null;
   }
 
@@ -156,7 +165,13 @@ export async function updateUser(
 
   if (error) {
     logger.error(
-      { err: error, clerkUserId, updates },
+      {
+        err: error,
+        errorCode: error.code,
+        errorMessage: error.message,
+        clerkUserId,
+        updates,
+      },
       "Error updating user"
     );
     return null;

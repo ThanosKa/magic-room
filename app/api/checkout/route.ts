@@ -71,7 +71,13 @@ export async function POST(request: Request): Promise<Response> {
       }
     );
   } catch (error) {
-    logger.error({ err: error }, "Checkout route error");
+    logger.error(
+      {
+        err: error,
+        errorMessage: error instanceof Error ? error.message : String(error),
+      },
+      "Checkout route error"
+    );
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

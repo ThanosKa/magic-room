@@ -38,9 +38,16 @@ export async function createCheckoutSession(
       },
     });
 
+    logger.info(
+      { sessionId: session.id, userId, packageId },
+      "Checkout session created"
+    );
     return session;
   } catch (error) {
-    logger.error({ err: error }, "Error creating checkout session");
+    logger.error(
+      { err: error, errorMessage: error instanceof Error ? error.message : String(error) },
+      "Error creating checkout session"
+    );
     throw error;
   }
 }

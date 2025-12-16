@@ -473,15 +473,19 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        // Mock user as not existing (already deleted/never existed)
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
         vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
-          isProcessed: true,
-          message: "Webhook already processed",
+          isProcessed: false,
+          message: "Webhook marked for processing",
         });
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
-        // Verify that no deletion was attempted (webhook was skipped)
+        // Verify that no deletion was attempted (user already doesn't exist)
         expect(supabaseLib.deleteUser).not.toHaveBeenCalled();
+        // Verify webhook was marked as processed
+        expect(redisLib.checkAndMarkWebhookProcessed).toHaveBeenCalled();
       });
     });
 
@@ -526,15 +530,26 @@ describe("Clerk Webhook Route", () => {
         };
 
         verifyMock.mockReturnValue(eventPayload);
+        // Mock user as already existing (idempotent handling of duplicate webhook)
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue({
+          id: "test-user-id",
+          clerk_user_id: TEST_CLERK_USER_ID,
+          email: TEST_EMAIL,
+          credits: 1,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
         vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
-          isProcessed: true,
-          message: "Webhook already processed",
+          isProcessed: false,
+          message: "Webhook marked for processing",
         });
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
-        // Verify that no user was created (webhook was skipped)
+        // Verify that no user was created (user already exists)
         expect(supabaseLib.createUser).not.toHaveBeenCalled();
+        // Verify webhook was marked as processed
+        expect(redisLib.checkAndMarkWebhookProcessed).toHaveBeenCalled();
       });
     });
   });
