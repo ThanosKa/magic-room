@@ -9,7 +9,6 @@ import { AuthGuard } from "@/components/auth-guard";
 import { RoomType, Theme, Quality } from "@/types";
 
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
@@ -18,6 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { ROOM_TYPES, THEMES } from "@/lib/constants";
 import {
     Download,
@@ -203,7 +203,7 @@ function GeneratePageContent() {
 
                     <div className="space-y-6 rounded-xl border bg-card p-6 shadow-sm">
                         <div className="space-y-3">
-                            <Label className="text-base font-semibold">1. Room Type</Label>
+                            <div className="text-base font-semibold">1. Room Type</div>
                             <Select
                                 value={roomType}
                                 onValueChange={(v) => setRoomType(v as RoomType)}
@@ -211,7 +211,7 @@ function GeneratePageContent() {
                                 <SelectTrigger className="h-11 cursor-pointer">
                                     <SelectValue placeholder="Select a room type" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent position="popper" className="z-[100]">
                                     <SelectGroup>
                                         {Object.entries(ROOM_TYPES).map(([key, label]) => (
                                             <SelectItem
@@ -228,21 +228,36 @@ function GeneratePageContent() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label className="text-base font-semibold">2. Quality</Label>
+                            <div className="text-base font-semibold">2. Quality</div>
                             <Select
                                 value={quality}
                                 onValueChange={(v) => setQuality(v as Quality)}
                             >
-                                <SelectTrigger className="h-11 cursor-pointer">
-                                    <SelectValue placeholder="Select quality" />
+                                <SelectTrigger className="h-14 w-full cursor-pointer">
+                                    <SelectValue placeholder="Select quality">
+                                        {quality === "standard" ? (
+                                            <span>Standard Quality <span className="text-muted-foreground">- 1 credit</span></span>
+                                        ) : (
+                                            <span>Premium Quality <span className="text-muted-foreground">- 2 credits</span></span>
+                                        )}
+                                    </SelectValue>
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent position="popper" className="z-[100]">
                                     <SelectGroup>
                                         <SelectItem value="standard" className="cursor-pointer">
-                                            Standard Quality • 1 credit
+                                            <div className="flex flex-col">
+                                                <span>Standard Quality</span>
+                                                <span className="text-muted-foreground text-sm">1 credit</span>
+                                            </div>
                                         </SelectItem>
                                         <SelectItem value="premium" className="cursor-pointer">
-                                            Premium Quality • 2 credits
+                                            <div className="flex items-start justify-between w-full">
+                                                <div className="flex flex-col">
+                                                    <span>Premium Quality</span>
+                                                    <span className="text-muted-foreground text-sm">2 credits</span>
+                                                </div>
+                                                <Badge variant="default" className="ml-2">PREMIUM</Badge>
+                                            </div>
                                         </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
@@ -250,7 +265,7 @@ function GeneratePageContent() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label className="text-base font-semibold">3. Choose Style</Label>
+                            <div className="text-base font-semibold">3. Choose Style</div>
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                                 {Object.entries(THEMES).map(([key, label]) => (
                                     <button
@@ -262,7 +277,7 @@ function GeneratePageContent() {
                                                 ? "border-primary bg-primary/5 ring-0"
                                                 : "border-input bg-transparent"
                                         )}
-                                    >
+                                    >b
                                         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                                             <Image
                                                 src={THEME_IMAGES[key as Theme]}
