@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { POST } from "./route";
+import { POST } from "@/app/api/checkout/route";
 import * as supabaseLib from "@/lib/supabase";
 import * as stripeLib from "@/lib/stripe";
 import { TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
@@ -8,8 +8,20 @@ import { TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
 }));
-vi.mock("@/lib/supabase");
-vi.mock("@/lib/stripe");
+vi.mock("@/lib/supabase", async () => {
+  const actual = await vi.importActual("@/lib/supabase");
+  return {
+    ...actual,
+    ensureUserExists: vi.fn(),
+  };
+});
+vi.mock("@/lib/stripe", async () => {
+  const actual = await vi.importActual("@/lib/stripe");
+  return {
+    ...actual,
+    createCheckoutSession: vi.fn(),
+  };
+});
 vi.mock("@/lib/logger", () => ({
   logger: {
     error: vi.fn(),

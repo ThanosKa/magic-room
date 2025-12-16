@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { useUserStore } from "./user-store";
+import { useUserStore } from "@/stores/user-store";
 
 describe("useUserStore", () => {
     beforeEach(() => {
@@ -114,3 +114,4 @@ describe("useUserStore", () => {
         });
     });
 });
+

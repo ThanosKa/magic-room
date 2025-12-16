@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { useGenerationStore } from "./generation-store";
+import { useGenerationStore } from "@/stores/generation-store";
 
 describe("useGenerationStore", () => {
     beforeEach(() => {
@@ -92,3 +92,4 @@ describe("useGenerationStore", () => {
         });
     });
 });
+

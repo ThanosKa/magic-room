@@ -1,13 +1,27 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { POST } from "./route";
+import { POST } from "@/app/api/webhooks/stripe/route";
 import * as supabaseLib from "@/lib/supabase";
 import * as stripeLib from "@/lib/stripe";
 import { createMockStripeWebhookEvent, createMockCheckoutSession, TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
 import type Stripe from "stripe";
 
 // Mock the modules
-vi.mock("@/lib/supabase");
-vi.mock("@/lib/stripe");
+vi.mock("@/lib/supabase", async () => {
+  const actual = await vi.importActual("@/lib/supabase");
+  return {
+    ...actual,
+    getUserByClerkId: vi.fn(),
+    updateUserCredits: vi.fn(),
+    createTransaction: vi.fn(),
+  };
+});
+vi.mock("@/lib/stripe", async () => {
+  const actual = await vi.importActual("@/lib/stripe");
+  return {
+    ...actual,
+    parseWebhookEvent: vi.fn(),
+  };
+});
 vi.mock("@/lib/logger", () => ({
   logger: {
     error: vi.fn(),

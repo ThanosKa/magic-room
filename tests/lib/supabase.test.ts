@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { updateUserCredits, createTransaction, deductCredits } from "./supabase";
-import { supabase } from "./supabase";
+import { updateUserCredits, createTransaction, deductCredits } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 // Mock the supabase client
-vi.mock("./supabase", async () => {
-  const actual = await vi.importActual("./supabase");
+vi.mock("@/lib/supabase", async () => {
+  const actual = await vi.importActual("@/lib/supabase");
   return {
     ...actual,
     supabase: {
@@ -14,7 +14,7 @@ vi.mock("./supabase", async () => {
 });
 
 // Mock logger
-vi.mock("./logger", () => ({
+vi.mock("@/lib/logger", () => ({
   logger: {
     error: vi.fn(),
     warn: vi.fn(),
