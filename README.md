@@ -51,7 +51,6 @@
   - [Database Setup](#database-setup)
   - [Run Locally](#run-locally)
   - [Testing](#testing)
-  - [SEO Check](#seo-check)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
@@ -90,7 +89,6 @@ Magic Room is an AI-powered interior design assistant that helps anyone transfor
 
 - Next.js Metadata API for dynamic Open Graph and Twitter cards
 - Core Web Vitals optimization for fast loading
-- SEO audit script (`pnpm seo:audit`) for content quality checks
 - Optimized images and Tailwind v4 for minimal bundle size
 - App Router for improved performance and SEO
 
@@ -188,22 +186,6 @@ pnpm dev
 - `pnpm type-check` — TypeScript compilation check
 - `pnpm test:run` — Run Vitest test suite
 - `pnpm test:coverage` — Run tests with coverage report
-
-### SEO Check
-
-```bash
-# Terminal 1
-pnpm dev
-
-# Terminal 2
-pnpm seo:audit
-```
-
-Optionally target a deployed URL:
-
-```bash
-NEXT_PUBLIC_APP_URL=https://your-domain.com pnpm seo:audit
-```
 
 ## Usage
 
