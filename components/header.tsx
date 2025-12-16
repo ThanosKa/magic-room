@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
@@ -16,6 +16,11 @@ export function Header() {
   const { credits, isLoading } = useUserStore();
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <>
@@ -94,68 +99,70 @@ export function Header() {
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-80 max-w-[90vw] px-4">
-                <div className="flex flex-col gap-6 pt-6">
-                  {clerkUser && (
-                    <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2 dark:bg-primary/20">
-                      <Coins className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-medium text-primary">
-                        {credits} credits
-                      </span>
-                    </div>
-                  )}
+              {isMounted && (
+                <SheetContent side="right" className="w-80 max-w-[90vw] px-4">
+                  <div className="flex flex-col gap-6 pt-6">
+                    {clerkUser && (
+                      <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2 dark:bg-primary/20">
+                        <Coins className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-medium text-primary">
+                          {credits} credits
+                        </span>
+                      </div>
+                    )}
 
-                  <nav className="flex flex-col gap-3">
-                    <Link
-                      href="/"
-                      onClick={() => setMobileOpen(false)}
-                      className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
-                    >
-                      Home
-                    </Link>
-                    <Link
-                      href="/generate"
-                      onClick={() => setMobileOpen(false)}
-                      className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
-                    >
-                      Generate
-                    </Link>
-                    <Link
-                      href="/pricing"
-                      onClick={() => setMobileOpen(false)}
-                      className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
-                    >
-                      Pricing
-                    </Link>
-                  </nav>
+                    <nav className="flex flex-col gap-3">
+                      <Link
+                        href="/"
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
+                      >
+                        Home
+                      </Link>
+                      <Link
+                        href="/generate"
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
+                      >
+                        Generate
+                      </Link>
+                      <Link
+                        href="/pricing"
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
+                      >
+                        Pricing
+                      </Link>
+                    </nav>
 
-                  {clerkUser ? (
-                    <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 dark:border-slate-800">
-                      <UserButton />
-                    </div>
-                  ) : (
-                    <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 dark:border-slate-800">
-                      <SignInButton mode="modal">
-                        <Button
-                          variant="outline"
-                          className="w-full bg-transparent"
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          Sign In
-                        </Button>
-                      </SignInButton>
-                      <SignUpButton mode="modal">
-                        <Button
-                          className="w-full bg-primary hover:bg-primary/90 text-white"
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          Sign Up
-                        </Button>
-                      </SignUpButton>
-                    </div>
+                    {clerkUser ? (
+                      <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 dark:border-slate-800">
+                        <UserButton />
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 dark:border-slate-800">
+                        <SignInButton mode="modal">
+                          <Button
+                            variant="outline"
+                            className="w-full bg-transparent"
+                            onClick={() => setMobileOpen(false)}
+                          >
+                            Sign In
+                          </Button>
+                        </SignInButton>
+                        <SignUpButton mode="modal">
+                          <Button
+                            className="w-full bg-primary hover:bg-primary/90 text-white"
+                            onClick={() => setMobileOpen(false)}
+                          >
+                            Sign Up
+                          </Button>
+                        </SignUpButton>
+                      </div>
                   )}
                 </div>
               </SheetContent>
+              )}
             </Sheet>
           </div>
         </div>

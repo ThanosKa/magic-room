@@ -18,7 +18,7 @@ export default function NotFound() {
         </div>
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <Link href="/">
-            <Button size="lg" className="w-full sm:w-auto h-12 bg-purple-600 hover:bg-purple-700 text-white px-8">
+            <Button size="lg" className="w-full sm:w-auto h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white">
               Go back home
             </Button>
           </Link>

@@ -13,7 +13,6 @@ import {
   SITE_NAME,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
-  OG_IMAGE,
   TWITTER_HANDLE,
 } from "@/lib/seo/config";
 
@@ -67,14 +66,6 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} - AI Interior Design`,
     description: SITE_DESCRIPTION,
-    images: [
-      {
-        url: OG_IMAGE.url,
-        width: OG_IMAGE.width,
-        height: OG_IMAGE.height,
-        alt: OG_IMAGE.alt,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -82,7 +73,6 @@ export const metadata: Metadata = {
     creator: TWITTER_HANDLE,
     title: `${SITE_NAME} - AI Interior Design`,
     description: SITE_DESCRIPTION,
-    images: [OG_IMAGE.url],
   },
 };
 

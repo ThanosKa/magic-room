@@ -21,7 +21,7 @@ export function Footer() {
               </span>
             </div>
             <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
-              Bring your old photos back to life with AI-powered restoration.
+              Transform your space with AI-powered interior design.
             </p>
           </div>
 
@@ -56,7 +56,7 @@ export function Footer() {
                       window.location.href = "/generate";
                     }
                   }}
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                  className="cursor-pointer text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
                   Generate
                 </button>
