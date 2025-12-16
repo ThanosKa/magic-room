@@ -18,9 +18,6 @@ interface ResultsViewerProps {
   onGenerateAgain: () => void;
 }
 
-/**
- * ResultsViewer component displays before/after comparison and design variations grid
- */
 export function ResultsViewer({
   originalImage,
   results = [],
@@ -135,7 +132,6 @@ export function ResultsViewer({
       <div className="space-y-3">
         <h3 className="text-lg font-semibold">Your Design Variations</h3>
 
-        {/* Before/After Comparison */}
         {originalImage && selectedResult && (
           <Card className="overflow-hidden bg-slate-100 dark:bg-slate-900">
             <div className="relative w-full" style={{ aspectRatio: "1" }}>

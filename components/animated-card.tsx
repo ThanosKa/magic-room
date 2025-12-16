@@ -9,9 +9,6 @@ interface AnimatedCardProps extends React.ComponentProps<typeof Card> {
   delay?: number;
 }
 
-/**
- * AnimatedCard wraps shadcn Card with Framer Motion entrance animations
- */
 export const AnimatedCard = React.forwardRef<HTMLDivElement, AnimatedCardProps>(
   ({ children, delay = 0, ...props }, ref) => {
     return (
@@ -38,9 +35,6 @@ interface PageTransitionProps {
   children: React.ReactNode;
 }
 
-/**
- * PageTransition wraps page content with entrance animations
- */
 export function PageTransition({ children }: PageTransitionProps) {
   return (
     <motion.div

@@ -8,9 +8,6 @@ interface AnimatedButtonProps extends ButtonProps {
   children: React.ReactNode;
 }
 
-/**
- * AnimatedButton wraps shadcn Button with Framer Motion animations
- */
 export const AnimatedButton = React.forwardRef<
   HTMLButtonElement,
   AnimatedButtonProps

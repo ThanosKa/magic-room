@@ -8,7 +8,6 @@ export default defineConfig({
         include: ["tests/**/*.test.{ts,tsx}"],
         exclude: ["node_modules", ".next"],
         env: {
-            // Mock environment variables to prevent module initialization errors
             NEXT_PUBLIC_SUPABASE_URL: "https://test.supabase.co",
             SUPABASE_SERVICE_ROLE_KEY: "test-service-role-key",
             STRIPE_SECRET_KEY: "sk_test_mock_key",

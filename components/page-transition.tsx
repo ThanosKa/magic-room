@@ -7,9 +7,6 @@ interface PageTransitionProps {
   children: React.ReactNode;
 }
 
-/**
- * PageTransition provides smooth fade-in animations for pages
- */
 export function PageTransition({ children }: PageTransitionProps) {
   return (
     <motion.div

@@ -1,4 +1,3 @@
-// Room and design types
 export type RoomType =
   | "living-room"
   | "bedroom"
@@ -18,7 +17,6 @@ export type Theme =
   | "vintage"
   | "luxury";
 
-// Design options interface
 export interface IDesignOptions {
   roomType: RoomType;
   theme: Theme;
@@ -26,7 +24,6 @@ export interface IDesignOptions {
   imageUrl: string;
 }
 
-// Generation result interface
 export interface IGenerationResult {
   id: string;
   status: "starting" | "processing" | "succeeded" | "failed" | "canceled";
@@ -36,7 +33,6 @@ export interface IGenerationResult {
   completedAt?: string;
 }
 
-// User interface
 export interface IUser {
   id: string;
   clerkUserId: string;
@@ -46,7 +42,6 @@ export interface IUser {
   updatedAt: string;
 }
 
-// Transaction interface
 export interface ITransaction {
   id: string;
   userId: string;
@@ -57,7 +52,6 @@ export interface ITransaction {
   createdAt: string;
 }
 
-// Credit package interface
 export interface ICreditPackage {
   id: string;
   name: string;
@@ -67,7 +61,6 @@ export interface ICreditPackage {
   active: boolean;
 }
 
-// API request/response types
 export interface IGenerateRequest {
   imageUrl: string;
   roomType: RoomType;
@@ -94,7 +87,6 @@ export interface ICheckoutResponse {
   error?: string;
 }
 
-// Stripe webhook types
 export interface IStripeWebhookEvent {
   type: string;
   data: {

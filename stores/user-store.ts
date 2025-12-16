@@ -7,13 +7,11 @@ interface UserStore {
   isLoading: boolean;
   error: string | null;
 
-  // Actions
   setUser: (user: IUser | null) => void;
   setCredits: (credits: number) => void;
   setIsLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 
-  // Async actions
   refreshUser: (clerkUserId: string) => Promise<void>;
   deductCredit: () => void;
   addCredits: (amount: number) => void;

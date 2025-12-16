@@ -73,7 +73,6 @@ export function BeforeAfterSlider({
             ref={containerRef}
             className={`relative select-none overflow-hidden rounded-xl border border-slate-200 shadow-2xl dark:border-slate-800 ${className}`}
         >
-            {/* After Image (Background) */}
             <div className="absolute inset-0">
                 <Image
                     src={afterImage}
@@ -87,7 +86,6 @@ export function BeforeAfterSlider({
                 </div>
             </div>
 
-            {/* Before Image (Foreground, clipped) */}
             <div
                 className="absolute inset-0"
                 style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
@@ -104,7 +102,6 @@ export function BeforeAfterSlider({
                 </div>
             </div>
 
-            {/* Slider Handle */}
             <div
                 className="absolute inset-y-0 w-1 bg-white cursor-ew-resize"
                 style={{ left: `${sliderPosition}%` }}

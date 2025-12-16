@@ -18,11 +18,6 @@ const STATUS_MESSAGES = [
   "Finalizing results...",
 ];
 
-/**
- * GenerationLoading component displays loading state during design generation.
- * 
- * Updated for synchronous OpenRouter flow - no more polling.
- */
 export function GenerationLoading({
   onCancel,
   estimatedTime = 60,
@@ -31,7 +26,6 @@ export function GenerationLoading({
   const [progress, setProgress] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  // Cycle through status messages
   useEffect(() => {
     const interval = setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % STATUS_MESSAGES.length);
@@ -39,14 +33,11 @@ export function GenerationLoading({
     return () => clearInterval(interval);
   }, []);
 
-  // Smooth progress animation based on elapsed time
   useEffect(() => {
     const interval = setInterval(() => {
       setElapsedTime((prev) => prev + 1);
-      // Smooth progress that slows down as it approaches 95%
       setProgress((prev) => {
         const targetProgress = Math.min(95, (elapsedTime / estimatedTime) * 100);
-        // Ease towards target
         return prev + (targetProgress - prev) * 0.1;
       });
     }, 1000);
@@ -117,7 +108,7 @@ export function GenerationLoading({
         {/* Tips */}
         <div className="space-y-2 rounded-lg bg-blue-50/50 px-4 py-3 dark:bg-blue-950/20">
           <p className="text-xs font-medium text-blue-900 dark:text-blue-200">
-            💡 Tips while you wait:
+            Tips while you wait:
           </p>
           <ul className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
             <li>• AI is analyzing your room layout</li>
