@@ -29,7 +29,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
               Product
             </h3>
-// ... imports must be handled at top, providing full file content for safety or using multi_replace key
+
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
