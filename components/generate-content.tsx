@@ -277,7 +277,7 @@ function GeneratePageContent() {
                                                 ? "border-primary bg-primary/5 ring-0"
                                                 : "border-input bg-transparent"
                                         )}
-                                    >b
+                                    >
                                         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                                             <Image
                                                 src={THEME_IMAGES[key as Theme]}
