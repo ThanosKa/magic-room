@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>🏠 Magic Room 🏠</h1>
+<h1>✨ Magic Room ✨</h1>
 
 [![Next.js 15](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
