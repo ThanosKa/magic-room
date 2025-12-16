@@ -2,15 +2,20 @@
 
 import React from "react";
 import Link from "next/link";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { Logo } from "@/components/logo";
 
 export function Footer() {
+  const { openSignIn } = useClerk();
+  const { isSignedIn } = useUser();
+
   return (
     <footer className="border-t border-slate-200 bg-white py-12 dark:border-slate-800 dark:bg-slate-950">
       <div className="container px-4 md:px-6">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-primary" />
+              <Logo className="h-8 w-8" />
               <span className="text-lg font-bold dark:text-white">
                 Magic Room
               </span>
@@ -24,6 +29,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
               Product
             </h3>
+// ... imports must be handled at top, providing full file content for safety or using multi_replace key
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
@@ -42,12 +48,18 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/generate"
+                <button
+                  onClick={() => {
+                    if (!isSignedIn) {
+                      openSignIn();
+                    } else {
+                      window.location.href = "/generate";
+                    }
+                  }}
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
                   Generate
-                </Link>
+                </button>
               </li>
             </ul>
           </div>

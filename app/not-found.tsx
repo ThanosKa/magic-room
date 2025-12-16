@@ -1,41 +1,34 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <div className="container mx-auto flex min-h-[70vh] flex-col items-center justify-center px-4 py-16 text-center">
-      <div className="mx-auto max-w-xl">
-        <p className="text-sm font-semibold text-purple-600 dark:text-purple-400">
+    <div className="flex min-h-[80vh] flex-col items-center justify-center p-4 text-center">
+      <div className="space-y-6">
+        <h1 className="text-[8rem] font-bold leading-none tracking-tighter text-slate-900 dark:text-white md:text-[12rem]">
           404
-        </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 dark:text-white md:text-4xl">
-          Page not found
         </h1>
-        <p className="mt-4 text-slate-600 dark:text-slate-400">
-          The page you’re looking for doesn’t exist or has been moved.
-        </p>
-
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Link
-            href="/"
-            className="inline-flex h-10 items-center justify-center rounded-md bg-purple-600 px-6 text-sm font-medium text-white hover:bg-purple-700"
-          >
-            Go home
+        <div className="space-y-2">
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white md:text-3xl">
+            Page not found
+          </h2>
+          <p className="mx-auto max-w-[600px] text-slate-500 dark:text-slate-400 md:text-xl">
+            Sorry, we couldn’t find the page you’re looking for. It might have been removed or doesn't exist.
+          </p>
+        </div>
+        <div className="flex flex-col justify-center gap-4 sm:flex-row">
+          <Link href="/">
+            <Button size="lg" className="w-full sm:w-auto h-12 bg-purple-600 hover:bg-purple-700 text-white px-8">
+              Go back home
+            </Button>
           </Link>
-          <Link
-            href="/generate"
-            className="inline-flex h-10 items-center justify-center rounded-md border border-slate-200 bg-white px-6 text-sm font-medium text-slate-900 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:hover:bg-slate-900"
-          >
-            Generate designs
-          </Link>
-          <Link
-            href="/pricing"
-            className="inline-flex h-10 items-center justify-center rounded-md border border-slate-200 bg-white px-6 text-sm font-medium text-slate-900 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:hover:bg-slate-900"
-          >
-            Pricing
+          <Link href="/generate">
+            <Button size="lg" variant="outline" className="w-full sm:w-auto h-12 px-8">
+              Generate Designs
+            </Button>
           </Link>
         </div>
       </div>
     </div>
   );
 }
-

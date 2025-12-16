@@ -9,6 +9,7 @@ import { Menu, Coins } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CreditsSkeleton } from "@/components/ui/loading-states";
 import { AnnouncementBanner } from "@/components/announcement-banner";
+import { Logo } from "@/components/logo";
 
 export function Header() {
   const { user: clerkUser } = useUser();
@@ -22,7 +23,7 @@ export function Header() {
       <header className="sticky top-0 z-40 w-full border-b border-slate-200/50 bg-white/80 backdrop-blur">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary" />
+            <Logo className="h-8 w-8" />
             <span className="font-bold text-lg">Magic Room</span>
           </Link>
 
