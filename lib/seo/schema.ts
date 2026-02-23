@@ -3,7 +3,8 @@ import { SITE_URL, SITE_NAME } from "./config";
 export function graphSchema(schemas: Record<string, unknown>[]) {
     return {
         "@context": "https://schema.org",
-        "@graph": schemas.map(({ "@context": _, ...rest }) => rest),
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        "@graph": schemas.map(({ "@context": _ctx, ...rest }) => rest),
     };
 }
 

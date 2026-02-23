@@ -143,7 +143,7 @@ export function AlternativePageContent({ competitor }: AlternativePageContentPro
                                 <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
                                     <li>Want privacy guarantees around your room photos</li>
                                     <li>Prefer a one-time credit purchase over a subscription</li>
-                                    <li>Want outputs that preserve your room's physical structure accurately</li>
+                                    <li>Want outputs that preserve your room&apos;s physical structure accurately</li>
                                     <li>Need consistent results without multiple regeneration attempts</li>
                                 </ul>
                             </div>
