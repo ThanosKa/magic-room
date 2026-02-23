@@ -7,6 +7,18 @@ import { PageTransition } from "@/components/animated-card";
 import { HeroComparison } from "@/components/hero-comparison";
 import { FeaturesSection } from "@/components/features-section";
 import { FAQSection } from "@/components/faq-section";
+import { Card, CardContent } from "@/components/ui/card";
+
+const POPULAR_DESIGNS = [
+    { slug: "modern-living-room", label: "Modern Living Room" },
+    { slug: "scandinavian-bedroom", label: "Scandinavian Bedroom" },
+    { slug: "industrial-kitchen", label: "Industrial Kitchen" },
+    { slug: "minimalist-bathroom", label: "Minimalist Bathroom" },
+    { slug: "bohemian-living-room", label: "Bohemian Living Room" },
+    { slug: "luxury-bedroom", label: "Luxury Bedroom" },
+    { slug: "tropical-living-room", label: "Tropical Living Room" },
+    { slug: "vintage-dining-room", label: "Vintage Dining Room" },
+];
 
 export default function HomeContent() {
 
@@ -61,6 +73,38 @@ export default function HomeContent() {
             </section>
 
             <FeaturesSection />
+
+            <section className="border-t border-slate-200 bg-slate-50 py-16 dark:border-slate-800 dark:bg-slate-900/50">
+                <div className="container px-4 md:px-6">
+                    <div className="mb-8 flex items-center justify-between">
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white md:text-3xl">
+                            Popular Design Styles
+                        </h2>
+                        <Link
+                            href="/design"
+                            className="text-sm font-medium text-primary hover:underline"
+                        >
+                            View all design styles
+                        </Link>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {POPULAR_DESIGNS.map((design) => (
+                            <Link key={design.slug} href={`/design/${design.slug}`}>
+                                <Card className="h-full border-slate-200 bg-white transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+                                    <CardContent className="p-4">
+                                        <p className="font-medium text-slate-900 dark:text-white">
+                                            {design.label}
+                                        </p>
+                                        <p className="mt-1 text-sm text-primary">
+                                            Generate designs
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             <FAQSection />
 

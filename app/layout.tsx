@@ -15,8 +15,18 @@ import {
   SITE_KEYWORDS,
   TWITTER_HANDLE,
 } from "@/lib/seo/config";
+import {
+  organizationSchema,
+  webSiteSchema,
+  softwareApplicationSchema,
+  graphSchema,
+} from "@/lib/seo/schema";
 
-export const dynamic = "force-dynamic";
+const globalSchema = graphSchema([
+  organizationSchema(),
+  webSiteSchema({ description: SITE_DESCRIPTION }),
+  softwareApplicationSchema(),
+]);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -115,6 +125,10 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} flex flex-col antialiased`}
         >
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(globalSchema) }}
+          />
           <ThemeProviderComponent>
             <UserDataProvider>
               <div className="flex min-h-screen flex-col">

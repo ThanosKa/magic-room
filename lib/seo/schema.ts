@@ -1,5 +1,68 @@
 import { SITE_URL, SITE_NAME } from "./config";
 
+export function graphSchema(schemas: Record<string, unknown>[]) {
+    return {
+        "@context": "https://schema.org",
+        "@graph": schemas.map(({ "@context": _, ...rest }) => rest),
+    };
+}
+
+interface AggregateOfferSchemaInput {
+    name: string;
+    description: string;
+    lowPrice: number;
+    highPrice: number;
+    priceCurrency?: string;
+    offerCount: number;
+    url?: string;
+}
+
+export function aggregateOfferSchema(input: AggregateOfferSchemaInput) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: input.name,
+        description: input.description,
+        offers: {
+            "@type": "AggregateOffer",
+            lowPrice: input.lowPrice,
+            highPrice: input.highPrice,
+            priceCurrency: input.priceCurrency ?? "EUR",
+            offerCount: input.offerCount,
+            availability: "https://schema.org/InStock",
+            url: input.url ?? `${SITE_URL}/pricing`,
+        },
+    };
+}
+
+interface BlogPostingSchemaInput {
+    title: string;
+    description: string;
+    authorName: string;
+    publishedDate: string;
+    modifiedDate: string;
+    url: string;
+}
+
+export function blogPostingSchema(input: BlogPostingSchemaInput) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: input.title,
+        description: input.description,
+        author: { "@type": "Organization", name: input.authorName },
+        publisher: {
+            "@type": "Organization",
+            name: SITE_NAME,
+            logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
+        },
+        datePublished: input.publishedDate,
+        dateModified: input.modifiedDate,
+        url: input.url,
+        mainEntityOfPage: input.url,
+    };
+}
+
 interface OrganizationSchemaInput {
     name?: string;
     url?: string;

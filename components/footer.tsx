@@ -12,7 +12,7 @@ export function Footer() {
   return (
     <footer className="border-t border-slate-200 bg-white py-12 dark:border-slate-800 dark:bg-slate-950">
       <div className="container px-4 md:px-6">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div>
             <div className="flex items-center gap-2">
               <Logo className="h-8 w-8" />
@@ -83,6 +83,54 @@ export function Footer() {
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
                   Privacy policy
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
+              Design Ideas
+            </h3>
+            <ul className="mt-4 space-y-2">
+              <li>
+                <Link
+                  href="/design"
+                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                >
+                  All design styles
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/design/modern-living-room"
+                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                >
+                  Modern living room
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/design/scandinavian-bedroom"
+                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                >
+                  Scandinavian bedroom
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/design/industrial-kitchen"
+                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                >
+                  Industrial kitchen
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                >
+                  Blog
                 </Link>
               </li>
             </ul>
