@@ -25,6 +25,8 @@ export function HeroComparison({
                         src={beforeImage}
                         alt="Original room"
                         fill
+                        priority
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"
                     />
                 </div>
@@ -40,6 +42,7 @@ export function HeroComparison({
                         src={afterImage}
                         alt="After"
                         fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"
                     />
                 </div>
