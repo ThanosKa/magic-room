@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
-        title: `Best ${competitor.name} Alternative | Magic Room`,
+        title: `Best ${competitor.name} Alternative`,
         description: `Looking for a ${competitor.name} alternative? See how Magic Room compares on privacy, pricing, and AI quality. Try for free with one credit.`,
         path: `/alternatives/${slug}`,
         keywords: competitor.keywords,

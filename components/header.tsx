@@ -28,18 +28,30 @@ export function Header() {
             <span className="font-bold text-lg">Magic Room</span>
           </Link>
 
-          <nav className="hidden gap-8 md:flex">
-            <Link
-              href="/"
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
-            >
-              Home
-            </Link>
+          <nav className="hidden gap-6 md:flex xl:gap-8">
             <Link
               href="/generate"
               className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
             >
               Generate
+            </Link>
+            <Link
+              href="/design"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
+            >
+              Design Ideas
+            </Link>
+            <Link
+              href="/blog"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
+            >
+              Blog
+            </Link>
+            <Link
+              href="/alternatives"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
+            >
+              Alternatives
             </Link>
             <Link
               href="/pricing"
@@ -109,18 +121,32 @@ export function Header() {
 
                     <nav className="flex flex-col gap-3">
                       <Link
-                        href="/"
-                        onClick={() => setMobileOpen(false)}
-                        className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
-                      >
-                        Home
-                      </Link>
-                      <Link
                         href="/generate"
                         onClick={() => setMobileOpen(false)}
                         className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
                       >
                         Generate
+                      </Link>
+                      <Link
+                        href="/design"
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
+                      >
+                        Design Ideas
+                      </Link>
+                      <Link
+                        href="/blog"
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
+                      >
+                        Blog
+                      </Link>
+                      <Link
+                        href="/alternatives"
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-md px-2 py-1.5 text-lg font-medium transition-colors hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary"
+                      >
+                        Alternatives
                       </Link>
                       <Link
                         href="/pricing"

@@ -5,6 +5,7 @@ import {
     faqSchema,
     breadcrumbSchema,
     productSchema,
+    howToSchema,
 } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import {
@@ -60,6 +61,25 @@ export default async function DesignSlugPage({ params }: Props) {
             name: `${page.themeName} ${page.roomName} Design`,
             description: page.metaDescription,
             price: 9.99,
+            url: `${SITE_URL}/design/${slug}`,
+        }),
+        howToSchema({
+            name: `How to Generate ${page.themeName} ${page.roomName} Design Ideas with AI`,
+            description: `Step-by-step guide to redesigning your ${page.roomName.toLowerCase()} in a ${page.themeName.toLowerCase()} style using AI interior design.`,
+            steps: [
+                {
+                    name: "Upload your room photo",
+                    text: "Take a clear photo of your room in good daylight, shooting from a corner or doorway to capture as much of the space as possible. Upload it directly from your phone or computer.",
+                },
+                {
+                    name: `Select ${page.themeName} style and room type`,
+                    text: `Choose ${page.themeName} as your design theme and confirm the room type. Add any specific details or requirements in the optional text field.`,
+                },
+                {
+                    name: "Review and download your AI-generated designs",
+                    text: "The AI generates your redesigned room in 30 to 60 seconds. Review the design variations and download the result for planning or sharing.",
+                },
+            ],
             url: `${SITE_URL}/design/${slug}`,
         }),
         ...(page.faqs.length > 0 ? [faqSchema(page.faqs)] : []),

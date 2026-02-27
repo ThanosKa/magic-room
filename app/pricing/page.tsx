@@ -1,9 +1,6 @@
-import { Suspense, lazy } from "react";
 import { Metadata } from "next";
 import { pricingMetadata, aggregateOfferSchema } from "@/lib/seo";
-import { PageLoader } from "@/components/page-loader";
-
-const PricingContent = lazy(() => import("@/components/pricing-content"));
+import PricingContent from "@/components/pricing-content";
 
 export const metadata: Metadata = pricingMetadata();
 
@@ -25,9 +22,7 @@ export default function PricingPage() {
           __html: JSON.stringify(PRICING_SCHEMA),
         }}
       />
-      <Suspense fallback={<PageLoader />}>
-        <PricingContent />
-      </Suspense>
+      <PricingContent />
     </>
   );
 }

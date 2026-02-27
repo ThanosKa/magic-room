@@ -1,9 +1,6 @@
-import { Suspense, lazy } from "react";
 import { Metadata } from "next";
 import { homeMetadata, faqSchema } from "@/lib/seo";
-import { PageLoader } from "@/components/page-loader";
-
-const HomeContent = lazy(() => import("@/components/home-content"));
+import HomeContent from "@/components/home-content";
 
 export const metadata: Metadata = homeMetadata();
 
@@ -44,9 +41,7 @@ export default function Home() {
           __html: JSON.stringify(faqSchema(FAQ_ITEMS)),
         }}
       />
-      <Suspense fallback={<PageLoader />}>
-        <HomeContent />
-      </Suspense>
+      <HomeContent />
     </>
   );
 }

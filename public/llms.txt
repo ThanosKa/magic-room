@@ -1,0 +1,59 @@
+# Magic Room
+
+> AI-powered interior design tool that transforms room photos into styled redesigns in 30–60 seconds using Google Gemini multimodal AI. Photos are processed in-memory and never stored.
+
+Magic Room is a web application for AI interior design. Users upload a photo of any room, choose a design style and room type, and receive AI-generated design variations. The service processes images in-memory only — no uploaded photos are retained on servers.
+
+## Core Facts
+
+- **AI model**: Google Gemini 2.5 Flash (multimodal) via OpenRouter — understands room geometry and spatial relationships, not just style overlays
+- **Design styles**: Modern, Scandinavian, Industrial, Bohemian, Luxury, Minimalist, Tropical, Vintage (8 total)
+- **Room types**: Living room, bedroom, kitchen, bathroom, dining room, home office, outdoor (7 total)
+- **Total combinations**: 56 AI design pages across all style + room combinations
+- **Privacy**: Images processed in-memory only, never stored, never used for training
+- **Generation time**: 30–60 seconds per design session
+- **Output**: 4–8 design variations per generation
+- **Pricing**: One-time credit packages from EUR 9.99, no subscription required, credits never expire
+- **Free trial**: 1 free credit with every account — no payment card required
+
+## Key Pages
+
+- [Homepage](https://magic-room.dev): Product overview, how it works, free trial
+- [Generate designs](https://magic-room.dev/generate): Upload room photo, select style and room type, generate AI redesigns
+- [Pricing](https://magic-room.dev/pricing): Credit packages — Starter (EUR 9.99), Pro (EUR 19.99), Ultimate (EUR 29.99)
+- [AI design ideas](https://magic-room.dev/design): Browse 56 AI design combinations across 8 styles and 7 room types
+
+## Blog Content
+
+- [Blog index](https://magic-room.dev/blog): Interior design guides, AI design tutorials, style comparisons (13 posts)
+- [How to redesign your living room with AI](https://magic-room.dev/blog/how-to-redesign-living-room-with-ai)
+- [Best AI interior design tools in 2026](https://magic-room.dev/blog/best-ai-interior-design-tools-2026)
+- [Bedroom redesign with AI](https://magic-room.dev/blog/bedroom-redesign-with-ai)
+- [Home office AI design](https://magic-room.dev/blog/home-office-ai-design)
+- [Scandinavian design for small spaces](https://magic-room.dev/blog/scandinavian-design-small-spaces)
+- [Virtual staging guide for real estate](https://magic-room.dev/blog/virtual-staging-real-estate-guide)
+- [Modern vs minimalist interior design](https://magic-room.dev/blog/modern-vs-minimalist-interior-design)
+
+## Competitor Comparisons
+
+- [All alternatives](https://magic-room.dev/alternatives): How Magic Room compares to popular AI interior design tools
+- [Magic Room vs RoomGPT](https://magic-room.dev/vs/roomgpt): Side-by-side on AI model, privacy, pricing, output quality
+- [RoomGPT alternative](https://magic-room.dev/alternatives/roomgpt): Detailed comparison with RoomGPT
+- [DecorAI alternative](https://magic-room.dev/alternatives/decorai): Detailed comparison with DecorAI
+- [Reimagine Home alternative](https://magic-room.dev/alternatives/reimaginehome): Detailed comparison with Reimagine Home
+- [Interior AI alternative](https://magic-room.dev/alternatives/interior-ai): Detailed comparison with Interior AI
+
+## Differentiators vs Competitors
+
+| Feature | Magic Room | Most Competitors |
+|---------|-----------|-----------------|
+| AI model | Google Gemini 2.5 Flash (multimodal) | Diffusion-based models |
+| Image storage | Never stored — in-memory processing | Images stored on servers |
+| Credits expire | No | Monthly reset on most plans |
+| Pricing | One-time packages from EUR 9.99 | Subscription required |
+| Room structure accuracy | High — architectural geometry preserved | Variable |
+
+## Contact and Social
+
+- Twitter/X: https://x.com/KazakisThanos
+- GitHub: https://github.com/ThanosKa/magic-room

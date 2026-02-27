@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
-        title: `${post.title} | Magic Room Blog`,
+        title: post.title,
         description: post.metaDescription,
         path: `/blog/${slug}`,
         keywords: post.keywords,
@@ -52,7 +52,7 @@ export default async function BlogSlugPage({ params }: Props) {
         blogPostingSchema({
             title: post.title,
             description: post.metaDescription,
-            authorName: "Magic Room Team",
+            authorName: post.authorName ?? "Thanos Kazakis",
             publishedDate: post.publishedDate,
             modifiedDate: post.updatedDate,
             url: postUrl,

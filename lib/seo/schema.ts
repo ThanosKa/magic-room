@@ -43,6 +43,7 @@ interface BlogPostingSchemaInput {
     publishedDate: string;
     modifiedDate: string;
     url: string;
+    image?: string;
 }
 
 export function blogPostingSchema(input: BlogPostingSchemaInput) {
@@ -51,7 +52,8 @@ export function blogPostingSchema(input: BlogPostingSchemaInput) {
         "@type": "BlogPosting",
         headline: input.title,
         description: input.description,
-        author: { "@type": "Organization", name: input.authorName },
+        image: input.image ?? `${SITE_URL}/opengraph-image.png`,
+        author: { "@type": "Person", name: input.authorName },
         publisher: {
             "@type": "Organization",
             name: SITE_NAME,
@@ -60,7 +62,7 @@ export function blogPostingSchema(input: BlogPostingSchemaInput) {
         datePublished: input.publishedDate,
         dateModified: input.modifiedDate,
         url: input.url,
-        mainEntityOfPage: input.url,
+        mainEntityOfPage: { "@type": "WebPage", "@id": input.url },
     };
 }
 
@@ -76,8 +78,11 @@ export function organizationSchema(input?: OrganizationSchemaInput) {
         "@type": "Organization",
         name: input?.name ?? SITE_NAME,
         url: input?.url ?? SITE_URL,
-        logo: input?.logo ?? `${SITE_URL}/favicon.ico`,
-        sameAs: [],
+        logo: input?.logo ?? `${SITE_URL}/logo.png`,
+        sameAs: [
+            "https://x.com/KazakisThanos",
+            "https://github.com/ThanosKa/magic-room",
+        ],
     };
 }
 
@@ -96,10 +101,8 @@ export function webSiteSchema(input?: WebSiteSchemaInput) {
         description: input?.description,
         potentialAction: {
             "@type": "SearchAction",
-            target: {
-                "@type": "EntryPoint",
-                urlTemplate: `${SITE_URL}/generate`,
-            },
+            target: `${SITE_URL}/design?q={search_term_string}`,
+            "query-input": "required name=search_term_string",
         },
     };
 }
@@ -166,6 +169,63 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
     };
 }
 
+interface HowToStep {
+    name: string;
+    text: string;
+}
+
+interface HowToSchemaInput {
+    name: string;
+    description?: string;
+    steps: HowToStep[];
+    url: string;
+}
+
+export function howToSchema(input: HowToSchemaInput) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name: input.name,
+        description: input.description,
+        step: input.steps.map((step, index) => ({
+            "@type": "HowToStep",
+            position: index + 1,
+            name: step.name,
+            text: step.text,
+        })),
+        url: input.url,
+    };
+}
+
+interface ItemListSchemaItem {
+    position: number;
+    name: string;
+    url: string;
+    description?: string;
+}
+
+interface ItemListSchemaInput {
+    name: string;
+    description?: string;
+    items: ItemListSchemaItem[];
+}
+
+export function itemListSchema(input: ItemListSchemaInput) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: input.name,
+        description: input.description,
+        itemListElement: input.items.map((item) => ({
+            "@type": "ListItem",
+            position: item.position,
+            name: item.name,
+            url: item.url,
+            description: item.description,
+        })),
+    };
+}
+
 interface SoftwareApplicationSchemaInput {
     name?: string;
     description?: string;
@@ -181,10 +241,21 @@ export function softwareApplicationSchema(input?: SoftwareApplicationSchemaInput
         description: input?.description ?? "AI-powered interior design tool",
         applicationCategory: input?.applicationCategory ?? "DesignApplication",
         operatingSystem: input?.operatingSystem ?? "Web",
-        offers: {
-            "@type": "Offer",
-            price: "0",
-            priceCurrency: "EUR",
-        },
+        offers: [
+            {
+                "@type": "Offer",
+                name: "Free Trial",
+                price: "0",
+                priceCurrency: "EUR",
+                description: "1 free credit with every account — no card required",
+            },
+            {
+                "@type": "Offer",
+                name: "Starter Pack",
+                price: "9.99",
+                priceCurrency: "EUR",
+                url: `${SITE_URL}/pricing`,
+            },
+        ],
     };
 }

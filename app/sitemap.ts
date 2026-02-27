@@ -2,35 +2,38 @@ import { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo/config";
 import { getAllDesignSlugs } from "@/lib/seo/design-data";
 import { getAllCompetitorSlugs } from "@/lib/seo/competitor-data";
-import { getAllBlogSlugs } from "@/lib/seo/blog-data";
+import { BLOG_POSTS } from "@/lib/seo/blog-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
-    const lastModified = new Date();
+
+    // Use stable dates instead of new Date() to avoid wasting crawl budget
+    const siteLastUpdated = new Date("2026-02-10");
+    const legalLastUpdated = new Date("2024-12-01");
 
     // Core pages
     const corePages: MetadataRoute.Sitemap = [
         {
             url: baseUrl,
-            lastModified,
+            lastModified: siteLastUpdated,
             changeFrequency: "weekly",
             priority: 1,
         },
         {
             url: `${baseUrl}/pricing`,
-            lastModified,
+            lastModified: siteLastUpdated,
             changeFrequency: "monthly",
             priority: 0.8,
         },
         {
             url: `${baseUrl}/privacy`,
-            lastModified,
+            lastModified: legalLastUpdated,
             changeFrequency: "yearly",
             priority: 0.3,
         },
         {
             url: `${baseUrl}/terms`,
-            lastModified,
+            lastModified: legalLastUpdated,
             changeFrequency: "yearly",
             priority: 0.3,
         },
@@ -40,7 +43,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const designHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/design`,
-            lastModified,
+            lastModified: siteLastUpdated,
             changeFrequency: "monthly",
             priority: 0.9,
         },
@@ -48,50 +51,52 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const designPages: MetadataRoute.Sitemap = getAllDesignSlugs().map((slug) => ({
         url: `${baseUrl}/design/${slug}`,
-        lastModified,
+        lastModified: siteLastUpdated,
         changeFrequency: "monthly" as const,
         priority: 0.7,
     }));
 
-    // Alternatives hub + 4 competitor pages + 1 vs page
+    // Alternatives hub + competitor pages + vs page
     const alternativesHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/alternatives`,
-            lastModified,
+            lastModified: siteLastUpdated,
             changeFrequency: "monthly",
             priority: 0.8,
         },
     ];
 
-    const alternativePages: MetadataRoute.Sitemap = getAllCompetitorSlugs().map((slug) => ({
-        url: `${baseUrl}/alternatives/${slug}`,
-        lastModified,
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-    }));
+    const alternativePages: MetadataRoute.Sitemap = getAllCompetitorSlugs().map(
+        (slug) => ({
+            url: `${baseUrl}/alternatives/${slug}`,
+            lastModified: siteLastUpdated,
+            changeFrequency: "monthly" as const,
+            priority: 0.7,
+        })
+    );
 
     const vsPages: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/vs/roomgpt`,
-            lastModified,
+            lastModified: siteLastUpdated,
             changeFrequency: "monthly",
             priority: 0.7,
         },
     ];
 
-    // Blog hub + 10 blog posts
+    // Blog hub + blog posts with real publish/update dates
     const blogHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/blog`,
-            lastModified,
+            lastModified: siteLastUpdated,
             changeFrequency: "weekly",
             priority: 0.8,
         },
     ];
 
-    const blogPages: MetadataRoute.Sitemap = getAllBlogSlugs().map((slug) => ({
-        url: `${baseUrl}/blog/${slug}`,
-        lastModified,
+    const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+        url: `${baseUrl}/blog/${post.slug}`,
+        lastModified: new Date(post.updatedDate || post.publishedDate),
         changeFrequency: "monthly" as const,
         priority: 0.6,
     }));

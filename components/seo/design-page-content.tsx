@@ -214,6 +214,25 @@ export function DesignPageContent({ page, themeData, roomData }: DesignPageConte
                 </section>
             )}
 
+            {/* Cross-links to blog and alternatives */}
+            <section className="bg-white py-8 dark:bg-slate-950">
+                <div className="container px-4 md:px-6">
+                    <div className="mx-auto max-w-3xl">
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                            Want more design guidance?{" "}
+                            <Link href="/blog" className="text-primary hover:underline">
+                                Read our interior design blog
+                            </Link>{" "}
+                            for practical AI room design guides. Or{" "}
+                            <Link href="/alternatives" className="text-primary hover:underline">
+                                compare Magic Room to other AI design tools
+                            </Link>
+                            .
+                        </p>
+                    </div>
+                </div>
+            </section>
+
             {/* CTA */}
             <CtaSection
                 heading={`Ready to redesign your ${page.roomName.toLowerCase()}?`}

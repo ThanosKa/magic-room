@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { createMetadata } from "@/lib/seo/metadata";
-import { breadcrumbSchema } from "@/lib/seo/schema";
+import { breadcrumbSchema, itemListSchema } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import { COMPETITORS } from "@/lib/seo/competitor-data";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { CtaSection } from "@/components/seo/cta-section";
 import { PageTransition } from "@/components/page-transition";
 
 export const metadata: Metadata = createMetadata({
-    title: "AI Interior Design Alternatives | Magic Room vs RoomGPT and More",
+    title: "AI Interior Design Alternatives - RoomGPT and More",
     description:
         "Comparing AI interior design tools? See how Magic Room compares to RoomGPT, DecorAI, Reimagine Home, and Interior AI on privacy, pricing, and output quality.",
     path: "/alternatives",
@@ -22,17 +22,32 @@ export const metadata: Metadata = createMetadata({
     ],
 });
 
-const schema = breadcrumbSchema([
+const breadcrumb = breadcrumbSchema([
     { name: "Home", url: SITE_URL },
     { name: "Alternatives", url: `${SITE_URL}/alternatives` },
 ]);
+
+const itemList = itemListSchema({
+    name: "Best AI Interior Design Tool Alternatives to Magic Room",
+    description: "Comparison of Magic Room versus RoomGPT, DecorAI, Reimagine Home, and Interior AI on privacy, AI model, pricing, and output quality.",
+    items: COMPETITORS.map((c, i) => ({
+        position: i + 1,
+        name: `Best ${c.name} Alternative`,
+        url: `${SITE_URL}/alternatives/${c.slug}`,
+        description: c.description,
+    })),
+});
 
 export default function AlternativesHubPage() {
     return (
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
             />
             <PageTransition>
                 {/* Breadcrumb */}
@@ -118,6 +133,41 @@ export default function AlternativesHubPage() {
                                     </CardContent>
                                 </Card>
                             </Link>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Cross-links to other content sections */}
+                <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
+                    <div className="container px-4 md:px-6">
+                        <div className="mx-auto max-w-3xl">
+                            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                                Explore more
+                            </h2>
+                            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                                <Link
+                                    href="/design"
+                                    className="rounded-lg border border-slate-200 bg-white p-4 transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+                                >
+                                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                                        AI Design Ideas
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                        Browse 56 AI design combinations across 8 styles and 7 room types.
+                                    </p>
+                                </Link>
+                                <Link
+                                    href="/blog"
+                                    className="rounded-lg border border-slate-200 bg-white p-4 transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+                                >
+                                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                                        Interior Design Blog
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                        Practical guides on AI room design, styling tips, and redesigning on any budget.
+                                    </p>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </section>

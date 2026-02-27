@@ -27,15 +27,19 @@ export default function HomeContent() {
             <section className="relative overflow-hidden bg-white pb-12 pt-8 dark:bg-slate-950 md:pb-20 md:pt-12">
                 <div className="container px-4 md:px-6">
                     <div className="flex flex-col items-center text-center">
-                        <h1 className="mt-8 max-w-4xl text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-6xl lg:text-7xl">
+                        <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
+                            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                            1 free credit with every account — no card required
+                        </div>
+
+                        <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-6xl lg:text-7xl">
                             Transform Your Room in <br className="hidden md:block" />
                             <span className="text-primary">Seconds</span>
                         </h1>
 
                         <p className="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-                            Upload a photo of your space and let our AI generate stunning
-                            design variations. Privacy-first, instant results, and
-                            professional quality.
+                            Upload a photo of any room. Get 4–8 AI design variations in 30–60 seconds.
+                            Your photos are never stored — processed in-memory and deleted immediately.
                         </p>
 
                         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
@@ -44,7 +48,7 @@ export default function HomeContent() {
                                     size="lg"
                                     className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white"
                                 >
-                                    Generate Designs
+                                    Generate Free Design
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </Button>
                             </Link>
@@ -78,7 +82,7 @@ export default function HomeContent() {
                 <div className="container px-4 md:px-6">
                     <div className="mb-8 flex items-center justify-between">
                         <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white md:text-3xl">
-                            Popular Design Styles
+                            Popular AI Design Ideas
                         </h2>
                         <Link
                             href="/design"
@@ -114,7 +118,7 @@ export default function HomeContent() {
                         Ready to Redesign Your Space?
                     </h2>
                     <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600 dark:text-slate-400">
-                        Join thousands of users transforming their homes with Magic Room.
+                        Join homeowners, real estate agents, and interior designers transforming spaces with AI.
                     </p>
                     <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
                         <Link href="/generate">
@@ -122,7 +126,7 @@ export default function HomeContent() {
                                 size="lg"
                                 className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white"
                             >
-                                Start Creating Now
+                                Generate Free Design
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </Link>

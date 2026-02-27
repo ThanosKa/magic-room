@@ -9,12 +9,15 @@ export type IBlogSection =
     | { type: "h3"; text: string }
     | { type: "ordered-list"; items: string[] }
     | { type: "unordered-list"; items: string[] }
-    | { type: "cta"; heading: string; subtext: string };
+    | { type: "cta"; heading: string; subtext: string }
+    | { type: "table"; headers: string[]; rows: string[][] }
+    | { type: "blockquote"; quote: string; attribution: string };
 
 export interface IBlogPost {
     slug: string;
     title: string;
     metaDescription: string;
+    authorName?: string;
     publishedDate: string;
     updatedDate: string;
     readingTime: number;
@@ -1076,6 +1079,360 @@ export const BLOG_POSTS: IBlogPost[] = [
                 question: "What rooms benefit most from AI staging?",
                 answer:
                     "Living rooms and master bedrooms have the highest impact in property searches because they are the rooms buyers use most as emotional anchors. An AI-staged living room that shows the room's potential as a comfortable, well-proportioned space converts significantly more online viewers to physical viewings than an empty or poorly furnished alternative.",
+            },
+        ],
+    },
+    {
+        slug: "best-ai-interior-design-tools-2026",
+        title: "Best AI Interior Design Tools in 2026",
+        metaDescription:
+            "A comparison of the best AI interior design tools available in 2026. Covers how each tool works, who it suits, and what to look for when choosing.",
+        publishedDate: "2026-02-15",
+        updatedDate: "2026-02-15",
+        readingTime: 8,
+        keywords: [
+            "best AI interior design tool",
+            "AI interior design app",
+            "AI room design software 2026",
+            "AI interior design comparison",
+        ],
+        excerpt:
+            "There are now dozens of AI tools that claim to redesign rooms from a single photo. They vary significantly in the AI model used, privacy approach, and output quality. Here is how to evaluate them.",
+        sections: [
+            {
+                type: "paragraph",
+                content:
+                    "The market for AI interior design tools has grown substantially since 2023. What started with a handful of tools using basic diffusion models has become a crowded field of products, each making slightly different trade-offs between output quality, privacy, pricing, and speed. Choosing between them requires understanding what each actually does technically — not just reading the marketing claims.",
+            },
+            {
+                type: "h2",
+                text: "What to look for in an AI interior design tool",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "Before comparing specific tools, it helps to understand the factors that actually determine output quality and usefulness. The most important are the underlying AI model, how the tool handles your uploaded photos, and whether the output preserves the physical structure of your room or distorts it.",
+            },
+            {
+                type: "unordered-list",
+                items: [
+                    "AI model quality: Tools built on multimodal models (like Google Gemini) tend to preserve room geometry more accurately than those using earlier diffusion models. The difference is visible — multimodal tools understand spatial relationships; diffusion tools apply style patterns.",
+                    "Privacy approach: Some tools store your uploaded photos permanently; others process them temporarily; others never store them at all. For personal spaces, this distinction matters.",
+                    "Room structure preservation: The best tools maintain your room's actual dimensions, window positions, and architectural features. Weaker tools often generate rooms that look nothing like the original layout.",
+                    "Output resolution: Lower-end tools produce images that pixelate when viewed at full size. Check whether the tool's output is usable for planning purposes.",
+                    "Pricing model: Subscription models can become expensive for occasional users. Credit-based models suit people who need a few designs rather than ongoing monthly generation.",
+                ],
+            },
+            {
+                type: "h2",
+                text: "The tools worth considering in 2026",
+            },
+            {
+                type: "h3",
+                text: "Magic Room",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "Magic Room uses Google Gemini 2.5 Flash — a multimodal model — to process uploaded room photos. The key advantage of a multimodal model is that it understands the spatial and structural context of the room rather than applying a style overlay to a flat image. Results preserve room geometry with significantly higher accuracy than diffusion-based tools. Photos are processed in-memory and not stored. Pricing is credit-based from EUR 9.99, with one free credit on signup.",
+            },
+            {
+                type: "h3",
+                text: "RoomGPT",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "RoomGPT was one of the first AI interior design tools to gain mainstream attention. It uses a diffusion model, which means outputs can vary considerably in how closely they match the original room's structure. It has a large library of user-generated examples and a free tier, which accounts for its wide user base. The underlying model has not been updated as recently as some newer tools.",
+            },
+            {
+                type: "h3",
+                text: "Interior AI",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "Interior AI focuses on providing multiple style options with a straightforward upload-and-select interface. Like RoomGPT, it uses diffusion-based models. It has been popular with real estate professionals who need quick, visually appealing outputs rather than architecturally precise results.",
+            },
+            {
+                type: "h3",
+                text: "REimagine Home",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "REimagine Home offers a wider feature set including empty room furnishing, style transfer, and object removal. It targets a slightly more professional user base, including interior designers and staging professionals. Pricing is subscription-based.",
+            },
+            {
+                type: "table",
+                headers: ["Tool", "AI model", "Image storage", "Pricing", "Free trial"],
+                rows: [
+                    [
+                        "Magic Room",
+                        "Google Gemini 2.5 Flash (multimodal)",
+                        "Never stored — in-memory only",
+                        "Credits from EUR 9.99, no subscription",
+                        "1 credit on signup",
+                    ],
+                    [
+                        "RoomGPT",
+                        "Diffusion model",
+                        "Images retained on servers",
+                        "Subscription required for full access",
+                        "Limited free tier",
+                    ],
+                    [
+                        "Interior AI",
+                        "Diffusion model",
+                        "Not explicitly committed",
+                        "Subscription or credits",
+                        "Limited free tier",
+                    ],
+                    [
+                        "Reimagine Home",
+                        "Multiple AI modes",
+                        "Not explicitly committed",
+                        "Subscription, credits expire monthly",
+                        "Limited free tier",
+                    ],
+                ],
+            },
+            {
+                type: "cta",
+                heading: "Try Magic Room free",
+                subtext:
+                    "Upload a photo of your room and generate 4–8 AI design variations in under a minute. One free credit with every account — no card required.",
+            },
+            {
+                type: "h2",
+                text: "How to choose the right tool for your situation",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "The right tool depends on what you are trying to achieve. For homeowners redesigning one or several rooms, a credit-based tool is usually more cost-effective than a monthly subscription. For real estate professionals generating images regularly, a subscription may be more practical. For anyone with privacy concerns about uploaded room photos, a tool that does not store images is essential.",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "For output quality, test the specific room you need to redesign rather than relying on example images from the tool's marketing. AI tools vary significantly in how they handle different room types, lighting conditions, and architectural features. An example kitchen on the tool's homepage may look impressive while the tool struggles with your specific room layout.",
+            },
+        ],
+        relatedDesignSlugs: ["modern-living-room", "scandinavian-bedroom", "industrial-kitchen"],
+        faqs: [
+            {
+                question: "Which AI interior design tool has the best output quality in 2026?",
+                answer:
+                    "Tools using multimodal AI models (like Magic Room with Google Gemini) tend to produce outputs that better preserve room geometry and structural accuracy compared to diffusion-based tools. However, quality varies by room type and input photo quality — testing with your specific room is the best approach.",
+            },
+            {
+                question: "Are there free AI interior design tools?",
+                answer:
+                    "Most tools offer a limited free tier or free credits on signup. Magic Room provides one free credit with every account, enough to generate one complete room redesign. Full access to additional generations requires purchasing credits from EUR 9.99.",
+            },
+            {
+                question: "Do AI interior design tools store my photos?",
+                answer:
+                    "This varies by tool. Magic Room processes photos in-memory and deletes them immediately after generation — they are never stored on servers. Other tools, including some free ones, retain uploaded images. Always check the privacy policy before uploading photos of your home.",
+            },
+        ],
+    },
+    {
+        slug: "bedroom-redesign-with-ai",
+        title: "How to Redesign Your Bedroom with AI",
+        metaDescription:
+            "A practical guide to using AI to redesign your bedroom. Covers how to photograph your space, which styles work best, and how to translate AI output into purchasing decisions.",
+        publishedDate: "2026-02-18",
+        updatedDate: "2026-02-18",
+        readingTime: 6,
+        keywords: [
+            "bedroom redesign AI",
+            "AI bedroom makeover",
+            "redesign bedroom with AI",
+            "AI interior design bedroom",
+        ],
+        excerpt:
+            "Bedrooms are intensely personal spaces where the result needs to be functional, not just visually appealing. Here is how to approach AI bedroom redesign effectively.",
+        sections: [
+            {
+                type: "paragraph",
+                content:
+                    "Redesigning a bedroom with AI is slightly different from redesigning a living room or kitchen. The bedroom is used primarily for sleep, which means lighting quality and furniture arrangement around the bed are more critical than in other rooms. It is also a more personal space — the AI output needs to feel like somewhere you would actually want to sleep, not just an impressive image.",
+            },
+            {
+                type: "h2",
+                text: "Photographing your bedroom for AI redesign",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "The quality of the AI output depends directly on the quality of the input photo. Bedrooms are typically more difficult to photograph than living rooms because they are smaller and the bed occupies a significant proportion of the floor space, limiting the angle of view.",
+            },
+            {
+                type: "ordered-list",
+                items: [
+                    "Shoot from the doorway or the corner opposite the bed. This gives the widest possible view and allows the AI to understand the full spatial context — including the relationship between the bed, windows, and other furniture.",
+                    "Make the bed and remove personal items from surfaces. The AI performs better when it can clearly read the room's structure rather than parsing scattered objects.",
+                    "Shoot in natural daylight with curtains open. Bedroom lighting — often warm and low — creates colour casts that make it harder for the AI to accurately read surface colours and materials.",
+                    "Photograph at chest height rather than from standing height for a more natural perspective that avoids ceiling distortion.",
+                ],
+            },
+            {
+                type: "h2",
+                text: "Which bedroom styles translate well through AI",
+            },
+            {
+                type: "unordered-list",
+                items: [
+                    "Scandinavian: Natural wood tones, linen textiles, and a restrained palette. Works well for bedrooms of any size and is particularly effective in rooms with limited natural light.",
+                    "Modern minimalist: Clean surfaces, concealed storage, and a neutral palette. The AI output is useful for identifying which pieces of furniture to remove or replace first.",
+                    "Bohemian: Layered textiles, patterned fabrics, and warm lighting. Works well but requires more investment to implement — treat the AI output as directional inspiration.",
+                    "Luxury: Rich materials, upholstered headboards, and considered lighting. The AI handles luxury bedrooms well and can identify which single element has the most visual impact.",
+                ],
+            },
+            {
+                type: "cta",
+                heading: "Generate your bedroom redesign",
+                subtext:
+                    "Upload a photo of your bedroom and see it transformed in modern, Scandinavian, bohemian, or luxury style in under a minute.",
+            },
+            {
+                type: "h2",
+                text: "Translating the AI output into purchasing decisions",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "The most useful thing an AI bedroom redesign does is identify the two or three changes with the largest effect. In bedrooms, these are almost always: the headboard or bed frame, the flooring or rug, and the window treatment. Secondary changes — bedside tables, lighting, and textiles — reinforce the style but rarely transform the room on their own.",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "Use the AI output to understand the relationships in the room rather than as a precise shopping list. The specific furniture in the image may not exist, but the proportions, the colour relationships between surfaces, and the balance between pattern and solid colour are all directional information you can use when researching actual products.",
+            },
+        ],
+        relatedDesignSlugs: ["scandinavian-bedroom", "modern-bedroom", "luxury-bedroom"],
+        faqs: [
+            {
+                question: "How long does AI bedroom redesign take?",
+                answer:
+                    "With Magic Room, AI bedroom redesigns are generated in 30 to 60 seconds from a single uploaded photo. You receive multiple design variations in the style you selected.",
+            },
+            {
+                question: "Can AI redesign a small bedroom effectively?",
+                answer:
+                    "Yes. AI tools are particularly useful for small bedrooms because they can show how different furniture arrangements and storage solutions affect the sense of space. Minimalist and Scandinavian styles tend to work best for smaller rooms.",
+            },
+            {
+                question: "Will AI keep my bedroom's actual layout and dimensions?",
+                answer:
+                    "Higher-quality tools using multimodal AI models (like Magic Room with Google Gemini) preserve room geometry more accurately than diffusion-based alternatives. Window positions, room proportions, and architectural features should remain consistent in the redesigned output.",
+            },
+        ],
+    },
+    {
+        slug: "home-office-ai-design",
+        title: "Designing a Home Office with AI: A Practical Guide",
+        metaDescription:
+            "How to use AI interior design tools to redesign your home office. Covers photography, style selection, and how to interpret AI output for a functional workspace.",
+        publishedDate: "2026-02-22",
+        updatedDate: "2026-02-22",
+        readingTime: 7,
+        keywords: [
+            "home office design AI",
+            "AI home office redesign",
+            "work from home office design",
+            "AI interior design home office",
+        ],
+        excerpt:
+            "Home offices need to function well for focused work and appear professional in video calls. AI design tools can help you see possibilities and understand which changes to make first.",
+        sections: [
+            {
+                type: "paragraph",
+                content:
+                    "The home office is one of the most practically constrained rooms in the house. Unlike a living room or bedroom, where the primary goal is atmosphere, the home office needs to function well for focused work, appear professional in video calls, and often double as another space. AI interior design tools can help you visualise redesign options, but interpreting the output for a functional workspace requires a slightly different approach than for other rooms.",
+            },
+            {
+                type: "h2",
+                text: "What makes home offices difficult to design",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "Most home offices contain a desk, a chair, a monitor, and storage that has accumulated over time. The result is often a functional but visually disorganised space dominated by cables, screens, and utility furniture. AI design tools see the same structure and generate a redesigned version — but the redesign needs to remain functional as a workspace, not just look good in an image.",
+            },
+            {
+                type: "h2",
+                text: "Photographing your home office for AI redesign",
+            },
+            {
+                type: "ordered-list",
+                items: [
+                    "Clear the desk surface of daily working clutter before shooting. The AI will design around what it sees — a desk buried in papers produces a less useful output than a clear surface.",
+                    "Photograph from the doorway or a corner that shows the desk in context with the rest of the room. The AI needs to understand the relationship between the desk, window, and available floor space.",
+                    "Include the window in the frame if possible. Natural light direction is important for home office comfort, and the AI will work with the window placement in the redesign.",
+                    "Leave cables and equipment in the frame — it gives the AI information about the existing infrastructure and the output will show how to organise or conceal it.",
+                ],
+            },
+            {
+                type: "h2",
+                text: "Styles that work well for home offices",
+            },
+            {
+                type: "unordered-list",
+                items: [
+                    "Modern: Clean lines, organised storage, and neutral tones create a focused environment. The AI output will typically show built-in shelving, a structured desk, and concealed cable management.",
+                    "Scandinavian: Natural wood surfaces, white walls, and functional storage. This style photographs particularly well in video calls because the background appears organised without being distracting.",
+                    "Industrial: Exposed brick or concrete textures, metal desk frames, and open shelving. Works well in converted spaces and larger rooms.",
+                    "Minimalist: The most demanding style to implement in a working space because it requires genuine decluttering and storage solutions. The AI output can show the potential — implementation requires addressing the physical storage challenge first.",
+                ],
+            },
+            {
+                type: "cta",
+                heading: "Generate your home office redesign",
+                subtext:
+                    "Upload a photo of your home office and see it redesigned in modern, Scandinavian, industrial, or minimalist style. Results in under a minute.",
+            },
+            {
+                type: "h2",
+                text: "Using AI output to improve video call backgrounds",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "One specific and practical use of AI home office redesign is improving the background visible in video calls. The area behind your desk — typically a wall, bookshelf, or door — has a significant effect on how you appear in professional video calls. AI redesign can show you what that background could look like with different colour, shelving arrangement, or lighting.",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "For video call backgrounds, the most useful AI output is one that shows a clear, organised background in a neutral or warm tone. Modern and Scandinavian styles tend to produce the best results for professional contexts.",
+            },
+            {
+                type: "h2",
+                text: "Which changes have the most impact",
+            },
+            {
+                type: "paragraph",
+                content:
+                    "In most home offices, the three changes with the largest combined impact are: the desk (height, surface material, and size), the wall behind the desk (colour or texture), and the lighting (position and quality of task and ambient light). The AI output often identifies these as the primary changes because they are the most visually significant. Implementing them in sequence — desk first, then wall, then lighting — is more effective than attempting all changes simultaneously.",
+            },
+        ],
+        relatedDesignSlugs: ["modern-home-office", "industrial-home-office", "scandinavian-home-office"],
+        faqs: [
+            {
+                question: "Can I use AI to redesign a bedroom that doubles as a home office?",
+                answer:
+                    "Yes. Multi-function rooms are a common use case for AI redesign. Upload a photo that shows both the sleeping and working areas, and specify in the optional prompt field that you need the space to function for both purposes.",
+            },
+            {
+                question: "What is the best design style for a home office?",
+                answer:
+                    "Modern and Scandinavian styles tend to work best for home offices because they prioritise organisation, clean surfaces, and neutral backgrounds — all of which benefit focused work and video call backgrounds.",
+            },
+            {
+                question: "How do I make my home office look professional in video calls using AI?",
+                answer:
+                    "Use the AI redesign to focus on the background visible in your video calls — typically the wall behind and to the side of your desk. A clean, neutrally coloured wall with organised shelving creates a professional impression. Modern and Scandinavian styles tend to produce the best results for this use case.",
             },
         ],
     },

@@ -27,6 +27,7 @@ export function createMetadata(input?: CreateMetadataInput): Metadata {
     const description = input?.description ?? SITE_DESCRIPTION;
     const canonicalUrl = `${SITE_URL}${input?.path ?? ""}`;
     const ogImage = input?.ogImage ?? OG_IMAGE;
+    const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
 
     return {
         title,
@@ -46,7 +47,7 @@ export function createMetadata(input?: CreateMetadataInput): Metadata {
             locale: "en_US",
             url: canonicalUrl,
             siteName: SITE_NAME,
-            title: title ?? SITE_NAME,
+            title: fullTitle,
             description,
             images: [
                 {
@@ -61,7 +62,7 @@ export function createMetadata(input?: CreateMetadataInput): Metadata {
             card: "summary_large_image",
             site: TWITTER_HANDLE,
             creator: TWITTER_HANDLE,
-            title: title ?? SITE_NAME,
+            title: fullTitle,
             description,
             images: [ogImage.url],
         },
@@ -70,16 +71,16 @@ export function createMetadata(input?: CreateMetadataInput): Metadata {
 
 export function homeMetadata(): Metadata {
     return createMetadata({
-        title: "Magic Room - AI Interior Design | Transform Your Room in Seconds",
+        title: "AI Interior Design - Transform Your Room in Seconds",
         description:
             "Transform your room in seconds with AI-powered interior design. Upload a photo and get stunning design variations instantly. Privacy-first, professional quality.",
-        path: "/",
+        path: "",
     });
 }
 
 export function pricingMetadata(): Metadata {
     return createMetadata({
-        title: "Pricing - Magic Room",
+        title: "Pricing & Plans",
         description:
             "Simple, transparent pricing for AI interior design. Choose from flexible credit packages. Credits never expire.",
         path: "/pricing",
@@ -88,7 +89,7 @@ export function pricingMetadata(): Metadata {
 
 export function generateMetadata(): Metadata {
     return createMetadata({
-        title: "Generate Design - Magic Room",
+        title: "Generate Design",
         description:
             "Upload your room photo and generate AI-powered interior design variations. Select room type and style to get started.",
         path: "/generate",
@@ -98,7 +99,7 @@ export function generateMetadata(): Metadata {
 
 export function privacyMetadata(): Metadata {
     return createMetadata({
-        title: "Privacy Policy - Magic Room",
+        title: "Privacy Policy",
         description:
             "Magic Room privacy policy and data protection information. Learn how we protect your data and images.",
         path: "/privacy",
@@ -107,7 +108,7 @@ export function privacyMetadata(): Metadata {
 
 export function termsMetadata(): Metadata {
     return createMetadata({
-        title: "Terms of Service - Magic Room",
+        title: "Terms of Service",
         description:
             "Magic Room terms of service and user agreement. Read our terms before using the service.",
         path: "/terms",

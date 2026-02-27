@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { createMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
@@ -8,7 +9,7 @@ import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { PageTransition } from "@/components/page-transition";
 
 export const metadata: Metadata = createMetadata({
-    title: "Interior Design Blog | Magic Room",
+    title: "Interior Design Blog",
     description:
         "Practical guides on AI interior design, room styling, design styles, and how to redesign spaces on any budget. Written by the Magic Room team.",
     path: "/blog",
@@ -70,6 +71,40 @@ export default function BlogHubPage() {
                                 {posts.map((post) => (
                                     <BlogCard key={post.slug} post={post} />
                                 ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {/* Cross-links to other content sections */}
+                <section className="bg-white py-12 dark:bg-slate-950 md:py-16">
+                    <div className="container px-4 md:px-6">
+                        <div className="mx-auto max-w-3xl">
+                            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                                Explore more
+                            </h2>
+                            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                                <Link
+                                    href="/design"
+                                    className="rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800"
+                                >
+                                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                                        AI Design Ideas
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                        Browse 56 AI design combinations across 8 styles and 7 room types.
+                                    </p>
+                                </Link>
+                                <Link
+                                    href="/alternatives"
+                                    className="rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800"
+                                >
+                                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                                        Tool Comparisons
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                        See how Magic Room compares to RoomGPT, DecorAI, and other AI design tools.
+                                    </p>
+                                </Link>
                             </div>
                         </div>
                     </div>

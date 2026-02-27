@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { ICompetitorData } from "@/lib/seo/competitor-data";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
@@ -191,6 +192,25 @@ export function AlternativePageContent({ competitor }: AlternativePageContentPro
                     </div>
                 </section>
             )}
+
+            {/* Cross-links */}
+            <section className="bg-white py-8 dark:bg-slate-950">
+                <div className="container px-4 md:px-6">
+                    <div className="mx-auto max-w-3xl">
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                            Explore{" "}
+                            <Link href="/design" className="text-primary hover:underline">
+                                56 AI design combinations
+                            </Link>{" "}
+                            across 8 styles and 7 room types, or read our{" "}
+                            <Link href="/blog" className="text-primary hover:underline">
+                                interior design blog
+                            </Link>{" "}
+                            for practical room redesign guides.
+                        </p>
+                    </div>
+                </div>
+            </section>
 
             {/* CTA */}
             <CtaSection

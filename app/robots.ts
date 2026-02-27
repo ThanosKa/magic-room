@@ -6,9 +6,15 @@ export default function robots(): MetadataRoute.Robots {
         rules: [
             { userAgent: "*", allow: "/", disallow: ["/api/", "/generate"] },
             { userAgent: "GPTBot", allow: "/" },
+            { userAgent: "ChatGPT-User", allow: "/" },
             { userAgent: "PerplexityBot", allow: "/" },
             { userAgent: "ClaudeBot", allow: "/" },
-            { userAgent: "ChatGPT-User", allow: "/" },
+            { userAgent: "anthropic-ai", allow: "/" },
+            { userAgent: "Google-Extended", allow: "/" },
+            { userAgent: "Bingbot", allow: "/" },
+            { userAgent: "Applebot", allow: "/" },
+            { userAgent: "Bytespider", allow: "/" },
+            { userAgent: "CCBot", allow: "/" },
         ],
         sitemap: `${SITE_URL}/sitemap.xml`,
     };
