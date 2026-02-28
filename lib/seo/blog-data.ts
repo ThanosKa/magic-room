@@ -96,7 +96,7 @@ export const BLOG_POSTS: IBlogPost[] = [
                 type: "cta",
                 heading: "Generate your living room redesign",
                 subtext:
-                    "Upload a photo and see your living room in modern, Scandinavian, industrial, or any of 8 design styles. Results in under a minute.",
+                    "Upload a photo and see your living room in modern, Scandinavian, industrial, Japandi, or any of 14 design styles. Results in under a minute.",
             },
             {
                 type: "h2",
@@ -213,7 +213,7 @@ export const BLOG_POSTS: IBlogPost[] = [
                 type: "cta",
                 heading: "Generate a staged version of your room",
                 subtext:
-                    "Upload a photo of your empty or furnished space and generate a styled redesign in any of 8 design themes.",
+                    "Upload a photo of your empty or furnished space and generate a styled redesign in any of 14 design themes.",
             },
             {
                 type: "h2",
@@ -1134,7 +1134,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "Magic Room uses Google Gemini 2.5 Flash — a multimodal model — to process uploaded room photos. The key advantage of a multimodal model is that it understands the spatial and structural context of the room rather than applying a style overlay to a flat image. Results preserve room geometry with significantly higher accuracy than diffusion-based tools. Photos are processed in-memory and not stored. Pricing is credit-based from EUR 9.99, with one free credit on signup.",
+                    "Magic Room uses Google Gemini multimodal AI to process uploaded room photos. The key advantage of a multimodal model is that it understands the spatial and structural context of the room rather than applying a style overlay to a flat image. Results preserve room geometry with significantly higher accuracy than diffusion-based tools. Photos are processed in-memory and not stored. Pricing is credit-based from EUR 9.99, with one free credit on signup.",
             },
             {
                 type: "h3",
@@ -1169,7 +1169,7 @@ export const BLOG_POSTS: IBlogPost[] = [
                 rows: [
                     [
                         "Magic Room",
-                        "Google Gemini 2.5 Flash (multimodal)",
+                        "Google Gemini multimodal AI",
                         "Never stored — in-memory only",
                         "Credits from EUR 9.99, no subscription",
                         "1 credit on signup",

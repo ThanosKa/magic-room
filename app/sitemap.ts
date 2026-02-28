@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
 
     // Use stable dates instead of new Date() to avoid wasting crawl budget
-    const siteLastUpdated = new Date("2026-02-10");
+    const siteLastUpdated = new Date("2026-02-28");
     const legalLastUpdated = new Date("2024-12-01");
 
     // Core pages
@@ -39,7 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
     ];
 
-    // Design hub + 56 design pages
+    // Design hub + 196 design pages
     const designHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/design`,

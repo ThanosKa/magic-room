@@ -92,8 +92,10 @@ export function DesignPageContent({ page, themeData, roomData }: DesignPageConte
                             See the transformation
                         </h2>
                         <HeroComparison
-                            beforeImage="/images/room-before.png"
-                            afterImage="/images/room-after.png"
+                            beforeImage={`/images/designs/before-${page.roomType}.jpg`}
+                            afterImage={`/images/designs/${page.slug}.jpg`}
+                            beforeFallback="/images/room-before.png"
+                            afterFallback="/images/room-after.png"
                         />
                         <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
                             AI-generated {page.themeName.toLowerCase()} {page.roomName.toLowerCase()} redesign from a single photo

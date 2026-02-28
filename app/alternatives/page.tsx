@@ -153,7 +153,7 @@ export default function AlternativesHubPage() {
                                         AI Design Ideas
                                     </h3>
                                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                                        Browse 56 AI design combinations across 8 styles and 7 room types.
+                                        Browse 196 AI design combinations across 14 styles and 14 room types.
                                     </p>
                                 </Link>
                                 <Link

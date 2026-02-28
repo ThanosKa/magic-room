@@ -38,7 +38,7 @@ export function FeaturesSection() {
                         </h3>
                         <p className="mt-3 text-slate-600 dark:text-slate-400">
                             Get stunning design variations in under 60 seconds. Powered
-                            by Google Gemini 2.5 Flash.
+                            by Google Gemini multimodal AI.
                         </p>
                     </div>
 

@@ -4,8 +4,6 @@ import { createMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import { DESIGN_PAGES, THEME_DATA } from "@/lib/seo/design-data";
-import { THEMES } from "@/lib/constants";
-import { Theme } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { PageTransition } from "@/components/page-transition";
@@ -13,7 +11,7 @@ import { PageTransition } from "@/components/page-transition";
 export const metadata: Metadata = createMetadata({
     title: "AI Interior Design Ideas by Style and Room",
     description:
-        "Browse 56 AI interior design combinations across 8 styles and 7 room types. Generate modern, Scandinavian, industrial, bohemian, and more design ideas from a single photo.",
+        "Browse 196 AI interior design combinations across 14 styles and 14 room types. Generate modern, Scandinavian, Japandi, farmhouse, coastal, and more design ideas from a single photo.",
     path: "/design",
     keywords: [
         "AI interior design ideas",
@@ -30,7 +28,7 @@ const schema = breadcrumbSchema([
 ]);
 
 export default function DesignHubPage() {
-    const themeKeys = Object.keys(THEMES) as Theme[];
+    const themeKeys = Object.keys(THEME_DATA);
 
     return (
         <>
@@ -59,7 +57,7 @@ export default function DesignHubPage() {
                                 AI Interior Design Ideas
                             </h1>
                             <p className="mt-6 text-lg text-slate-600 dark:text-slate-400">
-                                Browse design inspiration across 8 styles and 7 room types. Upload a photo and
+                                Browse design inspiration across 14 styles and 14 room types. Upload a photo and
                                 generate your redesign in seconds.
                             </p>
                         </div>

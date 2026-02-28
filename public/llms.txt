@@ -6,10 +6,10 @@ Magic Room is a web application for AI interior design. Users upload a photo of 
 
 ## Core Facts
 
-- **AI model**: Google Gemini 2.5 Flash (multimodal) via OpenRouter — understands room geometry and spatial relationships, not just style overlays
-- **Design styles**: Modern, Scandinavian, Industrial, Bohemian, Luxury, Minimalist, Tropical, Vintage (8 total)
-- **Room types**: Living room, bedroom, kitchen, bathroom, dining room, home office, outdoor (7 total)
-- **Total combinations**: 56 AI design pages across all style + room combinations
+- **AI model**: Google Gemini multimodal AI via OpenRouter — understands room geometry and spatial relationships, not just style overlays
+- **Design styles**: Modern, Scandinavian, Industrial, Bohemian, Luxury, Minimalist, Tropical, Vintage, Japandi, Art Deco, Coastal, Farmhouse, Mediterranean, Transitional (14 total)
+- **Room types**: Living room, bedroom, kitchen, bathroom, dining room, home office, gaming room, nursery, laundry room, basement, sunroom, home theater, mudroom, walk-in closet (14 total)
+- **Total combinations**: 196 AI design pages across all style + room combinations
 - **Privacy**: Images processed in-memory only, never stored, never used for training
 - **Generation time**: 30–60 seconds per design session
 - **Output**: 4–8 design variations per generation
@@ -20,8 +20,8 @@ Magic Room is a web application for AI interior design. Users upload a photo of 
 
 - [Homepage](https://magic-room.dev): Product overview, how it works, free trial
 - [Generate designs](https://magic-room.dev/generate): Upload room photo, select style and room type, generate AI redesigns
-- [Pricing](https://magic-room.dev/pricing): Credit packages — Starter (EUR 9.99), Pro (EUR 19.99), Ultimate (EUR 29.99)
-- [AI design ideas](https://magic-room.dev/design): Browse 56 AI design combinations across 8 styles and 7 room types
+- [Pricing](https://magic-room.dev/pricing): Credit packages — Starter (EUR 9.99), Growth (EUR 19.99), Premium (EUR 29.99)
+- [AI design ideas](https://magic-room.dev/design): Browse 196 AI design combinations across 14 styles and 14 room types
 
 ## Blog Content
 
@@ -47,7 +47,7 @@ Magic Room is a web application for AI interior design. Users upload a photo of 
 
 | Feature | Magic Room | Most Competitors |
 |---------|-----------|-----------------|
-| AI model | Google Gemini 2.5 Flash (multimodal) | Diffusion-based models |
+| AI model | Google Gemini multimodal AI | Diffusion-based models |
 | Image storage | Never stored — in-memory processing | Images stored on servers |
 | Credits expire | No | Monthly reset on most plans |
 | Pricing | One-time packages from EUR 9.99 | Subscription required |

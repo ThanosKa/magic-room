@@ -1,5 +1,3 @@
-import { RoomType, Theme } from "@/types";
-import { ROOM_TYPES, THEMES } from "@/lib/constants";
 
 export interface IDesignTip {
     title: string;
@@ -35,8 +33,8 @@ export interface IFaqItem {
 
 export interface IDesignPageData {
     slug: string;
-    theme: Theme;
-    roomType: RoomType;
+    theme: string;
+    roomType: string;
     themeName: string;
     roomName: string;
     title: string;
@@ -46,7 +44,7 @@ export interface IDesignPageData {
     keywords: string[];
 }
 
-export const THEME_DATA: Record<Theme, IThemeData> = {
+export const THEME_DATA: Record<string, IThemeData> = {
     modern: {
         name: "Modern",
         slug: "modern",
@@ -327,9 +325,219 @@ export const THEME_DATA: Record<Theme, IThemeData> = {
             "premium interior design ideas",
         ],
     },
+    japandi: {
+        name: "Japandi",
+        slug: "japandi",
+        tagline: "Wabi-sabi meets hygge — imperfect simplicity",
+        description:
+            "Japandi fuses Japanese wabi-sabi philosophy with Scandinavian hygge sensibility, producing spaces that celebrate natural imperfection, restrained craftsmanship, and deliberate calm. Unlike either parent style alone, Japandi rooms feel simultaneously minimal and warm, with natural materials — pale wood, rattan, linen — playing against muted earthy tones and carefully edited objects.",
+        tips: [
+            {
+                title: "Embrace asymmetry and natural imperfection",
+                description:
+                    "Japandi interiors reject the pursuit of flawless symmetry. A handmade ceramic bowl with an uneven rim, a branch arranged in a vase, or a linen throw with a visible weave all carry more character than manufactured equivalents. Selecting objects with visible signs of making or natural irregularity is one of the most direct ways to achieve the wabi-sabi quality the style depends on.",
+            },
+            {
+                title: "Keep the palette muted and drawn from nature",
+                description:
+                    "Japandi colour ranges from warm off-white and undyed linen through clay, moss, and charcoal. Saturated colour rarely appears. When choosing paint or fabric, hold samples against natural materials in real daylight — the goal is a palette that makes the room feel neither stark nor busy, but quietly grounded.",
+            },
+            {
+                title: "Choose furniture with honest joinery",
+                description:
+                    "The furniture that fits Japandi best shows how it is made — visible mortise-and-tenon joints, hand-rubbed oil finishes, and simple forms with no applied decoration. Scandinavian-influenced pieces with lower profiles and Japanese-influenced pieces with fine, precise detailing both work well in the same room because they share an underlying commitment to craft over ornamentation.",
+            },
+            {
+                title: "Limit objects to those with clear purpose or beauty",
+                description:
+                    "Both Japanese and Scandinavian design traditions hold that objects on display should either serve a function or be genuinely beautiful — ideally both. Before placing anything on a surface, apply this test. Clearing surfaces to a curated few pieces and leaving the rest of the shelf or table empty is not incompleteness — it is the point.",
+            },
+        ],
+        keywords: [
+            "japandi interior design",
+            "japandi room ideas",
+            "japanese scandinavian design",
+            "japandi home decor",
+        ],
+    },
+    "art-deco": {
+        name: "Art Deco",
+        slug: "art-deco",
+        tagline: "Glamour, geometry, and gold — the roaring twenties reimagined",
+        description:
+            "Art Deco interior design is an exercise in confident opulence — geometric patterns, mirrored surfaces, rich jewel tones, and metallic accents assembled to create spaces that feel theatrical and deliberate. Born in 1920s Paris and popularised globally through the 1930s, the style translates into contemporary residential settings when applied with discipline and a selective hand rather than wholesale reproduction.",
+        tips: [
+            {
+                title: "Use geometry as a structural design element",
+                description:
+                    "Art Deco draws its visual energy from bold geometric forms — sunburst patterns, chevrons, stepped profiles, and fan shapes. Rather than applying these as surface decoration alone, look for furniture and architectural details that carry them structurally: a headboard with a geometric silhouette, skirting boards with stepped profiles, or a rug with a strong geometric repeat. The geometry should feel built-in, not stuck-on.",
+            },
+            {
+                title: "Anchor with jewel tones and add metallics sparingly",
+                description:
+                    "Deep emerald, sapphire, amethyst, and burgundy are the natural palette of Art Deco. Use one as the dominant wall or upholstery colour and introduce gold, brass, or black lacquer as accent rather than structure. When metallics appear on too many surfaces simultaneously, the room tips from glamorous into gaudy. A single prominent gold element — a ceiling light, a console frame — reads more powerfully than six smaller ones.",
+            },
+            {
+                title: "Incorporate mirrored and reflective surfaces thoughtfully",
+                description:
+                    "Mirrored furniture, glass table tops, and lacquered surfaces are signature Art Deco elements, and their practical function — making rooms feel larger and moving light around — is genuinely valuable. Position mirrored pieces to reflect a window or a decorative light source rather than a blank wall. Too many reflective surfaces in one sightline create visual noise; used selectively, they amplify the room's best features.",
+            },
+            {
+                title: "Balance opulence with restraint",
+                description:
+                    "The most successful contemporary Art Deco interiors borrow the language of the period without attempting full reproduction. Choose two or three signature elements per room — a geometric light fitting, velvet upholstery in a jewel tone, a brass-framed mirror — and build around a restrained base. Letting the key pieces breathe within a calmer surrounding makes them read as deliberate rather than accumulated.",
+            },
+        ],
+        keywords: [
+            "art deco interior design",
+            "art deco room ideas",
+            "art deco home decor",
+            "geometric interior design",
+        ],
+    },
+    coastal: {
+        name: "Coastal",
+        slug: "coastal",
+        tagline: "Breezy, light-filled spaces that bring the ocean indoors",
+        description:
+            "Coastal design distils the sensory experience of seaside living into an interior language — salt-bleached timbers, woven textures, the shifting blue-green palette of shallow water, and an abundance of natural light. At its best it is neither nautical-themed nor literalist; instead it creates rooms that feel genuinely relaxed and connected to the natural environment outside, with materials and colours that reference the coast without reproducing it.",
+        tips: [
+            {
+                title: "Prioritise natural light and window treatments that maximise it",
+                description:
+                    "Natural light is the defining quality of coastal interiors. Replace heavy drapes with linen sheers, remove window frames that block peripheral light, and use pale, reflective surfaces on walls and floors to carry that light deeper into the room. Light-coloured linen or cotton voile panels that move in a breeze are more faithful to the coastal aesthetic than any decorative element you could add.",
+            },
+            {
+                title: "Build the palette around whites, sand, and water",
+                description:
+                    "A coastal palette is bleached and light — white, off-white, warm sand, driftwood grey, and the blue-greens of shallow sea water. The blue-green tones should be soft and slightly desaturated; saturated navy or royal blue feels nautical rather than coastal. Use the lighter neutrals as the primary base and introduce the blue-green tones selectively through textiles, ceramics, or a single accent wall.",
+            },
+            {
+                title: "Choose natural, tactile materials over synthetic alternatives",
+                description:
+                    "Seagrass, sisal, rattan, woven cotton, weathered oak, and unglazed ceramics all carry the material sensibility of the coast. When selecting furniture and accessories, ask whether the material itself could have come from or been shaped by a coastal environment. Avoid plastic or resin equivalents of natural materials — they flatten the tactile quality that makes coastal interiors feel genuinely relaxing.",
+            },
+            {
+                title: "Avoid over-theming with nautical accessories",
+                description:
+                    "Anchor prints, ship wheels, and lighthouse ornaments signal 'beach house' rather than creating an actual coastal atmosphere. The most convincing coastal interiors rely on material quality, light, and spatial openness rather than thematic decoration. If you want a reference to the sea, a large piece of sea glass, a bowl of smooth stones, or a single botanical print of coastal flora will do more than a shelf of maritime ornaments.",
+            },
+        ],
+        keywords: [
+            "coastal interior design",
+            "coastal living room",
+            "beach house decor",
+            "coastal home design ideas",
+        ],
+    },
+    farmhouse: {
+        name: "Farmhouse",
+        slug: "farmhouse",
+        tagline: "Warmth, patina, and the honest beauty of working materials",
+        description:
+            "Farmhouse interior design values substance over surface — reclaimed wood, hand-thrown ceramics, linen and cotton textiles, and furniture that has earned its character through use rather than applied distressing. Contemporary farmhouse interiors balance this material honesty with thoughtful editing that prevents the aesthetic from reading as cluttered or nostalgic, creating rooms that feel lived-in and genuinely warm.",
+        tips: [
+            {
+                title: "Source materials with genuine history where possible",
+                description:
+                    "The quality that separates authentic farmhouse design from its imitators is the difference between genuine patina and manufactured distressing. Reclaimed timber beams, vintage furniture, hand-thrown ceramics with irregular glazes, and natural stone floors all carry a visual honesty that factory-distressed alternatives cannot replicate. Even if a single authentic piece costs more, it will define the room more effectively than ten new-but-aged substitutes.",
+            },
+            {
+                title: "Use a neutral palette anchored by natural texture",
+                description:
+                    "Farmhouse interiors work in warm whites, creams, warm greys, and the natural tones of unfinished wood. The colour interest comes from texture — the grain of timber, the weave of linen, the rough surface of stone — rather than paint. If you introduce colour, keep it as a single accent through a textile, a painted cabinet, or a piece of stoneware, and ensure it reads as a natural pigment rather than a synthetic one.",
+            },
+            {
+                title: "Mix old and new pieces with confidence",
+                description:
+                    "Contemporary farmhouse design does not require period furniture. A modern sofa with clean lines sits naturally in a farmhouse room if it is upholstered in natural linen or cotton, positioned near a reclaimed wood beam or an antique chest. The key is that the new pieces share the same material honesty — natural fibres, simple forms, no applied decoration — as the older ones.",
+            },
+            {
+                title: "Let functional objects become decorative elements",
+                description:
+                    "In farmhouse design, objects are not hidden away; they are displayed because they are good at what they do. A copper pot on an open shelf, a bunch of dried herbs above the window, a woven basket holding firewood — these serve purposes while contributing to the room's character. Avoid decorating with objects that only exist to look decorative; it produces the opposite of authenticity.",
+            },
+        ],
+        keywords: [
+            "farmhouse interior design",
+            "farmhouse style home",
+            "rustic farmhouse decor",
+            "modern farmhouse design ideas",
+        ],
+    },
+    mediterranean: {
+        name: "Mediterranean",
+        slug: "mediterranean",
+        tagline: "Sun-warmed, textured, and alive with colour and light",
+        description:
+            "Mediterranean interior design draws from the architecture and material culture of southern Europe — terracotta tiles, whitewashed walls, wrought iron, handmade ceramics, and the warm, vivid colour palette of Spain, Italy, and Greece. The style is most successful when it prioritises texture, craft, and the interaction of light with tactile surfaces rather than simply applying colour.",
+        tips: [
+            {
+                title: "Build around terracotta, stone, and ceramic tile",
+                description:
+                    "Mediterranean architecture is almost inseparable from terracotta tile floors, stone walls, and handmade ceramic surfaces. These materials regulate temperature, age beautifully, and carry a visual warmth that painted surfaces cannot replicate. If structural tile is not possible, introducing terracotta pots, hand-painted ceramic tiles as a splashback, or stone as a worktop surface achieves a material connection to the style that reads authentically.",
+            },
+            {
+                title: "Use white as the base and saturated accents deliberately",
+                description:
+                    "The most enduring Mediterranean interiors use white or off-white generously on walls and ceilings, then introduce saturated colour in specific places — a set of blue-painted shutters, a terracotta-tiled floor, a vivid mosaic panel. This contrast between the bright white base and the warm, intense accents is what gives the style its characteristic sense of light and liveliness. Applying saturated colour everywhere sacrifices this dynamic.",
+            },
+            {
+                title: "Incorporate handcraft and artisan objects",
+                description:
+                    "Mediterranean design is grounded in artisan production — hand-thrown pottery, hand-woven textiles, hand-forged ironwork. Introducing these objects connects a room to the design tradition more effectively than any paint colour. Look for ceramic table lamps, wrought iron candle holders, hand-painted tiles, and woven kilim rugs in natural dyes. The slight irregularity of handmade objects is a feature, not a defect.",
+            },
+            {
+                title: "Frame outdoor connections wherever possible",
+                description:
+                    "Mediterranean houses are designed around outdoor living, and the best interiors in this style acknowledge that relationship. If you have access to a garden, terrace, or even a small balcony, use the window as a deliberate frame — sheer curtains that move in outdoor air, furniture positioned to look toward greenery, and materials that transition gracefully between inside and outside spaces.",
+            },
+        ],
+        keywords: [
+            "mediterranean interior design",
+            "mediterranean home decor",
+            "spanish interior design",
+            "italian interior design ideas",
+        ],
+    },
+    transitional: {
+        name: "Transitional",
+        slug: "transitional",
+        tagline: "The best of traditional and contemporary, seamlessly united",
+        description:
+            "Transitional interior design sits in the productive tension between traditional warmth and contemporary clarity. It avoids the formality of classical interiors while retaining their sense of permanence, and avoids the austerity of modern design while adopting its clean geometry and functional approach. The result is rooms that feel neither dated nor aggressively current — permanently liveable rather than momentarily fashionable.",
+        tips: [
+            {
+                title: "Pair traditional forms with contemporary finishes",
+                description:
+                    "Transitional design often places a traditionally-shaped sofa — with rolled arms, turned legs, or a classic Chesterfield profile — in a material that reads as current: performance linen, a muted geometric fabric, or a solid mid-tone neutral. The tension between familiar form and updated finish is the source of the style's appeal. The same principle applies to case furniture, lighting, and architectural elements.",
+            },
+            {
+                title: "Use a neutral palette with subtle warmth",
+                description:
+                    "Transitional interiors avoid both the cool greys of contemporary design and the warm creams of traditional interiors. The sweet spot is a slightly warm neutral — greige, warm white, taupe, soft stone — that reads as neither strictly modern nor period. Introduce depth through texture and tone variation rather than colour contrast. Wood tones should be medium rather than very pale (Scandi) or very dark (traditional).",
+            },
+            {
+                title: "Mix antique or vintage pieces with new ones deliberately",
+                description:
+                    "The most convincing transitional rooms contain at least one piece with genuine age alongside contemporary items. An antique mirror above a modern console, a traditional painting in a slim metal frame, or a vintage rug under a clean-lined sofa all create the temporal layering that distinguishes transitional from either pure contemporary or period design. The key is that each piece should be genuinely well-designed, not just old.",
+            },
+            {
+                title: "Keep architectural detail moderate",
+                description:
+                    "Transitional design uses mouldings, cornices, and panelling where they exist but doesn't add elaborate period detail to contemporary spaces. Simple panel moulding on a door, a restrained cornice, or a classic skirting board profile is enough architectural reference. Avoid reproduced ornate period detailing — it pushes the room into traditional territory — and avoid stripping all detail — it tips it into pure contemporary.",
+            },
+        ],
+        keywords: [
+            "transitional interior design",
+            "transitional home decor",
+            "classic modern interior",
+            "timeless interior design ideas",
+        ],
+    },
 };
 
-export const ROOM_DATA: Record<RoomType, IRoomData> = {
+export const ROOM_DATA: Record<string, IRoomData> = {
     "living-room": {
         name: "Living Room",
         slug: "living-room",
@@ -533,9 +741,212 @@ export const ROOM_DATA: Record<RoomType, IRoomData> = {
             "gaming room makeover",
         ],
     },
+    nursery: {
+        name: "Nursery",
+        slug: "nursery",
+        description:
+            "A nursery must solve design challenges that no other room faces: it needs to be safe for a newborn, stimulating enough for a developing mind, and adaptable enough to serve a child across the first several years of life. It must also accommodate parents who will spend significant time in the space, often during night hours, which makes the functional and sensory decisions here unusually consequential.",
+        considerations: [
+            {
+                title: "Safety first — no exceptions",
+                description:
+                    "All furniture should meet current safety standards for children's products — cot and bed heights, guardrail dimensions, and stability requirements vary by country and are updated regularly. Secure all tall furniture to walls with anti-tip brackets, eliminate blind cords entirely, and ensure any paint or finish used in the room is non-toxic and fully cured before occupation. These requirements should be confirmed before purchasing any item, not retrofitted afterward.",
+            },
+            {
+                title: "Design for the full growth arc, not just infancy",
+                description:
+                    "A room designed only for a newborn will require complete refurnishing within eighteen months. Choose a cot that converts to a toddler bed, invest in a chest of drawers that can serve as a changing station now and a wardrobe component later, and select a wall colour that will not feel babyish at age five. Spending more on fewer, more adaptable pieces produces better value than decorating purely for the first year.",
+            },
+            {
+                title: "Manage light for both daytime and night-time functions",
+                description:
+                    "Nurseries require blackout capability during the day for nap times and a very low-level warm light source for night feeds and settling. Full blackout blinds or curtains with a blackout lining are essential from day one. Install a secondary warm, dimmable light — a plug-in lamp with a warm bulb at low level — so that night duties can happen without triggering full wakefulness in either parent or child.",
+            },
+        ],
+        keywords: [
+            "nursery design ideas",
+            "baby room interior design",
+            "nursery decor ideas",
+            "AI nursery design",
+        ],
+    },
+    "laundry-room": {
+        name: "Laundry Room",
+        slug: "laundry-room",
+        description:
+            "The laundry room is the most functional space in a home, but that does not mean it has to be the least considered. Purpose-designed utility spaces that are genuinely pleasant to spend time in actively improve the likelihood that household tasks are completed promptly and that adjacent areas stay organised. Practicality and considered design are not in competition here — the brief requires both simultaneously.",
+        considerations: [
+            {
+                title: "Plan storage before selecting appliances",
+                description:
+                    "The most common laundry room failure is installing appliances and then trying to organise around them. Start by listing everything that needs to be stored — detergent, fabric softener, ironing equipment, cleaning supplies, spare linens — and allocate specific storage positions for each before finalising the layout. Tall cabinets above machines, pull-out laundry sorting hampers built into lower cabinetry, and a fold-down ironing board mounted in a wall cabinet are all significantly more functional than open shelving added after the fact.",
+            },
+            {
+                title: "Include a dedicated folding and sorting surface",
+                description:
+                    "The absence of a folding surface is the single most common reason laundry piles up unfolded. A counter running the full width of the room above the machines, even at 50cm deep, transforms how the space is used. If the room is very small, a wall-mounted fold-down surface that collapses flat when not in use provides the functionality without permanently occupying floor space.",
+            },
+            {
+                title: "Ventilate properly to prevent moisture problems",
+                description:
+                    "Tumble dryers produce large volumes of humid air, and washing machines create heat and steam during operation. Without adequate ventilation, this moisture accumulates in wall cavities and behind appliances, leading to mould, damaged finishes, and poor air quality throughout adjacent rooms. An externally-vented extractor fan running during and after operation is the minimum requirement; a heat recovery ventilation system is the ideal solution in a fully insulated home.",
+            },
+        ],
+        keywords: [
+            "laundry room design ideas",
+            "utility room design",
+            "laundry room makeover",
+            "AI laundry room design",
+        ],
+    },
+    basement: {
+        name: "Basement",
+        slug: "basement",
+        description:
+            "A basement presents one of the more interesting design challenges in residential interiors: a space that is typically below grade, often low in natural light, and underused by default. Converted thoughtfully, it can become one of the most useful and private areas in the home — a cinema room, gym, guest suite, or family room that does not compete with the main living areas above.",
+        considerations: [
+            {
+                title: "Solve moisture and waterproofing before any other decision",
+                description:
+                    "No interior finish, flooring, or furniture choice will perform adequately in a basement that has not been properly waterproofed. Before planning any conversion, assess the perimeter walls and slab for signs of water ingress — efflorescence, damp patches, or previous flooding. Any water management issue must be resolved at structural level before any interior work begins. Retrofitting waterproofing after finishes are installed costs significantly more than addressing it first.",
+            },
+            {
+                title: "Compensate for limited natural light deliberately",
+                description:
+                    "Basements with below-grade windows or no windows require a layered artificial lighting strategy that replaces the role natural light would play. Recessed ceiling lights should be supplemented with wall-level and task lighting to create depth and prevent the flat, institutional quality of overhead-only illumination. Warm colour temperatures (2700–3000K), light-coloured walls and ceilings to maximise reflection, and well-placed mirrors where window wells exist will all improve the sense of light significantly.",
+            },
+            {
+                title: "Choose flooring that tolerates basement conditions",
+                description:
+                    "Basements are prone to higher humidity and temperature fluctuation than above-grade spaces, and some flooring materials perform very poorly under these conditions. Solid hardwood expands and contracts excessively and is not recommended. Luxury vinyl tile, engineered hardwood with a stable core, polished concrete, or porcelain tile are all appropriate choices. A floating installation rather than a glued-down one also accommodates minor moisture movement without permanent damage.",
+            },
+        ],
+        keywords: [
+            "basement design ideas",
+            "basement conversion interior",
+            "finished basement ideas",
+            "basement room design",
+        ],
+    },
+    sunroom: {
+        name: "Sunroom",
+        slug: "sunroom",
+        description:
+            "A sunroom occupies an unusual position in a home — partly interior, partly exterior, designed to maximise natural light and connection to the garden while remaining sheltered from weather. Its design brief is distinct from any other room: the architecture and glazing do most of the work, and the interior furnishing must respond to those conditions — intense light, temperature variation, and visual connection to the outside — rather than fight them.",
+        considerations: [
+            {
+                title: "Choose materials that tolerate direct sunlight and heat",
+                description:
+                    "A south-facing sunroom can reach very high temperatures in summer and suffer significant UV exposure year-round. Many materials that perform well in shaded interior rooms fade, warp, or deteriorate under these conditions. Choose UV-stable fabrics — solution-dyed acrylic outdoor fabrics perform exceptionally well — and avoid dark upholstery that will absorb heat uncomfortably. Solid hardwood furniture may develop stress cracks in rooms with significant temperature and humidity fluctuation; engineered pieces or materials designed for outdoor use will outlast them.",
+            },
+            {
+                title: "Design for glare management alongside light maximisation",
+                description:
+                    "The same glazing that makes a sunroom bright and pleasant in winter can create uncomfortable glare and heat in summer. Cellular blinds or roller blinds with heat-reflective backing can be fitted within the roof glazing to reduce solar gain without eliminating daylight. Planting outside the glazed walls — deciduous climbers that provide shade in summer and admit light after leaf-fall in winter — is an elegant and effective long-term solution.",
+            },
+            {
+                title: "Connect the flooring to the outdoor space visually",
+                description:
+                    "One of the most effective design moves in a sunroom is to use a flooring material that bridges indoors and outdoors — large-format porcelain tile that continues as paving outside, or natural stone used inside and on an adjacent terrace. This visual continuity makes the garden feel like an extension of the interior rather than a separate space, which is precisely the quality that makes sunrooms valuable as living spaces.",
+            },
+        ],
+        keywords: [
+            "sunroom design ideas",
+            "sunroom interior design",
+            "conservatory decor",
+            "sunroom furniture ideas",
+        ],
+    },
+    "home-theater": {
+        name: "Home Theater",
+        slug: "home-theater",
+        description:
+            "A dedicated home theater room exists to maximise the audio-visual experience of watching film and television, which means its design brief is unusually technical. Every element — wall colour, seat arrangement, acoustic treatment, projector or screen placement, and lighting — either supports or undermines the viewing experience. Understanding these relationships before committing to finishes is particularly valuable.",
+        considerations: [
+            {
+                title: "Control ambient light completely",
+                description:
+                    "Projected images and even high-quality screens lose significant contrast and colour accuracy in the presence of ambient light. Full blackout window treatments are non-negotiable in a dedicated cinema room. Walls should be painted in dark, matte, non-reflective finishes — deep grey, charcoal, or dark navy are common choices — to prevent reflected light from the screen washing out dark areas of the image. Any bias lighting behind the screen (used to reduce eye strain) should be warm-toned and very low intensity.",
+            },
+            {
+                title: "Address acoustics from the room-planning stage",
+                description:
+                    "Bare walls and hard floors create reflected sound that degrades audio quality in ways that expensive speaker upgrades cannot overcome. Acoustic treatment in a home theater should address first-reflection points — the side walls and ceiling at the position where sound from the speakers first bounces before reaching the listener. Bass traps in corners control low-frequency buildup. Acoustic panels, heavy curtains, upholstered seating, and thick carpeting all contribute to sound absorption. These need to be planned into the room's design, not added as afterthought decoration.",
+            },
+            {
+                title: "Plan tiered seating for rooms deeper than 3.5 metres",
+                description:
+                    "In a long room with more than one row of seating, the second row will have obstructed sightlines unless it is elevated. A raised platform of 15–20cm behind the front row resolves this cleanly. The platform also provides a natural housing location for in-floor conduits routing speaker cables and power to the rear row. If the room depth allows for only one row, this consideration does not apply, but it is essential to plan for cable management from the start regardless.",
+            },
+        ],
+        keywords: [
+            "home theater design ideas",
+            "home cinema interior design",
+            "media room design",
+            "home theater room setup",
+        ],
+    },
+    mudroom: {
+        name: "Mudroom",
+        slug: "mudroom",
+        description:
+            "The mudroom is the first line of defence between outdoor disorder and interior calm. A well-designed mudroom contains the transition from outside to inside — boots, coats, bags, and the general accumulation of daily life — so that none of it spreads into the main living areas. It is a working room whose design is almost entirely driven by what it must contain and how efficiently it must function for every member of the household.",
+        considerations: [
+            {
+                title: "Allocate dedicated storage per person",
+                description:
+                    "The most organised mudrooms give each household member their own storage zone rather than shared hooks and cubbies that accumulate confusion. Assign each person a coat hook at the right height, a cubby or basket for shoes, and a shelf or hook for bags. In a family with children, hooks at child height alongside adult-height hooks are a functional necessity rather than a design choice. Labelling zones, at least temporarily until habits form, reduces significantly the likelihood that items migrate into the wrong place.",
+            },
+            {
+                title: "Choose surfaces that tolerate wet, mud, and heavy use",
+                description:
+                    "A mudroom is subjected to more abuse than almost any other interior space — wet boots, muddy dogs, dripping outdoor gear, and heavy bag dropping. The floor should be a hard, impermeable surface that can be mopped without damage: large-format porcelain tile, slate, or poured concrete are all excellent choices. Wall surfaces behind hooks and cubbies should be cleanable; painted board-and-batten or a full-height boot room panel are more durable than plasterboard alone.",
+            },
+            {
+                title: "Include a bench for putting on and removing footwear",
+                description:
+                    "The absence of a sitting surface in a mudroom creates the single greatest friction point in its daily use: people take shoes off at the door then carry them further inside rather than organising them properly because there is nowhere to sit. A bench — even a simple, narrow one — anchors the shoe removal process at the entry point. Under-bench storage for spare boots or seasonal footwear makes the bench more useful still.",
+            },
+        ],
+        keywords: [
+            "mudroom design ideas",
+            "mudroom interior design",
+            "entryway storage design",
+            "mudroom makeover ideas",
+        ],
+    },
+    "walk-in-closet": {
+        name: "Walk-in Closet",
+        slug: "walk-in-closet",
+        description:
+            "A walk-in closet is a storage system with an interior design problem: it must organise a wardrobe efficiently while creating an environment where the act of choosing what to wear is genuinely pleasant. The balance between visible organisation, lighting quality, and material finish determines whether a walk-in closet feels like an aspirational dressing room or an overwhelming storage problem.",
+        considerations: [
+            {
+                title: "Map your wardrobe before designing the storage",
+                description:
+                    "Every walk-in closet configuration should begin with a wardrobe audit: count the number of full-length hanging items, folded items, shoes, bags, and accessories. The most common error is allocating too much long-hang rail space relative to short-hang and shelving. Most wardrobes are dominated by shirts, jackets, and folded items — not full-length dresses — and a layout that reflects actual wardrobe composition will feel better organised and less cramped than a generic equal-division layout.",
+            },
+            {
+                title: "Light every zone with dedicated task lighting",
+                description:
+                    "A single ceiling light in a walk-in closet is insufficient. Hanging rails require downlighting at 45 degrees to illuminate the garments rather than the tops of hangers. Shoe shelves need light angled at their face, not their top surface. Drawers and lower cabinets benefit from interior lighting triggered by opening. LED strip lighting mounted beneath shelves and inside cabinets is an efficient and cost-effective solution. The goal is to make every item immediately visible without shadows obscuring colour or detail.",
+            },
+            {
+                title: "Include a full-length mirror with adequate clearance",
+                description:
+                    "A walk-in closet without a full-length mirror is functionally incomplete — users will get dressed and leave to check appearance elsewhere, defeating part of the room's purpose. Position the mirror on the end wall or on a door, with at least 60cm of clear floor space in front of it and good light falling on the person rather than from behind them. A second smaller mirror at an angle near the door, positioned to show the back view, is a useful addition in larger closets.",
+            },
+        ],
+        keywords: [
+            "walk-in closet design ideas",
+            "dressing room interior design",
+            "closet organisation design",
+            "walk-in wardrobe ideas",
+        ],
+    },
 };
 
-// 56 unique intro paragraphs: keyed by `${theme}-${roomSlug}`
+// Unique intro paragraphs for key combinations: keyed by `${theme}-${roomSlug}`
 export const COMBINATION_INTROS: Record<string, string> = {
     "modern-living-room":
         "A modern living room sits at the intersection of visual restraint and daily functionality. By reducing the number of objects, materials, and colours in play, each element that remains carries more weight, and the room feels more considered as a result. AI-assisted visualisation lets you test different proportions and layouts before committing to furniture that is difficult or expensive to return.",
@@ -651,7 +1062,7 @@ export const COMBINATION_INTROS: Record<string, string> = {
         "A luxury gaming room treats the technical requirements of high-performance gaming — display calibration, audio system quality, seating ergonomics for extended sessions — as the specifications around which a genuinely excellent room is designed. Professional installation of acoustic treatment, custom cabinetry to house equipment without cable clutter, and lighting systems that can be calibrated for different game types and times of day define the category.",
 };
 
-// 56 unique FAQ sets: keyed by `${theme}-${roomSlug}`
+// FAQ sets for key combinations: keyed by `${theme}-${roomSlug}`
 export const COMBINATION_FAQS: Record<string, IFaqItem[]> = {
     "modern-living-room": [
         {
@@ -1439,12 +1850,12 @@ export const COMBINATION_FAQS: Record<string, IFaqItem[]> = {
     ],
 };
 
-// Generate the 56 page configs
+// Generate all 196 page configs (14 themes × 14 rooms)
 function generateDesignPages(): IDesignPageData[] {
     const pages: IDesignPageData[] = [];
 
-    const themeKeys = Object.keys(THEMES) as Theme[];
-    const roomKeys = Object.keys(ROOM_TYPES) as RoomType[];
+    const themeKeys = Object.keys(THEME_DATA);
+    const roomKeys = Object.keys(ROOM_DATA);
 
     for (const theme of themeKeys) {
         for (const roomType of roomKeys) {

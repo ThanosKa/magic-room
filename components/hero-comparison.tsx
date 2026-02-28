@@ -1,18 +1,26 @@
 "use client";
 
+import React, { useState } from "react";
 import Image from "next/image";
 
 interface HeroComparisonProps {
     beforeImage: string;
     afterImage: string;
+    beforeFallback?: string;
+    afterFallback?: string;
     className?: string;
 }
 
 export function HeroComparison({
     beforeImage,
     afterImage,
+    beforeFallback,
+    afterFallback,
     className = "",
 }: HeroComparisonProps) {
+    const [beforeSrc, setBeforeSrc] = useState(beforeImage);
+    const [afterSrc, setAfterSrc] = useState(afterImage);
+
     return (
         <div className={`grid gap-4 md:grid-cols-2 ${className}`}>
             {/* Before Image */}
@@ -22,12 +30,13 @@ export function HeroComparison({
                 </div>
                 <div className="aspect-[4/3] w-full relative">
                     <Image
-                        src={beforeImage}
+                        src={beforeSrc}
                         alt="Original room"
                         fill
                         priority
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"
+                        onError={() => beforeFallback && setBeforeSrc(beforeFallback)}
                     />
                 </div>
             </div>
@@ -39,11 +48,12 @@ export function HeroComparison({
                 </div>
                 <div className="aspect-[4/3] w-full relative">
                     <Image
-                        src={afterImage}
+                        src={afterSrc}
                         alt="After"
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"
+                        onError={() => afterFallback && setAfterSrc(afterFallback)}
                     />
                 </div>
             </div>

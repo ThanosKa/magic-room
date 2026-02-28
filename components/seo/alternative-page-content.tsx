@@ -200,9 +200,9 @@ export function AlternativePageContent({ competitor }: AlternativePageContentPro
                         <p className="text-sm text-slate-600 dark:text-slate-400">
                             Explore{" "}
                             <Link href="/design" className="text-primary hover:underline">
-                                56 AI design combinations
+                                196 AI design combinations
                             </Link>{" "}
-                            across 8 styles and 7 room types, or read our{" "}
+                            across 14 styles and 14 room types, or read our{" "}
                             <Link href="/blog" className="text-primary hover:underline">
                                 interior design blog
                             </Link>{" "}

@@ -21,6 +21,27 @@ export const THEMES: Record<Theme, string> = {
   luxury: "Luxury",
 };
 
+// SEO-only themes — appear on /design pages but NOT in the generate UI
+export const THEMES_SEO_ONLY: Record<string, string> = {
+  japandi: "Japandi",
+  "art-deco": "Art Deco",
+  coastal: "Coastal",
+  farmhouse: "Farmhouse",
+  mediterranean: "Mediterranean",
+  transitional: "Transitional",
+};
+
+// SEO-only room types — appear on /design pages but NOT in the generate UI
+export const ROOM_TYPES_SEO_ONLY: Record<string, string> = {
+  nursery: "Nursery",
+  "laundry-room": "Laundry Room",
+  basement: "Basement",
+  sunroom: "Sunroom",
+  "home-theater": "Home Theater",
+  mudroom: "Mudroom",
+  "walk-in-closet": "Walk-in Closet",
+};
+
 export const QUALITY_OPTIONS = {
   standard: {
     id: "standard" as const,
