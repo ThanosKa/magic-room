@@ -204,7 +204,7 @@ let totalFailed = 0;
 if (!onlyAfter) {
     console.log("\n📷 Generating BEFORE images (neutral rooms)...\n");
 
-    for (const [roomKey, roomName] of Object.entries(ALL_ROOMS)) {
+    for (const [roomKey] of Object.entries(ALL_ROOMS)) {
         if (roomFilter && roomKey !== roomFilter) continue;
 
         const outputPath = path.join(outputDir, `before-${roomKey}.jpg`);
