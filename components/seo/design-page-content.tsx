@@ -96,6 +96,8 @@ export function DesignPageContent({ page, themeData, roomData }: DesignPageConte
                             afterImage={`/images/designs/${page.slug}.jpg`}
                             beforeFallback="/images/room-before.png"
                             afterFallback="/images/room-after.png"
+                            beforeAlt={`${page.themeName} ${page.roomName}: before AI redesign`}
+                            afterAlt={`${page.themeName} ${page.roomName}: after AI redesign`}
                         />
                         <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
                             AI-generated {page.themeName.toLowerCase()} {page.roomName.toLowerCase()} redesign from a single photo
@@ -216,21 +218,35 @@ export function DesignPageContent({ page, themeData, roomData }: DesignPageConte
                 </section>
             )}
 
-            {/* Cross-links to blog and alternatives */}
-            <section className="bg-white py-8 dark:bg-slate-950">
+            {/* Related guides */}
+            <section className="bg-white py-10 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
                 <div className="container px-4 md:px-6">
                     <div className="mx-auto max-w-3xl">
-                        <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Want more design guidance?{" "}
-                            <Link href="/blog" className="text-primary hover:underline">
-                                Read our interior design blog
-                            </Link>{" "}
-                            for practical AI room design guides. Or{" "}
-                            <Link href="/alternatives" className="text-primary hover:underline">
-                                compare Magic Room to other AI design tools
-                            </Link>
-                            .
-                        </p>
+                        <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">
+                            Related design guides
+                        </h2>
+                        <ul className="flex flex-wrap gap-3">
+                            <li>
+                                <Link href="/blog/how-to-redesign-living-room-with-ai" className="text-sm text-primary hover:underline">
+                                    How to Redesign Your Living Room with AI
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/blog/how-to-choose-interior-design-theme" className="text-sm text-primary hover:underline">
+                                    How to Choose an Interior Design Style
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/blog/interior-design-on-a-budget-ai" className="text-sm text-primary hover:underline">
+                                    Interior Design on a Budget
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/blog" className="text-sm text-primary hover:underline">
+                                    View all design guides →
+                                </Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </section>

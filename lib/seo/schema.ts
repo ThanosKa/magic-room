@@ -81,6 +81,7 @@ export function organizationSchema(input?: OrganizationSchemaInput) {
         logo: input?.logo ?? `${SITE_URL}/logo.png`,
         sameAs: [
             "https://x.com/KazakisThanos",
+            "https://www.linkedin.com/in/thanos-kazakis-922977205/",
             "https://github.com/ThanosKa/magic-room",
         ],
     };
@@ -133,6 +134,7 @@ interface ProductSchemaInput {
     price: number;
     priceCurrency?: string;
     url?: string;
+    image?: string;
 }
 
 export function productSchema(input: ProductSchemaInput) {
@@ -141,6 +143,8 @@ export function productSchema(input: ProductSchemaInput) {
         "@type": "Product",
         name: input.name,
         description: input.description,
+        image: input.image ?? `${SITE_URL}/opengraph-image.png`,
+        brand: { "@type": "Brand", name: SITE_NAME },
         offers: {
             "@type": "Offer",
             price: input.price,

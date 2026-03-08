@@ -6,6 +6,7 @@ import { SITE_URL } from "@/lib/seo/config";
 import {
     getCompetitorBySlug,
     getAllCompetitorSlugs,
+    COMPETITORS,
 } from "@/lib/seo/competitor-data";
 import { AlternativePageContent } from "@/components/seo/alternative-page-content";
 
@@ -62,7 +63,10 @@ export default async function AlternativePage({ params }: Props) {
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
                 />
             ))}
-            <AlternativePageContent competitor={competitor} />
+            <AlternativePageContent
+                competitor={competitor}
+                otherCompetitors={COMPETITORS.filter((c) => c.slug !== slug)}
+            />
         </>
     );
 }

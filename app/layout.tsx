@@ -14,6 +14,7 @@ import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
   TWITTER_HANDLE,
+  OG_IMAGE,
 } from "@/lib/seo/config";
 import {
   organizationSchema,
@@ -75,10 +76,10 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [
       {
-        url: "/opengraph-image.png", // Static file
-        width: 1200,
-        height: 630,
-        alt: `${SITE_NAME} - AI Interior Design`,
+        url: OG_IMAGE.url,
+        width: OG_IMAGE.width,
+        height: OG_IMAGE.height,
+        alt: OG_IMAGE.alt,
       },
     ],
   },

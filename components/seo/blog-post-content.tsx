@@ -192,6 +192,30 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
                             {sectionsWithCta.map((section, index) => renderSection(section, index))}
                         </div>
 
+                        {/* Compare AI tools */}
+                        <div className="mt-10 border-t border-slate-200 pt-8 dark:border-slate-800">
+                            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                Compare AI interior design tools
+                            </h3>
+                            <ul className="mt-3 flex flex-wrap gap-3">
+                                {[
+                                    { slug: "roomgpt", name: "RoomGPT" },
+                                    { slug: "decorai", name: "DecorAI" },
+                                    { slug: "reimaginehome", name: "Reimagine Home" },
+                                    { slug: "interior-ai", name: "Interior AI" },
+                                ].map((tool) => (
+                                    <li key={tool.slug}>
+                                        <Link
+                                            href={`/alternatives/${tool.slug}`}
+                                            className="text-sm text-primary hover:underline"
+                                        >
+                                            Magic Room vs {tool.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
                         {/* Related design pages */}
                         {post.relatedDesignSlugs.length > 0 && (
                             <div className="mt-12 border-t border-slate-200 pt-8 dark:border-slate-800">

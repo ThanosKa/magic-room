@@ -15,9 +15,9 @@ export const SITE_KEYWORDS = [
 
 export const OG_IMAGE = {
     url: `${SITE_URL}/opengraph-image.png`,
-    width: 1200,
-    height: 630,
+    width: 1024,
+    height: 1024,
     alt: "Magic Room - AI Interior Design",
 };
 
-export const TWITTER_HANDLE = "@magicroom";
+export const TWITTER_HANDLE = "@KazakisThanos";

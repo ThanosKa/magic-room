@@ -8,6 +8,8 @@ interface HeroComparisonProps {
     afterImage: string;
     beforeFallback?: string;
     afterFallback?: string;
+    beforeAlt?: string;
+    afterAlt?: string;
     className?: string;
 }
 
@@ -16,6 +18,8 @@ export function HeroComparison({
     afterImage,
     beforeFallback,
     afterFallback,
+    beforeAlt = "Room before AI redesign",
+    afterAlt = "Room after AI redesign",
     className = "",
 }: HeroComparisonProps) {
     const [beforeSrc, setBeforeSrc] = useState(beforeImage);
@@ -31,7 +35,7 @@ export function HeroComparison({
                 <div className="aspect-[4/3] w-full relative">
                     <Image
                         src={beforeSrc}
-                        alt="Original room"
+                        alt={beforeAlt}
                         fill
                         priority
                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -49,7 +53,7 @@ export function HeroComparison({
                 <div className="aspect-[4/3] w-full relative">
                     <Image
                         src={afterSrc}
-                        alt="After"
+                        alt={afterAlt}
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"

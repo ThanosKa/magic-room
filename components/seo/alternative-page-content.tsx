@@ -16,9 +16,10 @@ import {
 
 interface AlternativePageContentProps {
     competitor: ICompetitorData;
+    otherCompetitors?: ICompetitorData[];
 }
 
-export function AlternativePageContent({ competitor }: AlternativePageContentProps) {
+export function AlternativePageContent({ competitor, otherCompetitors = [] }: AlternativePageContentProps) {
     const breadcrumbItems = [
         { name: "Home", href: "/" },
         { name: "Alternatives", href: "/alternatives" },
@@ -193,24 +194,30 @@ export function AlternativePageContent({ competitor }: AlternativePageContentPro
                 </section>
             )}
 
-            {/* Cross-links */}
-            <section className="bg-white py-8 dark:bg-slate-950">
-                <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-3xl">
-                        <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Explore{" "}
-                            <Link href="/design" className="text-primary hover:underline">
-                                196 AI design combinations
-                            </Link>{" "}
-                            across 14 styles and 14 room types, or read our{" "}
-                            <Link href="/blog" className="text-primary hover:underline">
-                                interior design blog
-                            </Link>{" "}
-                            for practical room redesign guides.
-                        </p>
+            {/* Also compare */}
+            {otherCompetitors.length > 0 && (
+                <section className="bg-slate-50 py-10 dark:bg-slate-900/50">
+                    <div className="container px-4 md:px-6">
+                        <div className="mx-auto max-w-3xl">
+                            <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">
+                                Also compare
+                            </h2>
+                            <ul className="flex flex-wrap gap-3">
+                                {otherCompetitors.map((c) => (
+                                    <li key={c.slug}>
+                                        <Link
+                                            href={`/alternatives/${c.slug}`}
+                                            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:border-primary hover:text-primary dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+                                        >
+                                            Magic Room vs {c.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            )}
 
             {/* CTA */}
             <CtaSection

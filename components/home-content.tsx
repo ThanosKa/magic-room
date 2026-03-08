@@ -33,8 +33,8 @@ export default function HomeContent() {
                         </div>
 
                         <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-6xl lg:text-7xl">
-                            Transform Your Room in <br className="hidden md:block" />
-                            <span className="text-primary">Seconds</span>
+                            AI Interior Design —<br className="hidden md:block" />
+                            <span className="text-primary">Redesign Any Room</span> from a Photo
                         </h1>
 
                         <p className="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
