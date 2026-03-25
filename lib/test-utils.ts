@@ -93,7 +93,7 @@ export const TEST_PACKAGES = {
   growth: {
     id: "growth",
     name: "Growth",
-    credits: 150,
+    credits: 90,
     priceCents: 1999,
     stripePriceId: "price_test_growth",
     active: true,
@@ -101,7 +101,7 @@ export const TEST_PACKAGES = {
   premium: {
     id: "premium",
     name: "Premium",
-    credits: 300,
+    credits: 200,
     priceCents: 2999,
     stripePriceId: "price_test_premium",
     active: true,

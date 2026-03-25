@@ -12,7 +12,7 @@ export function Footer() {
   return (
     <footer className="border-t border-slate-200 bg-white py-12 dark:border-slate-800 dark:bg-slate-950">
       <div className="container px-4 md:px-6">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6">
           <div>
             <div className="flex items-center gap-2">
               <Logo className="h-8 w-8" />
@@ -37,6 +37,14 @@ export function Footer() {
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
                   Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                >
+                  About
                 </Link>
               </li>
               <li>

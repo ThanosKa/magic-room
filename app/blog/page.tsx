@@ -67,7 +67,7 @@ export default function BlogHubPage() {
                 <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
                     <div className="container px-4 md:px-6">
                         <div className="mx-auto max-w-5xl">
-                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 {posts.map((post) => (
                                     <BlogCard key={post.slug} post={post} />
                                 ))}

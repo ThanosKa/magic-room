@@ -15,12 +15,81 @@ import { HeroComparison } from "@/components/hero-comparison";
 import { PageTransition } from "@/components/page-transition";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
-import { IDesignPageData, IThemeData, IRoomData } from "@/lib/seo/design-data";
+import { IDesignPageData, IThemeData, IRoomData, THEME_DATA, ROOM_DATA } from "@/lib/seo/design-data";
 
 interface DesignPageContentProps {
     page: IDesignPageData;
     themeData: IThemeData;
     roomData: IRoomData;
+}
+
+interface RelatedDesignLinksProps {
+    page: IDesignPageData;
+    themeData: IThemeData;
+    roomData: IRoomData;
+}
+
+function RelatedDesignLinks({ page, themeData, roomData }: RelatedDesignLinksProps) {
+    // Same theme, different rooms — pick up to 4, excluding current room
+    const sameThemeLinks = Object.values(ROOM_DATA)
+        .filter((room) => room.slug !== page.roomType)
+        .slice(0, 4)
+        .map((room) => ({
+            href: `/design/${themeData.slug}-${room.slug}`,
+            label: `${themeData.name} ${room.name}`,
+        }));
+
+    // Same room, different themes — pick up to 4, excluding current theme
+    const sameRoomLinks = Object.values(THEME_DATA)
+        .filter((theme) => theme.slug !== page.theme)
+        .slice(0, 4)
+        .map((theme) => ({
+            href: `/design/${theme.slug}-${roomData.slug}`,
+            label: `${theme.name} ${roomData.name}`,
+        }));
+
+    return (
+        <div className="space-y-6">
+            <div>
+                <h3 className="mb-3 text-base font-semibold text-slate-900 dark:text-white">
+                    More {themeData.name} design ideas
+                </h3>
+                <ul className="flex flex-wrap gap-3">
+                    {sameThemeLinks.map((link) => (
+                        <li key={link.href}>
+                            <Link href={link.href} className="text-sm text-primary hover:underline">
+                                {link.label}
+                            </Link>
+                        </li>
+                    ))}
+                    <li>
+                        <Link href="/design" className="text-sm text-slate-500 hover:underline dark:text-slate-400">
+                            View all {themeData.name} styles →
+                        </Link>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h3 className="mb-3 text-base font-semibold text-slate-900 dark:text-white">
+                    Other {roomData.name} design styles
+                </h3>
+                <ul className="flex flex-wrap gap-3">
+                    {sameRoomLinks.map((link) => (
+                        <li key={link.href}>
+                            <Link href={link.href} className="text-sm text-primary hover:underline">
+                                {link.label}
+                            </Link>
+                        </li>
+                    ))}
+                    <li>
+                        <Link href="/design" className="text-sm text-slate-500 hover:underline dark:text-slate-400">
+                            View all {roomData.name} styles →
+                        </Link>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    );
 }
 
 const STEPS = [
@@ -218,35 +287,38 @@ export function DesignPageContent({ page, themeData, roomData }: DesignPageConte
                 </section>
             )}
 
-            {/* Related guides */}
+            {/* Related design pages */}
             <section className="bg-white py-10 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
                 <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-3xl">
-                        <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">
-                            Related design guides
-                        </h2>
-                        <ul className="flex flex-wrap gap-3">
-                            <li>
-                                <Link href="/blog/how-to-redesign-living-room-with-ai" className="text-sm text-primary hover:underline">
-                                    How to Redesign Your Living Room with AI
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/blog/how-to-choose-interior-design-theme" className="text-sm text-primary hover:underline">
-                                    How to Choose an Interior Design Style
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/blog/interior-design-on-a-budget-ai" className="text-sm text-primary hover:underline">
-                                    Interior Design on a Budget
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/blog" className="text-sm text-primary hover:underline">
-                                    View all design guides →
-                                </Link>
-                            </li>
-                        </ul>
+                    <div className="mx-auto max-w-3xl space-y-8">
+                        <RelatedDesignLinks page={page} themeData={themeData} roomData={roomData} />
+                        <div>
+                            <h3 className="mb-3 text-base font-semibold text-slate-900 dark:text-white">
+                                More design guides
+                            </h3>
+                            <ul className="flex flex-wrap gap-3">
+                                <li>
+                                    <Link href="/blog/how-to-redesign-living-room-with-ai" className="text-sm text-primary hover:underline">
+                                        How to Redesign Your Living Room with AI
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/blog/how-to-choose-interior-design-theme" className="text-sm text-primary hover:underline">
+                                        How to Choose an Interior Design Style
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/blog/interior-design-on-a-budget-ai" className="text-sm text-primary hover:underline">
+                                        Interior Design on a Budget
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/blog" className="text-sm text-primary hover:underline">
+                                        View all design guides →
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>

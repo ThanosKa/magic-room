@@ -71,7 +71,7 @@ export const CREDIT_PACKAGES: ICreditPackage[] = [
   {
     id: "growth",
     name: "Growth",
-    credits: 150,
+    credits: 90,
     priceCents: 1999,
     stripePriceId: process.env.STRIPE_PRICE_GROWTH || "",
     active: true,
@@ -79,7 +79,7 @@ export const CREDIT_PACKAGES: ICreditPackage[] = [
   {
     id: "premium",
     name: "Premium",
-    credits: 300,
+    credits: 200,
     priceCents: 2999,
     stripePriceId: process.env.STRIPE_PRICE_PREMIUM || "",
     active: true,

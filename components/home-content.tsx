@@ -11,13 +11,17 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const POPULAR_DESIGNS = [
     { slug: "modern-living-room", label: "Modern Living Room" },
+    { slug: "scandinavian-living-room", label: "Scandinavian Living Room" },
+    { slug: "minimalist-living-room", label: "Minimalist Living Room" },
+    { slug: "modern-bedroom", label: "Modern Bedroom" },
     { slug: "scandinavian-bedroom", label: "Scandinavian Bedroom" },
+    { slug: "bohemian-bedroom", label: "Bohemian Bedroom" },
     { slug: "industrial-kitchen", label: "Industrial Kitchen" },
-    { slug: "minimalist-bathroom", label: "Minimalist Bathroom" },
-    { slug: "bohemian-living-room", label: "Bohemian Living Room" },
-    { slug: "luxury-bedroom", label: "Luxury Bedroom" },
-    { slug: "tropical-living-room", label: "Tropical Living Room" },
-    { slug: "vintage-dining-room", label: "Vintage Dining Room" },
+    { slug: "farmhouse-kitchen", label: "Farmhouse Kitchen" },
+    { slug: "luxury-bathroom", label: "Luxury Bathroom" },
+    { slug: "coastal-living-room", label: "Coastal Living Room" },
+    { slug: "minimalist-bedroom", label: "Minimalist Bedroom" },
+    { slug: "art-deco-living-room", label: "Art Deco Living Room" },
 ];
 
 export default function HomeContent() {
@@ -32,7 +36,7 @@ export default function HomeContent() {
                             1 free credit with every account — no card required
                         </div>
 
-                        <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-6xl lg:text-7xl">
+                        <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl lg:text-7xl">
                             AI Interior Design —<br className="hidden md:block" />
                             <span className="text-primary">Redesign Any Room</span> from a Photo
                         </h1>

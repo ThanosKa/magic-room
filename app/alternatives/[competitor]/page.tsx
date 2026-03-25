@@ -51,7 +51,7 @@ export default async function AlternativePage({ params }: Props) {
                 url: `${SITE_URL}/alternatives/${slug}`,
             },
         ]),
-        ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs)] : []),
+        ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs, `${SITE_URL}/alternatives/${slug}`)] : []),
     ];
 
     return (

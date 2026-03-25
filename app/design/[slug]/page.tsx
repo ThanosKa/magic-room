@@ -4,7 +4,6 @@ import { createMetadata } from "@/lib/seo/metadata";
 import {
     faqSchema,
     breadcrumbSchema,
-    productSchema,
     howToSchema,
 } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
@@ -51,21 +50,18 @@ export default async function DesignSlugPage({ params }: Props) {
     const themeData = THEME_DATA[page.theme];
     const roomData = ROOM_DATA[page.roomType];
 
+    const pageUrl = `${SITE_URL}/design/${slug}`;
+
     const schemas = [
         breadcrumbSchema([
             { name: "Home", url: SITE_URL },
             { name: "Design Ideas", url: `${SITE_URL}/design` },
-            { name: `${page.themeName} ${page.roomName}`, url: `${SITE_URL}/design/${slug}` },
+            { name: `${page.themeName} ${page.roomName}`, url: pageUrl },
         ]),
-        productSchema({
-            name: `${page.themeName} ${page.roomName} Design`,
-            description: page.metaDescription,
-            price: 9.99,
-            url: `${SITE_URL}/design/${slug}`,
-        }),
         howToSchema({
             name: `How to Generate ${page.themeName} ${page.roomName} Design Ideas with AI`,
             description: `Step-by-step guide to redesigning your ${page.roomName.toLowerCase()} in a ${page.themeName.toLowerCase()} style using AI interior design.`,
+            totalTime: "PT2M",
             steps: [
                 {
                     name: "Upload your room photo",
@@ -80,9 +76,9 @@ export default async function DesignSlugPage({ params }: Props) {
                     text: "The AI generates your redesigned room in 30 to 60 seconds. Review the design variations and download the result for planning or sharing.",
                 },
             ],
-            url: `${SITE_URL}/design/${slug}`,
+            url: pageUrl,
         }),
-        ...(page.faqs.length > 0 ? [faqSchema(page.faqs)] : []),
+        ...(page.faqs.length > 0 ? [faqSchema(page.faqs, pageUrl)] : []),
     ];
 
     return (

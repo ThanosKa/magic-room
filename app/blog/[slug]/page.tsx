@@ -57,7 +57,7 @@ export default async function BlogSlugPage({ params }: Props) {
             modifiedDate: post.updatedDate,
             url: postUrl,
         }),
-        ...(post.faqs && post.faqs.length > 0 ? [faqSchema(post.faqs)] : []),
+        ...(post.faqs && post.faqs.length > 0 ? [faqSchema(post.faqs, postUrl)] : []),
     ];
 
     return (

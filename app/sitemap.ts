@@ -4,11 +4,33 @@ import { getAllDesignSlugs } from "@/lib/seo/design-data";
 import { getAllCompetitorSlugs } from "@/lib/seo/competitor-data";
 import { BLOG_POSTS } from "@/lib/seo/blog-data";
 
+// Top-volume design slugs that get boosted priority
+const TOP_DESIGN_SLUGS = new Set([
+    "modern-living-room",
+    "scandinavian-living-room",
+    "minimalist-living-room",
+    "modern-bedroom",
+    "scandinavian-bedroom",
+    "bohemian-bedroom",
+    "minimalist-bedroom",
+    "modern-kitchen",
+    "industrial-kitchen",
+    "farmhouse-kitchen",
+    "luxury-bathroom",
+    "coastal-living-room",
+    "japandi-living-room",
+    "art-deco-living-room",
+    "modern-bathroom",
+]);
+
+// All vs competitor slugs
+const VS_SLUGS = ["roomgpt", "interior-ai", "reimaginehome"];
+
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
 
     // Use stable dates instead of new Date() to avoid wasting crawl budget
-    const siteLastUpdated = new Date("2026-02-28");
+    const siteLastUpdated = new Date("2026-03-25");
     const legalLastUpdated = new Date("2024-12-01");
 
     // Core pages
@@ -24,6 +46,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: siteLastUpdated,
             changeFrequency: "monthly",
             priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/virtual-staging`,
+            lastModified: siteLastUpdated,
+            changeFrequency: "monthly",
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/gallery`,
+            lastModified: siteLastUpdated,
+            changeFrequency: "monthly",
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/about`,
+            lastModified: siteLastUpdated,
+            changeFrequency: "monthly",
+            priority: 0.5,
         },
         {
             url: `${baseUrl}/privacy`,
@@ -53,10 +93,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${baseUrl}/design/${slug}`,
         lastModified: siteLastUpdated,
         changeFrequency: "monthly" as const,
-        priority: 0.7,
+        priority: TOP_DESIGN_SLUGS.has(slug) ? 0.8 : 0.6,
     }));
 
-    // Alternatives hub + competitor pages + vs page
+    // Alternatives hub + competitor pages + vs pages
     const alternativesHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/alternatives`,
@@ -75,14 +115,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
         })
     );
 
-    const vsPages: MetadataRoute.Sitemap = [
-        {
-            url: `${baseUrl}/vs/roomgpt`,
-            lastModified: siteLastUpdated,
-            changeFrequency: "monthly",
-            priority: 0.7,
-        },
-    ];
+    const vsPages: MetadataRoute.Sitemap = VS_SLUGS.map((slug) => ({
+        url: `${baseUrl}/vs/${slug}`,
+        lastModified: siteLastUpdated,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+    }));
 
     // Blog hub + blog posts with real publish/update dates
     const blogHub: MetadataRoute.Sitemap = [

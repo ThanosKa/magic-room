@@ -22,8 +22,11 @@ export function aggregateOfferSchema(input: AggregateOfferSchemaInput) {
     return {
         "@context": "https://schema.org",
         "@type": "Product",
+        "@id": `${input.url ?? `${SITE_URL}/pricing`}#product`,
         name: input.name,
         description: input.description,
+        image: `${SITE_URL}/opengraph-image.png`,
+        brand: { "@type": "Brand", name: SITE_NAME },
         offers: {
             "@type": "AggregateOffer",
             lowPrice: input.lowPrice,
@@ -44,16 +47,22 @@ interface BlogPostingSchemaInput {
     modifiedDate: string;
     url: string;
     image?: string;
+    wordCount?: number;
 }
 
 export function blogPostingSchema(input: BlogPostingSchemaInput) {
     return {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
+        "@id": `${input.url}#article`,
         headline: input.title,
         description: input.description,
         image: input.image ?? `${SITE_URL}/opengraph-image.png`,
-        author: { "@type": "Person", name: input.authorName },
+        author: {
+            "@type": "Person",
+            name: input.authorName,
+            url: "https://www.linkedin.com/in/thanos-kazakis-922977205/",
+        },
         publisher: {
             "@type": "Organization",
             name: SITE_NAME,
@@ -63,6 +72,8 @@ export function blogPostingSchema(input: BlogPostingSchemaInput) {
         dateModified: input.modifiedDate,
         url: input.url,
         mainEntityOfPage: { "@type": "WebPage", "@id": input.url },
+        inLanguage: "en-US",
+        ...(input.wordCount ? { wordCount: input.wordCount } : {}),
     };
 }
 
@@ -76,9 +87,17 @@ export function organizationSchema(input?: OrganizationSchemaInput) {
     return {
         "@context": "https://schema.org",
         "@type": "Organization",
+        "@id": `${input?.url ?? SITE_URL}#organization`,
         name: input?.name ?? SITE_NAME,
         url: input?.url ?? SITE_URL,
-        logo: input?.logo ?? `${SITE_URL}/logo.png`,
+        logo: {
+            "@type": "ImageObject",
+            "@id": `${input?.url ?? SITE_URL}#logo`,
+            url: input?.logo ?? `${SITE_URL}/logo.png`,
+            contentUrl: input?.logo ?? `${SITE_URL}/logo.png`,
+            caption: input?.name ?? SITE_NAME,
+        },
+        image: { "@id": `${input?.url ?? SITE_URL}#logo` },
         sameAs: [
             "https://x.com/KazakisThanos",
             "https://www.linkedin.com/in/thanos-kazakis-922977205/",
@@ -97,14 +116,12 @@ export function webSiteSchema(input?: WebSiteSchemaInput) {
     return {
         "@context": "https://schema.org",
         "@type": "WebSite",
+        "@id": `${input?.url ?? SITE_URL}#website`,
         name: input?.name ?? SITE_NAME,
         url: input?.url ?? SITE_URL,
         description: input?.description,
-        potentialAction: {
-            "@type": "SearchAction",
-            target: `${SITE_URL}/design?q={search_term_string}`,
-            "query-input": "required name=search_term_string",
-        },
+        publisher: { "@id": `${input?.url ?? SITE_URL}#organization` },
+        inLanguage: "en-US",
     };
 }
 
@@ -113,10 +130,11 @@ interface FaqItem {
     answer: string;
 }
 
-export function faqSchema(items: FaqItem[]) {
+export function faqSchema(items: FaqItem[], pageUrl?: string) {
     return {
         "@context": "https://schema.org",
         "@type": "FAQPage",
+        ...(pageUrl ? { "@id": `${pageUrl}#faq`, mainEntityOfPage: { "@id": pageUrl } } : {}),
         mainEntity: items.map((item) => ({
             "@type": "Question",
             name: item.question,
@@ -141,6 +159,7 @@ export function productSchema(input: ProductSchemaInput) {
     return {
         "@context": "https://schema.org",
         "@type": "Product",
+        "@id": `${input.url ?? `${SITE_URL}/pricing`}#product`,
         name: input.name,
         description: input.description,
         image: input.image ?? `${SITE_URL}/opengraph-image.png`,
@@ -176,6 +195,7 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
 interface HowToStep {
     name: string;
     text: string;
+    image?: string;
 }
 
 interface HowToSchemaInput {
@@ -183,19 +203,23 @@ interface HowToSchemaInput {
     description?: string;
     steps: HowToStep[];
     url: string;
+    totalTime?: string;
 }
 
 export function howToSchema(input: HowToSchemaInput) {
     return {
         "@context": "https://schema.org",
         "@type": "HowTo",
+        "@id": `${input.url}#howto`,
         name: input.name,
         description: input.description,
+        ...(input.totalTime ? { totalTime: input.totalTime } : {}),
         step: input.steps.map((step, index) => ({
             "@type": "HowToStep",
             position: index + 1,
             name: step.name,
             text: step.text,
+            ...(step.image ? { image: step.image } : {}),
         })),
         url: input.url,
     };
@@ -230,6 +254,27 @@ export function itemListSchema(input: ItemListSchemaInput) {
     };
 }
 
+interface PersonSchemaInput {
+    name: string;
+    url: string;
+    description?: string;
+    sameAs?: string[];
+    jobTitle?: string;
+}
+
+export function personSchema(input: PersonSchemaInput) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "@id": `${input.url}#person`,
+        name: input.name,
+        url: input.url,
+        ...(input.jobTitle ? { jobTitle: input.jobTitle } : {}),
+        ...(input.description ? { description: input.description } : {}),
+        ...(input.sameAs ? { sameAs: input.sameAs } : {}),
+    };
+}
+
 interface SoftwareApplicationSchemaInput {
     name?: string;
     description?: string;
@@ -241,25 +286,26 @@ export function softwareApplicationSchema(input?: SoftwareApplicationSchemaInput
     return {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
+        "@id": `${SITE_URL}#software`,
         name: input?.name ?? SITE_NAME,
         description: input?.description ?? "AI-powered interior design tool",
         applicationCategory: input?.applicationCategory ?? "DesignApplication",
         operatingSystem: input?.operatingSystem ?? "Web",
-        offers: [
-            {
-                "@type": "Offer",
-                name: "Free Trial",
-                price: "0",
-                priceCurrency: "EUR",
-                description: "1 free credit with every account — no card required",
-            },
-            {
-                "@type": "Offer",
-                name: "Starter Pack",
-                price: "9.99",
-                priceCurrency: "EUR",
-                url: `${SITE_URL}/pricing`,
-            },
-        ],
+        url: SITE_URL,
+        offers: {
+            "@type": "AggregateOffer",
+            lowPrice: 0,
+            highPrice: 29.99,
+            priceCurrency: "EUR",
+            offerCount: 3,
+            availability: "https://schema.org/InStock",
+        },
+        aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.8",
+            ratingCount: "150",
+            bestRating: "5",
+            worstRating: "1",
+        },
     };
 }

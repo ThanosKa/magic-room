@@ -53,12 +53,12 @@ const CREDIT_PACKAGES = [
     {
         id: "growth",
         name: "Growth",
-        credits: 150,
+        credits: 90,
         price: 19.99,
         priceDisplay: "€19.99",
         description: "Best for regular users",
         features: [
-            "150 design generations",
+            "90 design generations",
             "Credits never expire",
             "Priority support",
             "All design themes",
@@ -68,12 +68,12 @@ const CREDIT_PACKAGES = [
     {
         id: "premium",
         name: "Premium",
-        credits: 300,
+        credits: 200,
         price: 29.99,
         priceDisplay: "€29.99",
         description: "Best for professionals",
         features: [
-            "300 design generations",
+            "200 design generations",
             "Credits never expire",
             "24/7 priority support",
             "Early access to new features",
@@ -139,7 +139,7 @@ export default function PricingContent() {
                 </div>
 
                 <motion.div
-                    className="mt-16 grid gap-8 lg:grid-cols-4"
+                    className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-50px" }}

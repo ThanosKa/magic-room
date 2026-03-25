@@ -6,8 +6,8 @@ import { SITE_URL } from "@/lib/seo/config";
 import { getCompetitorBySlug } from "@/lib/seo/competitor-data";
 import { VsPageContent } from "@/components/seo/vs-page-content";
 
-// Only the RoomGPT vs page for now — extend this list as needed
-const VS_SLUGS = ["roomgpt"];
+// VS comparison pages — extend this list to add new comparisons
+const VS_SLUGS = ["roomgpt", "interior-ai", "reimaginehome"];
 
 interface Props {
     params: Promise<{ competitor: string }>;
@@ -65,7 +65,7 @@ export default async function VsPage({ params }: Props) {
                 url: `${SITE_URL}/vs/${slug}`,
             },
         ]),
-        ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs)] : []),
+        ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs, `${SITE_URL}/vs/${slug}`)] : []),
     ];
 
     return (

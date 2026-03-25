@@ -36,8 +36,8 @@ const THEME_IMAGES: Record<Theme, string> = {
     industrial: "/themes/theme_industrial.png",
     tropical: "/themes/theme_tropical.png",
     bohemian: "/themes/theme_bohemian.png",
-    vintage: "/themes/theme_modern.png",
-    luxury: "/themes/theme_modern.png",
+    vintage: "/images/designs/vintage-living-room.jpg",
+    luxury: "/images/designs/luxury-living-room.jpg",
 };
 
 export default function GenerateContent() {
@@ -233,7 +233,7 @@ function GeneratePageContent() {
                                 value={quality}
                                 onValueChange={(v) => setQuality(v as Quality)}
                             >
-                                <SelectTrigger className="h-14 w-full cursor-pointer">
+                                <SelectTrigger className="h-11 w-full cursor-pointer">
                                     <SelectValue placeholder="Select quality">
                                         {quality === "standard" ? (
                                             <span>Standard Quality <span className="text-muted-foreground">- 1 credit</span></span>
@@ -266,7 +266,7 @@ function GeneratePageContent() {
 
                         <div className="space-y-3">
                             <div className="text-base font-semibold">3. Choose Style</div>
-                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4">
                                 {Object.entries(THEMES).map(([key, label]) => (
                                     <button
                                         key={key}
@@ -387,7 +387,7 @@ function GeneratePageContent() {
 
                     {(uploadedImageUrl || hasResult) && (
                         <div className="flex flex-col gap-4">
-                            <div className="flex items-center justify-end gap-3 p-4">
+                            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 p-4">
                                 {hasResult ? (
                                     <>
                                         <Button
@@ -430,7 +430,7 @@ function GeneratePageContent() {
                                     </>
                                 ) : (
                                     uploadedImageUrl && (
-                                        <div className="flex items-center gap-3 ml-auto">
+                                        <div className="flex flex-col sm:flex-row items-center gap-3 ml-auto">
                                             <Button
                                                 variant="outline"
                                                 size="lg"

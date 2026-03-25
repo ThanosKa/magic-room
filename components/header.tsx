@@ -108,7 +108,7 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               {isMounted && (
-                <SheetContent side="right" className="w-80 max-w-[90vw] px-4">
+                <SheetContent side="right" className="w-[85vw] sm:w-80 max-w-[90vw] px-4">
                   <div className="flex flex-col gap-6 pt-6">
                     {clerkUser && (
                       <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-2 dark:bg-primary/20">

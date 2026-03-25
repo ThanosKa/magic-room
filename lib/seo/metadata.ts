@@ -73,7 +73,7 @@ export function homeMetadata(): Metadata {
     return createMetadata({
         title: "AI Interior Design - Transform Your Room in Seconds",
         description:
-            "Transform your room in seconds with AI-powered interior design. Upload a photo and get stunning design variations instantly. Privacy-first, professional quality.",
+            "Magic Room is the AI interior design tool that transforms any room from a photo. Upload once, get stunning design variations in under 60 seconds.",
         path: "",
     });
 }
@@ -112,5 +112,42 @@ export function termsMetadata(): Metadata {
         description:
             "Magic Room terms of service and user agreement. Read our terms before using the service.",
         path: "/terms",
+    });
+}
+
+export function aboutMetadata(): Metadata {
+    return createMetadata({
+        title: "About Magic Room | AI Interior Design",
+        description:
+            "Magic Room was built by Thanos Kazakis to make AI-powered interior design accessible to everyone. Learn about the mission, the technology, and the founder.",
+        path: "/about",
+        keywords: [
+            "about magic room",
+            "AI interior design tool",
+            "Thanos Kazakis",
+            "interior design AI founder",
+            "magic room about",
+        ],
+    });
+}
+
+export function virtualStagingMetadata(): Metadata {
+    return createMetadata({
+        title: "AI Virtual Staging for Real Estate",
+        description:
+            "Stage any property listing with AI for under $1 per photo. Replace $2,000–$5,000 traditional staging costs. Upload a photo, choose a style, get professionally staged images in 60 seconds.",
+        path: "/virtual-staging",
+        keywords: [
+            "virtual staging ai",
+            "ai home staging",
+            "ai virtual staging",
+            "real estate virtual staging",
+            "virtual home staging",
+            "property staging ai",
+            "real estate ai staging",
+            "ai staging tool",
+            "virtual staging real estate agents",
+            "cheap virtual staging",
+        ],
     });
 }
