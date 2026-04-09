@@ -27,9 +27,9 @@ const CREDIT_PACKAGES = [
         priceId: null,
         description: "Perfect for trying out",
         features: [
-            "1 design per day",
-            "Resets every 24 hours",
+            "1 free design included",
             "High-quality results",
+            "All design themes",
             "No credit card required",
         ],
         popular: false,
@@ -168,7 +168,7 @@ export default function PricingContent() {
                                             <span className="text-muted-foreground"> one-time</span>
                                         )}
                                         {pkg.free && (
-                                            <span className="text-muted-foreground">/day</span>
+                                            <span className="text-muted-foreground"> forever</span>
                                         )}
                                     </div>
                                     <p className="mt-2 text-sm text-muted-foreground">
