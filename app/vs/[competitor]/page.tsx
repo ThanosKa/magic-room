@@ -7,7 +7,7 @@ import { getCompetitorBySlug } from "@/lib/seo/competitor-data";
 import { VsPageContent } from "@/components/seo/vs-page-content";
 
 // VS comparison pages — extend this list to add new comparisons
-const VS_SLUGS = ["roomgpt", "interior-ai", "reimaginehome"];
+const VS_SLUGS = ["roomgpt", "interior-ai", "reimaginehome", "decorai"];
 
 interface Props {
     params: Promise<{ competitor: string }>;
