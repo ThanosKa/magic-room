@@ -50,6 +50,16 @@ export default async function DesignSlugPage({ params }: Props) {
     const themeData = THEME_DATA[page.theme];
     const roomData = ROOM_DATA[page.roomType];
 
+    const otherThemes = Object.values(THEME_DATA)
+        .filter((theme) => theme.slug !== page.theme)
+        .sort((a, b) => a.slug.localeCompare(b.slug))
+        .slice(0, 6);
+
+    const otherRooms = Object.values(ROOM_DATA)
+        .filter((room) => room.slug !== page.roomType)
+        .sort((a, b) => a.slug.localeCompare(b.slug))
+        .slice(0, 6);
+
     const pageUrl = `${SITE_URL}/design/${slug}`;
 
     const schemas = [
@@ -90,7 +100,13 @@ export default async function DesignSlugPage({ params }: Props) {
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
                 />
             ))}
-            <DesignPageContent page={page} themeData={themeData} roomData={roomData} />
+            <DesignPageContent
+                page={page}
+                themeData={themeData}
+                roomData={roomData}
+                otherThemes={otherThemes}
+                otherRooms={otherRooms}
+            />
         </>
     );
 }
