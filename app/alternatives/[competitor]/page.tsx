@@ -27,8 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
-        title: `Best ${competitor.name} Alternative`,
-        description: `Looking for a ${competitor.name} alternative? See how Magic Room compares on privacy, pricing, and AI quality. Try for free with one credit.`,
+        title: `${competitor.name} Alternatives — Cheaper, Privacy-First (2026)`,
+        description: `Switching from ${competitor.name}? Magic Room starts at €9.99 one-time (not monthly), never stores your photos, and runs on Google Gemini. Try free with 1 credit.`,
         path: `/alternatives/${slug}`,
         keywords: competitor.keywords,
     });
