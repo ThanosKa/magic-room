@@ -15,81 +15,14 @@ import { HeroComparison } from "@/components/hero-comparison";
 import { PageTransition } from "@/components/page-transition";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
-import { IDesignPageData, IThemeData, IRoomData, THEME_DATA, ROOM_DATA } from "@/lib/seo/design-data";
+import { IDesignPageData, IThemeData, IRoomData } from "@/lib/seo/design-data";
 
 interface DesignPageContentProps {
     page: IDesignPageData;
     themeData: IThemeData;
     roomData: IRoomData;
-}
-
-interface RelatedDesignLinksProps {
-    page: IDesignPageData;
-    themeData: IThemeData;
-    roomData: IRoomData;
-}
-
-function RelatedDesignLinks({ page, themeData, roomData }: RelatedDesignLinksProps) {
-    // Same theme, different rooms — pick up to 4, excluding current room
-    const sameThemeLinks = Object.values(ROOM_DATA)
-        .filter((room) => room.slug !== page.roomType)
-        .slice(0, 4)
-        .map((room) => ({
-            href: `/design/${themeData.slug}-${room.slug}`,
-            label: `${themeData.name} ${room.name}`,
-        }));
-
-    // Same room, different themes — pick up to 4, excluding current theme
-    const sameRoomLinks = Object.values(THEME_DATA)
-        .filter((theme) => theme.slug !== page.theme)
-        .slice(0, 4)
-        .map((theme) => ({
-            href: `/design/${theme.slug}-${roomData.slug}`,
-            label: `${theme.name} ${roomData.name}`,
-        }));
-
-    return (
-        <div className="space-y-6">
-            <div>
-                <h3 className="mb-3 text-base font-semibold text-slate-900 dark:text-white">
-                    More {themeData.name} design ideas
-                </h3>
-                <ul className="flex flex-wrap gap-3">
-                    {sameThemeLinks.map((link) => (
-                        <li key={link.href}>
-                            <Link href={link.href} className="text-sm text-primary hover:underline">
-                                {link.label}
-                            </Link>
-                        </li>
-                    ))}
-                    <li>
-                        <Link href="/design" className="text-sm text-slate-500 hover:underline dark:text-slate-400">
-                            View all {themeData.name} styles →
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                <h3 className="mb-3 text-base font-semibold text-slate-900 dark:text-white">
-                    Other {roomData.name} design styles
-                </h3>
-                <ul className="flex flex-wrap gap-3">
-                    {sameRoomLinks.map((link) => (
-                        <li key={link.href}>
-                            <Link href={link.href} className="text-sm text-primary hover:underline">
-                                {link.label}
-                            </Link>
-                        </li>
-                    ))}
-                    <li>
-                        <Link href="/design" className="text-sm text-slate-500 hover:underline dark:text-slate-400">
-                            View all {roomData.name} styles →
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    );
+    otherThemes: IThemeData[];
+    otherRooms: IRoomData[];
 }
 
 const STEPS = [
@@ -113,7 +46,13 @@ const STEPS = [
     },
 ];
 
-export function DesignPageContent({ page, themeData, roomData }: DesignPageContentProps) {
+export function DesignPageContent({
+    page,
+    themeData,
+    roomData,
+    otherThemes,
+    otherRooms,
+}: DesignPageContentProps) {
     const breadcrumbItems = [
         { name: "Home", href: "/" },
         { name: "Design Ideas", href: "/design" },
@@ -287,37 +226,71 @@ export function DesignPageContent({ page, themeData, roomData }: DesignPageConte
                 </section>
             )}
 
-            {/* Related design pages */}
-            <section className="bg-white py-10 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
+            {/* Other styles for this room */}
+            <section className="bg-white py-12 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 md:py-16">
                 <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-3xl space-y-8">
-                        <RelatedDesignLinks page={page} themeData={themeData} roomData={roomData} />
-                        <div>
-                            <h3 className="mb-3 text-base font-semibold text-slate-900 dark:text-white">
-                                More design guides
-                            </h3>
-                            <ul className="flex flex-wrap gap-3">
-                                <li>
-                                    <Link href="/blog/how-to-redesign-living-room-with-ai" className="text-sm text-primary hover:underline">
-                                        How to Redesign Your Living Room with AI
+                    <div className="mx-auto max-w-5xl">
+                        <h2 className="mb-8 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
+                            Other styles for your {roomData.name}
+                        </h2>
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            {otherThemes.map((theme) => {
+                                const href = `/design/${theme.slug}-${roomData.slug}`;
+                                const label = `${theme.name} ${roomData.name} Design Ideas`;
+                                return (
+                                    <Link key={theme.slug} href={href} className="group">
+                                        <Card className="h-full border-slate-200 bg-white transition-colors hover:border-primary dark:border-slate-800 dark:bg-slate-900 dark:hover:border-primary">
+                                            <CardContent className="p-6">
+                                                <h3 className="mb-2 text-lg font-semibold text-slate-900 group-hover:text-primary dark:text-white dark:group-hover:text-primary">
+                                                    {label}
+                                                </h3>
+                                                <p className="text-sm text-slate-600 dark:text-slate-400">
+                                                    {theme.tagline}
+                                                </p>
+                                            </CardContent>
+                                        </Card>
                                     </Link>
-                                </li>
-                                <li>
-                                    <Link href="/blog/how-to-choose-interior-design-theme" className="text-sm text-primary hover:underline">
-                                        How to Choose an Interior Design Style
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* More rooms for this theme */}
+            <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
+                <div className="container px-4 md:px-6">
+                    <div className="mx-auto max-w-5xl">
+                        <h2 className="mb-8 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
+                            More {themeData.name} room designs
+                        </h2>
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            {otherRooms.map((room) => {
+                                const href = `/design/${themeData.slug}-${room.slug}`;
+                                const label = `${themeData.name} ${room.name} Design Ideas`;
+                                return (
+                                    <Link key={room.slug} href={href} className="group">
+                                        <Card className="h-full border-slate-200 bg-white transition-colors hover:border-primary dark:border-slate-800 dark:bg-slate-900 dark:hover:border-primary">
+                                            <CardContent className="p-6">
+                                                <h3 className="mb-2 text-lg font-semibold text-slate-900 group-hover:text-primary dark:text-white dark:group-hover:text-primary">
+                                                    {label}
+                                                </h3>
+                                                <p className="text-sm text-slate-600 dark:text-slate-400">
+                                                    Apply the {themeData.name.toLowerCase()} style to your {room.name.toLowerCase()}.
+                                                </p>
+                                            </CardContent>
+                                        </Card>
                                     </Link>
-                                </li>
-                                <li>
-                                    <Link href="/blog/interior-design-on-a-budget-ai" className="text-sm text-primary hover:underline">
-                                        Interior Design on a Budget
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/blog" className="text-sm text-primary hover:underline">
-                                        View all design guides →
-                                    </Link>
-                                </li>
-                            </ul>
+                                );
+                            })}
+                        </div>
+                        <div className="mt-8 flex flex-wrap items-center gap-4 text-sm">
+                            <Link href="/design" className="text-primary hover:underline">
+                                Browse all 196 AI interior design combinations
+                            </Link>
+                            <Link href="/blog" className="text-slate-500 hover:underline dark:text-slate-400">
+                                Read design guides on the blog
+                            </Link>
                         </div>
                     </div>
                 </div>
