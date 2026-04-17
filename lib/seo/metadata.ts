@@ -80,9 +80,9 @@ export function homeMetadata(): Metadata {
 
 export function pricingMetadata(): Metadata {
     return createMetadata({
-        title: "Pricing & Plans",
+        title: "Pricing — From €9.99 for 30 AI Designs",
         description:
-            "Simple, transparent pricing for AI interior design. Choose from flexible credit packages. Credits never expire.",
+            "AI interior design from €9.99 for 30 credits (~€0.33 per design). No subscription, credits never expire, full commercial rights included.",
         path: "/pricing",
     });
 }
