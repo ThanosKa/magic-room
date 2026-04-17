@@ -6,6 +6,11 @@ export const metadata: Metadata = homeMetadata();
 
 const FAQ_ITEMS = [
   {
+    question: "What is Magic Room?",
+    answer:
+      "Magic Room is an AI interior design tool that transforms any room from a single photo. Upload a picture of your room, pick a design style, and the AI generates 4–8 redesigned variations in 30–60 seconds. Magic Room uses Google Gemini multimodal AI and never stores your photos — images are processed in-memory and deleted immediately. Pricing starts at €9.99 for 30 credits, with no subscription and commercial rights included.",
+  },
+  {
     question: "How does Magic Room work?",
     answer:
       "Magic Room uses Google Gemini multimodal AI via OpenRouter to analyze your uploaded room photo and generate professional interior design variations. The AI preserves your room's original structure and layout while applying your chosen style. Each generation takes 30-60 seconds and produces 4-8 unique design variations you can compare side by side.",
