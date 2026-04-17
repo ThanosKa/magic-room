@@ -31,7 +31,7 @@ export interface IBlogPost {
 export const BLOG_POSTS: IBlogPost[] = [
     {
         slug: "how-to-redesign-living-room-with-ai",
-        title: "How to Redesign Your Living Room with AI",
+        title: "Redesign Your Living Room with AI: 7 Steps (2026 Guide)",
         metaDescription:
             "A practical guide to using AI tools to redesign your living room. Covers how to photograph your space, choose a style, and get useful results from AI design generation.",
         publishedDate: "2026-02-10",
@@ -143,7 +143,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "virtual-staging-real-estate-guide",
-        title: "Virtual Staging for Real Estate: A Practical Guide",
+        title: "Virtual Staging for Real Estate: Worth It in 2026?",
         metaDescription:
             "How virtual staging works, when it is worth the cost, and how AI tools have changed the economics of staging properties for sale.",
         publishedDate: "2026-02-08",
@@ -251,7 +251,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "modern-vs-minimalist-interior-design",
-        title: "Modern vs Minimalist Interior Design: What Is the Difference?",
+        title: "Modern vs Minimalist Design: 5 Real Differences (2026)",
         metaDescription:
             "Modern and minimalist are the two most frequently confused interior design styles. Here is a clear explanation of what distinguishes them and how to choose between them.",
         publishedDate: "2026-02-06",
@@ -354,7 +354,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "ai-interior-design-tools-how-they-work",
-        title: "How AI Interior Design Tools Work",
+        title: "How AI Interior Design Tools Actually Work in 2026",
         metaDescription:
             "A clear explanation of the AI technology behind room redesign tools — what they can and cannot do, and how different approaches produce different results.",
         publishedDate: "2026-02-04",
@@ -458,7 +458,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "scandinavian-design-small-spaces",
-        title: "Scandinavian Design for Small Spaces",
+        title: "Scandinavian Design: 12 Ideas for Small Spaces (2026)",
         metaDescription:
             "How to apply Scandinavian interior design principles in small rooms and apartments. Practical guidance on light, storage, furniture scale, and material choices.",
         publishedDate: "2026-02-02",
@@ -561,7 +561,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "how-to-choose-interior-design-theme",
-        title: "How to Choose an Interior Design Style for Your Home",
+        title: "How to Choose an Interior Design Style: 6 Quick Tests",
         metaDescription:
             "A practical approach to choosing an interior design style that suits your lifestyle, your space, and your ability to maintain it over time.",
         publishedDate: "2026-01-30",
@@ -665,7 +665,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "interior-design-on-a-budget-ai",
-        title: "Interior Design on a Budget: How AI Changes the Approach",
+        title: "Interior Design on a Budget: 9 AI Hacks for 2026",
         metaDescription:
             "How to redesign a room on a limited budget by using AI visualisation to identify the changes with the highest impact before spending anything.",
         publishedDate: "2026-01-28",
@@ -768,7 +768,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "industrial-kitchen-design-ideas",
-        title: "Industrial Kitchen Design Ideas",
+        title: "Industrial Kitchen Design: 15 Ideas That Actually Work",
         metaDescription:
             "Practical design ideas for creating an industrial kitchen. Covers materials, appliances, cabinetry, lighting, and how to adapt the style to domestic use.",
         publishedDate: "2026-01-26",
@@ -872,7 +872,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "bohemian-bedroom-decor-guide",
-        title: "Bohemian Bedroom Decor: A Complete Guide",
+        title: "Bohemian Bedroom Decor: 20 Ideas to Steal in 2026",
         metaDescription:
             "How to create a bohemian bedroom through textiles, vintage furniture, plants, and collected objects. Practical guidance on layering and cohesion.",
         publishedDate: "2026-01-24",
@@ -980,7 +980,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "ai-home-staging-before-selling",
-        title: "AI Home Staging Before Selling: What It Can and Cannot Do",
+        title: "AI Home Staging Before Selling: What Works (and Fails)",
         metaDescription:
             "How AI home staging works for property sales, what it costs compared to traditional staging, and where it delivers the most value in the selling process.",
         publishedDate: "2026-01-22",
@@ -1084,7 +1084,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "best-ai-interior-design-tools-2026",
-        title: "Best AI Interior Design Tools in 2026",
+        title: "7 Best AI Interior Design Tools in 2026 (Tested)",
         metaDescription:
             "A comparison of the best AI interior design tools available in 2026. Covers how each tool works, who it suits, and what to look for when choosing.",
         publishedDate: "2026-02-15",
@@ -1239,7 +1239,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "bedroom-redesign-with-ai",
-        title: "How to Redesign Your Bedroom with AI",
+        title: "Redesign Your Bedroom with AI: 8 Styles to Try in 2026",
         metaDescription:
             "A practical guide to using AI to redesign your bedroom. Covers how to photograph your space, which styles work best, and how to translate AI output into purchasing decisions.",
         publishedDate: "2026-02-18",
@@ -1332,7 +1332,7 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "home-office-ai-design",
-        title: "Designing a Home Office with AI: A Practical Guide",
+        title: "Design a Home Office with AI: 10 Ideas for 2026",
         metaDescription:
             "How to use AI interior design tools to redesign your home office. Covers photography, style selection, and how to interpret AI output for a functional workspace.",
         publishedDate: "2026-02-22",
