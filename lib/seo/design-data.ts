@@ -1851,6 +1851,60 @@ export const COMBINATION_FAQS: Record<string, IFaqItem[]> = {
 };
 
 // Generate all 196 page configs (14 themes × 14 rooms)
+// Title variants rotated deterministically per slug to diversify SERP listings.
+const TITLE_TEMPLATES = [
+    (themeName: string, roomName: string) =>
+        `${themeName} ${roomName} Ideas — AI-Generated in 60 Seconds`,
+    (themeName: string, roomName: string) =>
+        `${roomName} in ${themeName} Style — See Yours in AI`,
+    (themeName: string, roomName: string) =>
+        `Redesign Your ${roomName} in a ${themeName} Style (AI, 60s)`,
+    (themeName: string, roomName: string) =>
+        `${themeName} ${roomName}: 30+ AI Design Ideas`,
+] as const;
+
+// Meta description variants — used as a fallback when a per-slug intro is not available.
+const META_TEMPLATES = [
+    (themeName: string, roomName: string) =>
+        `Upload a photo of your ${roomName.toLowerCase()} and get AI-generated ${themeName.toLowerCase()} redesigns in 60 seconds. From €9.99, no subscription.`,
+    (themeName: string, roomName: string) =>
+        `See your ${roomName.toLowerCase()} reimagined in ${themeName.toLowerCase()} style. AI preserves your room's structure and generates 4–8 variations in under a minute.`,
+    (themeName: string, roomName: string) =>
+        `Turn your current ${roomName.toLowerCase()} into a ${themeName.toLowerCase()} dream space with AI. Upload once, get 4–8 design ideas in under 60s.`,
+    (themeName: string, roomName: string) =>
+        `${themeName} ${roomName} inspiration, generated from your own room photo. AI redesigns in 60s, from €9.99 — credits never expire.`,
+] as const;
+
+const META_DESCRIPTION_MAX_LENGTH = 158;
+const META_DESCRIPTION_TRUNCATE_AT = 155;
+
+// Deterministic (no Math.random / Date) char-code sum hash so variant
+// assignment is stable across builds — important for SEO consistency.
+function hashToIndex(str: string, modulo: number): number {
+    let sum = 0;
+    for (let i = 0; i < str.length; i++) {
+        sum += str.charCodeAt(i);
+    }
+    return sum % modulo;
+}
+
+function firstSentenceFromIntro(intro: string): string {
+    const firstSentence = intro.split(". ")[0];
+    // Re-add the trailing period the split removed (unless it was already the last sentence).
+    const sentence = firstSentence.endsWith(".")
+        ? firstSentence
+        : `${firstSentence}.`;
+
+    if (sentence.length <= META_DESCRIPTION_MAX_LENGTH) {
+        return sentence;
+    }
+
+    const truncated = sentence.slice(0, META_DESCRIPTION_TRUNCATE_AT);
+    const lastSpace = truncated.lastIndexOf(" ");
+    const cut = lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated;
+    return `${cut}...`;
+}
+
 function generateDesignPages(): IDesignPageData[] {
     const pages: IDesignPageData[] = [];
 
@@ -1863,15 +1917,23 @@ function generateDesignPages(): IDesignPageData[] {
             const roomData = ROOM_DATA[roomType];
             const slug = `${themeData.slug}-${roomData.slug}`;
 
+            const variantIndex = hashToIndex(slug, TITLE_TEMPLATES.length);
+            const title = TITLE_TEMPLATES[variantIndex](themeData.name, roomData.name);
+
+            const combinationIntro = COMBINATION_INTROS[slug];
+            const metaDescription = combinationIntro
+                ? firstSentenceFromIntro(combinationIntro)
+                : META_TEMPLATES[variantIndex](themeData.name, roomData.name);
+
             pages.push({
                 slug,
                 theme,
                 roomType,
                 themeName: themeData.name,
                 roomName: roomData.name,
-                title: `${themeData.name} ${roomData.name} Design Ideas | AI Interior Design`,
-                metaDescription: `Transform your ${roomData.name.toLowerCase()} with ${themeData.name.toLowerCase()} interior design. Generate stunning ${themeData.name.toLowerCase()} ${roomData.name.toLowerCase()} ideas with AI in seconds.`,
-                intro: COMBINATION_INTROS[slug] ?? `Generate ${themeData.name.toLowerCase()} ${roomData.name.toLowerCase()} design ideas instantly with AI.`,
+                title,
+                metaDescription,
+                intro: combinationIntro ?? `Generate ${themeData.name.toLowerCase()} ${roomData.name.toLowerCase()} design ideas instantly with AI.`,
                 faqs: COMBINATION_FAQS[slug] ?? [],
                 keywords: [
                     ...themeData.keywords,
