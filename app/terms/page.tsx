@@ -111,7 +111,7 @@ export default function TermsPage() {
               <li>Payments are processed through Stripe</li>
               <li>Prices are displayed in USD and include applicable taxes</li>
               <li>
-                Credit purchases are non-refundable except where required by law
+                All sales are final. Credit purchases are non-refundable under any circumstances
               </li>
               <li>Unused credits carry no monetary value</li>
               <li>
@@ -123,24 +123,21 @@ export default function TermsPage() {
               4.3 Refunds
             </h3>
             <p>
-              We offer a 7-day money-back guarantee for initial credit
-              purchases. Refund requests must be made within 7 days of purchase.
-              To request a refund, contact{" "}
-              <a
-                href="mailto:kazakis.th@gmail.com"
-                className="text-purple-600 dark:text-purple-400"
-              >
-                kazakis.th@gmail.com
-              </a>{" "}
-              with your order details.
+              All sales are final. We do not issue refunds under any
+              circumstances, including but not limited to unused credits,
+              partial usage, dissatisfaction with generated designs, or account
+              closure. Please review your purchase carefully before completing
+              checkout.
             </p>
 
             <h3 className="mt-4 text-lg font-semibold text-slate-800 dark:text-slate-100">
               4.4 Failed Generations
             </h3>
             <p>
-              If a design generation fails, we will automatically refund the
-              credit to your account within 30 minutes.
+              If a design generation fails due to a processing error on our
+              end, the credit is automatically restored to your account
+              balance. This credit restoration is a service continuity measure
+              and does not constitute a monetary refund.
             </p>
           </section>
 

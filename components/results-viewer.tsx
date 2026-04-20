@@ -68,7 +68,7 @@ export function ResultsViewer({
               {error}
             </p>
             <p className="mt-2 text-xs text-red-600 dark:text-red-400">
-              Your credit has been refunded.
+              Your credit has been restored.
             </p>
             <Button
               onClick={onGenerateAgain}
