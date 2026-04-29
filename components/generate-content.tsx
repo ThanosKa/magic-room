@@ -29,6 +29,67 @@ import { useDropzone } from "react-dropzone";
 import { fileToBase64 } from "@/lib/supabase-client";
 import { cn } from "@/lib/utils";
 
+const MAX_UPLOAD_SIZE = 2.5 * 1024 * 1024;
+const RESIZE_MAX_DIMENSION = 1536;
+
+async function compressImage(file: File): Promise<File> {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const i = new window.Image();
+        i.onload = () => resolve(i);
+        i.onerror = () => reject(new Error("Failed to load image"));
+        i.src = URL.createObjectURL(file);
+    });
+
+    const needsResize =
+        img.width > RESIZE_MAX_DIMENSION ||
+        img.height > RESIZE_MAX_DIMENSION ||
+        file.size > MAX_UPLOAD_SIZE;
+
+    if (!needsResize) {
+        URL.revokeObjectURL(img.src);
+        return file;
+    }
+
+    let w = img.width;
+    let h = img.height;
+    if (w > RESIZE_MAX_DIMENSION || h > RESIZE_MAX_DIMENSION) {
+        if (w >= h) {
+            h = Math.round((h / w) * RESIZE_MAX_DIMENSION);
+            w = RESIZE_MAX_DIMENSION;
+        } else {
+            w = Math.round((w / h) * RESIZE_MAX_DIMENSION);
+            h = RESIZE_MAX_DIMENSION;
+        }
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(img, 0, 0, w, h);
+    URL.revokeObjectURL(img.src);
+
+    const blob = await new Promise<Blob>((resolve, reject) =>
+        canvas.toBlob(
+            (b) => {
+                if (b) resolve(b);
+                else reject(new Error("Image compression failed"));
+            },
+            "image/jpeg",
+            0.9,
+        )
+    );
+
+    canvas.width = 0;
+    canvas.height = 0;
+
+    return new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
+        type: "image/jpeg",
+    });
+}
+
 const THEME_IMAGES: Record<Theme, string> = {
     modern: "/themes/theme_modern.png",
     minimalist: "/themes/theme_minimalist.png",
@@ -71,14 +132,15 @@ function GeneratePageContent() {
             const file = acceptedFiles[0];
             if (!file) return;
 
-            if (file.size > 10 * 1024 * 1024) {
+            if (file.size > 20 * 1024 * 1024) {
                 return;
             }
 
             try {
                 setActiveGeneration(null);
 
-                const base64 = await fileToBase64(file);
+                const compressed = await compressImage(file);
+                const base64 = await fileToBase64(compressed);
                 setUploadedImage(base64, "");
                 setOriginalImage(base64);
             } catch {

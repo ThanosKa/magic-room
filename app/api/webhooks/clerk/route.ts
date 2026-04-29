@@ -8,6 +8,7 @@ import {
 } from "@/lib/supabase";
 import { checkAndMarkWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
+import { sendWelcomeEmail } from "@/lib/email";
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET || "";
 
@@ -152,6 +153,13 @@ export async function POST(request: Request) {
 
       // Mark as processed AFTER successful database operations
       await checkAndMarkWebhookProcessed("clerk", svixId);
+
+      // Fire-and-forget welcome email
+      sendWelcomeEmail({
+        to: primaryEmail,
+        firstName: first_name,
+        lastName: last_name,
+      }).catch(() => {});
 
       logger.info(
         { clerkUserId: id, email: primaryEmail, userId: newUser.id },

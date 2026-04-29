@@ -8,6 +8,7 @@ import {
 } from "@/lib/supabase";
 import { isWebhookProcessed, markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
+import { sendPurchaseEmail } from "@/lib/email";
 import type Stripe from "stripe";
 
 // Helper to check if a string looks like a UUID
@@ -142,6 +143,18 @@ export async function POST(request: Request): Promise<Response> {
 
       // Only mark as processed after credits and transaction are successfully recorded
       await markWebhookProcessed("stripe", event.id);
+
+      // Fire-and-forget purchase confirmation email
+      const customerEmail =
+        session.customer_details?.email ?? session.customer_email ?? user.email;
+      if (customerEmail) {
+        sendPurchaseEmail({
+          to: customerEmail,
+          packageName: pkg.name,
+          credits: pkg.credits,
+          amountCents: pkg.priceCents,
+        }).catch(() => {});
+      }
 
       logger.info(
         { userId: user.id, packageId, creditsAdded: pkg.credits, sessionId: session.id },
