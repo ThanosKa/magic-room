@@ -152,7 +152,6 @@ export async function POST(request: Request): Promise<Response> {
           to: customerEmail,
           packageName: pkg.name,
           credits: pkg.credits,
-          amountCents: pkg.priceCents,
         }).catch(() => {});
       }
 

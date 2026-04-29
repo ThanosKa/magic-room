@@ -155,10 +155,7 @@ export function buildWelcomeEmailHtml(params: {
 export function buildPurchaseEmailHtml(params: {
   packageName: string;
   credits: number;
-  amountCents: number;
 }): string {
-  const formattedAmount = `€${(params.amountCents / 100).toFixed(2)}`;
-
   const body = `
     <h1 style="margin:0 0 8px;font-size:24px;font-weight:700;color:#1f2937;">Payment confirmed</h1>
     <p style="margin:0 0 24px;font-size:15px;color:#6b7280;line-height:22px;">
@@ -182,13 +179,6 @@ export function buildPurchaseEmailHtml(params: {
             <tr>
               <td style="padding:6px 0;font-size:14px;color:#6b7280;">Credits added</td>
               <td align="right" style="padding:6px 0;font-size:14px;font-weight:600;color:#1f2937;">${params.credits} credits</td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding:8px 0 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;" /></td>
-            </tr>
-            <tr>
-              <td style="padding:8px 0 0;font-size:15px;font-weight:600;color:#1f2937;">Total</td>
-              <td align="right" style="padding:8px 0 0;font-size:15px;font-weight:700;color:${COLORS.primary};">${formattedAmount}</td>
             </tr>
           </table>
         </td>
@@ -252,12 +242,10 @@ export async function sendPurchaseEmail(params: {
   to: string;
   packageName: string;
   credits: number;
-  amountCents: number;
 }): Promise<void> {
   const html = buildPurchaseEmailHtml({
     packageName: params.packageName,
     credits: params.credits,
-    amountCents: params.amountCents,
   });
 
   const { error } = await getResend().emails.send({
