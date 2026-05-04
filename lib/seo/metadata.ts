@@ -9,7 +9,7 @@ import {
 } from "./config";
 
 interface CreateMetadataInput {
-    title?: string;
+    title?: string | { absolute: string };
     description?: string;
     path?: string;
     noIndex?: boolean;
@@ -24,10 +24,17 @@ interface CreateMetadataInput {
 
 export function createMetadata(input?: CreateMetadataInput): Metadata {
     const title = input?.title;
+    const titleString =
+        typeof title === "string" ? title : title?.absolute;
     const description = input?.description ?? SITE_DESCRIPTION;
     const canonicalUrl = `${SITE_URL}${input?.path ?? ""}`;
     const ogImage = input?.ogImage ?? OG_IMAGE;
-    const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+    const isAbsolute = typeof title === "object" && title !== null;
+    const fullTitle = titleString
+        ? isAbsolute
+            ? titleString
+            : `${titleString} | ${SITE_NAME}`
+        : SITE_NAME;
 
     return {
         title,
@@ -71,9 +78,12 @@ export function createMetadata(input?: CreateMetadataInput): Metadata {
 
 export function homeMetadata(): Metadata {
     return createMetadata({
-        title: "AI Interior Design - Transform Your Room in Seconds",
+        title: {
+            absolute:
+                "Magic Room — AI Interior Design from a Photo (60 Seconds)",
+        },
         description:
-            "Magic Room is the AI interior design tool that transforms any room from a photo. Upload once, get stunning design variations in under 60 seconds.",
+            "Magic Room redesigns any room from a single photo in 60 seconds using Google Gemini AI. Photos never stored. From €9.99 — no subscription. 1 free credit.",
         path: "",
     });
 }
@@ -117,16 +127,19 @@ export function termsMetadata(): Metadata {
 
 export function aboutMetadata(): Metadata {
     return createMetadata({
-        title: "About Magic Room | AI Interior Design",
+        title: {
+            absolute:
+                "What is Magic Room? AI Interior Design Built for Privacy",
+        },
         description:
-            "Magic Room was built by Thanos Kazakis to make AI-powered interior design accessible to everyone. Learn about the mission, the technology, and the founder.",
+            "Magic Room is an AI interior design tool that redesigns any room from a single photo in 60 seconds — built privacy-first, photos never stored. Read the story behind the product.",
         path: "/about",
         keywords: [
+            "what is magic room",
             "about magic room",
             "AI interior design tool",
             "Thanos Kazakis",
             "interior design AI founder",
-            "magic room about",
         ],
     });
 }

@@ -10,15 +10,18 @@ import { CtaSection } from "@/components/seo/cta-section";
 import { PageTransition } from "@/components/page-transition";
 
 export const metadata: Metadata = createMetadata({
-    title: "AI Interior Design Alternatives - RoomGPT and More",
+    title: "RoomGPT Alternatives Compared (2026) — Privacy & Pricing",
     description:
-        "Comparing AI interior design tools? See how Magic Room compares to RoomGPT, DecorAI, Reimagine Home, and Interior AI on privacy, pricing, and output quality.",
+        "Switching from RoomGPT, Interior AI, DecorAI or Reimagine Home? Side-by-side comparison on AI model, photo privacy, pricing, and output quality. Updated 2026.",
     path: "/alternatives",
     keywords: [
         "roomgpt alternative",
+        "roomgpt alternatives",
         "ai interior design alternative",
         "room design ai comparison",
         "interior ai alternative",
+        "reimagine home alternative",
+        "decorai alternative",
     ],
 });
 

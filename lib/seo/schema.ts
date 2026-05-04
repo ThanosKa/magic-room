@@ -294,18 +294,11 @@ export function softwareApplicationSchema(input?: SoftwareApplicationSchemaInput
         url: SITE_URL,
         offers: {
             "@type": "AggregateOffer",
-            lowPrice: 0,
+            lowPrice: 9.99,
             highPrice: 29.99,
             priceCurrency: "EUR",
             offerCount: 3,
             availability: "https://schema.org/InStock",
-        },
-        aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.8",
-            ratingCount: "150",
-            bestRating: "5",
-            worstRating: "1",
         },
     };
 }

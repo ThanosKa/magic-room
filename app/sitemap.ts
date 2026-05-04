@@ -24,7 +24,7 @@ const TOP_DESIGN_SLUGS = new Set([
 ]);
 
 // All vs competitor slugs
-const VS_SLUGS = ["roomgpt", "interior-ai", "reimaginehome"];
+const VS_SLUGS = ["roomgpt", "interior-ai", "reimaginehome", "decorai"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;

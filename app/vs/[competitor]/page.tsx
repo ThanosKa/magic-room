@@ -31,8 +31,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
-        title: `Magic Room vs ${competitor.name}`,
-        description: `Detailed comparison of Magic Room and ${competitor.name}. See the differences in AI model, privacy, pricing, and output quality.`,
+        title: {
+            absolute: `Magic Room vs ${competitor.name} — Side-by-Side (2026)`,
+        },
+        description: `Magic Room vs ${competitor.name}: AI model, photo privacy, pricing, and output quality compared side-by-side. Try Magic Room free with 1 credit.`,
         path: `/vs/${slug}`,
         keywords: [
             `magic room vs ${competitor.name.toLowerCase()}`,
