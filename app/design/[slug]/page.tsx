@@ -5,6 +5,8 @@ import {
     faqSchema,
     breadcrumbSchema,
     howToSchema,
+    imageObjectSchema,
+    webPageSchema,
 } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import {
@@ -13,6 +15,7 @@ import {
     THEME_DATA,
     ROOM_DATA,
 } from "@/lib/seo/design-data";
+import { isPriorityDesignSlug, PRIORITY_DESIGN_SET } from "@/lib/seo/priority-pages";
 import { DesignPageContent } from "@/components/seo/design-page-content";
 
 interface Props {
@@ -31,11 +34,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         return {};
     }
 
+    // Non-priority (theme, room) combos still render so users browsing the
+    // catalogue see a real page, but are kept out of the index. This pulls
+    // the site below Google's scaled-content threshold and concentrates
+    // ranking signals on the pages we actually want to win.
+    const indexable = isPriorityDesignSlug(slug);
+
     return createMetadata({
         title: page.title,
         description: page.metaDescription,
         path: `/design/${slug}`,
         keywords: page.keywords,
+        noIndex: !indexable,
     });
 }
 
@@ -50,19 +60,42 @@ export default async function DesignSlugPage({ params }: Props) {
     const themeData = THEME_DATA[page.theme];
     const roomData = ROOM_DATA[page.roomType];
 
+    // Only link out to other (theme, room) combinations that are in the
+    // indexable priority set — sending crawl signal to noindex pages
+    // wastes Google's crawl budget and signals scaled content.
     const otherThemes = Object.values(THEME_DATA)
         .filter((theme) => theme.slug !== page.theme)
+        .filter((theme) => PRIORITY_DESIGN_SET.has(`${theme.slug}-${page.roomType}`))
         .sort((a, b) => a.slug.localeCompare(b.slug))
         .slice(0, 6);
 
     const otherRooms = Object.values(ROOM_DATA)
         .filter((room) => room.slug !== page.roomType)
+        .filter((room) => PRIORITY_DESIGN_SET.has(`${page.theme}-${room.slug}`))
         .sort((a, b) => a.slug.localeCompare(b.slug))
         .slice(0, 6);
 
     const pageUrl = `${SITE_URL}/design/${slug}`;
+    const heroImageUrl = `${SITE_URL}/images/designs/${page.slug}.jpg`;
 
     const schemas = [
+        webPageSchema({
+            url: pageUrl,
+            name: `${page.themeName} ${page.roomName} Design Ideas`,
+            description: page.metaDescription,
+            datePublished: "2026-02-15",
+            dateModified: "2026-05-19",
+            primaryImage: heroImageUrl,
+        }),
+        imageObjectSchema({
+            url: heroImageUrl,
+            caption: `AI-generated ${page.themeName.toLowerCase()} ${page.roomName.toLowerCase()} redesign from a single photo`,
+            creditText: "Magic Room (AI-generated)",
+            creator: {
+                name: "Thanos Kazakis",
+                url: "https://www.linkedin.com/in/thanos-kazakis-922977205/",
+            },
+        }),
         breadcrumbSchema([
             { name: "Home", url: SITE_URL },
             { name: "Design Ideas", url: `${SITE_URL}/design` },

@@ -1,39 +1,17 @@
 import { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo/config";
-import { getAllDesignSlugs } from "@/lib/seo/design-data";
 import { getAllCompetitorSlugs } from "@/lib/seo/competitor-data";
 import { BLOG_POSTS } from "@/lib/seo/blog-data";
+import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-pages";
 
-// Top-volume design slugs that get boosted priority
-const TOP_DESIGN_SLUGS = new Set([
-    "modern-living-room",
-    "scandinavian-living-room",
-    "minimalist-living-room",
-    "modern-bedroom",
-    "scandinavian-bedroom",
-    "bohemian-bedroom",
-    "minimalist-bedroom",
-    "modern-kitchen",
-    "industrial-kitchen",
-    "farmhouse-kitchen",
-    "luxury-bathroom",
-    "coastal-living-room",
-    "japandi-living-room",
-    "art-deco-living-room",
-    "modern-bathroom",
-]);
-
-// All vs competitor slugs
 const VS_SLUGS = ["roomgpt", "interior-ai", "reimaginehome", "decorai"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
 
-    // Use stable dates instead of new Date() to avoid wasting crawl budget
-    const siteLastUpdated = new Date("2026-03-25");
+    const siteLastUpdated = new Date("2026-05-19");
     const legalLastUpdated = new Date("2024-12-01");
 
-    // Core pages
     const corePages: MetadataRoute.Sitemap = [
         {
             url: baseUrl,
@@ -79,7 +57,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
     ];
 
-    // Design hub + 196 design pages
     const designHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/design`,
@@ -89,14 +66,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
     ];
 
-    const designPages: MetadataRoute.Sitemap = getAllDesignSlugs().map((slug) => ({
+    // Only ship curated, high-signal design pages to the sitemap.
+    // Other (theme, room) combos still render but are noindex — they
+    // exist for users browsing, but Google won't waste crawl budget on them.
+    const designPages: MetadataRoute.Sitemap = PRIORITY_DESIGN_SLUGS.map((slug) => ({
         url: `${baseUrl}/design/${slug}`,
         lastModified: siteLastUpdated,
         changeFrequency: "monthly" as const,
         priority: TOP_DESIGN_SLUGS.has(slug) ? 0.8 : 0.6,
     }));
 
-    // Alternatives hub + competitor pages + vs pages
     const alternativesHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/alternatives`,
@@ -122,7 +101,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.7,
     }));
 
-    // Blog hub + blog posts with real publish/update dates
     const blogHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/blog`,

@@ -10,9 +10,9 @@ import { CtaSection } from "@/components/seo/cta-section";
 import { PageTransition } from "@/components/page-transition";
 
 export const metadata: Metadata = createMetadata({
-    title: "RoomGPT Alternatives Compared (2026) — Privacy & Pricing",
+    title: "Switching from RoomGPT? 4 Better Alternatives Tested (May 2026)",
     description:
-        "Switching from RoomGPT, Interior AI, DecorAI or Reimagine Home? Side-by-side comparison on AI model, photo privacy, pricing, and output quality. Updated 2026.",
+        "I built Magic Room, so I tested the four most-asked-about alternatives — RoomGPT, Interior AI, DecorAI, Reimagine Home — head-to-head on AI quality, photo privacy and price.",
     path: "/alternatives",
     keywords: [
         "roomgpt alternative",

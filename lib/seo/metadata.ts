@@ -83,7 +83,7 @@ export function homeMetadata(): Metadata {
                 "Magic Room — AI Interior Design from a Photo (60 Seconds)",
         },
         description:
-            "Magic Room redesigns any room from a single photo in 60 seconds using Google Gemini AI. Photos never stored. From €9.99 — no subscription. 1 free credit.",
+            "Upload one room photo → 4–8 redesigned variations in 60 seconds, powered by Google Gemini. Photos never stored. From €9.99, no subscription. 1 free credit, no card needed.",
         path: "",
     });
 }

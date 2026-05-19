@@ -225,6 +225,65 @@ export function howToSchema(input: HowToSchemaInput) {
     };
 }
 
+interface ImageObjectSchemaInput {
+    url: string;
+    contentUrl?: string;
+    caption?: string;
+    width?: number;
+    height?: number;
+    creditText?: string;
+    creator?: { name: string; url?: string };
+}
+
+export function imageObjectSchema(input: ImageObjectSchemaInput) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "ImageObject",
+        url: input.url,
+        contentUrl: input.contentUrl ?? input.url,
+        ...(input.caption ? { caption: input.caption } : {}),
+        ...(input.width ? { width: input.width } : {}),
+        ...(input.height ? { height: input.height } : {}),
+        ...(input.creditText ? { creditText: input.creditText } : {}),
+        ...(input.creator
+            ? {
+                creator: {
+                    "@type": "Person",
+                    name: input.creator.name,
+                    ...(input.creator.url ? { url: input.creator.url } : {}),
+                },
+            }
+            : {}),
+    };
+}
+
+interface WebPageSchemaInput {
+    url: string;
+    name: string;
+    description: string;
+    datePublished?: string;
+    dateModified?: string;
+    primaryImage?: string;
+}
+
+export function webPageSchema(input: WebPageSchemaInput) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": `${input.url}#webpage`,
+        url: input.url,
+        name: input.name,
+        description: input.description,
+        isPartOf: { "@id": `${SITE_URL}#website` },
+        ...(input.primaryImage
+            ? { primaryImageOfPage: { "@type": "ImageObject", url: input.primaryImage } }
+            : {}),
+        ...(input.datePublished ? { datePublished: input.datePublished } : {}),
+        ...(input.dateModified ? { dateModified: input.dateModified } : {}),
+        inLanguage: "en-US",
+    };
+}
+
 interface ItemListSchemaItem {
     position: number;
     name: string;

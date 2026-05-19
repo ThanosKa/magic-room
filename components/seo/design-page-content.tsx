@@ -75,6 +75,13 @@ export function DesignPageContent({
                         <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl">
                             {page.themeName} {page.roomName} Design Ideas
                         </h1>
+                        <p className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                            <span>By <Link href="/about" className="hover:text-primary hover:underline">Thanos Kazakis</Link></span>
+                            <span aria-hidden="true">·</span>
+                            <span>Magic Room founder</span>
+                            <span aria-hidden="true">·</span>
+                            <span>Updated <time dateTime="2026-05-19">May 2026</time></span>
+                        </p>
                         <p className="mt-6 text-lg text-slate-600 dark:text-slate-400">
                             {page.intro}
                         </p>

@@ -1084,11 +1084,12 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "best-ai-interior-design-tools-2026",
-        title: "Best AI Interior Design Tools 2026 — 7 Tools Tested & Ranked",
+        title: "7 Best AI Interior Design Tools, Tested by a Builder (May 2026)",
         metaDescription:
-            "We tested the 7 best AI interior design tools in 2025–2026. RoomGPT, Interior AI, Reimagine Home & more — ranked by output quality, privacy & price.",
+            "I built one of these tools, so I tested the other six honestly. Side-by-side on AI model, photo privacy, output quality and price — no affiliate fluff.",
+        authorName: "Thanos Kazakis",
         publishedDate: "2026-02-15",
-        updatedDate: "2026-03-25",
+        updatedDate: "2026-05-19",
         readingTime: 8,
         keywords: [
             "best AI interior design tools 2026",
@@ -1423,7 +1424,7 @@ export const BLOG_POSTS: IBlogPost[] = [
                     "In most home offices, the three changes with the largest combined impact are: the desk (height, surface material, and size), the wall behind the desk (colour or texture), and the lighting (position and quality of task and ambient light). The AI output often identifies these as the primary changes because they are the most visually significant. Implementing them in sequence — desk first, then wall, then lighting — is more effective than attempting all changes simultaneously. Traditional interior design consultations cost $100–$500 per hour; using AI to identify and prioritise those three changes before spending anything is a significantly better use of a limited redesign budget.",
             },
         ],
-        relatedDesignSlugs: ["modern-home-office", "industrial-home-office", "scandinavian-home-office"],
+        relatedDesignSlugs: ["modern-office", "industrial-office", "scandinavian-office"],
         faqs: [
             {
                 question: "Can I use AI to redesign a bedroom that doubles as a home office?",
