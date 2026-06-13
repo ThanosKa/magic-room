@@ -1,7 +1,11 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { createMetadata } from "@/lib/seo/metadata";
-import { breadcrumbSchema, itemListSchema } from "@/lib/seo/schema";
+import {
+    breadcrumbSchema,
+    itemListSchema,
+    aggregateOfferSchema,
+} from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import { COMPETITORS } from "@/lib/seo/competitor-data";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,6 +34,16 @@ const breadcrumb = breadcrumbSchema([
     { name: "Alternatives", url: `${SITE_URL}/alternatives` },
 ]);
 
+const product = aggregateOfferSchema({
+    name: "Magic Room — AI Interior Design Tool",
+    description:
+        "Privacy-first AI interior design tool and a pay-per-use alternative to RoomGPT, Interior AI, DecorAI, and Reimagine Home. One-time credit packages from €9.99, no subscription, photos never stored.",
+    lowPrice: 9.99,
+    highPrice: 29.99,
+    offerCount: 3,
+    url: `${SITE_URL}/alternatives`,
+});
+
 const itemList = itemListSchema({
     name: "Best AI Interior Design Tool Alternatives to Magic Room",
     description: "Comparison of Magic Room versus RoomGPT, DecorAI, Reimagine Home, and Interior AI on privacy, AI model, pricing, and output quality.",
@@ -47,6 +61,10 @@ export default function AlternativesHubPage() {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(product) }}
             />
             <script
                 type="application/ld+json"
@@ -120,22 +138,29 @@ export default function AlternativesHubPage() {
                             <h2 className="mb-8 text-2xl font-bold text-slate-900 dark:text-white">
                                 Head-to-head comparisons
                             </h2>
-                            <Link href="/vs/roomgpt">
-                                <Card className="border-slate-200 bg-white transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
-                                    <CardContent className="p-6">
-                                        <h3 className="font-semibold text-slate-900 dark:text-white">
-                                            Magic Room vs RoomGPT
-                                        </h3>
-                                        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                                            Detailed side-by-side comparison of AI model, privacy approach,
-                                            pricing model, and output quality.
-                                        </p>
-                                        <span className="mt-3 inline-block text-sm font-medium text-primary">
-                                            View comparison
-                                        </span>
-                                    </CardContent>
-                                </Card>
-                            </Link>
+                            <div className="space-y-4">
+                                {COMPETITORS.map((competitor) => (
+                                    <Link
+                                        key={competitor.slug}
+                                        href={`/vs/${competitor.slug}`}
+                                    >
+                                        <Card className="border-slate-200 bg-white transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+                                            <CardContent className="p-6">
+                                                <h3 className="font-semibold text-slate-900 dark:text-white">
+                                                    Magic Room vs {competitor.name}
+                                                </h3>
+                                                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                                                    Detailed side-by-side comparison of AI model, privacy approach,
+                                                    pricing model, and output quality.
+                                                </p>
+                                                <span className="mt-3 inline-block text-sm font-medium text-primary">
+                                                    View comparison
+                                                </span>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>

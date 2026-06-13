@@ -1,7 +1,11 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createMetadata } from "@/lib/seo/metadata";
-import { faqSchema, breadcrumbSchema } from "@/lib/seo/schema";
+import {
+    faqSchema,
+    breadcrumbSchema,
+    aggregateOfferSchema,
+} from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import {
     getCompetitorBySlug,
@@ -53,6 +57,14 @@ export default async function AlternativePage({ params }: Props) {
                 url: `${SITE_URL}/alternatives/${slug}`,
             },
         ]),
+        aggregateOfferSchema({
+            name: `Magic Room — ${competitor.name} Alternative`,
+            description: `AI interior design tool offered as a ${competitor.name} alternative. One-time credit packages from €9.99, no subscription, photos never stored.`,
+            lowPrice: 9.99,
+            highPrice: 29.99,
+            offerCount: 3,
+            url: `${SITE_URL}/alternatives/${slug}`,
+        }),
         ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs, `${SITE_URL}/alternatives/${slug}`)] : []),
     ];
 

@@ -47,7 +47,7 @@ const VS_ROWS: VsRow[] = [
     },
     {
         feature: "Design themes",
-        magicRoom: "8 themes (modern, scandinavian, industrial, bohemian, etc.)",
+        magicRoom: "14 themes (modern, scandinavian, industrial, bohemian, etc.)",
         competitor: "Style presets without design guidance",
     },
     {

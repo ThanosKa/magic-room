@@ -36,7 +36,7 @@ export const COMPETITORS: ICompetitorData[] = [
             "Magic Room processes images in-memory and never stores your room photos — RoomGPT retains uploaded images on their servers",
             "Magic Room uses Google Gemini multimodal AI, which produces more architecturally coherent outputs than diffusion-only approaches",
             "Magic Room credits never expire and are not tied to a monthly subscription",
-            "Magic Room provides 8 distinct design themes with AI that understands the style's specific design principles",
+            "Magic Room provides 14 distinct design themes with AI that understands each style's specific design principles",
         ],
         faqs: [
             {
@@ -58,6 +58,16 @@ export const COMPETITORS: ICompetitorData[] = [
                 question: "Can I use Magic Room instead of RoomGPT?",
                 answer:
                     "Yes. Magic Room accepts the same input — a photo of your room — and produces redesigned outputs in a range of styles. The workflow is similar: upload a photo, select a style, and download the result. The main differences are the AI model used, the privacy approach, and the pricing structure.",
+            },
+            {
+                question: "How do I switch from RoomGPT to Magic Room?",
+                answer:
+                    "There is nothing to migrate — Magic Room works directly from your room photos, so you can switch instantly. Create an account to claim 1 free credit, upload the same photo you would use in RoomGPT, pick one of the 14 design themes, and generate. Because credits are one-time purchases that never expire, there is no subscription to cancel before you start.",
+            },
+            {
+                question: "Is there a free RoomGPT alternative?",
+                answer:
+                    "Magic Room gives every new account 1 free credit with no card required, so you can generate a full set of redesigns before paying anything. After that, credits start at €9.99 for 30 designs (about €0.33 each) with no monthly commitment — a lower entry cost than most subscription-based RoomGPT alternatives.",
             },
         ],
         keywords: [
@@ -157,6 +167,16 @@ export const COMPETITORS: ICompetitorData[] = [
                 question: "Which AI model does Magic Room use versus Reimagine Home?",
                 answer:
                     "Magic Room uses Google Gemini multimodal AI via OpenRouter, which handles image understanding and generation as a unified process. This produces outputs that better preserve the physical structure of your room while applying the selected design style.",
+            },
+            {
+                question: "How does Magic Room pricing compare to Reimagine Home?",
+                answer:
+                    "Reimagine Home uses a monthly subscription where unused credits typically reset at the end of each billing period. Magic Room sells one-time credit packages from €9.99 for 30 designs (about €0.33 each) that never expire, so occasional users do not pay for months they do not use. Both include a free way to try the tool before paying.",
+            },
+            {
+                question: "Is Magic Room a free Reimagine Home alternative?",
+                answer:
+                    "Magic Room includes 1 free credit on signup with no card required, letting you generate a redesign before committing. Unlike Reimagine Home's recurring plans, Magic Room never charges a subscription — you buy credits only when you need them, and they never expire.",
             },
         ],
         keywords: [

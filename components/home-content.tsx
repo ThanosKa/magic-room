@@ -24,6 +24,39 @@ const POPULAR_DESIGNS = [
     { slug: "art-deco-living-room", label: "Art Deco Living Room" },
 ];
 
+const COMPARE_LINKS = [
+    {
+        href: "/alternatives/roomgpt",
+        label: "Best RoomGPT Alternative",
+        cta: "Magic Room vs RoomGPT",
+    },
+    {
+        href: "/alternatives/reimaginehome",
+        label: "Best Reimagine Home Alternative",
+        cta: "Magic Room vs Reimagine Home",
+    },
+    {
+        href: "/alternatives/interior-ai",
+        label: "Best Interior AI Alternative",
+        cta: "Magic Room vs Interior AI",
+    },
+    {
+        href: "/alternatives/decorai",
+        label: "Best DecorAI Alternative",
+        cta: "Magic Room vs DecorAI",
+    },
+    {
+        href: "/vs/roomgpt",
+        label: "Magic Room vs RoomGPT",
+        cta: "Side-by-side comparison",
+    },
+    {
+        href: "/alternatives",
+        label: "All AI Design Tool Comparisons",
+        cta: "Browse every alternative",
+    },
+];
+
 export default function HomeContent() {
 
     return (
@@ -37,13 +70,14 @@ export default function HomeContent() {
                         </div>
 
                         <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl lg:text-7xl">
-                            AI Interior Design —<br className="hidden md:block" />
-                            <span className="text-primary">Redesign Any Room</span> from a Photo
+                            The AI Interior Design Tool That{" "}
+                            <span className="text-primary">Redesigns Any Room</span> from a Photo
                         </h1>
 
                         <p className="mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-                            Upload a photo of any room. Get 4–8 AI design variations in 30–60 seconds.
-                            Your photos are never stored — processed in-memory and deleted immediately.
+                            Magic Room is an AI interior design tool that turns one room photo into 4–8 styled
+                            redesigns in 30–60 seconds, powered by Google Gemini. Your photos are never stored —
+                            processed in-memory and deleted immediately.
                         </p>
 
                         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
@@ -110,6 +144,56 @@ export default function HomeContent() {
                                 </Card>
                             </Link>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            <section className="border-t border-slate-200 bg-white py-16 dark:border-slate-800 dark:bg-slate-950">
+                <div className="container px-4 md:px-6">
+                    <div className="mb-8 flex items-center justify-between">
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white md:text-3xl">
+                            Compare AI Interior Design Tools
+                        </h2>
+                        <Link
+                            href="/alternatives"
+                            className="text-sm font-medium text-primary hover:underline"
+                        >
+                            See all comparisons
+                        </Link>
+                    </div>
+                    <p className="mb-8 max-w-2xl text-slate-600 dark:text-slate-400">
+                        Weighing up the best AI tools for interior design in 2026? See how Magic Room
+                        compares to the most popular alternatives on AI model, photo privacy, and price.
+                    </p>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {COMPARE_LINKS.map((link) => (
+                            <Link key={link.href} href={link.href}>
+                                <Card className="h-full border-slate-200 bg-white transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+                                    <CardContent className="p-4">
+                                        <p className="font-medium text-slate-900 dark:text-white">
+                                            {link.label}
+                                        </p>
+                                        <p className="mt-1 text-sm text-primary">
+                                            {link.cta}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        ))}
+                    </div>
+                    <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                        <Link href="/blog" className="font-medium text-primary hover:underline">
+                            Read the interior design blog
+                        </Link>
+                        <Link
+                            href="/blog/best-ai-interior-design-tools-2026"
+                            className="font-medium text-primary hover:underline"
+                        >
+                            Best AI interior design tools (2026)
+                        </Link>
+                        <Link href="/virtual-staging" className="font-medium text-primary hover:underline">
+                            AI virtual staging for real estate
+                        </Link>
                     </div>
                 </div>
             </section>

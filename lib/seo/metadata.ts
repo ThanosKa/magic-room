@@ -80,11 +80,21 @@ export function homeMetadata(): Metadata {
     return createMetadata({
         title: {
             absolute:
-                "Magic Room — AI Interior Design from a Photo (60 Seconds)",
+                "AI Interior Design Tools — Redesign Any Room from a Photo (2026)",
         },
         description:
-            "Upload one room photo → 4–8 redesigned variations in 60 seconds, powered by Google Gemini. Photos never stored. From €9.99, no subscription. 1 free credit, no card needed.",
+            "Magic Room is an AI interior design tool that turns one room photo into 4–8 redesigns in 60 seconds, powered by Google Gemini. Photos never stored. From €9.99, no subscription. 1 free credit, no card needed.",
         path: "",
+        keywords: [
+            "ai interior design tools",
+            "best ai tools for interior design 2026",
+            "ai interior design",
+            "ai room design tool",
+            "ai interior design generator",
+            "redesign room from photo ai",
+            "virtual staging ai",
+            "ai room makeover",
+        ],
     });
 }
 

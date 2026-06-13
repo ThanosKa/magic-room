@@ -104,7 +104,10 @@ export function AlternativePageContent({ competitor, otherCompetitors = [] }: Al
                         <h2 className="mb-8 text-2xl font-bold text-slate-900 dark:text-white">
                             Feature comparison: Magic Room vs {competitor.name}
                         </h2>
-                        <FeatureComparisonTable competitorName={competitor.name} />
+                        <FeatureComparisonTable
+                            competitorName={competitor.name}
+                            competitorPricing={competitor.pricing}
+                        />
                     </div>
                 </div>
             </section>

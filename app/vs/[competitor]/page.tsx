@@ -1,7 +1,11 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createMetadata } from "@/lib/seo/metadata";
-import { faqSchema, breadcrumbSchema } from "@/lib/seo/schema";
+import {
+    faqSchema,
+    breadcrumbSchema,
+    aggregateOfferSchema,
+} from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import { getCompetitorBySlug } from "@/lib/seo/competitor-data";
 import { VsPageContent } from "@/components/seo/vs-page-content";
@@ -67,6 +71,14 @@ export default async function VsPage({ params }: Props) {
                 url: `${SITE_URL}/vs/${slug}`,
             },
         ]),
+        aggregateOfferSchema({
+            name: `Magic Room (vs ${competitor.name})`,
+            description: `AI interior design tool compared side-by-side with ${competitor.name}. One-time credit packages from €9.99, no subscription, photos never stored.`,
+            lowPrice: 9.99,
+            highPrice: 29.99,
+            offerCount: 3,
+            url: `${SITE_URL}/vs/${slug}`,
+        }),
         ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs, `${SITE_URL}/vs/${slug}`)] : []),
     ];
 

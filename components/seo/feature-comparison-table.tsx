@@ -8,6 +8,31 @@ interface ComparisonRow {
 
 const ROWS: ComparisonRow[] = [
     {
+        feature: "Starting price",
+        magicRoom: "€9.99 one-time for 30 credits (~€0.33/design)",
+        competitor: "Subscription, typically billed monthly",
+    },
+    {
+        feature: "Pricing model",
+        magicRoom: "One-time credit packages — no subscription",
+        competitor: "Subscription-based for most functionality",
+    },
+    {
+        feature: "Free trial",
+        magicRoom: "1 free credit on signup — no card required",
+        competitor: "Limited free tier with watermark or low cap",
+    },
+    {
+        feature: "Credits expire",
+        magicRoom: "No — credits never expire",
+        competitor: "Monthly credits often reset each billing period",
+    },
+    {
+        feature: "Commercial rights",
+        magicRoom: "Full commercial rights on every paid design",
+        competitor: "Often restricted to higher-tier plans",
+    },
+    {
         feature: "Image storage",
         magicRoom: "Never stored — processed in memory only",
         competitor: "Varies — most store uploaded images on servers",
@@ -18,24 +43,24 @@ const ROWS: ComparisonRow[] = [
         competitor: "Does not typically make equivalent commitment",
     },
     {
-        feature: "Pricing model",
-        magicRoom: "One-time credit packages — no subscription",
-        competitor: "Subscription-based for most functionality",
-    },
-    {
-        feature: "Credits expire",
-        magicRoom: "No — credits never expire",
-        competitor: "Monthly credits often reset each billing period",
-    },
-    {
         feature: "AI model",
         magicRoom: "Google Gemini multimodal (architecture-aware)",
         competitor: "Diffusion-based models (variable structure preservation)",
     },
     {
         feature: "Design themes",
-        magicRoom: "8 themes with design-principle guidance",
+        magicRoom: "14 themes with design-principle guidance",
         competitor: "Style presets without detailed design guidance",
+    },
+    {
+        feature: "Room types",
+        magicRoom: "14 room types (196 style × room combinations)",
+        competitor: "Fewer room types, less granular control",
+    },
+    {
+        feature: "Speed",
+        magicRoom: "4–8 variations in 30–60 seconds",
+        competitor: "Single output; slower on higher-quality settings",
     },
     {
         feature: "Output quality",
@@ -46,14 +71,22 @@ const ROWS: ComparisonRow[] = [
 
 interface FeatureComparisonTableProps {
     competitorName: string;
+    competitorPricing?: string;
 }
 
-export function FeatureComparisonTable({ competitorName }: FeatureComparisonTableProps) {
+export function FeatureComparisonTable({ competitorName, competitorPricing }: FeatureComparisonTableProps) {
+    const rows: ComparisonRow[] = competitorPricing
+        ? ROWS.map((row) =>
+            row.feature === "Starting price"
+                ? { ...row, competitor: competitorPricing }
+                : row
+        )
+        : ROWS;
     return (
         <>
             {/* Card layout for mobile */}
             <div className="flex flex-col gap-4 md:hidden">
-                {ROWS.map((row, index) => (
+                {rows.map((row, index) => (
                     <div
                         key={index}
                         className="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900"
@@ -92,7 +125,7 @@ export function FeatureComparisonTable({ competitorName }: FeatureComparisonTabl
                         </tr>
                     </thead>
                     <tbody>
-                        {ROWS.map((row, index) => (
+                        {rows.map((row, index) => (
                             <tr
                                 key={index}
                                 className="border-b border-slate-100 last:border-0 dark:border-slate-800/50"
