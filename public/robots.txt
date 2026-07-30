@@ -1,8 +1,9 @@
-# /generate is intentionally NOT disallowed here. It serves
-# <meta name="robots" content="noindex,nofollow"> (lib/seo/metadata.ts →
-# generateMetadata). Blocking it in robots.txt would stop Googlebot from ever
-# reading that noindex, which is why /generate was still accumulating
-# impressions in Search Console. Let it be crawled so the noindex can apply.
+# /generate is intentionally NOT disallowed here. proxy.ts protects it with
+# Clerk (`auth.protect()`), so a signed-out Googlebot gets a 404 rewrite — it
+# never reaches the page's noindex meta tag. The 404 de-indexes it either way,
+# but only if Google is allowed to crawl and see it. Disallowing here would
+# leave the URL in the index unresolved, which is why it kept accumulating
+# impressions in Search Console.
 User-agent: *
 Allow: /
 Disallow: /api/
