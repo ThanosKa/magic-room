@@ -1084,9 +1084,15 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "best-ai-interior-design-tools-2026",
-        title: "7 Best AI Interior Design Tools, Tested by a Builder (May 2026)",
+        // Previous title promised "7 ... Tools" while the article compares 4,
+        // and "Tested by a Builder" reads as a construction builder in an
+        // interior-design SERP. A count/content mismatch is the classic trigger
+        // for Google rewriting the title, which is the likeliest cause of the
+        // 0.05% CTR at position 9.4. Now honest, front-loaded on the exact
+        // query, and differentiated on the two axes the table actually covers.
+        title: "Best AI Interior Design Tools 2026: Privacy & Price Compared",
         metaDescription:
-            "I built one of these tools, so I tested the other six honestly. Side-by-side on AI model, photo privacy, output quality and price — no affiliate fluff.",
+            "RoomGPT, Interior AI and Reimagine Home compared on AI model, photo retention and real cost — by someone who built one of them. No affiliate links.",
         authorName: "Thanos Kazakis",
         publishedDate: "2026-02-15",
         updatedDate: "2026-05-19",
@@ -1339,9 +1345,12 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "home-office-ai-design",
-        title: "Design a Home Office with AI: 10 Ideas for 2026",
+        // Front-loads "ai home office design" (the actual query); description
+        // switched from a summary of the article to a promise about the reader's
+        // own room.
+        title: "AI Home Office Design: 10 Ideas for 2026 Workspaces",
         metaDescription:
-            "How to use AI interior design tools to redesign your home office. Covers photography, style selection, and how to interpret AI output for a functional workspace.",
+            "Home office ideas you can test on your own room before buying a desk. Upload one photo, get 4–8 AI redesigns in 60 seconds. 1 free credit, no card.",
         publishedDate: "2026-02-22",
         updatedDate: "2026-03-25",
         readingTime: 7,

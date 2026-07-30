@@ -16,6 +16,10 @@ import { PageTransition } from "@/components/page-transition";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
 
+// Anchor-chip class, repeated once per contextual link below.
+const CHIP_CLASS =
+    "rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:border-primary hover:text-primary dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300";
+
 const STEPS = [
     {
         icon: Upload,
@@ -317,23 +321,69 @@ export function VirtualStagingContent() {
                         </h2>
                         <ul className="flex flex-wrap gap-3">
                             <li>
-                                <Link href="/design/modern-living-room" className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:border-primary hover:text-primary dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+                                <Link href="/design/modern-living-room" className={CHIP_CLASS}>
                                     Modern Living Room
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/design/scandinavian-bedroom" className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:border-primary hover:text-primary dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+                                <Link href="/design/scandinavian-bedroom" className={CHIP_CLASS}>
                                     Scandinavian Bedroom
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/design/minimalist-living-room" className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:border-primary hover:text-primary dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+                                <Link href="/design/minimalist-living-room" className={CHIP_CLASS}>
                                     Minimalist Living Room
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/design" className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:border-primary hover:text-primary dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
-                                    View all design styles →
+                                <Link href="/design/coastal-living-room" className={CHIP_CLASS}>
+                                    Coastal living room design ideas
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/design/farmhouse-kitchen" className={CHIP_CLASS}>
+                                    Farmhouse kitchen design ideas
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/design" className={CHIP_CLASS}>
+                                    All 196 AI interior design combinations
+                                </Link>
+                            </li>
+                        </ul>
+
+                        <h2 className="mb-4 mt-10 text-lg font-semibold text-slate-900 dark:text-white">
+                            Compare staging and redesign tools
+                        </h2>
+                        <ul className="flex flex-wrap gap-3">
+                            <li>
+                                <Link href="/alternatives" className={CHIP_CLASS}>
+                                    RoomGPT alternatives compared
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/alternatives/decorai" className={CHIP_CLASS}>
+                                    DecorAI alternative
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/alternatives/reimaginehome" className={CHIP_CLASS}>
+                                    Reimagine Home alternative
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/blog/virtual-staging-real-estate-guide" className={CHIP_CLASS}>
+                                    Virtual staging for real estate: worth it in 2026?
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/blog/ai-home-staging-before-selling" className={CHIP_CLASS}>
+                                    AI home staging before selling
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/gallery" className={CHIP_CLASS}>
+                                    AI room design gallery
                                 </Link>
                             </li>
                         </ul>

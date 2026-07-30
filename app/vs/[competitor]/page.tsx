@@ -4,14 +4,24 @@ import { createMetadata } from "@/lib/seo/metadata";
 import {
     faqSchema,
     breadcrumbSchema,
-    aggregateOfferSchema,
+    softwareApplicationSchema,
 } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
-import { getCompetitorBySlug } from "@/lib/seo/competitor-data";
+import {
+    getCompetitorBySlug,
+    hasVsPage,
+    VS_SLUGS,
+    COMPETITORS,
+} from "@/lib/seo/competitor-data";
+import {
+    getDesignLinksForCompetitor,
+    getBlogLinksForCompetitor,
+} from "@/lib/seo/internal-links";
 import { VsPageContent } from "@/components/seo/vs-page-content";
+import { JsonLd } from "@/components/seo/json-ld";
 
-// VS comparison pages — extend this list to add new comparisons
-const VS_SLUGS = ["roomgpt", "interior-ai", "reimaginehome", "decorai"];
+// VS comparison pages are declared once in lib/seo/competitor-data.ts so this
+// route and app/sitemap.ts can never disagree about which /vs/ URLs exist.
 
 interface Props {
     params: Promise<{ competitor: string }>;
@@ -24,7 +34,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { competitor: slug } = await params;
 
-    if (!VS_SLUGS.includes(slug)) {
+    if (!hasVsPage(slug)) {
         return {};
     }
 
@@ -35,10 +45,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
+        // Leads with the competitor, not us: on a comparison query the
+        // recognised brand is the anchor that earns the eye, and "Side-by-Side"
+        // told the searcher nothing that the three named axes don't tell better.
         title: {
-            absolute: `Magic Room vs ${competitor.name} — Side-by-Side (2026)`,
+            absolute: `${competitor.name} vs Magic Room — Price, Privacy, Output (2026)`,
         },
-        description: `Magic Room vs ${competitor.name}: AI model, photo privacy, pricing, and output quality compared side-by-side. Try Magic Room free with 1 credit.`,
+        description: `${competitor.name} vs Magic Room on AI model, photo retention and real cost. One bills monthly, one charges €9.99 once. Try Magic Room free — 1 credit.`,
         path: `/vs/${slug}`,
         keywords: [
             `magic room vs ${competitor.name.toLowerCase()}`,
@@ -52,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function VsPage({ params }: Props) {
     const { competitor: slug } = await params;
 
-    if (!VS_SLUGS.includes(slug)) {
+    if (!hasVsPage(slug)) {
         notFound();
     }
 
@@ -71,27 +84,27 @@ export default async function VsPage({ params }: Props) {
                 url: `${SITE_URL}/vs/${slug}`,
             },
         ]),
-        aggregateOfferSchema({
-            name: `Magic Room (vs ${competitor.name})`,
+        // SoftwareApplication rather than Product — see the note in
+        // lib/seo/schema.ts on why a rating-less Product entity was costing
+        // clicks rather than earning them.
+        softwareApplicationSchema({
             description: `AI interior design tool compared side-by-side with ${competitor.name}. One-time credit packages from €9.99, no subscription, photos never stored.`,
-            lowPrice: 9.99,
-            highPrice: 29.99,
-            offerCount: 3,
-            url: `${SITE_URL}/vs/${slug}`,
+            includeOffers: true,
         }),
         ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs, `${SITE_URL}/vs/${slug}`)] : []),
     ];
 
     return (
         <>
-            {schemas.map((schema, i) => (
-                <script
-                    key={i}
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-                />
-            ))}
-            <VsPageContent competitor={competitor} />
+            <JsonLd schemas={schemas} />
+            <VsPageContent
+                competitor={competitor}
+                otherCompetitors={COMPETITORS.filter(
+                    (c) => c.slug !== slug && hasVsPage(c.slug)
+                )}
+                designLinks={getDesignLinksForCompetitor(`vs-${slug}`)}
+                blogLinks={getBlogLinksForCompetitor(`vs-${slug}`)}
+            />
         </>
     );
 }

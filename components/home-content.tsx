@@ -152,7 +152,7 @@ export default function HomeContent() {
                 <div className="container px-4 md:px-6">
                     <div className="mb-8 flex items-center justify-between">
                         <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white md:text-3xl">
-                            Compare AI Interior Design Tools
+                            Which AI interior design tool should you use?
                         </h2>
                         <Link
                             href="/alternatives"
@@ -161,9 +161,12 @@ export default function HomeContent() {
                             See all comparisons
                         </Link>
                     </div>
-                    <p className="mb-8 max-w-2xl text-slate-600 dark:text-slate-400">
-                        Weighing up the best AI tools for interior design in 2026? See how Magic Room
-                        compares to the most popular alternatives on AI model, photo privacy, and price.
+                    <p className="mb-8 max-w-3xl text-slate-600 dark:text-slate-400">
+                        It depends on your constraint. Magic Room is the pick when photo privacy, one-time
+                        pricing, and preserving your room&apos;s real layout matter — it never stores your
+                        photo, charges €9.99 once instead of monthly, and runs Google Gemini multimodal AI
+                        rather than a diffusion model. RoomGPT, Interior AI, Reimagine Home, and DecorAI all
+                        require subscriptions and retain uploaded images. Compare each in detail below.
                     </p>
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {COMPARE_LINKS.map((link) => (

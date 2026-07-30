@@ -7,11 +7,18 @@ import { getSortedBlogPosts } from "@/lib/seo/blog-data";
 import { BlogCard } from "@/components/seo/blog-card";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { PageTransition } from "@/components/page-transition";
+import { JsonLd } from "@/components/seo/json-ld";
+
+// Cross-link card, repeated once per card in the grid below.
+const RELATED_CARD_CLASS =
+    "rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800";
 
 export const metadata: Metadata = createMetadata({
-    title: "Interior Design Blog",
+    // "Interior Design Blog | Magic Room" is a filing label — it names the
+    // container, not the payoff, and gives a searcher at position 12 nothing.
+    title: { absolute: "AI Interior Design Guides: Redesign, Styles, Staging" },
     description:
-        "Practical guides on AI interior design, room styling, design styles, and how to redesign spaces on any budget. Written by the Magic Room team.",
+        "Hands-on guides to redesigning rooms with AI — tool comparisons, style breakdowns, virtual staging for listings, and budget makeovers. No affiliate links.",
     path: "/blog",
     keywords: [
         "interior design blog",
@@ -31,10 +38,7 @@ export default function BlogHubPage() {
 
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-            />
+            <JsonLd schemas={[schema]} />
             <PageTransition>
                 {/* Breadcrumb */}
                 <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
@@ -85,7 +89,7 @@ export default function BlogHubPage() {
                             <div className="mt-6 grid gap-4 sm:grid-cols-2">
                                 <Link
                                     href="/design"
-                                    className="rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800"
+                                    className={RELATED_CARD_CLASS}
                                 >
                                     <h3 className="font-semibold text-slate-900 dark:text-white">
                                         AI Design Ideas
@@ -96,13 +100,35 @@ export default function BlogHubPage() {
                                 </Link>
                                 <Link
                                     href="/alternatives"
-                                    className="rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800"
+                                    className={RELATED_CARD_CLASS}
                                 >
                                     <h3 className="font-semibold text-slate-900 dark:text-white">
-                                        Tool Comparisons
+                                        RoomGPT alternatives compared
                                     </h3>
                                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                                        See how Magic Room compares to RoomGPT, DecorAI, and other AI design tools.
+                                        RoomGPT, Interior AI, DecorAI and Reimagine Home on model, privacy and price.
+                                    </p>
+                                </Link>
+                                <Link
+                                    href="/virtual-staging"
+                                    className={RELATED_CARD_CLASS}
+                                >
+                                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                                        AI virtual staging for real estate
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                        What AI staging replaces on a listing, and where it still falls short.
+                                    </p>
+                                </Link>
+                                <Link
+                                    href="/gallery"
+                                    className={RELATED_CARD_CLASS}
+                                >
+                                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                                        AI room design gallery
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                        Before-and-after examples generated from real room photos.
                                     </p>
                                 </Link>
                             </div>

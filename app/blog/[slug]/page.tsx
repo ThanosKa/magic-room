@@ -7,7 +7,12 @@ import {
     getBlogPostBySlug,
     getAllBlogSlugs,
 } from "@/lib/seo/blog-data";
+import {
+    getRelatedBlogLinksForPost,
+    getComparisonLinksForPost,
+} from "@/lib/seo/internal-links";
 import { BlogPostContent } from "@/components/seo/blog-post-content";
+import { JsonLd } from "@/components/seo/json-ld";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -26,7 +31,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
-        title: post.title,
+        // Absolute: blog titles are already written to fill the ~60 visible
+        // SERP characters. Appending "| Magic Room" only pushes the
+        // differentiator past the truncation point.
+        title: { absolute: post.title },
         description: post.metaDescription,
         path: `/blog/${slug}`,
         keywords: post.keywords,
@@ -62,14 +70,12 @@ export default async function BlogSlugPage({ params }: Props) {
 
     return (
         <>
-            {schemas.map((schema, i) => (
-                <script
-                    key={i}
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-                />
-            ))}
-            <BlogPostContent post={post} />
+            <JsonLd schemas={schemas} />
+            <BlogPostContent
+                post={post}
+                relatedPostLinks={getRelatedBlogLinksForPost(slug)}
+                comparisonLinks={getComparisonLinksForPost(slug)}
+            />
         </>
     );
 }

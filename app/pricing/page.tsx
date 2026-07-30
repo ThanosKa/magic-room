@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { pricingMetadata, aggregateOfferSchema } from "@/lib/seo";
 import PricingContent from "@/components/pricing-content";
+import { JsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = pricingMetadata();
 
@@ -16,12 +17,7 @@ const PRICING_SCHEMA = aggregateOfferSchema({
 export default function PricingPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(PRICING_SCHEMA),
-        }}
-      />
+      <JsonLd schemas={[PRICING_SCHEMA]} />
       <PricingContent />
     </>
   );

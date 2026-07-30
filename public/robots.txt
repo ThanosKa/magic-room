@@ -1,7 +1,11 @@
+# /generate is intentionally NOT disallowed here. It serves
+# <meta name="robots" content="noindex,nofollow"> (lib/seo/metadata.ts →
+# generateMetadata). Blocking it in robots.txt would stop Googlebot from ever
+# reading that noindex, which is why /generate was still accumulating
+# impressions in Search Console. Let it be crawled so the noindex can apply.
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /generate
 
 User-agent: GPTBot
 Allow: /

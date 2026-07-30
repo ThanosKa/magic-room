@@ -1,6 +1,13 @@
 import { Metadata } from "next";
-import { homeMetadata, faqSchema, howToSchema, SITE_URL } from "@/lib/seo";
+import {
+  homeMetadata,
+  faqSchema,
+  howToSchema,
+  softwareApplicationSchema,
+  SITE_URL,
+} from "@/lib/seo";
 import HomeContent from "@/components/home-content";
+import { JsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = homeMetadata();
 
@@ -79,21 +86,25 @@ const HOME_HOWTO = howToSchema({
   url: SITE_URL,
 });
 
+/**
+ * The SoftwareApplication entity, declared here rather than sitewide.
+ *
+ * No `aggregateRating` is present because Magic Room has no collected reviews.
+ * Inventing one would be a Google structured-data policy violation and a
+ * manual-action risk. Without a rating this entity is not eligible for a
+ * software rich result — that is the correct, honest state until real reviews
+ * exist, and it still feeds entity understanding and AI-answer extraction.
+ */
+const HOME_SOFTWARE = softwareApplicationSchema({
+  description:
+    "AI interior design tool that turns one room photo into 4–8 redesigned variations in 30–60 seconds using Google Gemini multimodal AI. Photos are processed in-memory and never stored.",
+  includeOffers: true,
+});
+
 export default function Home() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(faqSchema(FAQ_ITEMS, SITE_URL)),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(HOME_HOWTO),
-        }}
-      />
+      <JsonLd schemas={[HOME_SOFTWARE, faqSchema(FAQ_ITEMS, SITE_URL), HOME_HOWTO]} />
       <HomeContent />
     </>
   );

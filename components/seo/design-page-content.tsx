@@ -15,7 +15,9 @@ import { HeroComparison } from "@/components/hero-comparison";
 import { PageTransition } from "@/components/page-transition";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
+import { RelatedLinks } from "@/components/seo/related-links";
 import { IDesignPageData, IThemeData, IRoomData } from "@/lib/seo/design-data";
+import { IContextualLink } from "@/lib/seo/internal-links";
 
 interface DesignPageContentProps {
     page: IDesignPageData;
@@ -23,6 +25,10 @@ interface DesignPageContentProps {
     roomData: IRoomData;
     otherThemes: IThemeData[];
     otherRooms: IRoomData[];
+    relatedBlogLinks?: IContextualLink[];
+    comparisonLinks?: IContextualLink[];
+    /** Rotating chips into the indexable design pages with the fewest siblings. */
+    moreDesignLinks?: IContextualLink[];
 }
 
 const STEPS = [
@@ -52,6 +58,9 @@ export function DesignPageContent({
     roomData,
     otherThemes,
     otherRooms,
+    relatedBlogLinks = [],
+    comparisonLinks = [],
+    moreDesignLinks = [],
 }: DesignPageContentProps) {
     const breadcrumbItems = [
         { name: "Home", href: "/" },
@@ -204,6 +213,74 @@ export function DesignPageContent({
                 </div>
             </section>
 
+            {/* Deep dive — bespoke, page-specific depth for the combinations
+                that already earn impressions but rank too low to earn clicks. */}
+            {page.deepDive && page.deepDive.length > 0 && (
+                <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
+                    <div className="container px-4 md:px-6">
+                        <div className="mx-auto max-w-3xl space-y-10">
+                            {page.deepDive.map((section, index) => (
+                                <div key={index}>
+                                    <h2 className="mb-4 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
+                                        {section.heading}
+                                    </h2>
+                                    {section.paragraphs?.map((paragraph, pIndex) => (
+                                        <p
+                                            key={pIndex}
+                                            className="mb-4 text-slate-600 dark:text-slate-400"
+                                        >
+                                            {paragraph}
+                                        </p>
+                                    ))}
+                                    {section.bullets && section.bullets.length > 0 && (
+                                        <ul className="mb-4 list-disc space-y-2 pl-6 text-slate-600 dark:text-slate-400">
+                                            {section.bullets.map((bullet, bIndex) => (
+                                                <li key={bIndex}>{bullet}</li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                    {section.table && (
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full border border-slate-200 text-sm dark:border-slate-800">
+                                                <thead>
+                                                    <tr className="bg-slate-100 dark:bg-slate-800">
+                                                        {section.table.headers.map((header, hIndex) => (
+                                                            <th
+                                                                key={hIndex}
+                                                                className="border-b border-slate-200 px-4 py-2 text-left font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-300"
+                                                            >
+                                                                {header}
+                                                            </th>
+                                                        ))}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {section.table.rows.map((row, rIndex) => (
+                                                        <tr
+                                                            key={rIndex}
+                                                            className="border-b border-slate-100 last:border-0 odd:bg-white even:bg-slate-50 dark:border-slate-800/50 dark:odd:bg-slate-950 dark:even:bg-slate-900"
+                                                        >
+                                                            {row.map((cell, cIndex) => (
+                                                                <td
+                                                                    key={cIndex}
+                                                                    className="px-4 py-2 text-slate-600 dark:text-slate-400"
+                                                                >
+                                                                    {cell}
+                                                                </td>
+                                                            ))}
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
             {/* FAQ */}
             {page.faqs.length > 0 && (
                 <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
@@ -233,7 +310,15 @@ export function DesignPageContent({
                 </section>
             )}
 
-            {/* Other styles for this room */}
+            {/*
+              Rendered only when there is something to render. Five priority
+              slugs are the sole indexable page for their theme or room
+              (vintage-bedroom, mediterranean-living-room, farmhouse-gaming-room,
+              coastal-walk-in-closet, japandi-mudroom), so this list comes back
+              empty for them. Shipping a heading above an empty grid is a
+              thin-content signal on exactly the pages that can least afford one.
+            */}
+            {otherThemes.length > 0 && (
             <section className="bg-white py-12 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 md:py-16">
                 <div className="container px-4 md:px-6">
                     <div className="mx-auto max-w-5xl">
@@ -263,45 +348,83 @@ export function DesignPageContent({
                     </div>
                 </div>
             </section>
+            )}
 
             {/* More rooms for this theme */}
             <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
                 <div className="container px-4 md:px-6">
                     <div className="mx-auto max-w-5xl">
-                        <h2 className="mb-8 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
-                            More {themeData.name} room designs
-                        </h2>
-                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                            {otherRooms.map((room) => {
-                                const href = `/design/${themeData.slug}-${room.slug}`;
-                                const label = `${themeData.name} ${room.name} Design Ideas`;
-                                return (
-                                    <Link key={room.slug} href={href} className="group">
-                                        <Card className="h-full border-slate-200 bg-white transition-colors hover:border-primary dark:border-slate-800 dark:bg-slate-900 dark:hover:border-primary">
-                                            <CardContent className="p-6">
-                                                <h3 className="mb-2 text-lg font-semibold text-slate-900 group-hover:text-primary dark:text-white dark:group-hover:text-primary">
-                                                    {label}
-                                                </h3>
-                                                <p className="text-sm text-slate-600 dark:text-slate-400">
-                                                    Apply the {themeData.name.toLowerCase()} style to your {room.name.toLowerCase()}.
-                                                </p>
-                                            </CardContent>
-                                        </Card>
-                                    </Link>
-                                );
-                            })}
-                        </div>
+                        {otherRooms.length > 0 && (
+                            <>
+                                <h2 className="mb-8 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
+                                    More {themeData.name} room designs
+                                </h2>
+                                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                    {otherRooms.map((room) => {
+                                        const href = `/design/${themeData.slug}-${room.slug}`;
+                                        const label = `${themeData.name} ${room.name} Design Ideas`;
+                                        return (
+                                            <Link key={room.slug} href={href} className="group">
+                                                <Card className="h-full border-slate-200 bg-white transition-colors hover:border-primary dark:border-slate-800 dark:bg-slate-900 dark:hover:border-primary">
+                                                    <CardContent className="p-6">
+                                                        <h3 className="mb-2 text-lg font-semibold text-slate-900 group-hover:text-primary dark:text-white dark:group-hover:text-primary">
+                                                            {label}
+                                                        </h3>
+                                                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                                                            Apply the {themeData.name.toLowerCase()} style to your {room.name.toLowerCase()}.
+                                                        </p>
+                                                    </CardContent>
+                                                </Card>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            </>
+                        )}
                         <div className="mt-8 flex flex-wrap items-center gap-4 text-sm">
                             <Link href="/design" className="text-primary hover:underline">
                                 Browse all 196 AI interior design combinations
                             </Link>
-                            <Link href="/blog" className="text-slate-500 hover:underline dark:text-slate-400">
-                                Read design guides on the blog
+                            <Link href="/gallery" className="text-primary hover:underline">
+                                See the AI room design gallery
+                            </Link>
+                            <Link
+                                href="/virtual-staging"
+                                className="text-slate-500 hover:underline dark:text-slate-400"
+                            >
+                                AI virtual staging for real estate listings
                             </Link>
                         </div>
                     </div>
                 </div>
             </section>
+
+            {/* Top-up links into the indexable design pages that have the
+                fewest structural siblings — some are the only priority
+                combination for their room type, so no sibling block can reach
+                them. */}
+            <RelatedLinks
+                heading="More AI design ideas"
+                links={moreDesignLinks}
+                variant="inline"
+                className="bg-slate-50 py-10 dark:bg-slate-900/50"
+            />
+
+            {/* Contextual links out of the design cluster into the blog */}
+            <RelatedLinks
+                heading={`${page.themeName} ${page.roomName} guides worth reading`}
+                intro={`Practical write-ups that go deeper than a single ${page.roomName.toLowerCase()} page — how to photograph the room, how to pick a style, and what AI redesign actually changes.`}
+                links={relatedBlogLinks}
+                className="bg-white py-12 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 md:py-16"
+            />
+
+            {/* Contextual links into the comparison cluster */}
+            <RelatedLinks
+                heading="Before you pick an AI interior design tool"
+                intro="Magic Room is not the only way to generate these designs. Here is how it compares to the tools most people evaluate alongside it."
+                links={comparisonLinks}
+                className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16"
+            />
 
             {/* CTA */}
             <CtaSection

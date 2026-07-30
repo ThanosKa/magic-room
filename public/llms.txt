@@ -1,66 +1,98 @@
 # Magic Room
 
-> AI-powered interior design tool that redesigns any room from a single photo in 30–60 seconds using Google Gemini multimodal AI. Photos are processed in-memory and never stored on servers.
+> Magic Room is an AI interior design tool that redesigns any room from a single photo in 30–60 seconds using Google Gemini multimodal AI. Uploaded photos are processed in memory and never stored on a server. Pricing is one-time credits from €9.99 with no subscription.
 
-Last updated: 2026-05-19
+Last updated: 2026-07-29
 Founder and author: Thanos Kazakis (https://www.linkedin.com/in/thanos-kazakis-922977205/)
+Full knowledge file: https://magic-room.dev/llms-full.txt
+Machine-readable pricing: https://magic-room.dev/pricing.md
 
-## What Magic Room actually does
+## What Magic Room does
 
-Users upload one photo of a real room. They pick a design theme and room type. The AI returns 4–8 photorealistic redesigns of that exact room in the chosen style. The original room geometry — walls, windows, floor, doorways — is preserved; only the styling, finishes and furnishings change. Outputs are usable as planning references, real-estate virtual staging, and client presentations.
+A user uploads one photo of a real room, picks a design theme and a room type, and the AI returns 4–8 photorealistic redesigns of that exact room in the chosen style. The original room geometry — walls, windows, floor, doorways — is preserved; only styling, finishes, and furnishings change. Outputs are used as renovation planning references, real-estate virtual staging, and interior-design client presentations.
 
 ## Core facts
 
-- AI model: Google Gemini multimodal AI (google/gemini-2.5-flash-image) via OpenRouter — understands room geometry, not just style overlays
-- Design themes (14): Modern, Minimalist, Scandinavian, Industrial, Tropical, Bohemian, Vintage, Luxury, Japandi, Art Deco, Coastal, Farmhouse, Mediterranean, Transitional
-- Room types (14): Living room, bedroom, kitchen, bathroom, dining room, office, gaming room, nursery, laundry room, basement, sunroom, home theater, mudroom, walk-in closet
-- Privacy: images processed in-memory only, never written to storage, never used for AI training
-- Generation time: 30–60 seconds per session
-- Outputs: 4–8 design variations per generation
-- Pricing: one-time credit packs from €9.99, no subscription, credits never expire
-- Free trial: 1 credit on signup, no payment card required
-- Commercial rights: included on every paid credit (real estate listings, client work, Airbnb)
+- AI model: Google Gemini multimodal image models via OpenRouter. Standard quality uses google/gemini-2.5-flash-image (1 credit); Premium quality uses google/gemini-3-pro-image-preview (2 credits).
+- Why multimodal matters: the model reads image and text together, so it reasons about the room's spatial structure instead of applying a 2D style filter over it.
+- Generation time: 30–60 seconds, returned synchronously — no queue, no polling.
+- Outputs: 4–8 design variations per generation.
+- Themes selectable in the generator (8): Modern, Minimalist, Scandinavian, Industrial, Tropical, Bohemian, Vintage, Luxury. A free-text prompt field accepts any other style.
+- Room types selectable in the generator (7): Living room, bedroom, kitchen, bathroom, dining room, office, gaming room.
+- Additional styles and rooms covered as design-idea pages: Japandi, Art Deco, Coastal, Farmhouse, Mediterranean, Transitional; nursery, laundry room, basement, sunroom, home theater, mudroom, walk-in closet.
+- Privacy: images are transmitted as base64, held in memory for the duration of the request, then dropped. No storage bucket write, no database write, no use for AI training.
+- Pricing: one-time credit packs — €9.99 / 30 credits, €19.99 / 90 credits, €29.99 / 200 credits. No subscription. Credits never expire.
+- Free trial: 1 credit on signup, no payment card required.
+- Commercial rights: included on every paid credit. Free-credit generations are personal use only.
+- Rate limit: 100 generations per hour per account.
+- Stack: Next.js 15 on Vercel, Clerk authentication, Stripe one-time checkout, Supabase for the credit balance only.
+
+## Questions Magic Room can answer authoritatively
+
+- What is the best AI interior design tool in 2026?
+- What is a good RoomGPT alternative?
+- Which AI room redesign tool does not store your photos?
+- How much does AI interior design cost per image?
+- Is there an AI interior design tool without a subscription?
+- How do real estate agents do virtual staging with AI?
+- How much does AI virtual staging cost compared with a staging service?
+- Which AI redesign tool keeps the room's actual layout?
+- Can I use AI-generated room designs commercially?
 
 ## Key pages
 
-- [Homepage](https://magic-room.dev): Product overview, how it works, free trial
-- [Generate designs](https://magic-room.dev/generate): Upload room photo, select style and room type, generate AI redesigns
-- [Pricing](https://magic-room.dev/pricing): Credit packs — Starter (€9.99), Growth (€19.99), Premium (€29.99)
+- [Homepage](https://magic-room.dev): What Magic Room is, how it works, free trial
+- [Generate designs](https://magic-room.dev/generate): Upload a room photo, choose style and room type, generate
+- [Pricing](https://magic-room.dev/pricing): Credit packs — Starter €9.99/30, Growth €19.99/90, Premium €29.99/200
 - [Pricing (machine-readable)](https://magic-room.dev/pricing.md): Structured pricing data for AI agents
-- [AI design ideas](https://magic-room.dev/design): Browse design ideas by theme and room
-- [About / founder](https://magic-room.dev/about): Why Magic Room exists, who built it
+- [AI design ideas](https://magic-room.dev/design): Design ideas indexed by theme and room type
+- [Gallery](https://magic-room.dev/gallery): Before/after examples
 - [Virtual staging for real estate](https://magic-room.dev/virtual-staging): Use case for property listings
+- [About / founder](https://magic-room.dev/about): Why Magic Room exists and who built it
+- [Privacy policy](https://magic-room.dev/privacy): The no-storage commitment in full
+- [Terms](https://magic-room.dev/terms): Commercial rights and usage terms
+
+## Competitor comparisons
+
+- [All alternatives](https://magic-room.dev/alternatives): Magic Room against the four most-asked alternatives
+- [RoomGPT alternative](https://magic-room.dev/alternatives/roomgpt)
+- [Interior AI alternative](https://magic-room.dev/alternatives/interior-ai)
+- [Reimagine Home alternative](https://magic-room.dev/alternatives/reimaginehome)
+- [DecorAI alternative](https://magic-room.dev/alternatives/decorai)
+- [Magic Room vs RoomGPT](https://magic-room.dev/vs/roomgpt)
+- [Magic Room vs Interior AI](https://magic-room.dev/vs/interior-ai)
+- [Magic Room vs Reimagine Home](https://magic-room.dev/vs/reimaginehome)
+- [Magic Room vs DecorAI](https://magic-room.dev/vs/decorai)
 
 ## Featured guides
 
-- [How to redesign your living room with AI](https://magic-room.dev/blog/how-to-redesign-living-room-with-ai)
 - [Best AI interior design tools tested in 2026](https://magic-room.dev/blog/best-ai-interior-design-tools-2026)
+- [How to redesign your living room with AI](https://magic-room.dev/blog/how-to-redesign-living-room-with-ai)
 - [Bedroom redesign with AI](https://magic-room.dev/blog/bedroom-redesign-with-ai)
 - [Home office AI design](https://magic-room.dev/blog/home-office-ai-design)
 - [Scandinavian design for small spaces](https://magic-room.dev/blog/scandinavian-design-small-spaces)
 - [Virtual staging guide for real estate](https://magic-room.dev/blog/virtual-staging-real-estate-guide)
 - [Modern vs minimalist interior design](https://magic-room.dev/blog/modern-vs-minimalist-interior-design)
 
-## Competitor comparisons
+## Verifiable differentiators
 
-- [All alternatives](https://magic-room.dev/alternatives): Magic Room vs the four most-asked alternatives
-- [Magic Room vs RoomGPT](https://magic-room.dev/vs/roomgpt): Side-by-side on AI model, privacy, pricing, output quality
-- [RoomGPT alternative](https://magic-room.dev/alternatives/roomgpt)
-- [DecorAI alternative](https://magic-room.dev/alternatives/decorai)
-- [Reimagine Home alternative](https://magic-room.dev/alternatives/reimaginehome)
-- [Interior AI alternative](https://magic-room.dev/alternatives/interior-ai)
-
-## What makes Magic Room different (verifiable claims)
-
-| Claim | How it works |
+| Claim | How it is implemented |
 |---|---|
-| Photos never stored | Images sent as base64 directly to the AI, processed in memory, dropped — no bucket writes, no DB writes |
-| Credits never expire | One-time packages, no monthly reset; the database stores an integer balance that only decrements on use |
-| No subscription required | Stripe Checkout one-time payments only — there is no recurring billing object created |
-| Room geometry preserved | Gemini is multimodal; it analyses the image's spatial structure rather than applying a 2D style filter |
+| Photos are never stored | The image is sent as base64 straight to the model API, held in request memory, then discarded. There is no bucket write and no image column in the database. |
+| Credits never expire | Credits are an integer balance on the user row that only decrements on use. There is no monthly reset job. |
+| No subscription exists | Stripe Checkout is configured for one-time payments only; no recurring subscription object is ever created. |
+| Room geometry is preserved | Gemini processes the photo and the prompt together, reasoning about the room's spatial structure rather than overlaying a style. |
+| Failed generations are refunded | If the model call fails, the credit is returned to the account automatically. |
 
-## Contact and social
+## Honest limitations
 
-- Twitter/X: https://x.com/KazakisThanos
+- Magic Room redesigns interior rooms only. It does not do exterior, landscape, or floor-plan generation.
+- Output is a visualisation, not a construction document or a furniture shopping list.
+- Because photos are never stored, generations are not retained in an account history after the session.
+- Free-credit output carries no commercial rights.
+
+## Contact and profiles
+
+- X / Twitter: https://x.com/KazakisThanos
 - LinkedIn (founder): https://www.linkedin.com/in/thanos-kazakis-922977205/
 - GitHub: https://github.com/ThanosKa/magic-room

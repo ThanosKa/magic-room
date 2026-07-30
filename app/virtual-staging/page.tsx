@@ -1,8 +1,14 @@
 import { Metadata } from "next";
 import { virtualStagingMetadata } from "@/lib/seo/metadata";
-import { faqSchema, breadcrumbSchema, howToSchema } from "@/lib/seo/schema";
+import {
+    faqSchema,
+    breadcrumbSchema,
+    howToSchema,
+    softwareApplicationSchema,
+} from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import { VirtualStagingContent } from "@/components/seo/virtual-staging-content";
+import { JsonLd } from "@/components/seo/json-ld";
 
 export function generateMetadata(): Metadata {
     return virtualStagingMetadata();
@@ -49,6 +55,13 @@ export default function VirtualStagingPage() {
             { name: "Home", url: SITE_URL },
             { name: "Virtual Staging", url: PAGE_URL },
         ]),
+        // Commercial-intent page, so the priced SoftwareApplication belongs
+        // here. It is no longer emitted sitewide from the root layout.
+        softwareApplicationSchema({
+            description:
+                "AI virtual staging for real estate listings. Upload an empty or unfurnished room photo and get a photo-realistic staged image in 60 seconds, for under €1 per photo.",
+            includeOffers: true,
+        }),
         faqSchema(FAQS, PAGE_URL),
         howToSchema({
             name: "How to virtually stage a property with AI",
@@ -75,13 +88,7 @@ export default function VirtualStagingPage() {
 
     return (
         <>
-            {schemas.map((schema, i) => (
-                <script
-                    key={i}
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-                />
-            ))}
+            <JsonLd schemas={schemas} />
             <VirtualStagingContent />
         </>
     );

@@ -31,6 +31,21 @@ export interface IFaqItem {
     answer: string;
 }
 
+/**
+ * Page-specific editorial depth, for combinations that already earn impressions
+ * but rank too low to earn clicks. `/design/art-deco-bedroom` took 415
+ * impressions at position 18.9 with zero clicks — the template content is
+ * identical to 195 other pages, so there is nothing on it that a top-10
+ * "art deco bedroom ideas" result has. This is where the page-specific
+ * substance lives.
+ */
+export interface IDeepDiveSection {
+    heading: string;
+    paragraphs?: string[];
+    bullets?: string[];
+    table?: { headers: string[]; rows: string[][] };
+}
+
 export interface IDesignPageData {
     slug: string;
     theme: string;
@@ -42,6 +57,7 @@ export interface IDesignPageData {
     intro: string;
     faqs: IFaqItem[];
     keywords: string[];
+    deepDive?: IDeepDiveSection[];
 }
 
 export const THEME_DATA: Record<string, IThemeData> = {
@@ -1088,6 +1104,18 @@ export const COMBINATION_INTROS: Record<string, string> = {
         "A modern home theater applies the style's discipline of restraint to a room with significant technical requirements, treating the screen, speakers, and seating as integrated elements within a coherent visual composition rather than equipment placed into a generic room. Continuous matte-painted walls in a deep neutral, recessed linear lighting calibrated to dim cleanly with the projector, a tiered seating row in single-tone leather, and acoustic panels integrated flush with the wall plane define the look. The practical benefit of the modern approach is that the room performs as a cinema without looking like one between viewings.",
     "modern-sunroom":
         "A modern sunroom uses the style's emphasis on architectural clarity to produce a room that frames the landscape rather than competing with it. Slim-profile aluminium glazing maximising the apparent glass area, a single-tone flooring that runs continuously to the threshold, low-profile upholstery in a neutral linen or boucle, and a deliberate absence of decorative pattern direct attention outward through the glass. A modern sunroom rewards careful editing — fewer, larger pieces of furniture, no scattered accessories — because the view does most of the visual work.",
+    "farmhouse-kitchen":
+        "The farmhouse kitchen is the room the style was effectively invented for, which is why it survives contact with daily cooking better than almost any other aesthetic. A deep apron-front Belfast sink, painted shaker cabinetry in a muted sage or off-white, open shelving carrying everyday crockery rather than styled props, a butcher-block or honed stone worktop that accepts marks, and a freestanding range under a plastered chimney breast form the working vocabulary. The most common execution error is treating it as a decorative layer — adding sliding barn hardware and printed signage to an otherwise contemporary kitchen — rather than as a set of material choices, so visualising the cabinet colour and worktop pairing against your actual room geometry is worth doing before any joinery is ordered.",
+    "coastal-living-room":
+        "A coastal living room earns its calm from light and material honesty, not from nautical decoration. Whitewashed or limed timber, slipcovered sofas in washed linen or cotton that can genuinely be removed and laundered, a jute or sisal rug, woven pendant shades, and a palette held to soft whites, sand, and one restrained sea-blue or sage accent are what actually produce the effect people are after. Because the style relies on maximising available daylight, the position of the largest seating piece relative to the room's main window matters more than any individual purchase — which is precisely the kind of decision AI visualisation lets you test against your own room before you commit to a sofa that is difficult to return.",
+    "japandi-living-room":
+        "Japandi resolves the tension between Japanese spatial discipline and Scandinavian material warmth, and the living room is where that resolution is most legible. Low-slung seating in oatmeal boucle or undyed linen, a solid oak or walnut low table with visible joinery, a single ceramic or paper pendant, one branch arrangement rather than a full display, and storage sized so nothing sits out permanently define the room. The style depends on a strictly limited palette — two woods at most, three colours at most — because it has no pattern or ornament to hide behind, so seeing the actual wood tones of your existing floor rendered alongside candidate furniture is the fastest way to avoid a mismatch that would otherwise only become obvious after delivery.",
+    "art-deco-living-room":
+        "An Art Deco living room is built on geometry and material contrast: fan and sunburst motifs, stepped or scalloped silhouettes, and the deliberate collision of lacquered timber, brass, mirrored glass, and deep velvet. The contemporary versions that work choose a single jewel tone — emerald, sapphire, or oxblood — for the largest upholstered piece and let brass detailing, a geometric rug, and one statement mirror carry the rest, rather than distributing metallic accents evenly around the room. Scale is the usual failure point, because the period's furniture was designed for tall rooms, so testing a curved velvet sofa and a tiered pendant against your actual ceiling height before purchasing prevents the most expensive mistake in the style.",
+    "japandi-bedroom":
+        "A Japandi bedroom applies the style's editing discipline to the room where visual noise costs the most. A low platform bed in light oak or walnut, undyed linen bedding, a single low nightstand rather than a matched pair, wall-mounted or paper-shaded lighting that removes clutter from surfaces, and closed storage that conceals everything not in daily use produce a room that reads as quiet before any other change is made. The style rewards restraint in floor coverage as much as in objects — leaving clear floor around the bed is a deliberate compositional decision, not an omission — and visualising the room with that much empty space is often what makes the edit feel achievable rather than austere.",
+    "mediterranean-living-room":
+        "A Mediterranean living room draws on southern European domestic architecture, where thick walls, deep-set windows, and hard floors were practical responses to heat before they were aesthetic choices. Lime-washed or micro-cement walls in warm cream and terracotta, exposed timber beams, a deep linen-upholstered sofa with generous seat depth, terracotta or handmade tile flooring partly covered by a kilim, wrought-iron or plaster wall sconces, and olive or fig trees in unglazed pots set the character. The palette is warm throughout — no cool greys — and the room improves as its plaster and timber age, which makes it an unusually forgiving style to execute in stages rather than all at once.",
 };
 
 // FAQ sets for key combinations: keyed by `${theme}-${roomSlug}`
@@ -1876,31 +1904,326 @@ export const COMBINATION_FAQS: Record<string, IFaqItem[]> = {
             answer: "Acoustic insulation between the gaming room and adjacent rooms, a door that seals effectively, and finishes that match the quality standard of the rest of the home all integrate a dedicated gaming room into a luxury property without it reading as an afterthought. The technology inside the room need not be visible from outside it.",
         },
     ],
+    // Art Deco had no FAQ entries at all, which is why /design/art-deco-bedroom
+    // shipped with no FAQ section and no FAQ schema despite taking 415
+    // impressions. Questions below are taken from the actual query cluster in
+    // Search Console: "art deco bedroom ideas", "modern art deco bedroom",
+    // "simple art deco bedroom", "art deco bedroom decorating ideas".
+    "art-deco-bedroom": [
+        {
+            question: "What colours work in an Art Deco bedroom?",
+            answer: "A neutral base plus one jewel tone is the reliable formula. Warm off-white, greige or a soft camel across the walls, then emerald, sapphire, oxblood or dusty rose introduced through the headboard and cushions. Black and deep charcoal work as a grounding third colour on lacquered furniture. The mistake is running the jewel tone across the walls as well as the furniture — that is a 1920s period reconstruction rather than the contemporary interpretation most people are looking for.",
+        },
+        {
+            question: "How do I make an Art Deco bedroom feel modern rather than dated?",
+            answer: "Keep the geometry and the metals, cut the ornament density by about two thirds. One repeated motif — a fan, a sunburst or a chevron — instead of three. Plain walls instead of patterned wallpaper. Brass or polished chrome hardware, never matte black, which reads as generic contemporary and cancels the Deco signal. The result keeps the style's identity while remaining a room you can sleep in.",
+        },
+        {
+            question: "What is the single highest-impact Art Deco bedroom element?",
+            answer: "The headboard. A tall upholstered panel in velvet with channel tufting, a fan silhouette or a stepped outline carries more of the style than any other single object, and it is the element people read first. If the budget only stretches to one considered purchase, it should be the headboard rather than the case goods.",
+        },
+        {
+            question: "Does Art Deco work in a small bedroom?",
+            answer: "Yes, with adjusted ratios. Keep the tall headboard, because vertical emphasis makes a small room read taller, but replace freestanding bedside tables with wall-mounted shelves, drop the pendant in favour of two wall sconces to free the ceiling plane, and keep walls in a warm off-white so the dark tones do not close the space in. Confine the geometry to the mirror and the hardware.",
+        },
+        {
+            question: "What metals belong in an Art Deco bedroom?",
+            answer: "Brass and polished chrome. Art Deco predates the matte-black hardware convention entirely, and matte black is the fastest way to make the room read as generic contemporary. Mixing brass and chrome is period-appropriate provided one of them clearly leads and the other appears once or twice.",
+        },
+        {
+            question: "What lighting suits an Art Deco bedroom?",
+            answer: "A tiered or fluted pendant in frosted glass with brass or chrome fittings, plus wall sconces flanking the bed rather than table lamps. The sconces are the detail most contemporary Art Deco bedrooms skip, and their absence is why those rooms end up looking like a Deco headboard installed in an ordinary bedroom.",
+        },
+    ],
+    "art-deco-living-room": [
+        {
+            question: "How do I get an Art Deco living room without it looking like a hotel lobby?",
+            answer: "Limit the reflective surfaces. Art Deco living rooms tip into hotel territory when mirror, lacquer, brass and velvet all appear at full strength simultaneously. Choose two of the four to lead — commonly velvet seating and brass lighting — and let lacquer and mirror appear once each as accents.",
+        },
+        {
+            question: "What seating defines an Art Deco living room?",
+            answer: "A curved or scalloped sofa in velvet or a tight-weave bouclé, with a low back and visible tapered legs, is the anchor. Club chairs with rolled arms in leather work as the counterpoint. The silhouettes matter more than the upholstery colour — a curved sofa in a neutral fabric reads more Deco than a square sofa in emerald velvet.",
+        },
+        {
+            question: "What flooring suits an Art Deco living room?",
+            answer: "Dark stained timber, parquet in a herringbone or chevron lay, or a large-format tile in a two-tone geometric pattern. If the floor already carries a strong geometric pattern, the rug on top should be plain — the most common failure in Deco living rooms is two competing geometries on the floor plane.",
+        },
+    ],
+    "art-deco-dining-room": [
+        {
+            question: "What table shape suits an Art Deco dining room?",
+            answer: "Round or oval on a pedestal or starburst base, in a lacquered finish or a figured veneer such as burl walnut. The pedestal is functionally useful as well as period-correct — it removes corner legs and seats more people comfortably in a room where the table is usually the visual centrepiece.",
+        },
+        {
+            question: "How many Art Deco elements are too many in a dining room?",
+            answer: "The dining room tolerates more than any other room in the house, because it is used in short, occasion-driven bursts rather than lived in. Even so, one strong colour direction should lead. Patterned wallpaper on top of velvet chairs, a figured-veneer table, a brass sideboard and a tiered chandelier is the point at which the room stops reading as designed and starts reading as staged.",
+        },
+        {
+            question: "What lighting works over an Art Deco dining table?",
+            answer: "A tiered chandelier or a fluted glass pendant hung 75-85cm above the table surface. Scale it generously — an undersized fitting is the most common error, and a Deco dining room can carry a fixture roughly half to two thirds the width of the table.",
+        },
+    ],
+    "farmhouse-kitchen": [
+        {
+            question: "What cabinet colour works best in a farmhouse kitchen?",
+            answer: "Muted, slightly desaturated colours hold up best: sage green, mushroom, putty, soft off-white, and deep blue-grey. Pure brilliant white reads as contemporary rather than farmhouse, and high-gloss finishes fight the style entirely. If the room has limited natural light, keep wall units in the palest tone and reserve the stronger colour for base units and the island, which keeps the upper half of the room bright.",
+        },
+        {
+            question: "Is a Belfast sink practical for daily use?",
+            answer: "Yes, with two caveats. Fireclay Belfast sinks are heavy — a full one plus water can exceed 60kg, so the base unit needs proper support rather than standard carcass sides. And the exposed apron means water runs down the front of the cabinet unless the tap is positioned to land centrally in the bowl. In exchange you get a bowl deep enough for oven trays, which no standard undermount sink offers.",
+        },
+        {
+            question: "Do I need open shelving in a farmhouse kitchen?",
+            answer: "No. Open shelving is the most-photographed element of the style and the most abandoned in practice, because it collects cooking grease and dust and requires the crockery on it to be worth looking at. A useful compromise is one run of open shelving in the least grease-exposed corner of the room, with everything else behind doors. The style survives perfectly well without it.",
+        },
+        {
+            question: "What worktop suits a farmhouse kitchen?",
+            answer: "Butcher block (oak or iroko) and honed natural stone both suit the style because they accept marks rather than resisting them, which is central to the farmhouse aesthetic. Timber needs re-oiling roughly twice a year and will darken around the sink; honed granite and soapstone need sealing but tolerate heat. Polished quartz in a stone-effect print is the common substitute but reads noticeably flatter in person.",
+        },
+    ],
+    "coastal-living-room": [
+        {
+            question: "How do I get a coastal living room without it looking themed?",
+            answer: "Remove the literal references first: no anchors, no rope-wrapped objects, no shell displays, no navy-and-white stripes on everything. What actually produces the effect is material and light — whitewashed or limed timber, washed linen or cotton slipcovers, a jute or sisal rug, woven pendant shades, and a palette of soft white, sand, and one restrained blue or sage. The room should read as a bright house near water, not as a gift-shop display.",
+        },
+        {
+            question: "What sofa fabric works in a coastal living room?",
+            answer: "Washed linen, cotton canvas, and performance-weave blends in undyed or pale tones are the standard choices. The critical feature is a removable, washable slipcover, because a pale palette only survives real use if it can be laundered. Loose-fit covers also produce the relaxed silhouette the style depends on — a tightly upholstered sofa in the same fabric reads as formal rather than coastal.",
+        },
+        {
+            question: "Does a coastal living room work in a room with limited natural light?",
+            answer: "Partially. The style leans heavily on daylight, so in a north-facing or shaded room the cool blues turn grey and the palette flattens. The workaround is to shift warm — sand, oatmeal, and pale driftwood tones rather than crisp white and sea-blue — and to layer 2700K lighting at multiple heights. Visualising the room before repainting is worth doing here, because the difference is dramatic and paint is expensive to undo.",
+        },
+    ],
+    "japandi-living-room": [
+        {
+            question: "What is the difference between Japandi and minimalist design?",
+            answer: "Minimalism is defined by subtraction — the fewest objects that still allow the room to function. Japandi is defined by material warmth within restraint: it keeps a similar object count but insists those objects have visible grain, hand-finish, or natural irregularity. A minimalist living room can be entirely white and smooth; a Japandi one cannot, because the wood, linen, paper, and ceramic are the point.",
+        },
+        {
+            question: "How many wood tones should a Japandi living room use?",
+            answer: "Two at most, and they should be clearly different rather than nearly the same — pale oak with a single walnut piece works, oak with a slightly yellower oak does not. If your existing floor is the mid-orange tone common in older laminate, treat that as one of your two and choose furniture in a distinctly paler or darker species rather than trying to match it, because a near-miss is more visible than a deliberate contrast.",
+        },
+        {
+            question: "What colours belong in a Japandi living room?",
+            answer: "A base of warm off-white, oatmeal, or a very pale greige, plus the wood tones, plus at most one muted accent — charcoal, clay, moss, or ink blue. Saturated colour breaks the style immediately because there is no pattern or ornament to absorb it. Texture (boucle, linen weave, raw ceramic, paper) does the work that colour would do in a busier interior.",
+        },
+    ],
+    "japandi-bedroom": [
+        {
+            question: "Does a Japandi bedroom need a low platform bed?",
+            answer: "A low frame is characteristic but not mandatory. What matters is that the bed reads as a single quiet horizontal mass rather than as furniture with legs and visible under-bed storage. A standard-height frame in solid pale timber with a plain slatted or upholstered headboard achieves the same effect. If you keep a higher frame, the space beneath it has to stay genuinely empty.",
+        },
+        {
+            question: "What bedding suits a Japandi bedroom?",
+            answer: "Washed or stonewashed linen in undyed, oatmeal, warm white, or clay. Linen is the right choice specifically because it creases — that soft irregularity is the texture the style needs, and pressed cotton percale looks too crisp against natural timber. Keep the pillow count low; the stacked-cushion arrangement common in other styles works directly against the room's calm.",
+        },
+        {
+            question: "How do I light a Japandi bedroom?",
+            answer: "Wall-mounted or pendant reading lights either side of the bed instead of table lamps, so the nightstand surfaces stay clear, plus a single warm ambient source (a paper shade or a low-output ceiling fitting) at around 2700K. Avoid a bright central downlight as the only fixture. Dimmability matters more than fixture count, because the room's character changes entirely between daytime and evening light levels.",
+        },
+    ],
+    "mediterranean-living-room": [
+        {
+            question: "Can I get a Mediterranean living room without structural work?",
+            answer: "Yes. The three highest-impact changes are all surface-level: a lime-wash or textured mineral paint in place of flat emulsion, a warm terracotta-and-cream palette in place of cool greys, and a large flat-woven kilim over the existing floor. Beams and arched openings are the expensive part of the style and are not required for the room to read correctly.",
+        },
+        {
+            question: "What lighting suits a Mediterranean living room?",
+            answer: "Wall sconces in wrought iron, plaster, or ceramic positioned at roughly eye height and fitted with warm 2200-2700K lamps, plus table lamps — not a bright central pendant. The style comes from a domestic tradition built around evening light, so the room should be lit in pools rather than uniformly. Dimmers matter here more than in most styles.",
+        },
+        {
+            question: "What plants belong in a Mediterranean living room?",
+            answer: "Olive, fig, citrus, and rosemary in unglazed terracotta pots are the authentic choices, and all four need a genuinely bright position — olive in particular thins out and drops leaves in a shaded corner. If the room's light will not support them, a large rubber plant or fiddle-leaf fig in the same terracotta pot keeps the material logic without the maintenance failure.",
+        },
+    ],
+    "art-deco-sunroom": [
+        {
+            question: "Does velvet upholstery survive in a sunroom?",
+            answer: "Not well in direct sun — cotton and silk velvets fade noticeably within a couple of summers in a heavily glazed room. Polyester and solution-dyed velvets hold colour far better and are now available in the deep jewel tones the style needs. The alternative is to position upholstered pieces out of the direct sun path and let harder materials (lacquer, glass, brass, tile) take the exposed positions.",
+        },
+        {
+            question: "What flooring suits an Art Deco sunroom?",
+            answer: "Geometric tile is the natural choice: a black-and-white chequer, a chevron, or a hexagonal repeat in porcelain or encaustic cement. Tile also handles the temperature swings and occasional damp of a glazed room better than engineered timber. Keep the pattern to the floor and let the walls stay plain, otherwise the room becomes visually exhausting in bright light.",
+        },
+        {
+            question: "How do I stop an Art Deco sunroom overheating?",
+            answer: "The period's own answer works well: large potted palms positioned to filter the strongest direct light, plus full-height curtains in a heavy fabric drawn across the worst-exposed glazing in the afternoon. Practically, solar-control glass or an external blind on the south or west elevation does most of the work; internal blinds alone stop glare but not heat.",
+        },
+    ],
+    "coastal-bedroom": [
+        {
+            question: "What is the right blue for a coastal bedroom?",
+            answer: "Soft, greyed, and desaturated — a chalky sea-blue, a pale duck-egg, or a muted sage — rather than a saturated navy or a bright sky blue. Test it on the wall that gets least daylight, because coastal blues shift dramatically with light and a shade that looks calm in a bright showroom often reads cold and grey in a north-facing bedroom.",
+        },
+        {
+            question: "What headboard works in a coastal bedroom?",
+            answer: "Rattan, cane, whitewashed or limed timber, or a loose linen slipcover in a natural tone. All four contribute the woven or grained texture the style depends on, and all avoid the heaviness of a buttoned velvet or leather headboard. If you already have an upholstered headboard, a washed-linen cover is the cheapest way to bring it into the palette.",
+        },
+        {
+            question: "How do I stop a coastal bedroom feeling cold?",
+            answer: "Layer warm materials against the pale palette: a jute or wool rug underfoot, linen curtains that reach the floor, a knitted or waffle throw across the bed, and 2700K lamps rather than cool white. The style's failure mode is a room that reads bare and slightly clinical, and it is almost always caused by too few textiles rather than by the wrong wall colour.",
+        },
+    ],
+    "coastal-walk-in-closet": [
+        {
+            question: "How much space does a walk-in closet actually need?",
+            answer: "A single-sided walk-in needs roughly 1.7m of width — about 60cm for hanging depth plus 1.1m of clear circulation. A double-sided run needs about 2.4m. Below those figures you cannot pull a drawer or a hanging rail out fully while standing in front of it, and the room stops working regardless of how well it is finished.",
+        },
+        {
+            question: "What lighting does a walk-in closet need?",
+            answer: "Daylight-balanced light at around 4000K positioned so it falls on you rather than only on the rails — otherwise every colour judgement made in the room is wrong. A ceiling fitting plus LED strips inside the hanging sections is the standard arrangement. A full-length mirror sited to catch the room's strongest light source roughly doubles the effective brightness and is the most useful fitting in the space.",
+        },
+        {
+            question: "What makes a walk-in closet coastal rather than generic?",
+            answer: "White Shaker-profile joinery with rope-pull or brushed nickel hardware, woven seagrass or rattan baskets in place of moulded plastic drawer inserts, a pale timber or marble-topped island, and a jute runner underfoot. The style is essentially a material substitution over a standard closet layout, which makes it one of the cheapest rooms in which to execute the aesthetic properly.",
+        },
+    ],
+    "farmhouse-bedroom": [
+        {
+            question: "What bed frame suits a farmhouse bedroom?",
+            answer: "Solid timber in oak, pine, or reclaimed boards, or a simple wrought-iron frame — both read correctly because both were genuinely used in the settings the style references. Avoid heavily distressed factory finishes: artificial wear is the most common tell that a farmhouse room was bought rather than assembled, and an honest plain frame ages into the look on its own.",
+        },
+        {
+            question: "What colours work in a farmhouse bedroom?",
+            answer: "Warm whites, oatmeal, soft clay, muted sage, and dusty blue, with timber and wrought iron supplying the darker tones. The palette should feel slightly aged rather than crisp — a warm white with a hint of yellow rather than a cool brilliant white. Strong accent colours belong in a quilt or a rug rather than on the walls.",
+        },
+        {
+            question: "Is farmhouse a practical style for a family bedroom?",
+            answer: "Unusually so. The style is built around materials that improve, or at least remain acceptable, as they wear — solid timber that can be sanded, painted furniture where chips read as character, quilts and rag rugs that wash. That tolerance for imperfection makes it more forgiving of children and pets than styles where a single scratch on a lacquered surface is permanently visible.",
+        },
+    ],
+    "farmhouse-bathroom": [
+        {
+            question: "Is shiplap a problem in a bathroom?",
+            answer: "It can be, because horizontal joints trap moisture and softwood moves with humidity. If you want the look, use a moisture-resistant MDF or PVC shiplap panel rather than solid timber, keep it out of the direct shower spray zone, and seal the top edge and every cut end. Extraction matters more than panel material — an undersized fan will fail any timber-clad bathroom regardless of finish.",
+        },
+        {
+            question: "What flooring suits a farmhouse bathroom?",
+            answer: "Hexagonal or small-square porcelain in white or warm grey with a contrasting grout, or a large-format stone-effect porcelain. Both give the period reference without the maintenance of real stone. Genuine timber floors suit the style visually but are the wrong choice next to a bath or shower unless the room has exceptional ventilation and the boards are properly finished.",
+        },
+        {
+            question: "Do I need a clawfoot bath for a farmhouse bathroom?",
+            answer: "No, though it is the fastest single route to the look. A freestanding bath in any simple profile achieves most of the effect, and a standard built-in bath with a tongue-and-groove panel front works well in a smaller room. Note that clawfoot baths need floor- or wall-mounted taps and a floor structure rated for the filled weight, which is often what rules them out.",
+        },
+    ],
+    "farmhouse-dining-room": [
+        {
+            question: "How long should a farmhouse dining table be?",
+            answer: "Allow roughly 60cm of table edge per person, plus 90-100cm of clear circulation on every side you intend to walk around. A table seating eight is therefore around 2.0-2.2m long and needs a room around 3.8-4.0m in the same direction. The style's characteristic long table is often what fails in an average room, so the dimension check is worth doing before ordering.",
+        },
+        {
+            question: "Should farmhouse dining chairs match?",
+            answer: "No — mismatched chairs are central to the style, because the room is meant to read as assembled over time. The reliable way to do it without looking accidental is to hold one variable constant: all timber, or all painted the same colour, or all roughly the same seat and back height, while the shapes vary. Two matching carvers at the ends anchor the arrangement.",
+        },
+        {
+            question: "How should a farmhouse dining table be finished?",
+            answer: "Oiled or waxed rather than lacquered. An oiled top marks and stains and can be sanded and re-oiled by hand; a lacquered top resists marks until it scratches, after which the whole surface needs professional refinishing. Since the style explicitly values visible use, the oiled finish is both more authentic and more repairable.",
+        },
+    ],
+    "farmhouse-gaming-room": [
+        {
+            question: "How do I hide gaming equipment in a farmhouse room?",
+            answer: "A barn-door or shaker-fronted media cabinet with a ventilated back panel handles consoles and AV kit, and a cable channel behind reclaimed timber panelling handles the rest. The one thing that cannot be hidden is the screen, so treat it as the room's dark focal point and balance it with warm timber and textiles on the surrounding walls rather than trying to conceal it.",
+        },
+        {
+            question: "Does RGB lighting work in a farmhouse gaming room?",
+            answer: "Sparingly, and warm. The style's palette is built on 2200-2700K filament light, so saturated blue and purple bias lighting fights it directly. Amber and warm-white bias lighting behind the screen gives the same eye-strain benefit without breaking the room. If you want colour, confine it to peripherals rather than to the room's architecture.",
+        },
+        {
+            question: "What seating suits a farmhouse gaming room?",
+            answer: "A deep leather Chesterfield or an oversized linen sofa rather than a moulded racing-style gaming chair, which is the single element most likely to break the aesthetic. If you need proper ergonomic support for long desk sessions, a timber-framed task chair with a leather or wool seat achieves it without the automotive styling.",
+        },
+    ],
+    "farmhouse-home-theater": [
+        {
+            question: "Can a farmhouse home theatre actually perform acoustically?",
+            answer: "Yes, because most acoustic treatment can be concealed. Fabric-wrapped absorption panels fit behind tongue-and-groove cladding, heavy lined curtains handle first reflections at the side walls, and a large wool rug controls floor bounce. The style's natural preference for textiles, timber, and soft furnishings is acoustically helpful — it is hard rooms full of plaster and glass that need the most intervention.",
+        },
+        {
+            question: "How do I control light in a farmhouse home theatre?",
+            answer: "Full-height lined linen or wool curtains on a timber pole, plus dimmable filament sconces at low level rather than ceiling downlights. Matte finishes matter: a limewashed or chalk-paint wall behind the screen reflects far less stray light than a satin emulsion, which noticeably improves perceived contrast without any change to the projector.",
+        },
+        {
+            question: "Should the screen be hidden when not in use?",
+            answer: "It depends on whether the room does anything else. If it doubles as a family room during the day, a sliding barn-door panel or a drop-down screen behind a beam keeps the room domestic. If it is a dedicated cinema, concealment is unnecessary complexity and the budget is better spent on seating and acoustic treatment.",
+        },
+    ],
+    "japandi-mudroom": [
+        {
+            question: "How much shoe storage does a mudroom actually need?",
+            answer: "Plan for roughly 30cm of shelf width and 20cm of height per pair, then add about 50% over your current count — mudroom storage sized exactly to today's requirement fills immediately, and the overflow ends up on the floor, which is what the room exists to prevent. Closed storage matters more than raw capacity in a Japandi execution, because visible shoe racks defeat the style entirely.",
+        },
+        {
+            question: "What flooring suits a Japandi mudroom?",
+            answer: "Large-format porcelain in a slate or limestone effect, or honed natural stone. Both handle grit, water, and salt, and both give the quiet matte surface the style needs. Timber and timber-effect laminate are the wrong choice here regardless of aesthetic preference, because a mudroom floor is wet several months a year by definition.",
+        },
+        {
+            question: "What makes a mudroom Japandi rather than just built-in storage?",
+            answer: "Handle-free push-to-open fronts in oak or oak veneer rather than painted MDF with visible knobs, a low timber bench with a single linen cushion instead of a moulded seat, blackened steel or brass hooks in a straight run at a consistent height, and a strictly limited palette. The layout is conventional; the style comes entirely from finish, hardware, and the discipline of keeping horizontal surfaces clear.",
+        },
+    ],
+    "modern-sunroom": [
+        {
+            question: "How do I stop a modern sunroom overheating in summer?",
+            answer: "Glazing specification does most of the work: a low-g solar-control unit rejects a large share of solar gain before it enters the room, which internal blinds cannot do once the heat is inside. Beyond that, external blinds or a brise-soleil on the south and west elevations, plus openable rooflights to vent hot air at high level, are far more effective than any amount of internal shading.",
+        },
+        {
+            question: "What furniture suits a modern sunroom?",
+            answer: "Low-profile pieces in a single neutral — linen, boucle, or an outdoor-grade performance weave — with slim legs that keep sightlines to the glass open. The style depends on fewer, larger items rather than a scattered arrangement, because the view does most of the visual work and clutter in the foreground competes with it directly. UV-stable fabrics matter here more than in any other room.",
+        },
+        {
+            question: "Should sunroom flooring match the adjoining room?",
+            answer: "Yes, where the structure allows it. Running a single flooring material continuously through the threshold is one of the defining moves of modern design and it makes both rooms read as larger. Porcelain that continues onto an external terrace in a matching outdoor-rated finish extends the effect further, which is worth specifying at the same time even if the terrace is a later project.",
+        },
+    ],
+    "modern-home-theater": [
+        {
+            question: "What wall colour should a modern home theatre be?",
+            answer: "A deep, matte neutral — charcoal, graphite, or a very dark warm grey — on every surface within the viewer's field of vision, particularly the wall behind the screen. Sheen matters most: a matte finish at the same colour measurably improves perceived contrast over a satin one, because it stops light from the screen bouncing back onto it.",
+        },
+        {
+            question: "How do I integrate acoustic panels into a modern home theatre?",
+            answer: "Recess them so they sit flush with the surrounding wall plane and wrap them in a single fabric matching the wall colour, rather than mounting proprietary panels proud of the surface. This preserves the continuous, uninterrupted wall the style depends on while still handling first reflections. A fabric-stretch wall system does the same job across an entire wall if the budget allows.",
+        },
+        {
+            question: "How far should seating be from the screen?",
+            answer: "For a 4K display, roughly 1 to 1.5 times the screen's diagonal gives a cinema-like field of view without visible pixel structure — about 2.7-4.0m for a 100-inch screen. Set the seating distance first and size the screen to it rather than the reverse, because the room's dimensions are fixed and the display is not.",
+        },
+    ],
 };
 
 // Generate all 196 page configs (14 themes × 14 rooms)
 // Title variants rotated deterministically per slug to diversify SERP listings.
+// Every variant front-loads the exact "{Theme} {Room}" query phrase, because the
+// SERP only ever shows the first ~55 characters and that phrase is what the
+// searcher typed. The tail carries the one thing the nine results above us
+// cannot offer: these ideas rendered on the searcher's own room, not a showroom.
 const TITLE_TEMPLATES = [
     (themeName: string, roomName: string) =>
-        `${themeName} ${roomName} Ideas — AI-Generated in 60 Seconds`,
+        `${themeName} ${roomName} Ideas — See Them In Your Own Room`,
     (themeName: string, roomName: string) =>
-        `${roomName} in ${themeName} Style — See Yours in AI`,
+        `${themeName} ${roomName} Ideas: Preview Them In Your Room`,
     (themeName: string, roomName: string) =>
-        `Redesign Your ${roomName} in a ${themeName} Style (AI, 60s)`,
+        `${themeName} ${roomName} Design — Try It On Your Own Photo`,
     (themeName: string, roomName: string) =>
-        `${themeName} ${roomName}: 30+ AI Design Ideas`,
+        `${themeName} ${roomName} Ideas — Test On Your Room in 60s`,
 ] as const;
 
-// Meta description variants — used as a fallback when a per-slug intro is not available.
+// Meta description variants. These are promises, not summaries: each one leads
+// with the query phrase (so Google bolds it), states the single action required,
+// and closes on a risk reducer. Applied to every design page — the previous
+// behaviour of deriving the description from the article's first sentence
+// produced encyclopedic openers that gave nobody a reason to click.
 const META_TEMPLATES = [
     (themeName: string, roomName: string) =>
-        `Upload a photo of your ${roomName.toLowerCase()} and get AI-generated ${themeName.toLowerCase()} redesigns in 60 seconds. From €9.99, no subscription.`,
+        `${themeName} ${roomName} ideas, applied to your own room. Upload one photo and AI returns 4–8 redesigns in 60 seconds. From €9.99, no subscription.`,
     (themeName: string, roomName: string) =>
-        `See your ${roomName.toLowerCase()} reimagined in ${themeName.toLowerCase()} style. AI preserves your room's structure and generates 4–8 variations in under a minute.`,
+        `${themeName} ${roomName} ideas you can test on your actual room, not someone else's. Upload a photo, get 4–8 AI redesigns in 60 seconds. 1 free credit.`,
     (themeName: string, roomName: string) =>
-        `Turn your current ${roomName.toLowerCase()} into a ${themeName.toLowerCase()} dream space with AI. Upload once, get 4–8 design ideas in under 60s.`,
+        `${themeName} ${roomName} design, tried on your own space before you spend a euro on furniture. Upload one photo, get 4–8 AI redesigns in 60 seconds.`,
     (themeName: string, roomName: string) =>
-        `${themeName} ${roomName} inspiration, generated from your own room photo. AI redesigns in 60s, from €9.99 — credits never expire.`,
+        `${themeName} ${roomName} ideas rendered on your own photo, not a showroom. AI returns 4–8 redesigns in 60 seconds. Photos never stored, 1 free credit.`,
 ] as const;
 
 const META_DESCRIPTION_MAX_LENGTH = 158;
@@ -1916,22 +2239,125 @@ function hashToIndex(str: string, modulo: number): number {
     return sum % modulo;
 }
 
-function firstSentenceFromIntro(intro: string): string {
-    const firstSentence = intro.split(". ")[0];
-    // Re-add the trailing period the split removed (unless it was already the last sentence).
-    const sentence = firstSentence.endsWith(".")
-        ? firstSentence
-        : `${firstSentence}.`;
-
-    if (sentence.length <= META_DESCRIPTION_MAX_LENGTH) {
-        return sentence;
+// Safety net for the longest theme+room combinations (e.g. "Mediterranean
+// Walk-In Closet"). Templates are written to sit comfortably under the limit;
+// this only ever fires on outlier combos.
+function clampDescription(description: string): string {
+    if (description.length <= META_DESCRIPTION_MAX_LENGTH) {
+        return description;
     }
 
-    const truncated = sentence.slice(0, META_DESCRIPTION_TRUNCATE_AT);
+    const truncated = description.slice(0, META_DESCRIPTION_TRUNCATE_AT);
     const lastSpace = truncated.lastIndexOf(" ");
     const cut = lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated;
     return `${cut}...`;
 }
+
+/**
+ * Bespoke depth for the pages with measured demand and no ranking.
+ *
+ * Selection is driven by Search Console, not by taste:
+ *   - art-deco-bedroom:        415 impressions, 0 clicks, position 18.9
+ *   - scandinavian-living-room: 215 impressions, 0 clicks, position 14.7
+ *
+ * Both sit on a query cluster the template content does not answer. The
+ * "what the AI gets wrong" sections are deliberately the opposite of listicle
+ * filler — they are the one thing a tool operator can write that a decorating
+ * blog cannot.
+ */
+export const COMBINATION_DEEP_DIVES: Record<string, IDeepDiveSection[]> = {
+    "art-deco-bedroom": [
+        {
+            heading: "Art Deco bedroom ideas, element by element",
+            paragraphs: [
+                "Art Deco is a vocabulary of specific shapes and materials rather than a general mood, which is why it is one of the easier styles to get 80% right and one of the harder styles to get the last 20% right. The elements below are the ones that actually carry the style. A bedroom that has three of them reads unmistakably Art Deco; a bedroom that has nine of them reads like a themed hotel suite.",
+            ],
+            bullets: [
+                "Headboard — the single highest-impact element. A tall upholstered panel in channel tufting, a fan silhouette, or a stepped ziggurat outline, in velvet or a tight-weave bouclé. Emerald, sapphire, oxblood and dusty rose are the period-correct jewel tones; charcoal and camel are the safe contemporary substitutes.",
+                "Geometry — fans, sunbursts, chevrons, stepped forms and concentric circles. Introduce it in exactly one repeated motif rather than three competing ones. A single sunburst mirror above a chest of drawers does more for the room than patterned wallpaper plus a geometric rug plus a chevron throw.",
+                "Metals — brass and polished chrome, not brushed nickel and not matte black. Art Deco predates the matte-black hardware convention entirely, and matte black is the fastest way to make a Deco bedroom read as generic contemporary.",
+                "Lacquer and high-gloss timber — ebonised walnut, black lacquered bedside tables, or a burl-veneer chest. The reflective surface is doing the same job the metals are: bouncing light in a palette that is otherwise quite dark.",
+                "Lighting — a tiered or fluted pendant with frosted glass, plus wall sconces flanking the bed rather than table lamps. Sconces are the detail that most contemporary Deco bedrooms skip, and their absence is why those rooms look like a Deco headboard in an ordinary bedroom.",
+                "Flooring and rugs — dark stained timber or parquet, with a low-pile rug carrying one geometric motif. Avoid layering a second patterned textile on top.",
+            ],
+        },
+        {
+            heading: "Modern Art Deco vs 1920s Art Deco: which one are you actually after?",
+            paragraphs: [
+                "Most people searching for an Art Deco bedroom want the modern interpretation, not a period reconstruction, and the difference matters because it changes almost every decision downstream. A period-accurate 1920s bedroom uses saturated colour across the whole envelope — patterned wallpaper, dark ceilings, heavily figured veneers — and a lot of ornament per square metre. It photographs beautifully and is genuinely difficult to sleep in.",
+                "The modern interpretation keeps the geometry and the metals but strips the ornament density back by roughly two thirds. Walls go to a warm off-white, greige, or a single deep accent behind the bed only. Pattern is confined to one surface. The jewel tones survive but move onto the headboard and one or two cushions rather than onto the walls. This is also the version that resells: a channel-tufted emerald headboard against a neutral wall reads as considered in almost any house, while a fully committed 1920s envelope reads as a decision the next owner has to undo.",
+                "If your search was for a minimalist or simple Art Deco bedroom, you are describing the modern interpretation with the ornament dialled back further still — one geometric motif, brass hardware, a lacquered surface, and nothing else. That version is easier to live with and much cheaper to execute.",
+            ],
+        },
+        {
+            heading: "What an Art Deco bedroom actually costs to execute",
+            paragraphs: [
+                "The costs below are indicative mid-market European figures for a standard double bedroom, and exist to show where the money concentrates rather than to be quoted. The headboard and the lighting account for most of the effect and most of the spend; the geometry can be introduced for very little.",
+            ],
+            table: {
+                headers: ["Element", "Indicative cost", "Impact on the style"],
+                rows: [
+                    ["Upholstered velvet headboard (king)", "€350–€900", "Highest — this is the element people read first"],
+                    ["Pair of brass wall sconces", "€120–€400", "High — the detail most contemporary versions omit"],
+                    ["Tiered / fluted pendant light", "€150–€500", "High"],
+                    ["Sunburst or fan mirror", "€80–€300", "Medium-high — cheapest way to introduce the geometry"],
+                    ["Lacquered or burl-veneer bedside pair", "€300–€1,200", "Medium"],
+                    ["Low-pile geometric rug", "€150–€600", "Medium"],
+                    ["Accent wall paint (deep tone)", "€40–€90", "Medium — highest impact per euro spent"],
+                    ["Velvet cushions and throw", "€60–€200", "Low-medium"],
+                ],
+            },
+        },
+        {
+            heading: "Art Deco in a small bedroom",
+            paragraphs: [
+                "The style is usually shown in large rooms with high ceilings, which is misleading — Art Deco was designed for ocean liner cabins and apartment blocks as much as for ballrooms, and it compresses well if you change the ratios rather than the vocabulary.",
+                "In a room under about 12 square metres: keep the tall headboard, because vertical emphasis makes a small room read taller, but drop the freestanding furniture to wall-mounted bedside shelves. Move the geometry onto the mirror and the hardware only, and leave the walls plain in a warm off-white so the dark tones do not close the space in. Replace the pendant with two sconces, which free up the ceiling plane entirely. The result keeps the sunburst-and-brass signature while removing the three things that make Deco feel heavy: floor-standing case goods, patterned walls, and a large light fitting.",
+            ],
+        },
+        {
+            heading: "What AI gets wrong on Art Deco bedrooms — and how to prompt around it",
+            paragraphs: [
+                "This is worth saying plainly because we run the generations. Art Deco is the style where AI image models most reliably overshoot, and knowing the failure modes in advance is the difference between one usable output and five wasted attempts.",
+                "The three consistent failures: the model adds metallic surfaces to everything it can find, so a request for brass hardware comes back with a brass bed frame, brass skirting, and a brass ceiling trim; it defaults to full-envelope 1920s ornament when you asked for the modern interpretation; and it converts geometric motifs into wallpaper, which is almost never what a contemporary Deco bedroom should have.",
+                "The fix is to specify what should stay plain, not only what should change. Prompts that name the restraint — \"Art Deco bedroom, channel-tufted emerald velvet headboard, brass wall sconces, plain warm off-white walls, no patterned wallpaper, dark timber floor\" — produce a usable first result far more often than \"Art Deco bedroom\" on its own. Naming the metal once, and stating that walls stay unpatterned, removes both of the dominant failure modes in a single sentence. Because Magic Room preserves the existing room geometry rather than regenerating the space, what you get back is your actual bedroom with those specific changes applied, which makes it a planning reference rather than a mood board.",
+            ],
+        },
+    ],
+    "scandinavian-living-room": [
+        {
+            heading: "What separates a Scandinavian living room from a generally minimal one",
+            paragraphs: [
+                "The two styles get conflated constantly, and the confusion produces rooms that are merely empty. Minimalism is a subtraction discipline: the goal is fewer objects. Scandinavian design is a warmth-under-constraint discipline that emerged from a specific problem — long, dark winters and small urban apartments — and its rules exist to solve that problem rather than to achieve visual purity.",
+                "The practical consequence is that a Scandinavian living room is allowed, and in fact required, to have soft things in it. Wool throws, sheepskin, layered textiles and visible timber grain are not decoration added on top of a minimal room; they are the point. A room with white walls, a grey sofa and nothing else is minimal. Add pale oak, a wool throw, two plants and a warm-toned pendant and it becomes Scandinavian.",
+            ],
+            bullets: [
+                "Light woods with visible grain — pale oak, ash, birch, pine. Walnut and wenge push the room toward mid-century modern instead.",
+                "Walls in warm white rather than cool white. Cool white plus grey furniture is the single most common way a Scandinavian living room ends up feeling clinical.",
+                "Layered lighting at multiple heights — a pendant, a floor lamp, and at least one low light source. Scandinavian interiors almost never rely on a single ceiling fixture.",
+                "Natural-fibre textiles: wool, linen, cotton, sheepskin. The tactile contrast against hard timber surfaces is doing most of the warmth work.",
+                "Two to four plants at different heights. Enough to add living texture, not enough to read as bohemian.",
+                "One muted accent colour at most — dusty blue, sage, terracotta or mustard, used across two or three small items.",
+            ],
+        },
+        {
+            heading: "Scandinavian living room ideas by room size",
+            paragraphs: [
+                "The style scales in a specific direction: the smaller the room, the more strictly the palette has to hold, and the more the warmth has to come from texture rather than from objects.",
+                "In a small living room (under 15 m²) choose a sofa with visible legs so floor shows underneath, keep the rug large enough to sit under the front legs of the furniture rather than floating in the middle, and use wall-mounted shelving instead of a freestanding unit. Wall colour stays warm white throughout — an accent wall in a small Scandinavian room fights the light-maximising logic that the style is built on.",
+                "In a larger room the risk inverts: the space becomes sparse and cold rather than cosy. The remedy is zoning rather than adding objects — a rug that defines the seating group, a reading chair with its own floor lamp in a corner, and a second textile layer on the sofa. A large Scandinavian living room needs more textile mass than a small one, not more furniture.",
+            ],
+        },
+        {
+            heading: "What AI gets wrong on Scandinavian living rooms",
+            paragraphs: [
+                "The dominant failure mode is that the model reads \"Scandinavian\" as \"white and grey minimal\" and strips out exactly the warmth that distinguishes the style. Outputs come back with a cool-white envelope, a grey sofa, no visible timber grain and no textiles — technically clean, and indistinguishable from a stock minimal render.",
+                "The second failure is wood tone. Left unspecified, models default to a mid-brown that reads as generic contemporary rather than the pale oak or ash the style depends on.",
+                "Naming the warmth explicitly fixes both. A prompt like \"Scandinavian living room, warm white walls, pale oak flooring and furniture, wool throw and linen cushions, layered lighting with floor lamp, two plants\" reliably produces the correct register on the first attempt, where \"Scandinavian living room\" alone does not. Specifying the wood species and the wall temperature is worth more than any other instruction you can add.",
+            ],
+        },
+    ],
+};
 
 function generateDesignPages(): IDesignPageData[] {
     const pages: IDesignPageData[] = [];
@@ -1949,9 +2375,14 @@ function generateDesignPages(): IDesignPageData[] {
             const title = TITLE_TEMPLATES[variantIndex](themeData.name, roomData.name);
 
             const combinationIntro = COMBINATION_INTROS[slug];
-            const metaDescription = combinationIntro
-                ? firstSentenceFromIntro(combinationIntro)
-                : META_TEMPLATES[variantIndex](themeData.name, roomData.name);
+            // The intro's first sentence is deliberately NOT used as the meta
+            // description any more. It reads as an encyclopedia entry
+            // ("A Scandinavian living room earns its warmth through...") which
+            // is indistinguishable from the Houzz/Pinterest results above us
+            // and gave searchers no reason to choose this result.
+            const metaDescription = clampDescription(
+                META_TEMPLATES[variantIndex](themeData.name, roomData.name)
+            );
 
             pages.push({
                 slug,
@@ -1963,6 +2394,7 @@ function generateDesignPages(): IDesignPageData[] {
                 metaDescription,
                 intro: combinationIntro ?? `Generate ${themeData.name.toLowerCase()} ${roomData.name.toLowerCase()} design ideas instantly with AI.`,
                 faqs: COMBINATION_FAQS[slug] ?? [],
+                deepDive: COMBINATION_DEEP_DIVES[slug],
                 keywords: [
                     ...themeData.keywords,
                     ...roomData.keywords,
@@ -1979,8 +2411,12 @@ function generateDesignPages(): IDesignPageData[] {
 
 export const DESIGN_PAGES: IDesignPageData[] = generateDesignPages();
 
+const DESIGN_PAGE_BY_SLUG: Record<string, IDesignPageData> = Object.fromEntries(
+    DESIGN_PAGES.map((p) => [p.slug, p])
+);
+
 export function getDesignPageBySlug(slug: string): IDesignPageData | undefined {
-    return DESIGN_PAGES.find((p) => p.slug === slug);
+    return DESIGN_PAGE_BY_SLUG[slug];
 }
 
 export function getAllDesignSlugs(): string[] {

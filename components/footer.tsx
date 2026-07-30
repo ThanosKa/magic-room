@@ -133,6 +133,29 @@ export function Footer() {
                   Industrial kitchen
                 </Link>
               </li>
+              {/*
+                Both of these are in the XML sitemap but had, respectively,
+                zero and one inbound internal link anywhere on the site —
+                /gallery's only occurrence was inside its own breadcrumb.
+                A sitewide footer link is the cheapest crawl path from every
+                page; without it they stay in "Discovered - not indexed".
+              */}
+              <li>
+                <Link
+                  href="/gallery"
+                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                >
+                  AI room design gallery
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/virtual-staging"
+                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                >
+                  AI virtual staging
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/blog"

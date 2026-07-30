@@ -7,6 +7,10 @@ import { PageTransition } from "@/components/page-transition";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
 
+// Cross-link card, repeated once per card in the grid below.
+const RELATED_CARD_CLASS =
+    "rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800";
+
 interface GalleryItem {
     slug: string;
     theme: string;
@@ -228,7 +232,7 @@ export function GalleryContent() {
                         <div className="mt-6 grid gap-4 sm:grid-cols-2">
                             <Link
                                 href="/design"
-                                className="rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800"
+                                className={RELATED_CARD_CLASS}
                             >
                                 <h3 className="font-semibold text-slate-900 dark:text-white">
                                     All Design Styles
@@ -239,7 +243,7 @@ export function GalleryContent() {
                             </Link>
                             <Link
                                 href="/blog"
-                                className="rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800"
+                                className={RELATED_CARD_CLASS}
                             >
                                 <h3 className="font-semibold text-slate-900 dark:text-white">
                                     Interior Design Blog
@@ -248,7 +252,58 @@ export function GalleryContent() {
                                     Guides on AI room design, styling tips, and redesigning on any budget.
                                 </p>
                             </Link>
+                            <Link
+                                href="/alternatives"
+                                className={RELATED_CARD_CLASS}
+                            >
+                                <h3 className="font-semibold text-slate-900 dark:text-white">
+                                    RoomGPT alternatives compared
+                                </h3>
+                                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                    RoomGPT, Interior AI, DecorAI and Reimagine Home on model, privacy and price.
+                                </p>
+                            </Link>
+                            <Link
+                                href="/virtual-staging"
+                                className={RELATED_CARD_CLASS}
+                            >
+                                <h3 className="font-semibold text-slate-900 dark:text-white">
+                                    AI virtual staging for real estate
+                                </h3>
+                                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                    Staging listing photos with AI instead of paying per room.
+                                </p>
+                            </Link>
                         </div>
+
+                        {/* Gallery was a complete orphan — zero inbound internal
+                            links despite being in the sitemap. These give it a
+                            reason to pass equity onward as well. */}
+                        <h3 className="mt-10 text-lg font-semibold text-slate-900 dark:text-white">
+                            Popular styles from the gallery
+                        </h3>
+                        <ul className="mt-4 flex flex-wrap gap-3">
+                            {[
+                                { slug: "art-deco-bedroom", label: "Art Deco bedroom ideas" },
+                                {
+                                    slug: "scandinavian-living-room",
+                                    label: "Scandinavian living room ideas",
+                                },
+                                { slug: "modern-living-room", label: "Modern living room design ideas" },
+                                { slug: "coastal-living-room", label: "Coastal living room design ideas" },
+                                { slug: "japandi-living-room", label: "Japandi living room design ideas" },
+                                { slug: "industrial-kitchen", label: "Industrial kitchen design ideas" },
+                            ].map((item) => (
+                                <li key={item.slug}>
+                                    <Link
+                                        href={`/design/${item.slug}`}
+                                        className="inline-block rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 transition-colors hover:border-primary hover:text-primary dark:border-slate-800 dark:text-slate-300"
+                                    >
+                                        {item.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             </section>

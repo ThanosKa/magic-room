@@ -8,6 +8,7 @@ import { ToastProvider } from "@/components/toast-provider";
 import { UserDataProvider } from "@/components/user-data-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { JsonLd } from "@/components/seo/json-ld";
 import {
   SITE_URL,
   SITE_NAME,
@@ -19,14 +20,28 @@ import {
 import {
   organizationSchema,
   webSiteSchema,
-  softwareApplicationSchema,
   graphSchema,
 } from "@/lib/seo/schema";
 
+/**
+ * Sitewide entity graph: Organization + WebSite only.
+ *
+ * SoftwareApplication (and its €9.99–€29.99 AggregateOffer) used to live here,
+ * which meant every one of the ~230 pages declared itself a priced product —
+ * including `/design/art-deco-bedroom` and every blog post. Search Console
+ * shows the result: "Product snippets, 82 impressions, 0 clicks, position
+ * 13.09". A price range rendered against an informational result is a click
+ * deterrent, not an enhancement.
+ *
+ * The SoftwareApplication entity is now declared only on the pages where
+ * purchase is the actual intent: `/`, `/virtual-staging`, `/alternatives`,
+ * `/alternatives/*` and `/vs/*`. (`/pricing` carries an AggregateOffer instead —
+ * see app/pricing/page.tsx.) Those pages reference `#organization` from this
+ * graph, so the @id resolves on merge.
+ */
 const globalSchema = graphSchema([
   organizationSchema(),
   webSiteSchema({ description: SITE_DESCRIPTION }),
-  softwareApplicationSchema(),
 ]);
 
 const geistSans = Geist({
@@ -126,10 +141,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} flex flex-col antialiased`}
         >
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(globalSchema) }}
-          />
+          <JsonLd schemas={[globalSchema]} />
           <ThemeProviderComponent>
             <UserDataProvider>
               <div className="flex min-h-screen flex-col">

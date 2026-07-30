@@ -15,8 +15,16 @@ import {
     THEME_DATA,
     ROOM_DATA,
 } from "@/lib/seo/design-data";
-import { isPriorityDesignSlug, PRIORITY_DESIGN_SET } from "@/lib/seo/priority-pages";
+import { isPriorityDesignSlug } from "@/lib/seo/priority-pages";
+import {
+    getSiblingThemes,
+    getSiblingRooms,
+    getRelatedBlogLinksForDesign,
+    getComparisonLinksForDesign,
+    getUnderlinkedDesignLinks,
+} from "@/lib/seo/internal-links";
 import { DesignPageContent } from "@/components/seo/design-page-content";
+import { JsonLd } from "@/components/seo/json-ld";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -41,7 +49,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const indexable = isPriorityDesignSlug(slug);
 
     return createMetadata({
-        title: page.title,
+        // Absolute: the root layout's "%s | Magic Room" template costs 12
+        // characters of an already-truncated SERP title, spent on a brand no
+        // non-brand searcher recognises. The domain is shown above the title
+        // anyway.
+        title: { absolute: page.title },
         description: page.metaDescription,
         path: `/design/${slug}`,
         keywords: page.keywords,
@@ -60,20 +72,16 @@ export default async function DesignSlugPage({ params }: Props) {
     const themeData = THEME_DATA[page.theme];
     const roomData = ROOM_DATA[page.roomType];
 
-    // Only link out to other (theme, room) combinations that are in the
-    // indexable priority set — sending crawl signal to noindex pages
-    // wastes Google's crawl budget and signals scaled content.
-    const otherThemes = Object.values(THEME_DATA)
-        .filter((theme) => theme.slug !== page.theme)
-        .filter((theme) => PRIORITY_DESIGN_SET.has(`${theme.slug}-${page.roomType}`))
-        .sort((a, b) => a.slug.localeCompare(b.slug))
-        .slice(0, 6);
+    const otherThemes = getSiblingThemes(slug, page.theme, page.roomType);
+    const otherRooms = getSiblingRooms(slug, page.theme, page.roomType);
 
-    const otherRooms = Object.values(ROOM_DATA)
-        .filter((room) => room.slug !== page.roomType)
-        .filter((room) => PRIORITY_DESIGN_SET.has(`${page.theme}-${room.slug}`))
-        .sort((a, b) => a.slug.localeCompare(b.slug))
-        .slice(0, 6);
+    // Contextual (non-nav) links out of the design cluster. Before this, every
+    // design page linked only to siblings, /design, /blog and /pricing — the
+    // blog posts and comparison pages had no inbound links except their own
+    // index page.
+    const relatedBlogLinks = getRelatedBlogLinksForDesign(slug, page.theme, page.roomType);
+    const comparisonLinks = getComparisonLinksForDesign(slug);
+    const moreDesignLinks = getUnderlinkedDesignLinks(slug);
 
     const pageUrl = `${SITE_URL}/design/${slug}`;
     const heroImageUrl = `${SITE_URL}/images/designs/${page.slug}.jpg`;
@@ -126,19 +134,16 @@ export default async function DesignSlugPage({ params }: Props) {
 
     return (
         <>
-            {schemas.map((schema, i) => (
-                <script
-                    key={i}
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-                />
-            ))}
+            <JsonLd schemas={schemas} />
             <DesignPageContent
                 page={page}
                 themeData={themeData}
                 roomData={roomData}
                 otherThemes={otherThemes}
                 otherRooms={otherRooms}
+                relatedBlogLinks={relatedBlogLinks}
+                comparisonLinks={comparisonLinks}
+                moreDesignLinks={moreDesignLinks}
             />
         </>
     );

@@ -3,8 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { IBlogPost, IBlogSection } from "@/lib/seo/blog-data";
+import { IContextualLink } from "@/lib/seo/internal-links";
+import { humanizeDesignSlug } from "@/lib/seo/slug-format";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
+import { RelatedLinks } from "@/components/seo/related-links";
 import { PageTransition } from "@/components/page-transition";
 import {
     Accordion,
@@ -17,6 +20,8 @@ import { ArrowRight } from "lucide-react";
 
 interface BlogPostContentProps {
     post: IBlogPost;
+    relatedPostLinks?: IContextualLink[];
+    comparisonLinks?: IContextualLink[];
 }
 
 function formatDate(dateStr: string): string {
@@ -142,7 +147,11 @@ function renderSection(section: IBlogSection, index: number): React.ReactNode {
     }
 }
 
-export function BlogPostContent({ post }: BlogPostContentProps) {
+export function BlogPostContent({
+    post,
+    relatedPostLinks = [],
+    comparisonLinks = [],
+}: BlogPostContentProps) {
     const breadcrumbItems = [
         { name: "Home", href: "/" },
         { name: "Blog", href: "/blog" },
@@ -192,71 +201,53 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
                             {sectionsWithCta.map((section, index) => renderSection(section, index))}
                         </div>
 
-                        {/* Compare AI tools */}
-                        <div className="mt-10 border-t border-slate-200 pt-8 dark:border-slate-800">
-                            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                                Compare AI interior design tools
-                            </h3>
-                            <ul className="mt-3 flex flex-wrap gap-3">
-                                {[
-                                    { slug: "roomgpt", name: "RoomGPT" },
-                                    { slug: "decorai", name: "DecorAI" },
-                                    { slug: "reimaginehome", name: "Reimagine Home" },
-                                    { slug: "interior-ai", name: "Interior AI" },
-                                ].map((tool) => (
-                                    <li key={tool.slug}>
-                                        <Link
-                                            href={`/alternatives/${tool.slug}`}
-                                            className="text-sm text-primary hover:underline"
-                                        >
-                                            Magic Room vs {tool.name}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Related design pages */}
+                        {/* Related design pages.
+                            Anchor now carries the target page's real query phrase
+                            ("Modern Living Room design ideas") rather than a
+                            generic call to action. */}
                         {post.relatedDesignSlugs.length > 0 && (
-                            <div className="mt-12 border-t border-slate-200 pt-8 dark:border-slate-800">
+                            <div className="mt-10 border-t border-slate-200 pt-8 dark:border-slate-800">
                                 <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                                     Try these designs on your own room
                                 </h3>
                                 <ul className="mt-3 space-y-2">
-                                    {post.relatedDesignSlugs.map((slug) => {
-                                        const label = slug
-                                            .split("-")
-                                            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                                            .join(" ");
-                                        return (
-                                            <li key={slug}>
-                                                <Link
-                                                    href={`/design/${slug}`}
-                                                    className="text-sm text-primary hover:underline"
-                                                >
-                                                    Generate {label} design from your photo →
-                                                </Link>
-                                            </li>
-                                        );
-                                    })}
+                                    {post.relatedDesignSlugs.map((slug) => (
+                                        <li key={slug}>
+                                            <Link
+                                                href={`/design/${slug}`}
+                                                className="text-sm text-primary hover:underline"
+                                            >
+                                                {humanizeDesignSlug(slug)} design ideas
+                                            </Link>
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                         )}
-
-                        <div className="mt-8 border-t border-slate-200 pt-8 dark:border-slate-800">
-                            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                                Compare AI tools
-                            </h3>
-                            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                                See how Magic Room compares to RoomGPT, DecorAI, and other AI interior design tools.{" "}
-                                <Link href="/alternatives" className="text-primary hover:underline">
-                                    View all comparisons →
-                                </Link>
-                            </p>
-                        </div>
                     </div>
                 </div>
             </article>
+
+            {/* Blog -> blog. Every post previously had exactly one inbound
+                internal link (the /blog index), which is the reason the whole
+                blog cluster sat in "Discovered - currently not indexed". */}
+            <RelatedLinks
+                heading="Related guides"
+                links={relatedPostLinks}
+                className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16"
+            />
+
+            {/* Blog -> comparison cluster, with query-phrase anchors.
+                The old block linked to /alternatives/[slug] using the anchor
+                "Magic Room vs [name]", which is the /vs/[slug] page's query
+                phrase — the anchor text and the target were mismatched on every
+                one of the 13 posts. */}
+            <RelatedLinks
+                heading="Compare AI interior design tools"
+                intro="Magic Room is one of several AI room redesign tools. These pages break down the differences in AI model, photo retention, and what a given number of designs actually costs."
+                links={comparisonLinks}
+                className="bg-white py-12 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 md:py-16"
+            />
 
             {/* FAQ */}
             {post.faqs && post.faqs.length > 0 && (

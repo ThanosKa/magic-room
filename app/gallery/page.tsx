@@ -3,6 +3,7 @@ import { createMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, itemListSchema } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import { GalleryContent } from "@/components/seo/gallery-content";
+import { JsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = createMetadata({
     title: "AI Interior Design Gallery | Before & After Room Transformations",
@@ -43,14 +44,7 @@ const itemList = itemListSchema({
 export default function GalleryPage() {
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
-            />
+            <JsonLd schemas={[breadcrumb, itemList]} />
             <GalleryContent />
         </>
     );

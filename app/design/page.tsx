@@ -1,18 +1,27 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { createMetadata } from "@/lib/seo/metadata";
-import { breadcrumbSchema } from "@/lib/seo/schema";
+import { breadcrumbSchema, itemListSchema } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
-import { DESIGN_PAGES, THEME_DATA } from "@/lib/seo/design-data";
+import { DESIGN_PAGES, THEME_DATA, getDesignPageBySlug } from "@/lib/seo/design-data";
+import { PRIORITY_DESIGN_SLUGS } from "@/lib/seo/priority-pages";
 import { Card, CardContent } from "@/components/ui/card";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { PageTransition } from "@/components/page-transition";
 import { Button } from "@/components/ui/button";
+import { JsonLd } from "@/components/seo/json-ld";
+
+// Cross-link card, repeated once per card in the grid below.
+const RELATED_CARD_CLASS =
+    "rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800";
 
 export const metadata: Metadata = createMetadata({
-    title: "AI Interior Design Ideas by Style and Room",
+    // "by Style and Room" described the page's filing system, not what the
+    // searcher gets. The queries landing here ("ai room styles", "ai room
+    // ideas") want to see styles applied to their own photo.
+    title: { absolute: "AI Room Design Ideas — 14 Styles On Your Own Photo" },
     description:
-        "Browse 196 AI interior design combinations across 14 styles and 14 room types. Generate modern, Scandinavian, Japandi, farmhouse, coastal, and more design ideas from a single photo.",
+        "Browse 14 interior design styles across 14 room types, then upload one photo and see any of them on your actual room in 60 seconds. 1 free credit, no card.",
     path: "/design",
     keywords: [
         "AI interior design ideas",
@@ -28,15 +37,36 @@ const schema = breadcrumbSchema([
     { name: "Design Ideas", url: `${SITE_URL}/design` },
 ]);
 
+/**
+ * ItemList for the design index — previously missing entirely, so Google had no
+ * machine-readable statement of what this hub collects.
+ *
+ * Scoped to the indexable priority set only. Listing all 196 combinations here
+ * would enumerate ~158 noindex URLs in structured data, contradicting the
+ * robots directive on those pages and re-signalling the scaled-content pattern
+ * the priority list exists to suppress.
+ */
+const designItemList = itemListSchema({
+    name: "AI Interior Design Ideas by Style and Room",
+    description:
+        "Interior design style and room-type combinations you can generate from a single photo with Magic Room.",
+    items: PRIORITY_DESIGN_SLUGS.map((slug, index) => {
+        const page = getDesignPageBySlug(slug);
+        return {
+            position: index + 1,
+            name: page ? `${page.themeName} ${page.roomName}` : slug,
+            url: `${SITE_URL}/design/${slug}`,
+            description: page?.metaDescription,
+        };
+    }),
+});
+
 export default function DesignHubPage() {
     const themeKeys = Object.keys(THEME_DATA);
 
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-            />
+            <JsonLd schemas={[schema, designItemList]} />
             <PageTransition>
                 {/* Breadcrumb */}
                 <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
@@ -189,7 +219,7 @@ export default function DesignHubPage() {
                             <div className="mt-6 grid gap-4 sm:grid-cols-2">
                                 <Link
                                     href="/blog"
-                                    className="rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800"
+                                    className={RELATED_CARD_CLASS}
                                 >
                                     <h3 className="font-semibold text-slate-900 dark:text-white">
                                         Interior Design Blog
@@ -200,13 +230,35 @@ export default function DesignHubPage() {
                                 </Link>
                                 <Link
                                     href="/alternatives"
-                                    className="rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800"
+                                    className={RELATED_CARD_CLASS}
                                 >
                                     <h3 className="font-semibold text-slate-900 dark:text-white">
-                                        Compare AI Design Tools
+                                        RoomGPT alternatives compared
                                     </h3>
                                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                                        How Magic Room compares to RoomGPT, DecorAI, and other AI interior design tools.
+                                        How Magic Room compares to RoomGPT, Interior AI, DecorAI and Reimagine Home.
+                                    </p>
+                                </Link>
+                                <Link
+                                    href="/gallery"
+                                    className={RELATED_CARD_CLASS}
+                                >
+                                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                                        AI room design gallery
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                        Before-and-after examples generated from real room photos.
+                                    </p>
+                                </Link>
+                                <Link
+                                    href="/virtual-staging"
+                                    className={RELATED_CARD_CLASS}
+                                >
+                                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                                        AI virtual staging for real estate
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                        Staging listing photos with AI instead of paying €75–150 per room.
                                     </p>
                                 </Link>
                             </div>

@@ -58,16 +58,24 @@ export function blogPostingSchema(input: BlogPostingSchemaInput) {
         headline: input.title,
         description: input.description,
         image: input.image ?? `${SITE_URL}/opengraph-image.png`,
+        // The author's `url` now points at the on-site /about page rather than
+        // straight out to LinkedIn, and `@id` matches the Person node declared
+        // there. That gives Google one author entity resolvable across the site
+        // instead of a bare name per post — the difference between an
+        // attributable author and an anonymous byline for E-E-A-T. Off-site
+        // profiles move to sameAs, where they belong.
         author: {
             "@type": "Person",
+            "@id": `${SITE_URL}/about#person`,
             name: input.authorName,
-            url: "https://www.linkedin.com/in/thanos-kazakis-922977205/",
+            url: `${SITE_URL}/about`,
+            sameAs: [
+                "https://www.linkedin.com/in/thanos-kazakis-922977205/",
+                "https://x.com/KazakisThanos",
+                "https://github.com/ThanosKa",
+            ],
         },
-        publisher: {
-            "@type": "Organization",
-            name: SITE_NAME,
-            logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
-        },
+        publisher: { "@id": `${SITE_URL}#organization` },
         datePublished: input.publishedDate,
         dateModified: input.modifiedDate,
         url: input.url,
@@ -143,34 +151,6 @@ export function faqSchema(items: FaqItem[], pageUrl?: string) {
                 text: item.answer,
             },
         })),
-    };
-}
-
-interface ProductSchemaInput {
-    name: string;
-    description: string;
-    price: number;
-    priceCurrency?: string;
-    url?: string;
-    image?: string;
-}
-
-export function productSchema(input: ProductSchemaInput) {
-    return {
-        "@context": "https://schema.org",
-        "@type": "Product",
-        "@id": `${input.url ?? `${SITE_URL}/pricing`}#product`,
-        name: input.name,
-        description: input.description,
-        image: input.image ?? `${SITE_URL}/opengraph-image.png`,
-        brand: { "@type": "Brand", name: SITE_NAME },
-        offers: {
-            "@type": "Offer",
-            price: input.price,
-            priceCurrency: input.priceCurrency ?? "EUR",
-            availability: "https://schema.org/InStock",
-            url: input.url ?? `${SITE_URL}/pricing`,
-        },
     };
 }
 
@@ -302,13 +282,13 @@ export function itemListSchema(input: ItemListSchemaInput) {
         "@context": "https://schema.org",
         "@type": "ItemList",
         name: input.name,
-        description: input.description,
+        ...(input.description ? { description: input.description } : {}),
         itemListElement: input.items.map((item) => ({
             "@type": "ListItem",
             position: item.position,
             name: item.name,
             url: item.url,
-            description: item.description,
+            ...(item.description ? { description: item.description } : {}),
         })),
     };
 }
@@ -339,6 +319,18 @@ interface SoftwareApplicationSchemaInput {
     description?: string;
     applicationCategory?: string;
     operatingSystem?: string;
+    /**
+     * Attach the €9.99–€29.99 AggregateOffer.
+     *
+     * Defaults to FALSE, and deliberately so. This entity is rendered sitewide
+     * from the root layout, which previously put a price range on all ~230
+     * pages including `/design/art-deco-bedroom` and every blog post. That is
+     * what produced the "Product snippets: 82 impressions, 0 clicks, position
+     * 13.09" row in Search Console: a price badge attached to purely
+     * informational results, where it reads as an ad and suppresses the click.
+     * Only pages where buying is the actual intent should pass `true`.
+     */
+    includeOffers?: boolean;
 }
 
 export function softwareApplicationSchema(input?: SoftwareApplicationSchemaInput) {
@@ -351,13 +343,19 @@ export function softwareApplicationSchema(input?: SoftwareApplicationSchemaInput
         applicationCategory: input?.applicationCategory ?? "DesignApplication",
         operatingSystem: input?.operatingSystem ?? "Web",
         url: SITE_URL,
-        offers: {
-            "@type": "AggregateOffer",
-            lowPrice: 9.99,
-            highPrice: 29.99,
-            priceCurrency: "EUR",
-            offerCount: 3,
-            availability: "https://schema.org/InStock",
-        },
+        publisher: { "@id": `${SITE_URL}#organization` },
+        ...(input?.includeOffers
+            ? {
+                offers: {
+                    "@type": "AggregateOffer",
+                    lowPrice: 9.99,
+                    highPrice: 29.99,
+                    priceCurrency: "EUR",
+                    offerCount: 3,
+                    availability: "https://schema.org/InStock",
+                    url: `${SITE_URL}/pricing`,
+                },
+            }
+            : {}),
     };
 }

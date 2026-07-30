@@ -4,7 +4,7 @@ import { createMetadata } from "@/lib/seo/metadata";
 import {
     faqSchema,
     breadcrumbSchema,
-    aggregateOfferSchema,
+    softwareApplicationSchema,
 } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import {
@@ -12,7 +12,12 @@ import {
     getAllCompetitorSlugs,
     COMPETITORS,
 } from "@/lib/seo/competitor-data";
+import {
+    getDesignLinksForCompetitor,
+    getBlogLinksForCompetitor,
+} from "@/lib/seo/internal-links";
 import { AlternativePageContent } from "@/components/seo/alternative-page-content";
+import { JsonLd } from "@/components/seo/json-ld";
 
 interface Props {
     params: Promise<{ competitor: string }>;
@@ -31,10 +36,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
+        // Was 69 chars and spent the prime post-query pixels on "Magic Room" —
+        // a brand a non-brand searcher has never heard of. Now the query phrase
+        // is front-loaded and the visible tail carries two concrete
+        // differentiators instead of an unknown name.
         title: {
-            absolute: `${competitor.name} Alternative — Magic Room (Cheaper, Privacy-First, 2026)`,
+            absolute: `${competitor.name} Alternative — Pay Once, Photos Never Stored`,
         },
-        description: `Switching from ${competitor.name}? Magic Room starts at €9.99 one-time (not monthly), never stores your photos, and runs on Google Gemini. Try free with 1 credit.`,
+        description: `A ${competitor.name} alternative that charges once, not monthly, and never stores your room photos. Google Gemini AI, 4–8 redesigns in 60s. 1 free credit.`,
         path: `/alternatives/${slug}`,
         keywords: competitor.keywords,
     });
@@ -57,29 +66,24 @@ export default async function AlternativePage({ params }: Props) {
                 url: `${SITE_URL}/alternatives/${slug}`,
             },
         ]),
-        aggregateOfferSchema({
-            name: `Magic Room — ${competitor.name} Alternative`,
+        // SoftwareApplication, not Product. Magic Room is a web app, not a SKU,
+        // and `Product` + offers with no aggregateRating is exactly the shape
+        // that produced the 0-click "Product snippets" appearance in GSC.
+        softwareApplicationSchema({
             description: `AI interior design tool offered as a ${competitor.name} alternative. One-time credit packages from €9.99, no subscription, photos never stored.`,
-            lowPrice: 9.99,
-            highPrice: 29.99,
-            offerCount: 3,
-            url: `${SITE_URL}/alternatives/${slug}`,
+            includeOffers: true,
         }),
         ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs, `${SITE_URL}/alternatives/${slug}`)] : []),
     ];
 
     return (
         <>
-            {schemas.map((schema, i) => (
-                <script
-                    key={i}
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-                />
-            ))}
+            <JsonLd schemas={schemas} />
             <AlternativePageContent
                 competitor={competitor}
                 otherCompetitors={COMPETITORS.filter((c) => c.slug !== slug)}
+                designLinks={getDesignLinksForCompetitor(slug)}
+                blogLinks={getBlogLinksForCompetitor(slug)}
             />
         </>
     );

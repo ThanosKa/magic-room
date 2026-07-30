@@ -1,57 +1,81 @@
 import { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo/config";
-import { getAllCompetitorSlugs } from "@/lib/seo/competitor-data";
+import {
+    getAllCompetitorSlugs,
+    VS_SLUGS,
+} from "@/lib/seo/competitor-data";
 import { BLOG_POSTS } from "@/lib/seo/blog-data";
 import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-pages";
 
-const VS_SLUGS = ["roomgpt", "interior-ai", "reimaginehome", "decorai"];
+/**
+ * Every URL emitted here must satisfy all four of:
+ *   1. It renders (no 404) — enforced by deriving slugs from the same data
+ *      modules the routes use, never from a hand-maintained copy.
+ *   2. It is indexable (no `robots: { index: false }` on the route).
+ *   3. It self-canonicals to exactly this absolute, non-trailing-slash URL.
+ *   4. It is reachable by at least one internal link.
+ *
+ * Deliberately ABSENT and correct to be absent:
+ *   /generate            — noindex (utility/app surface behind auth)
+ *   /design/<non-priority> — the 158 (theme, room) combos outside
+ *                          PRIORITY_DESIGN_SLUGS are noindex on purpose
+ *   /api/*               — disallowed in robots.txt
+ *   404 / error routes   — noindex
+ */
+
+// Content was materially revised on this date (per-slug intros + FAQ blocks
+// added to the priority design pages). Bumping it is the crawl signal that
+// tells Google the previously "crawled - currently not indexed" pages changed.
+const CONTENT_LAST_UPDATED = new Date("2026-07-29");
+const LEGAL_LAST_UPDATED = new Date("2024-12-01");
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
 
-    const siteLastUpdated = new Date("2026-05-19");
-    const legalLastUpdated = new Date("2024-12-01");
-
     const corePages: MetadataRoute.Sitemap = [
         {
-            url: baseUrl,
-            lastModified: siteLastUpdated,
+            // Trailing slash on purpose: the homepage <loc> must match the URL
+            // Google indexes ("https://magic-room.dev/", as it appears in the
+            // Search Console Pages report) and the canonical emitted by
+            // createMetadata({ path: "" }). The bare origin does not.
+            url: `${baseUrl}/`,
+            lastModified: CONTENT_LAST_UPDATED,
             changeFrequency: "weekly",
             priority: 1,
         },
         {
             url: `${baseUrl}/pricing`,
-            lastModified: siteLastUpdated,
+            lastModified: CONTENT_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
         {
             url: `${baseUrl}/virtual-staging`,
-            lastModified: siteLastUpdated,
+            lastModified: CONTENT_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
         {
             url: `${baseUrl}/gallery`,
-            lastModified: siteLastUpdated,
+            lastModified: CONTENT_LAST_UPDATED,
             changeFrequency: "monthly",
-            priority: 0.8,
+            priority: 0.6,
         },
         {
             url: `${baseUrl}/about`,
-            lastModified: siteLastUpdated,
+            lastModified: CONTENT_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.5,
         },
         {
             url: `${baseUrl}/privacy`,
-            lastModified: legalLastUpdated,
+            lastModified: LEGAL_LAST_UPDATED,
             changeFrequency: "yearly",
             priority: 0.3,
         },
         {
             url: `${baseUrl}/terms`,
-            lastModified: legalLastUpdated,
+            lastModified: LEGAL_LAST_UPDATED,
             changeFrequency: "yearly",
             priority: 0.3,
         },
@@ -60,7 +84,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const designHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/design`,
-            lastModified: siteLastUpdated,
+            lastModified: CONTENT_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.9,
         },
@@ -71,7 +95,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // exist for users browsing, but Google won't waste crawl budget on them.
     const designPages: MetadataRoute.Sitemap = PRIORITY_DESIGN_SLUGS.map((slug) => ({
         url: `${baseUrl}/design/${slug}`,
-        lastModified: siteLastUpdated,
+        lastModified: CONTENT_LAST_UPDATED,
         changeFrequency: "monthly" as const,
         priority: TOP_DESIGN_SLUGS.has(slug) ? 0.8 : 0.6,
     }));
@@ -79,7 +103,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const alternativesHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/alternatives`,
-            lastModified: siteLastUpdated,
+            lastModified: CONTENT_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
@@ -88,7 +112,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const alternativePages: MetadataRoute.Sitemap = getAllCompetitorSlugs().map(
         (slug) => ({
             url: `${baseUrl}/alternatives/${slug}`,
-            lastModified: siteLastUpdated,
+            lastModified: CONTENT_LAST_UPDATED,
             changeFrequency: "monthly" as const,
             priority: 0.7,
         })
@@ -96,7 +120,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const vsPages: MetadataRoute.Sitemap = VS_SLUGS.map((slug) => ({
         url: `${baseUrl}/vs/${slug}`,
-        lastModified: siteLastUpdated,
+        lastModified: CONTENT_LAST_UPDATED,
         changeFrequency: "monthly" as const,
         priority: 0.7,
     }));
@@ -104,7 +128,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const blogHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/blog`,
-            lastModified: siteLastUpdated,
+            lastModified: CONTENT_LAST_UPDATED,
             changeFrequency: "weekly",
             priority: 0.8,
         },
@@ -117,7 +141,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.6,
     }));
 
-    return [
+    const entries = [
         ...corePages,
         ...designHub,
         ...designPages,
@@ -127,4 +151,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ...blogHub,
         ...blogPages,
     ];
+
+    // Guard against a duplicate <loc> ever shipping (e.g. a slug appearing in
+    // both PRIORITY_DESIGN_SLUGS tiers, or a competitor listed twice).
+    // Duplicate URLs in a sitemap are a known trigger for Google ignoring it.
+    const seen = new Set<string>();
+    return entries.filter((entry) => {
+        if (seen.has(entry.url)) return false;
+        seen.add(entry.url);
+        return true;
+    });
 }
