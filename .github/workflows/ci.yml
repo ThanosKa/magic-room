@@ -2,41 +2,73 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+# Cancel superseded runs for the same branch / PR.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   quality:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20]
+    timeout-minutes: 15
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v7
 
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: latest
+      # No `version` input: pnpm is read from the `packageManager` field in
+      # package.json, so local, CI and Vercel use the same pnpm.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
 
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
+      # Node 24 = Vercel's default Node.js runtime.
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
 
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-    - name: Run linter
-      run: pnpm lint
+      - name: Lint
+        run: pnpm lint
 
-    - name: Run type check
-      run: pnpm type-check
+      - name: Type check
+        run: pnpm type-check
 
-    - name: Run tests
-      run: pnpm test:run
+      - name: Test
+        run: pnpm test:run
+
+      - name: Build
+        run: pnpm build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          # Placeholder values so `next build` can evaluate modules that read
+          # env vars at import time. Not real credentials; CI uses no secrets.
+          LOG_LEVEL: warn
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+          # Well-formed dummy key (base64 of "example.clerk.accounts.dev$").
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ZXhhbXBsZS5jbGVyay5hY2NvdW50cy5kZXYk
+          CLERK_SECRET_KEY: sk_test_ci_placeholder
+          CLERK_WEBHOOK_SECRET: whsec_ci_placeholder
+          NEXT_PUBLIC_SUPABASE_URL: https://ci-placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: ci-placeholder-service-role-key
+          OPENROUTER_API_KEY: sk-or-ci-placeholder
+          STRIPE_SECRET_KEY: sk_test_ci_placeholder
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_ci_placeholder
+          STRIPE_WEBHOOK_SECRET: whsec_ci_placeholder
+          STRIPE_PRICE_STARTER: price_ci_starter
+          STRIPE_PRICE_GROWTH: price_ci_growth
+          STRIPE_PRICE_PREMIUM: price_ci_premium
+          UPSTASH_REDIS_REST_URL: https://ci-placeholder.upstash.io
+          UPSTASH_REDIS_REST_TOKEN: ci-placeholder-token
+          RESEND_API_KEY: re_ci_placeholder

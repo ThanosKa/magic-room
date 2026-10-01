@@ -1,0 +1,19 @@
+# pnpm settings (pnpm >= 10.26). See https://pnpm.io/settings/build
+#
+# pnpm blocks dependency lifecycle scripts by default. Every package that ships
+# a build script must be listed here: true = allowed to run, false = reviewed
+# and denied. strictDepBuilds makes `pnpm install` fail on any new, unreviewed
+# build script instead of silently skipping it.
+allowBuilds:
+  # Verifies/installs the native esbuild binary used by Vite/Vitest.
+  esbuild: true
+  # Image optimisation for next/image; falls back to building from source
+  # when no prebuilt binary matches the platform.
+  sharp: true
+  # Native resolver used by eslint-config-next (eslint-import-resolver-typescript);
+  # napi-postinstall restores the binding if the optional dependency is missing.
+  unrs-resolver: true
+  # Only prints a telemetry notice; not needed.
+  '@clerk/shared': false
+
+strictDepBuilds: true
