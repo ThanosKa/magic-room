@@ -5,6 +5,7 @@ import Link from "next/link";
 import { IBlogPost, IBlogSection } from "@/lib/seo/blog-data";
 import { IContextualLink } from "@/lib/seo/internal-links";
 import { humanizeDesignSlug } from "@/lib/seo/slug-format";
+import { isPriorityDesignSlug } from "@/lib/seo/priority-pages";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
 import { RelatedLinks } from "@/components/seo/related-links";
@@ -158,6 +159,9 @@ export function BlogPostContent({
         { name: post.title, href: `/blog/${post.slug}` },
     ];
 
+    // Only link indexable design pages (pruned combos are noindex; lib/seo/pruned.ts).
+    const linkedDesignSlugs = post.relatedDesignSlugs.filter(isPriorityDesignSlug);
+
     // Insert CTA after the 4th section
     const sectionsWithCta = post.sections;
 
@@ -205,13 +209,13 @@ export function BlogPostContent({
                             Anchor now carries the target page's real query phrase
                             ("Modern Living Room design ideas") rather than a
                             generic call to action. */}
-                        {post.relatedDesignSlugs.length > 0 && (
+                        {linkedDesignSlugs.length > 0 && (
                             <div className="mt-10 border-t border-slate-200 pt-8 dark:border-slate-800">
                                 <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                                     Try these designs on your own room
                                 </h3>
                                 <ul className="mt-3 space-y-2">
-                                    {post.relatedDesignSlugs.map((slug) => (
+                                    {linkedDesignSlugs.map((slug) => (
                                         <li key={slug}>
                                             <Link
                                                 href={`/design/${slug}`}

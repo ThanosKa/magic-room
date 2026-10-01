@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import {
   homeMetadata,
   faqSchema,
-  howToSchema,
   softwareApplicationSchema,
   SITE_URL,
 } from "@/lib/seo";
@@ -64,28 +63,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOME_HOWTO = howToSchema({
-  name: "How to Redesign a Room with AI",
-  description:
-    "Transform any room in your home using AI-powered interior design in three simple steps.",
-  totalTime: "PT2M",
-  steps: [
-    {
-      name: "Upload a photo of your room",
-      text: "Take a clear photo of the room you want to redesign. Shoot from a corner or doorway in good lighting to capture as much of the space as possible, then upload it to Magic Room.",
-    },
-    {
-      name: "Choose your design style and room type",
-      text: "Select from 14 design themes including Modern, Scandinavian, Industrial, Bohemian, and more. Confirm your room type and optionally add custom details about what you want.",
-    },
-    {
-      name: "Get your AI-generated design in seconds",
-      text: "The AI processes your photo and generates a professionally redesigned version of your room in 30 to 60 seconds. Download the result for planning, sharing, or inspiration.",
-    },
-  ],
-  url: SITE_URL,
-});
-
 /**
  * The SoftwareApplication entity, declared here rather than sitewide.
  *
@@ -104,7 +81,7 @@ const HOME_SOFTWARE = softwareApplicationSchema({
 export default function Home() {
   return (
     <>
-      <JsonLd schemas={[HOME_SOFTWARE, faqSchema(FAQ_ITEMS, SITE_URL), HOME_HOWTO]} />
+      <JsonLd schemas={[HOME_SOFTWARE, faqSchema(FAQ_ITEMS, SITE_URL)]} />
       <HomeContent />
     </>
   );

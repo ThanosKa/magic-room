@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { PRUNED_NOINDEX_PATHS, PRUNED_REDIRECTS } from "./lib/seo/pruned";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: [
@@ -22,7 +23,20 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Reversible pruning (lib/seo/pruned.ts): one header rule per noindex path.
+      ...PRUNED_NOINDEX_PATHS.map((path) => ({
+        source: path,
+        headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+      })),
     ];
+  },
+  async redirects() {
+    // permanent: true => HTTP 308.
+    return PRUNED_REDIRECTS.map((entry) => ({
+      source: entry.path,
+      destination: entry.target,
+      permanent: true,
+    }));
   },
 };
 

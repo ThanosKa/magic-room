@@ -7,7 +7,7 @@ import {
     softwareApplicationSchema,
 } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
-import { COMPETITORS, getCompetitorBySlug } from "@/lib/seo/competitor-data";
+import { COMPETITORS, getCompetitorBySlug, hasVsPage } from "@/lib/seo/competitor-data";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
 import { PageTransition } from "@/components/page-transition";
@@ -423,12 +423,14 @@ export default function AlternativesHubPage() {
                                             >
                                                 {competitor.name} alternative — full breakdown
                                             </Link>
-                                            <Link
-                                                href={`/vs/${competitor.slug}`}
-                                                className="text-primary hover:underline"
-                                            >
-                                                Magic Room vs {competitor.name}
-                                            </Link>
+                                            {hasVsPage(competitor.slug) && (
+                                                <Link
+                                                    href={`/vs/${competitor.slug}`}
+                                                    className="text-primary hover:underline"
+                                                >
+                                                    Magic Room vs {competitor.name}
+                                                </Link>
+                                            )}
                                         </p>
                                     </article>
                                 ))}

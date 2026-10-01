@@ -12,6 +12,8 @@
  * billed, whether credits survive the billing period, what happens when you stop
  * paying — plus a link to the vendor's own page for the current rate.
  */
+import { isPrunedPath } from "@/lib/seo/pruned";
+
 export interface IPricingModel {
     /** How the vendor bills: subscription, one-time, hybrid. */
     billing: string;
@@ -372,7 +374,9 @@ export function getAllCompetitorSlugs(): string[] {
  * orphaned indexable page (adding it to the route copy only). Both routes now
  * import this constant.
  */
-export const VS_SLUGS: string[] = getAllCompetitorSlugs();
+export const VS_SLUGS: string[] = getAllCompetitorSlugs().filter(
+    (slug) => !isPrunedPath(`/vs/${slug}`)
+);
 
 export function hasVsPage(slug: string): boolean {
     return VS_SLUGS.includes(slug);

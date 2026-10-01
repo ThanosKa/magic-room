@@ -99,7 +99,8 @@ export default async function VsPage({ params }: Props) {
             <JsonLd schemas={schemas} />
             <VsPageContent
                 competitor={competitor}
-                otherCompetitors={COMPETITORS.filter(
+                otherCompetitors={COMPETITORS.filter((c) => c.slug !== slug)}
+                vsSiblings={COMPETITORS.filter(
                     (c) => c.slug !== slug && hasVsPage(c.slug)
                 )}
                 designLinks={getDesignLinksForCompetitor(`vs-${slug}`)}

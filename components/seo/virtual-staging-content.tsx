@@ -331,8 +331,8 @@ export function VirtualStagingContent() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/design/minimalist-living-room" className={CHIP_CLASS}>
-                                    Minimalist Living Room
+                                <Link href="/design/scandinavian-living-room" className={CHIP_CLASS}>
+                                    Scandinavian Living Room
                                 </Link>
                             </li>
                             <li>

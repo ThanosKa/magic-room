@@ -6,6 +6,7 @@ import Link from "next/link";
 import { PageTransition } from "@/components/page-transition";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
+import { isPriorityDesignSlug } from "@/lib/seo/priority-pages";
 
 // Cross-link card, repeated once per card in the grid below.
 const RELATED_CARD_CLASS =
@@ -92,14 +93,14 @@ const FILTERS = [
 
 function GalleryCard({ item }: { item: GalleryItem }) {
     const [hovered, setHovered] = useState(false);
+    // Only indexable design pages are linked; pruned/noindex combos still show
+    // their before/after image but are not a crawl path (lib/seo/pruned.ts).
+    const linked = isPriorityDesignSlug(item.slug);
+    const cardClassName =
+        "group block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-lg dark:border-slate-800 dark:bg-slate-900";
 
-    return (
-        <Link
-            href={`/design/${item.slug}`}
-            className="group block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-        >
+    const body = (
+        <>
             {/* Image area with before/after toggle */}
             <div className="relative aspect-[4/3] overflow-hidden bg-slate-100 dark:bg-slate-800">
                 {/* Before image */}
@@ -140,11 +141,36 @@ function GalleryCard({ item }: { item: GalleryItem }) {
                             {item.roomName}
                         </h3>
                     </div>
-                    <span className="text-xs text-slate-400 group-hover:text-primary transition-colors dark:text-slate-500">
-                        View →
-                    </span>
+                    {linked && (
+                        <span className="text-xs text-slate-400 group-hover:text-primary transition-colors dark:text-slate-500">
+                            View →
+                        </span>
+                    )}
                 </div>
             </div>
+        </>
+    );
+
+    if (!linked) {
+        return (
+            <div
+                className={cardClassName}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+            >
+                {body}
+            </div>
+        );
+    }
+
+    return (
+        <Link
+            href={`/design/${item.slug}`}
+            className={cardClassName}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            {body}
         </Link>
     );
 }
@@ -291,8 +317,8 @@ export function GalleryContent() {
                                 },
                                 { slug: "modern-living-room", label: "Modern living room design ideas" },
                                 { slug: "coastal-living-room", label: "Coastal living room design ideas" },
-                                { slug: "japandi-living-room", label: "Japandi living room design ideas" },
-                                { slug: "industrial-kitchen", label: "Industrial kitchen design ideas" },
+                                { slug: "modern-bathroom", label: "Modern bathroom design ideas" },
+                                { slug: "farmhouse-kitchen", label: "Farmhouse kitchen design ideas" },
                             ].map((item) => (
                                 <li key={item.slug}>
                                     <Link

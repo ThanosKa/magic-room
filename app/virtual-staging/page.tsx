@@ -3,7 +3,6 @@ import { virtualStagingMetadata } from "@/lib/seo/metadata";
 import {
     faqSchema,
     breadcrumbSchema,
-    howToSchema,
     softwareApplicationSchema,
 } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
@@ -63,27 +62,6 @@ export default function VirtualStagingPage() {
             includeOffers: true,
         }),
         faqSchema(FAQS, PAGE_URL),
-        howToSchema({
-            name: "How to virtually stage a property with AI",
-            description:
-                "Stage a real estate listing photo in 60 seconds using AI — no furniture, no scheduling, under $1 per photo.",
-            totalTime: "PT2M",
-            url: PAGE_URL,
-            steps: [
-                {
-                    name: "Upload your listing photo",
-                    text: "Take or select an existing photo of the room you want to stage. Upload it to Magic Room — JPG, PNG, and WEBP files are all supported.",
-                },
-                {
-                    name: "Select a staging style",
-                    text: "Choose a design theme such as modern, Scandinavian, or traditional. Optionally add specific instructions for furniture, colours, or materials.",
-                },
-                {
-                    name: "Download your staged image",
-                    text: "The AI generates a photo-realistic staged version of your room in 30 to 60 seconds. Download the result and use it in your MLS listing or marketing materials.",
-                },
-            ],
-        }),
     ];
 
     return (

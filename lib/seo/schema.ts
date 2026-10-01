@@ -172,39 +172,6 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
     };
 }
 
-interface HowToStep {
-    name: string;
-    text: string;
-    image?: string;
-}
-
-interface HowToSchemaInput {
-    name: string;
-    description?: string;
-    steps: HowToStep[];
-    url: string;
-    totalTime?: string;
-}
-
-export function howToSchema(input: HowToSchemaInput) {
-    return {
-        "@context": "https://schema.org",
-        "@type": "HowTo",
-        "@id": `${input.url}#howto`,
-        name: input.name,
-        description: input.description,
-        ...(input.totalTime ? { totalTime: input.totalTime } : {}),
-        step: input.steps.map((step, index) => ({
-            "@type": "HowToStep",
-            position: index + 1,
-            name: step.name,
-            text: step.text,
-            ...(step.image ? { image: step.image } : {}),
-        })),
-        url: input.url,
-    };
-}
-
 interface ImageObjectSchemaInput {
     url: string;
     contentUrl?: string;
