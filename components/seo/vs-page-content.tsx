@@ -67,6 +67,8 @@ interface VsPageContentProps {
     competitor: ICompetitorData;
     /** The other three competitors, for sibling /vs and /alternatives links. */
     otherCompetitors?: ICompetitorData[];
+    /** Subset of otherCompetitors that still have a live (non-redirecting) /vs page. */
+    vsSiblings?: ICompetitorData[];
     designLinks?: IContextualLink[];
     blogLinks?: IContextualLink[];
 }
@@ -74,6 +76,7 @@ interface VsPageContentProps {
 export function VsPageContent({
     competitor,
     otherCompetitors = [],
+    vsSiblings = [],
     designLinks = [],
     blogLinks = [],
 }: VsPageContentProps) {
@@ -341,24 +344,28 @@ export function VsPageContent({
             <section className="bg-slate-50 py-10 dark:bg-slate-900/50">
                 <div className="container px-4 md:px-6">
                     <div className="mx-auto max-w-3xl">
-                        <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">
-                            Other head-to-head comparisons
-                        </h2>
-                        <ul className="flex flex-wrap gap-3">
-                            {otherCompetitors.map((c) => (
-                                <li key={`vs-${c.slug}`}>
-                                    <Link
-                                        href={`/vs/${c.slug}`}
-                                        className={CHIP_CLASS}
-                                    >
-                                        Magic Room vs {c.name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                        <h3 className="mb-4 mt-8 text-lg font-semibold text-slate-900 dark:text-white">
+                        {vsSiblings.length > 0 && (
+                            <>
+                                <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">
+                                    Other head-to-head comparisons
+                                </h2>
+                                <ul className="flex flex-wrap gap-3">
+                                    {vsSiblings.map((c) => (
+                                        <li key={`vs-${c.slug}`}>
+                                            <Link
+                                                href={`/vs/${c.slug}`}
+                                                className={CHIP_CLASS}
+                                            >
+                                                Magic Room vs {c.name}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
+                        <h2 className="mb-4 mt-8 text-lg font-semibold text-slate-900 dark:text-white">
                             Looking for a straight replacement?
-                        </h3>
+                        </h2>
                         <ul className="flex flex-wrap gap-3">
                             <li>
                                 <Link

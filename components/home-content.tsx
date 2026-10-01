@@ -12,16 +12,12 @@ import { Card, CardContent } from "@/components/ui/card";
 const POPULAR_DESIGNS = [
     { slug: "modern-living-room", label: "Modern Living Room" },
     { slug: "scandinavian-living-room", label: "Scandinavian Living Room" },
-    { slug: "minimalist-living-room", label: "Minimalist Living Room" },
-    { slug: "modern-bedroom", label: "Modern Bedroom" },
     { slug: "scandinavian-bedroom", label: "Scandinavian Bedroom" },
-    { slug: "bohemian-bedroom", label: "Bohemian Bedroom" },
-    { slug: "industrial-kitchen", label: "Industrial Kitchen" },
     { slug: "farmhouse-kitchen", label: "Farmhouse Kitchen" },
-    { slug: "luxury-bathroom", label: "Luxury Bathroom" },
     { slug: "coastal-living-room", label: "Coastal Living Room" },
-    { slug: "minimalist-bedroom", label: "Minimalist Bedroom" },
-    { slug: "art-deco-living-room", label: "Art Deco Living Room" },
+    { slug: "art-deco-bedroom", label: "Art Deco Bedroom" },
+    { slug: "modern-bathroom", label: "Modern Bathroom" },
+    { slug: "modern-sunroom", label: "Modern Sunroom" },
 ];
 
 const COMPARE_LINKS = [
@@ -44,11 +40,6 @@ const COMPARE_LINKS = [
         href: "/alternatives/decorai",
         label: "Best DecorAI Alternative",
         cta: "Magic Room vs DecorAI",
-    },
-    {
-        href: "/vs/roomgpt",
-        label: "Magic Room vs RoomGPT",
-        cta: "Side-by-side comparison",
     },
     {
         href: "/alternatives",

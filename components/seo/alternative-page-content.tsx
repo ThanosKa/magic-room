@@ -23,6 +23,8 @@ const CHIP_CLASS =
 interface AlternativePageContentProps {
     competitor: ICompetitorData;
     otherCompetitors?: ICompetitorData[];
+    /** Competitors that still have a live (non-redirecting) /vs page, self included. */
+    vsCompetitors?: ICompetitorData[];
     designLinks?: IContextualLink[];
     blogLinks?: IContextualLink[];
 }
@@ -30,6 +32,7 @@ interface AlternativePageContentProps {
 export function AlternativePageContent({
     competitor,
     otherCompetitors = [],
+    vsCompetitors = [],
     designLinks = [],
     blogLinks = [],
 }: AlternativePageContentProps) {
@@ -428,18 +431,10 @@ export function AlternativePageContent({
                                 ))}
                             </ul>
                             <h3 className="mb-4 mt-8 text-lg font-semibold text-slate-900 dark:text-white">
-                                Head-to-head comparisons
+                                {vsCompetitors.length > 0 ? "Head-to-head comparisons" : "More comparisons"}
                             </h3>
                             <ul className="flex flex-wrap gap-3">
-                                <li>
-                                    <Link
-                                        href={`/vs/${competitor.slug}`}
-                                        className={CHIP_CLASS}
-                                    >
-                                        Magic Room vs {competitor.name}
-                                    </Link>
-                                </li>
-                                {otherCompetitors.map((c) => (
+                                {vsCompetitors.map((c) => (
                                     <li key={c.slug}>
                                         <Link
                                             href={`/vs/${c.slug}`}

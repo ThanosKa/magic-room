@@ -27,7 +27,7 @@
  */
 
 import { BLOG_POSTS, getBlogPostBySlug } from "@/lib/seo/blog-data";
-import { COMPETITORS, getCompetitorBySlug } from "@/lib/seo/competitor-data";
+import { COMPETITORS, getCompetitorBySlug, hasVsPage } from "@/lib/seo/competitor-data";
 import {
     THEME_DATA,
     ROOM_DATA,
@@ -382,7 +382,8 @@ function comparisonLinks(
     return [
         { href: "/alternatives", ...hub },
         ...rotated.map(alternativeLink),
-        ...(vsTargets === "all" ? rotated : rotated.slice(0, 1)).map(vsLink),
+        // Most /vs pages now 301 to /alternatives (lib/seo/pruned.ts); never link a redirect.
+        ...(vsTargets === "all" ? rotated : rotated.slice(0, 1)).filter(hasVsPage).map(vsLink),
     ];
 }
 

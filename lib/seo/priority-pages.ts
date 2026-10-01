@@ -1,3 +1,5 @@
+import { isPrunedPath } from "@/lib/seo/pruned";
+
 /**
  * Curated set of design pages that:
  *   - Are exposed in the XML sitemap
@@ -61,8 +63,14 @@ const SECONDARY_DESIGN_SLUGS = new Set([
     "scandinavian-office",
 ]);
 
-export const PRIORITY_DESIGN_SLUGS: string[] = Array.from(
+// The curated list before the 2026-10 prune. Entries listed in lib/seo/pruned.ts
+// are dropped below, which is what makes them noindex, unsitemapped and unlinked.
+const CURATED_DESIGN_SLUGS: string[] = Array.from(
     new Set<string>([...TOP_DESIGN_SLUGS, ...SECONDARY_DESIGN_SLUGS])
+);
+
+export const PRIORITY_DESIGN_SLUGS: string[] = CURATED_DESIGN_SLUGS.filter(
+    (slug) => !isPrunedPath(`/design/${slug}`)
 );
 
 export const PRIORITY_DESIGN_SET = new Set(PRIORITY_DESIGN_SLUGS);

@@ -19,14 +19,21 @@ import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-page
  *   /generate            — noindex (utility/app surface behind auth)
  *   /design/<non-priority> — the 158 (theme, room) combos outside
  *                          PRIORITY_DESIGN_SLUGS are noindex on purpose
+ *   /design/<pruned>     — noindex via lib/seo/pruned.ts (X-Robots-Tag header)
+ *   /vs/<redirected>     — 308 to /alternatives/<slug> via lib/seo/pruned.ts
  *   /api/*               — disallowed in robots.txt
  *   404 / error routes   — noindex
  */
 
-// Content was materially revised on this date (per-slug intros + FAQ blocks
-// added to the priority design pages). Bumping it is the crawl signal that
-// tells Google the previously "crawled - currently not indexed" pages changed.
-const CONTENT_LAST_UPDATED = new Date("2026-07-29");
+// Honest per-surface dates. Only bump a surface when it actually changed.
+//   - BASELINE: last broad content revision (per-slug intros + FAQ blocks on
+//     the priority design pages, 2026-07-29). Surfaces untouched since then.
+//   - PASS_2026_10: surfaces edited in the 2026-10 SEO pass (HowTo JSON-LD
+//     removed, /vs consolidated into /alternatives, internal links and hub
+//     listings changed, pruned combos removed from the design hub).
+//   - LEGAL: matches the "Last Updated: December 2024" line on /privacy and /terms.
+const BASELINE_LAST_UPDATED = new Date("2026-07-29");
+const PASS_2026_10_LAST_UPDATED = new Date("2026-10-01");
 const LEGAL_LAST_UPDATED = new Date("2024-12-01");
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -39,31 +46,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
             // Search Console Pages report) and the canonical emitted by
             // createMetadata({ path: "" }). The bare origin does not.
             url: `${baseUrl}/`,
-            lastModified: CONTENT_LAST_UPDATED,
+            lastModified: PASS_2026_10_LAST_UPDATED,
             changeFrequency: "weekly",
             priority: 1,
         },
         {
             url: `${baseUrl}/pricing`,
-            lastModified: CONTENT_LAST_UPDATED,
+            lastModified: BASELINE_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
         {
             url: `${baseUrl}/virtual-staging`,
-            lastModified: CONTENT_LAST_UPDATED,
+            lastModified: PASS_2026_10_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
         {
             url: `${baseUrl}/gallery`,
-            lastModified: CONTENT_LAST_UPDATED,
+            lastModified: PASS_2026_10_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.6,
         },
         {
             url: `${baseUrl}/about`,
-            lastModified: CONTENT_LAST_UPDATED,
+            lastModified: BASELINE_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.5,
         },
@@ -84,7 +91,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const designHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/design`,
-            lastModified: CONTENT_LAST_UPDATED,
+            lastModified: PASS_2026_10_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.9,
         },
@@ -95,7 +102,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // exist for users browsing, but Google won't waste crawl budget on them.
     const designPages: MetadataRoute.Sitemap = PRIORITY_DESIGN_SLUGS.map((slug) => ({
         url: `${baseUrl}/design/${slug}`,
-        lastModified: CONTENT_LAST_UPDATED,
+        lastModified: PASS_2026_10_LAST_UPDATED,
         changeFrequency: "monthly" as const,
         priority: TOP_DESIGN_SLUGS.has(slug) ? 0.8 : 0.6,
     }));
@@ -103,7 +110,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const alternativesHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/alternatives`,
-            lastModified: CONTENT_LAST_UPDATED,
+            lastModified: PASS_2026_10_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
@@ -112,7 +119,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const alternativePages: MetadataRoute.Sitemap = getAllCompetitorSlugs().map(
         (slug) => ({
             url: `${baseUrl}/alternatives/${slug}`,
-            lastModified: CONTENT_LAST_UPDATED,
+            lastModified: PASS_2026_10_LAST_UPDATED,
             changeFrequency: "monthly" as const,
             priority: 0.7,
         })
@@ -120,7 +127,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const vsPages: MetadataRoute.Sitemap = VS_SLUGS.map((slug) => ({
         url: `${baseUrl}/vs/${slug}`,
-        lastModified: CONTENT_LAST_UPDATED,
+        lastModified: PASS_2026_10_LAST_UPDATED,
         changeFrequency: "monthly" as const,
         priority: 0.7,
     }));
@@ -128,7 +135,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const blogHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/blog`,
-            lastModified: CONTENT_LAST_UPDATED,
+            lastModified: BASELINE_LAST_UPDATED,
             changeFrequency: "weekly",
             priority: 0.8,
         },

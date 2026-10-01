@@ -11,6 +11,7 @@ import {
     getCompetitorBySlug,
     getAllCompetitorSlugs,
     COMPETITORS,
+    hasVsPage,
 } from "@/lib/seo/competitor-data";
 import {
     getDesignLinksForCompetitor,
@@ -82,6 +83,7 @@ export default async function AlternativePage({ params }: Props) {
             <AlternativePageContent
                 competitor={competitor}
                 otherCompetitors={COMPETITORS.filter((c) => c.slug !== slug)}
+                vsCompetitors={COMPETITORS.filter((c) => hasVsPage(c.slug))}
                 designLinks={getDesignLinksForCompetitor(slug)}
                 blogLinks={getBlogLinksForCompetitor(slug)}
             />

@@ -4,7 +4,6 @@ import { createMetadata } from "@/lib/seo/metadata";
 import {
     faqSchema,
     breadcrumbSchema,
-    howToSchema,
     imageObjectSchema,
     webPageSchema,
 } from "@/lib/seo/schema";
@@ -109,26 +108,6 @@ export default async function DesignSlugPage({ params }: Props) {
             { name: "Design Ideas", url: `${SITE_URL}/design` },
             { name: `${page.themeName} ${page.roomName}`, url: pageUrl },
         ]),
-        howToSchema({
-            name: `How to Generate ${page.themeName} ${page.roomName} Design Ideas with AI`,
-            description: `Step-by-step guide to redesigning your ${page.roomName.toLowerCase()} in a ${page.themeName.toLowerCase()} style using AI interior design.`,
-            totalTime: "PT2M",
-            steps: [
-                {
-                    name: "Upload your room photo",
-                    text: "Take a clear photo of your room in good daylight, shooting from a corner or doorway to capture as much of the space as possible. Upload it directly from your phone or computer.",
-                },
-                {
-                    name: `Select ${page.themeName} style and room type`,
-                    text: `Choose ${page.themeName} as your design theme and confirm the room type. Add any specific details or requirements in the optional text field.`,
-                },
-                {
-                    name: "Review and download your AI-generated designs",
-                    text: "The AI generates your redesigned room in 30 to 60 seconds. Review the design variations and download the result for planning or sharing.",
-                },
-            ],
-            url: pageUrl,
-        }),
         ...(page.faqs.length > 0 ? [faqSchema(page.faqs, pageUrl)] : []),
     ];
 

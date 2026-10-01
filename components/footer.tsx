@@ -127,10 +127,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/design/industrial-kitchen"
+                  href="/design/art-deco-bedroom"
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
-                  Industrial kitchen
+                  Art Deco bedroom
                 </Link>
               </li>
               {/*
@@ -194,14 +194,6 @@ export function Footer() {
                   className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
                 >
                   DecorAI alternative
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/vs/roomgpt"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Magic Room vs RoomGPT
                 </Link>
               </li>
             </ul>

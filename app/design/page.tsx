@@ -4,7 +4,7 @@ import { createMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, itemListSchema } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import { DESIGN_PAGES, THEME_DATA, getDesignPageBySlug } from "@/lib/seo/design-data";
-import { PRIORITY_DESIGN_SLUGS } from "@/lib/seo/priority-pages";
+import { PRIORITY_DESIGN_SLUGS, isPriorityDesignSlug } from "@/lib/seo/priority-pages";
 import { Card, CardContent } from "@/components/ui/card";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { PageTransition } from "@/components/page-transition";
@@ -101,7 +101,12 @@ export default function DesignHubPage() {
                 {/* Themes */}
                 {themeKeys.map((theme) => {
                     const themeData = THEME_DATA[theme];
-                    const themePages = DESIGN_PAGES.filter((p) => p.theme === theme);
+                    // Link only to indexable pages. The other (theme, room) combos are
+                    // noindex (see lib/seo/pruned.ts); listing them here spent crawl on
+                    // pages we ask Google to drop. They stay reachable by direct URL.
+                    const themePages = DESIGN_PAGES.filter(
+                        (p) => p.theme === theme && isPriorityDesignSlug(p.slug)
+                    );
 
                     return (
                         <section
@@ -120,6 +125,15 @@ export default function DesignHubPage() {
                                         {themeData.description}
                                     </p>
                                 </div>
+                                {themePages.length === 0 && (
+                                    <Link
+                                        href="/generate"
+                                        className="text-sm font-medium text-primary hover:underline"
+                                    >
+                                        Try {themeData.name} on your own room photo
+                                    </Link>
+                                )}
+                                {themePages.length > 0 && (
                                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                     {themePages.map((page) => (
                                         <Link
@@ -139,6 +153,7 @@ export default function DesignHubPage() {
                                         </Link>
                                     ))}
                                 </div>
+                                )}
                             </div>
                         </section>
                     );
