@@ -127,7 +127,7 @@ Quick preview: Upload room photo → Select design theme → AI generates variat
 | State Management | Zustand                                  |
 | Auth             | Clerk                                    |
 | Database         | Supabase (PostgreSQL)                    |
-| AI Model         | Google Gemini 2.5 Flash (via OpenRouter) |
+| AI Model         | Google Gemini 3.1 Flash (via OpenRouter) |
 | Rate Limiting    | Upstash Redis                            |
 | Payments         | Stripe                                   |
 | Validation       | Zod                                      |

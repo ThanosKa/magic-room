@@ -1,7 +1,7 @@
 import { logger } from "@/lib/logger";
 
-export const OPENROUTER_MODEL = "google/gemini-2.5-flash-image";
-export const OPENROUTER_MODEL_PREMIUM = "google/gemini-3-pro-image-preview";
+export const OPENROUTER_MODEL = "google/gemini-3.1-flash-image";
+export const OPENROUTER_MODEL_PREMIUM = "google/gemini-3-pro-image";
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 export const POSITIVE_PROMPT = `beautiful interior design, professional photography, well-lit, 

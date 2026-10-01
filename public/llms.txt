@@ -13,7 +13,7 @@ A user uploads one photo of a real room, picks a design theme and a room type, a
 
 ## Core facts
 
-- AI model: Google Gemini multimodal image models via OpenRouter. Standard quality uses google/gemini-2.5-flash-image (1 credit); Premium quality uses google/gemini-3-pro-image-preview (2 credits).
+- AI model: Google Gemini multimodal image models via OpenRouter. Standard quality uses google/gemini-3.1-flash-image (1 credit); Premium quality uses google/gemini-3-pro-image (2 credits).
 - Why multimodal matters: the model reads image and text together, so it reasons about the room's spatial structure instead of applying a 2D style filter over it.
 - Generation time: 30–60 seconds, returned synchronously — no queue, no polling.
 - Outputs: 4–8 design variations per generation.

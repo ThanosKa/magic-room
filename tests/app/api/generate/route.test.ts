@@ -101,7 +101,7 @@ describe("Generate Route - Quality Feature", () => {
       expect(supabaseLib.createTransaction).toHaveBeenCalledWith(TEST_USER.id, "usage", 1);
     });
 
-    it("should use gemini-2.5-flash-image model for standard quality", async () => {
+    it("should use gemini-3.1-flash-image model for standard quality", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
@@ -189,7 +189,7 @@ describe("Generate Route - Quality Feature", () => {
       expect(supabaseLib.createTransaction).toHaveBeenCalledWith(TEST_USER.id, "usage", 2);
     });
 
-    it("should use gemini-3-pro-image-preview model for premium quality", async () => {
+    it("should use gemini-3-pro-image model for premium quality", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);

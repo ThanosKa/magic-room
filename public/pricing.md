@@ -53,7 +53,7 @@ Magic Room costs €9.99 for 30 designs, €19.99 for 90 designs, or €29.99 fo
 
 | Quality setting | Credits per generation | Model | Output |
 |---|---|---|---|
-| Standard | 1 credit | Google Gemini 2.5 Flash Image | 4–8 design variations in 30–60 seconds |
+| Standard | 1 credit | Google Gemini 3.1 Flash Image | 4–8 design variations in 30–60 seconds |
 | Premium | 2 credits | Google Gemini 3 Pro Image | Higher-fidelity variations in 30–60 seconds |
 
 One credit is one generation session, not one image. A single Standard credit returns 4–8 different redesigns of the same room, so €0.33 buys a set of variations rather than a single picture.

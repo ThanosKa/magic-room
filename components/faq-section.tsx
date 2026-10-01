@@ -48,7 +48,7 @@ const faqs: FaqItem[] = [
     id: "item-6",
     question: "What AI model does Magic Room use?",
     answer:
-      "Magic Room uses Google Gemini multimodal AI (google/gemini-2.5-flash-image) accessed via the OpenRouter API. Gemini processes both your room image and your text prompt simultaneously, allowing it to understand spatial context, maintain the room's structure, and apply design styles accurately without distorting walls, windows, or furniture placement.",
+      "Magic Room uses Google Gemini multimodal AI (google/gemini-3.1-flash-image) accessed via the OpenRouter API. Gemini processes both your room image and your text prompt simultaneously, allowing it to understand spatial context, maintain the room's structure, and apply design styles accurately without distorting walls, windows, or furniture placement.",
   },
   {
     id: "item-7",

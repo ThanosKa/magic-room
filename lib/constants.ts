@@ -48,14 +48,14 @@ export const QUALITY_OPTIONS = {
     label: "Standard Quality",
     description: "Quick generation",
     credits: 1,
-    model: "google/gemini-2.5-flash-image"
+    model: "google/gemini-3.1-flash-image"
   },
   premium: {
     id: "premium" as const,
     label: "Premium Quality",
     description: "Higher quality redesign",
     credits: 2,
-    model: "google/gemini-3-pro-image-preview"
+    model: "google/gemini-3-pro-image"
   }
 } as const;
 

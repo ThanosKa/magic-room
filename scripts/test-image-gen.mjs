@@ -19,7 +19,7 @@ contemporary furniture with clean lines, neutral tones with subtle accents,
 polished concrete or light oak flooring, high quality, photorealistic, no people`;
 
 console.log("🚀 Generating modern living room image...");
-console.log("   Model: google/gemini-2.5-flash-image");
+console.log("   Model: google/gemini-3.1-flash-image");
 console.log("   Prompt:", PROMPT.slice(0, 80) + "...");
 console.log("");
 
@@ -34,7 +34,7 @@ const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         "X-Title": "Magic Room",
     },
     body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image",
+        model: "google/gemini-3.1-flash-image",
         messages: [{ role: "user", content: PROMPT }],
         modalities: ["image", "text"],
     }),

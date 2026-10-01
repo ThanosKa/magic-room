@@ -7,7 +7,7 @@
 - **State Management**: Zustand (user credits, generation status)
 - **Database**: Supabase PostgreSQL
 - **Authentication**: Clerk
-- **AI Model**: OpenRouter (google/gemini-2.5-flash-image)
+- **AI Model**: OpenRouter (google/gemini-3.1-flash-image)
 - **Payments**: Stripe (checkout + webhooks)
 - **Rate Limiting**: Upstash Redis
 - **Hosting**: Vercel (Next.js API routes)
@@ -44,7 +44,7 @@
 
 ## Design Model Details
 
-**Model**: `google/gemini-2.5-flash-image` via OpenRouter
+**Model**: `google/gemini-3.1-flash-image` via OpenRouter
 
 - **Speed**: Synchronous response (~30-60 seconds)
 - **Quality**: Google Gemini multimodal output

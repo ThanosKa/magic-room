@@ -21,7 +21,7 @@ The uploaded photo is converted to base64 in the browser and posted to the gener
 
 ## What AI model does Magic Room use?
 
-Magic Room uses Google Gemini multimodal image models via OpenRouter. Standard quality runs google/gemini-2.5-flash-image and costs 1 credit. Premium quality runs google/gemini-3-pro-image-preview and costs 2 credits. Both are multimodal — they process the room photo and the text prompt together, which is why the room's existing geometry survives the redesign.
+Magic Room uses Google Gemini multimodal image models via OpenRouter. Standard quality runs google/gemini-3.1-flash-image and costs 1 credit. Premium quality runs google/gemini-3-pro-image and costs 2 credits. Both are multimodal — they process the room photo and the text prompt together, which is why the room's existing geometry survives the redesign.
 
 ## Why does a multimodal model produce better room redesigns than a diffusion model?
 
