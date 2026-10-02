@@ -1,21 +1,15 @@
-"use client";
-
 import React from "react";
-import { motion } from "framer-motion";
 
 interface PageTransitionProps {
   children: React.ReactNode;
 }
 
+/**
+ * Plain wrapper. It used to fade in from opacity 0 on mount, but the server
+ * HTML shipped `style="opacity:0"`, so every navigation (and every hard load)
+ * blanked the page body for ~0.4s while the header/footer stayed visible,
+ * which read as a flash. Kept as a component so call sites don't change.
+ */
 export function PageTransition({ children }: PageTransitionProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div>{children}</div>;
 }
-
