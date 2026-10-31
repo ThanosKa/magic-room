@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Check } from "lucide-react";
 import { NOTE_MAX_LENGTH, QUALITY_OPTIONS, ROOM_TYPES, THEMES } from "@/lib/constants";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn, formatCredits } from "@/lib/utils";
 import type { Quality, RoomType, Theme } from "@/types";
 
 /*
@@ -173,7 +173,7 @@ export function QualityPicker({ value, onChange }: { value: Quality; onChange: (
                             <span className="flex items-baseline justify-between gap-2 text-[15px] font-medium tracking-[-0.01em] text-ink">
                                 {q.id === "standard" ? "Standard" : "Premium"}
                                 <span className="text-[13px] font-normal text-ink-2 tabular-nums">
-                                    {q.credits} {q.credits === 1 ? "credit" : "credits"}
+                                    {formatCredits(q.credits)}
                                 </span>
                             </span>
                             <span className="text-[13px] text-ink-3">{q.description}</span>

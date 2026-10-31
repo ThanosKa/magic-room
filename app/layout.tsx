@@ -3,7 +3,6 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-import { ThemeProviderComponent } from "@/components/theme-provider";
 import { ToastProvider } from "@/components/toast-provider";
 import { UserDataProvider } from "@/components/user-data-provider";
 import { Header } from "@/components/header";
@@ -179,12 +178,11 @@ export default function RootLayout({
     <ClerkProvider
       appearance={clerkAppearance}
     >
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} flex flex-col antialiased`}
         >
           <JsonLd schemas={[globalSchema]} />
-          <ThemeProviderComponent>
             <UserDataProvider>
               <div className="flex min-h-screen flex-col">
                 <Header />
@@ -194,7 +192,6 @@ export default function RootLayout({
               <ToastProvider />
               <Analytics />
             </UserDataProvider>
-          </ThemeProviderComponent>
         </body>
       </html>
     </ClerkProvider>

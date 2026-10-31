@@ -3,14 +3,6 @@
 @import "./motion.css";
 
 /*
- * Dead dark-mode classes still exist in pages until they are restyled.
- * Keep `dark:` bound to a `.dark` class that is never set (the theme provider
- * is pinned to light), so those classes can never switch on from the OS theme.
- * Do not write new `dark:` classes.
- */
-@custom-variant dark (&:is(.dark *));
-
-/*
  * Hover effects only on devices that can really hover (mouse, trackpad).
  * This redefines Tailwind's `hover:` (and `group-hover:` / `peer-hover:`),
  * so touch screens never get a stuck hover state.

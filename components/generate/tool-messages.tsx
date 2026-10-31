@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AlertCircle, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatCredits } from "@/lib/utils";
 
 /**
  * A message shown in the slot above the Generate button (`#generate-message`).
@@ -17,9 +17,6 @@ export interface ToolMessage {
     action?: { label: string; href: string } | { label: string; onClick: () => void };
 }
 
-function credits(n: number) {
-    return `${n} ${n === 1 ? "credit" : "credits"}`;
-}
 
 /** Why a chosen file was not used. The current photo stays. */
 export const PHOTO_MESSAGES = {
@@ -50,7 +47,7 @@ export function notEnoughCreditsMessage(qualityName: string, cost: number, balan
     return {
         tone: "info",
         title: "Not enough credits",
-        text: `${qualityName} uses ${credits(cost)} and you have ${balance}.`,
+        text: `${qualityName} uses ${formatCredits(cost)} and you have ${formatCredits(balance)}.`,
         action: { label: "Buy credits", href: "/pricing" },
     };
 }
@@ -116,7 +113,7 @@ export function generateFailureMessage(
         return {
             tone: "info",
             title: "Not enough credits",
-            text: `This design uses ${credits(cost)}, more than your balance.`,
+            text: `This design uses ${formatCredits(cost)}, more than your balance.`,
             action: { label: "Buy credits", href: "/pricing" },
         };
     }
@@ -138,7 +135,7 @@ export function generateFailureMessage(
         return {
             tone: "error",
             title: "Generation failed",
-            text: `The design could not be made. Your ${credits(cost)} were refunded, so you can try again.`,
+            text: `The design could not be made. Your ${formatCredits(cost)} were refunded, so you can try again.`,
         };
     }
 

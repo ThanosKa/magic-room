@@ -7,7 +7,7 @@ import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand-mark";
-import { cn } from "@/lib/utils";
+import { cn, formatCredits } from "@/lib/utils";
 
 const NAV = [
   { href: "/generate", label: "Generate" },
@@ -45,7 +45,7 @@ function Credits({ onClick, className }: { onClick?: () => void; className?: str
           <span className="sr-only">Loading credits</span>
         </>
       ) : (
-        `${credits} credits`
+        formatCredits(credits)
       )}
     </Link>
   );

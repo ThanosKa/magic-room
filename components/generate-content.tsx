@@ -14,6 +14,7 @@ import { QUALITY_OPTIONS, THEMES } from "@/lib/constants";
 import { generateHref, readDesignSelection } from "@/lib/design-selection";
 import { MAX_PHOTO_FILE_SIZE, prepareRoomPhoto, type RoomPhoto } from "@/lib/room-photo";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
+import { formatCredits } from "@/lib/utils";
 import {
     DOWNLOAD_FAILED_MESSAGE,
     generateFailureMessage,
@@ -223,9 +224,9 @@ function GenerateTool() {
                                 {photo ? (
                                     <>
                                         <span className="block font-medium text-ink">
-                                            Uses {cost} {cost === 1 ? "credit" : "credits"}
+                                            Uses {formatCredits(cost)}
                                         </span>
-                                        <span className="block">You have {credits}</span>
+                                        <span className="block">You have {formatCredits(credits)}</span>
                                     </>
                                 ) : (
                                     "Add a photo of your room to start."
