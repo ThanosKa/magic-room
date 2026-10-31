@@ -3,18 +3,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useClerk, useUser } from "@clerk/nextjs";
-import { Loader2 } from "lucide-react";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
 import { AuthGuard } from "@/components/auth-guard";
-import { Button } from "@/components/ui/button";
+import { ActionBar } from "@/components/generate/action-bar";
 import { PhotoPanel, type ToolState } from "@/components/generate/photo-panel";
-import { NoteField, QualityPicker, RoomTypePicker, StylePicker } from "@/components/generate/option-pickers";
-import { QUALITY_OPTIONS, THEMES } from "@/lib/constants";
+import { RoomTypePicker, StylePicker } from "@/components/generate/option-pickers";
+import { QUALITY_OPTIONS, ROOM_TYPES, THEMES } from "@/lib/constants";
 import { generateHref, readDesignSelection } from "@/lib/design-selection";
 import { MAX_PHOTO_FILE_SIZE, prepareRoomPhoto, type RoomPhoto } from "@/lib/room-photo";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { formatCredits } from "@/lib/utils";
 import {
     DOWNLOAD_FAILED_MESSAGE,
     generateFailureMessage,
@@ -175,12 +173,12 @@ function GenerateTool() {
             </div>
 
             {/*
-              Phone: one flex column (photo, choices, action bar), so the bar
-              sticks to the bottom of the screen from the very top, even under
-              a tall photo. Desktop: photo left (sticky), choices right with the
-              bar sticking to the bottom of that column.
+              Photo, then the choices (photo left and sticky on desktop). The
+              action bar comes after both, as a child of the tool's root, so it
+              sticks to the bottom of the screen from the very top of the page
+              and, at the end, sits in its own place below the choices.
             */}
-            <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:gap-14">
+            <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-12">
                 <div ref={photoRef} className="scroll-mt-24 lg:sticky lg:top-24 lg:self-start">
                     <PhotoPanel
                         state={state}
@@ -198,62 +196,35 @@ function GenerateTool() {
                     />
                 </div>
 
-                <div className="contents lg:block lg:min-w-0">
-                    {/* Locked while a design is being made. */}
-                    <fieldset disabled={isGenerating} className="min-w-0 space-y-9">
-                        <legend className="sr-only">Your choices</legend>
-                        <RoomTypePicker value={roomType} onChange={setRoomType} />
-                        <StylePicker value={theme} onChange={setTheme} />
-                        <div className="space-y-5">
-                            <QualityPicker value={quality} onChange={setQuality} />
-                            <NoteField value={note} onChange={setNote} />
-                        </div>
-                    </fieldset>
-
-                    <div className="sticky bottom-0 z-30 -mx-5 border-t border-line bg-paper px-5 pb-[max(16px,env(safe-area-inset-bottom))] pt-4 sm:-mx-6 sm:px-6 lg:-mx-4 lg:mt-8 lg:px-4">
-                        <div id="generate-message" role="status" aria-live="polite" className="empty:hidden mb-3 space-y-2">
-                            {message && <ToolMessageView message={message} />}
-                            {shortOfCredits && !isGenerating && (
-                                <ToolMessageView
-                                    message={notEnoughCreditsMessage(quality === "standard" ? "Standard" : "Premium", cost, credits)}
-                                />
-                            )}
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <p className="min-w-0 flex-1 text-[13px] leading-snug text-ink-2">
-                                {photo ? (
-                                    <>
-                                        <span className="block font-medium text-ink">
-                                            Uses {formatCredits(cost)}
-                                        </span>
-                                        <span className="block">You have {formatCredits(credits)}</span>
-                                    </>
-                                ) : (
-                                    "Add a photo of your room to start."
-                                )}
-                            </p>
-                            <Button
-                                size="lg"
-                                onClick={handleGenerate}
-                                disabled={!canGenerate}
-                                aria-describedby="generate-message"
-                                className="min-w-[180px]"
-                            >
-                                {isGenerating ? (
-                                    <>
-                                        <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />
-                                        Generating…
-                                    </>
-                                ) : resultUrl ? (
-                                    "Regenerate"
-                                ) : (
-                                    "Generate design"
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+                {/* Locked while a design is being made. */}
+                <fieldset disabled={isGenerating} className="min-w-0 space-y-9">
+                    <legend className="sr-only">Your choices</legend>
+                    <RoomTypePicker value={roomType} onChange={setRoomType} />
+                    <StylePicker value={theme} onChange={setTheme} />
+                </fieldset>
             </div>
+
+            <ActionBar
+                quality={quality}
+                onQualityChange={setQuality}
+                note={note}
+                onNoteChange={setNote}
+                summary={`${ROOM_TYPES[roomType]} · ${THEMES[theme]}`}
+                generating={isGenerating}
+                hasResult={resultUrl !== null}
+                canGenerate={canGenerate}
+                onGenerate={handleGenerate}
+                messages={
+                    <>
+                        {message && <ToolMessageView message={message} />}
+                        {shortOfCredits && !isGenerating && (
+                            <ToolMessageView
+                                message={notEnoughCreditsMessage(quality === "standard" ? "Standard" : "Premium", cost, credits)}
+                            />
+                        )}
+                    </>
+                }
+            />
         </div>
     );
 }
