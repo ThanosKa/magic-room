@@ -3,5 +3,10 @@
         "path": "/",
         "fields": ["h1", "bodyText"],
         "reason": "Spec: the homepage takes the new design's copy; its H1 must still contain \"AI interior design\"."
+    },
+    {
+        "path": "/gallery",
+        "fields": ["bodyText"],
+        "reason": "Ticket 12: cards are drag sliders, so the two gallery lines say Drag instead of Hover (hero line and the Showing-N line)."
     }
 ]
