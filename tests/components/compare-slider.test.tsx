@@ -8,9 +8,9 @@ import { CompareSlider } from "@/components/compare-slider";
 function pointer(
     target: Element,
     type: string,
-    { x = 0, id = 1, kind = "mouse" }: { x?: number; id?: number; kind?: string } = {}
+    { x = 0, y = 75, id = 1, kind = "mouse" }: { x?: number; y?: number; id?: number; kind?: string } = {}
 ) {
-    const event = new MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, button: 0 });
+    const event = new MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0 });
     Object.defineProperty(event, "pointerId", { value: id });
     Object.defineProperty(event, "pointerType", { value: kind });
     Object.defineProperty(event, "isPrimary", { value: id === 1 });
@@ -94,6 +94,24 @@ describe("CompareSlider", () => {
         expect(position()).toBe(50);
         pointer(box(), "pointermove", { x: 120, kind: "touch" });
         expect(position()).toBe(50);
+    });
+
+    it("ignores the first, mostly vertical moves of a finger that is starting a scroll", () => {
+        // Chrome sends a few pointermoves before it takes over and cancels.
+        pointer(box(), "pointerdown", { x: 150, y: 100, kind: "touch" });
+        pointer(box(), "pointermove", { x: 154, y: 90, kind: "touch" });
+        pointer(box(), "pointermove", { x: 158, y: 70, kind: "touch" });
+        pointer(box(), "pointercancel", { x: 158, y: 70, kind: "touch" });
+        expect(position()).toBe(50);
+    });
+
+    it("follows a finger once it moves sideways", () => {
+        pointer(box(), "pointerdown", { x: 200, y: 100, kind: "touch" });
+        pointer(box(), "pointermove", { x: 208, y: 101, kind: "touch" });
+        expect(position()).toBe(54);
+        // From then on it follows, even if the finger drifts up or down.
+        pointer(box(), "pointermove", { x: 250, y: 140, kind: "touch" });
+        expect(position()).toBe(75);
     });
 
     it("moves the divider on a tap", () => {

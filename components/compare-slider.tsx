@@ -32,6 +32,8 @@ export interface CompareSliderProps {
 
 const STEP = 5;
 const BIG_STEP = 10;
+const TOUCH_SLOP = 6; // px a finger must move sideways (more than up/down) to start dragging
+const TAP_RADIUS = 10; // px a finger may wobble and still count as a tap
 const clamp = (n: number) => Math.min(100, Math.max(0, n));
 
 /**
@@ -51,7 +53,8 @@ export function CompareSlider({
     const [pos, setPos] = useState(50);
     const box = useRef<HTMLDivElement>(null);
     // The one pointer allowed to drag; any other finger is ignored until it lifts.
-    const active = useRef<number | null>(null);
+    // `engaged` is false while a finger has not yet shown it is moving sideways.
+    const drag = useRef<{ id: number; x0: number; y0: number; engaged: boolean } | null>(null);
     const value = Math.round(pos);
 
     const setFromX = (clientX: number) => {
@@ -61,7 +64,38 @@ export function CompareSlider({
     };
 
     const end = (e: PointerEvent) => {
-        if (e.pointerId === active.current) active.current = null;
+        if (drag.current?.id === e.pointerId) drag.current = null;
+    };
+
+    const onPointerDown = (e: PointerEvent) => {
+        if (drag.current || e.button !== 0) return;
+        // A mouse or pen jumps straight to the press. A finger waits for a
+        // sideways move or a tap, so starting a page scroll on the image does
+        // not jump the divider (the browser keeps vertical pans: touch-action: pan-y).
+        const touch = e.pointerType === "touch";
+        drag.current = { id: e.pointerId, x0: e.clientX, y0: e.clientY, engaged: !touch };
+        e.currentTarget.setPointerCapture?.(e.pointerId);
+        if (!touch) setFromX(e.clientX);
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+        const d = drag.current;
+        if (d?.id !== e.pointerId) return;
+        if (!d.engaged) {
+            const dx = Math.abs(e.clientX - d.x0);
+            const dy = Math.abs(e.clientY - d.y0);
+            if (dx < TOUCH_SLOP || dx <= dy) return;
+            d.engaged = true;
+        }
+        setFromX(e.clientX);
+    };
+
+    const onPointerUp = (e: PointerEvent) => {
+        const d = drag.current;
+        if (d?.id !== e.pointerId) return;
+        const tap = Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < TAP_RADIUS;
+        if (d.engaged || tap) setFromX(e.clientX);
+        end(e);
     };
 
     const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -87,22 +121,9 @@ export function CompareSlider({
             data-compare=""
             className={cn("compare aspect-[4/3]", className)}
             style={{ "--pos": `${pos}%`, aspectRatio } as CSSProperties}
-            onPointerDown={(e: PointerEvent) => {
-                if (active.current !== null || e.button !== 0) return;
-                active.current = e.pointerId;
-                e.currentTarget.setPointerCapture?.(e.pointerId);
-                // A mouse or pen jumps straight to the press. A finger waits for
-                // a sideways move or a tap, so starting a page scroll on the
-                // image does not jump the divider.
-                if (e.pointerType !== "touch") setFromX(e.clientX);
-            }}
-            onPointerMove={(e: PointerEvent) => {
-                if (e.pointerId === active.current) setFromX(e.clientX);
-            }}
-            onPointerUp={(e: PointerEvent) => {
-                if (e.pointerId === active.current) setFromX(e.clientX);
-                end(e);
-            }}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
             onPointerCancel={end}
         >
             <CompareLayer image={after} sizes={sizes} priority={priority} />
