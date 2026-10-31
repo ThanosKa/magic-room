@@ -27,7 +27,7 @@ export default function TermsPage() {
           Magic Room is an AI-powered interior design tool that transforms room
           photos into design variations using advanced artificial intelligence.
           Users upload photos and provide design preferences, and the Service
-          generates multiple design variations.
+          generates a redesigned version of the room.
         </p>
       </section>
 

@@ -1,17 +1,1715 @@
 [
     {
         "path": "/",
-        "fields": ["h1", "bodyText"],
+        "fields": [
+            "h1",
+            "bodyText"
+        ],
         "reason": "Spec: the homepage takes the new design's copy; its H1 must still contain \"AI interior design\"."
     },
     {
         "path": "/",
-        "fields": ["description", "jsonLd"],
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
         "reason": "Ticket 07: every homepage claim must match the tool. One run returns one redesign, not 4–8, so the meta description, the SoftwareApplication description and three FAQ answers (FAQ JSON-LD = visible FAQ) say so. Same entities and questions."
     },
     {
         "path": "/gallery",
-        "fields": ["bodyText"],
+        "fields": [
+            "bodyText"
+        ],
         "reason": "Ticket 12: cards are drag sliders, so the two gallery lines say Drag instead of Hover (hero line and the Showing-N line)."
+    },
+    {
+        "path": "/about",
+        "fields": [
+            "description"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/alternatives",
+        "fields": [
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/alternatives/decorai",
+        "fields": [
+            "description",
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/alternatives/interior-ai",
+        "fields": [
+            "description",
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/alternatives/reimaginehome",
+        "fields": [
+            "description",
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/alternatives/roomgpt",
+        "fields": [
+            "description",
+            "jsonLd",
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/blog/bedroom-redesign-with-ai",
+        "fields": [
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/blog/best-ai-interior-design-tools-2026",
+        "fields": [
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/blog/home-office-ai-design",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design",
+        "fields": [
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/art-deco-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/bohemian-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/coastal-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/farmhouse-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/industrial-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/japandi-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/luxury-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/mediterranean-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/minimalist-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/modern-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/scandinavian-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/transitional-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/tropical-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-basement",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-bathroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-bedroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-dining-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-gaming-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-home-theater",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-kitchen",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-laundry-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-living-room",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-mudroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-nursery",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-office",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-sunroom",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/design/vintage-walk-in-closet",
+        "fields": [
+            "description",
+            "jsonLd"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/pricing",
+        "fields": [
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/terms",
+        "fields": [
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/vs/decorai",
+        "fields": [
+            "description",
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/vs/interior-ai",
+        "fields": [
+            "description",
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/vs/reimaginehome",
+        "fields": [
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
+    },
+    {
+        "path": "/vs/roomgpt",
+        "fields": [
+            "description",
+            "jsonLd",
+            "bodyText"
+        ],
+        "reason": "Ticket 20: the false \"4–8 redesigns/variations per run\" claim now says one redesign per run (same wording as the homepage). Only that phrase changed in these fields."
     }
 ]

@@ -90,7 +90,7 @@ const FAQS = [
   },
   {
     q: "Is there a free version of Magic Room?",
-    a: "Yes. Every new account gets 1 free credit on signup with no payment card required. That credit produces a full generation of 4–8 design variations. Free-credit output is for personal use only and carries no commercial rights.",
+    a: "Yes. Every new account gets 1 free credit on signup with no payment card required. That credit produces one full generation: a redesigned version of your room. Free-credit output is for personal use only and carries no commercial rights.",
   },
   {
     q: "Is there a subscription?",
@@ -272,8 +272,8 @@ export default function PricingContent() {
             <h2 className={H2}>What does one credit get you?</h2>
             <p className="mt-5 max-w-[34rem] text-[16px] leading-[1.6] text-ink-2">
               One credit is one generation session, not one image. A single Standard-quality
-              credit returns 4–8 different redesigns of the same room in 30–60 seconds, so €0.33
-              buys a set of variations to compare rather than a single picture.
+              credit returns one redesign of your room in 30–60 seconds, so €0.33
+              buys a finished redesign you can compare with your original photo.
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl border border-line lg:col-span-7 lg:self-end">

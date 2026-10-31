@@ -1214,7 +1214,7 @@ export const BLOG_POSTS: IBlogPost[] = [
                 type: "cta",
                 heading: "Try Magic Room free",
                 subtext:
-                    "Upload a photo of your room and generate 4–8 AI design variations in under a minute. One free credit with every account — no card required.",
+                    "Upload a photo of your room and generate an AI redesign in under a minute. One free credit with every account — no card required.",
             },
             {
                 type: "h2",
@@ -1329,7 +1329,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "How long does AI bedroom redesign take?",
                 answer:
-                    "With Magic Room, AI bedroom redesigns are generated in 30 to 60 seconds from a single uploaded photo. You receive multiple design variations in the style you selected.",
+                    "With Magic Room, AI bedroom redesigns are generated in 30 to 60 seconds from a single uploaded photo. You receive a redesign in the style you selected.",
             },
             {
                 question: "Can AI redesign a small bedroom effectively?",
@@ -1350,7 +1350,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         // own room.
         title: "AI Home Office Design: 10 Ideas for 2026 Workspaces",
         metaDescription:
-            "Home office ideas you can test on your own room before buying a desk. Upload one photo, get 4–8 AI redesigns in 60 seconds. 1 free credit, no card.",
+            "Home office ideas you can test on your own room before buying a desk. Upload one photo, get an AI redesign in 60 seconds. 1 free credit, no card.",
         publishedDate: "2026-02-22",
         updatedDate: "2026-03-25",
         readingTime: 7,

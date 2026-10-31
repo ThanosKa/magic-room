@@ -196,7 +196,7 @@ export function AlternativePageContent({
                         {
                             label: "Free tier",
                             magicRoom:
-                                "1 free credit on signup, no card required. One credit produces 4–8 variations, so you see real output before paying.",
+                                "1 free credit on signup, no card required. One credit produces a full redesign, so you see real output before paying.",
                             competitor: competitor.pricingModel.freeTier,
                         },
                         {

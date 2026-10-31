@@ -247,7 +247,7 @@ export function VsPageContent({
                             },
                             {
                                 term: "Free tier",
-                                magicRoom: "1 credit on signup, no card, 4–8 variations from it.",
+                                magicRoom: "1 credit on signup, no card, one redesign from it.",
                                 competitor: competitor.pricingModel.freeTier,
                             },
                             {
