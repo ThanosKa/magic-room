@@ -3,7 +3,7 @@
  * Keyframes (exposed as Tailwind `animate-*` utilities), reveal-on-scroll,
  * the before/after compare slider, and their reduced-motion fallbacks.
  * Everything else (hover, press, fades, menus, dialogs) is Tailwind classes.
- * Values ported from the /motiontest reference.
+ * Values ported from the approved test-page design (now the homepage).
  */
 
 @theme static {
