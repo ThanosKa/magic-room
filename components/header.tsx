@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand-mark";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { cn, formatCredits } from "@/lib/utils";
 
 const NAV = [
@@ -19,6 +20,62 @@ const NAV = [
 
 /** The menu is for phones and tablets; from this width the full bar shows. */
 const DESKTOP_QUERY = "(min-width: 1024px)";
+
+/** Scroll positions where the bar narrows (going down) and widens again (going up). */
+const COMPACT_AFTER = 40;
+const FULL_BEFORE = 20;
+/** How far each end of the bar moves in, as a share of its width (capped by free space). */
+const SHRINK = 0.09;
+
+interface BarFit {
+  /** px each end of the bar moves in. */
+  inset: number;
+  /** scaleX for the background layer: (width - 2 * inset) / width. */
+  scale: number;
+  /** Half the bar's height: its corner radius. */
+  radius: number;
+}
+
+/**
+ * Measures how much the floating bar can narrow without its items touching:
+ * the free space between them, at most SHRINK of the width. Re-measured when
+ * the bar or any item changes size (viewport, Clerk loading, credits pill).
+ */
+function useBarFit(bar: RefObject<HTMLDivElement | null>) {
+  const [fit, setFit] = useState<BarFit | null>(null);
+
+  useEffect(() => {
+    const el = bar.current;
+    if (!el) return;
+    const items = Array.from(el.querySelectorAll<HTMLElement>(":scope > [data-bar-item]"));
+
+    const measure = () => {
+      const cs = getComputedStyle(el);
+      const width = el.clientWidth;
+      const shown = items.filter((i) => i.offsetWidth > 0);
+      const used =
+        shown.reduce((sum, i) => sum + i.offsetWidth, 0) +
+        parseFloat(cs.columnGap || "0") * Math.max(0, shown.length - 1) +
+        parseFloat(cs.paddingLeft) +
+        parseFloat(cs.paddingRight);
+      const inset = Math.max(0, Math.floor(Math.min(width * SHRINK, (width - used) / 2)));
+      const next = { inset, scale: width ? (width - 2 * inset) / width : 1, radius: el.clientHeight / 2 };
+      setFit((prev) =>
+        prev && prev.inset === next.inset && prev.radius === next.radius && Math.abs(prev.scale - next.scale) < 1e-4
+          ? prev
+          : next
+      );
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    items.forEach((i) => ro.observe(i));
+    return () => ro.disconnect();
+  }, [bar]);
+
+  return fit;
+}
 
 function isCurrent(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -61,21 +118,59 @@ export function Header() {
   const close = () => setOpenOn(null);
 
   const [scrolled, setScrolled] = useState(false);
+  const [past, setPast] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const fit = useBarFit(barRef);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 8);
+      // Two thresholds, so a page resting near one of them can't flicker.
+      setPast((was) => (was ? y > FULL_BEFORE : y > COMPACT_AFTER));
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Transitions switch on one frame after the first measure, so a page that
+  // loads already scrolled shows the narrow bar instead of animating to it.
+  const [live, setLive] = useState(false);
+  useEffect(() => {
+    if (!fit || live) return;
+    const id = requestAnimationFrame(() => setLive(true));
+    return () => cancelAnimationFrame(id);
+  }, [fit, live]);
+
+  /*
+   * Shrinking bar (owner request): past COMPACT_AFTER the floating bar gets
+   * narrower and widens again near the top. Nothing is resized: the
+   * background layer scales on X (its corner radius is widened by 1/scale so
+   * the round ends stay round) and the items at each end slide in. Reduced
+   * motion: the bar keeps its width.
+   */
+  const compact = past && !reduced && fit !== null && fit.inset > 0;
+  const shift = (dir: 1 | -1): CSSProperties | undefined =>
+    compact ? { transform: `translateX(${dir * (fit?.inset ?? 0)}px)` } : undefined;
+  const bgStyle: CSSProperties | undefined = fit
+    ? {
+        transform: compact ? `scaleX(${fit.scale})` : undefined,
+        borderRadius: compact ? `${fit.radius / fit.scale}px / ${fit.radius}px` : `${fit.radius}px`,
+      }
+    : undefined;
+  const slide = live && "transition-transform duration-400 ease-out motion-reduce:transition-none";
+
   // While the menu is open: lock page scroll, close on Esc (focus back on the
-  // menu button) and when the viewport grows to the desktop bar.
+  // menu button) and when the viewport grows to the desktop bar. The lock goes
+  // on <html>: on <body> it would make body a scroll container (html has
+  // overflow-x: clip), and the sticky header would leave the screen.
   useEffect(() => {
     if (!open) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const prevOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
@@ -88,7 +183,7 @@ export function Header() {
     window.addEventListener("keydown", onKey);
     mq.addEventListener("change", onMq);
     return () => {
-      document.body.style.overflow = prevOverflow;
+      document.documentElement.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKey);
       mq.removeEventListener("change", onMq);
     };
@@ -97,12 +192,27 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 px-3 pb-1.5 pt-2 sm:px-6 sm:pb-2 sm:pt-3 lg:px-12">
       <div
+        ref={barRef}
         data-scrolled={scrolled || open}
-        className="relative mx-auto flex h-[52px] max-w-[1344px] items-center gap-6 rounded-full border border-transparent bg-paper/72 pl-3 pr-1.5 backdrop-blur-[16px] backdrop-saturate-[1.2] transition-[background-color,border-color,box-shadow] duration-250 ease-out motion-reduce:transition-none data-[scrolled=true]:border-line data-[scrolled=true]:bg-paper/88 data-[scrolled=true]:shadow-[0_8px_30px_rgb(23_20_15/0.08)] sm:h-14 sm:pl-4 sm:pr-2"
+        data-compact={compact}
+        className="group/bar relative isolate mx-auto flex h-[52px] max-w-[1344px] items-center gap-6 pl-3 pr-1.5 sm:h-14 sm:pl-4 sm:pr-2"
       >
-        <BrandMark priority />
+        {/* The bar's surface, on its own layer so it can scale without touching layout. */}
+        <span
+          aria-hidden="true"
+          style={bgStyle}
+          className={cn(
+            "pointer-events-none absolute inset-0 -z-10 rounded-full border border-transparent bg-paper/72 backdrop-blur-[16px] backdrop-saturate-[1.2] group-data-[scrolled=true]/bar:border-line group-data-[scrolled=true]/bar:bg-paper/88 group-data-[scrolled=true]/bar:shadow-[0_8px_30px_rgb(23_20_15/0.08)]",
+            live &&
+              "transition-[transform,border-radius,background-color,border-color,box-shadow] duration-400 ease-out motion-reduce:transition-none"
+          )}
+        />
 
-        <nav aria-label="Main" className="mx-auto hidden gap-0.5 lg:flex">
+        <div data-bar-item className={cn("flex shrink-0", slide)} style={shift(1)}>
+          <BrandMark priority />
+        </div>
+
+        <nav data-bar-item aria-label="Main" className="mx-auto hidden gap-0.5 lg:flex">
           {NAV.map((n) => (
             <Link
               key={n.href}
@@ -116,8 +226,11 @@ export function Header() {
         </nav>
 
         <div
+          data-bar-item
+          style={shift(-1)}
           className={cn(
-            "hidden items-center gap-1.5 transition-opacity duration-200 motion-reduce:transition-none lg:flex",
+            "hidden items-center gap-1.5 lg:flex",
+            live && "transition-[opacity,transform] duration-[200ms,400ms] ease-out motion-reduce:transition-none",
             // Clerk decides the signed-in state on the client; fade in once it
             // has, so a signed-in visitor never sees a flash of "Sign In".
             !isLoaded && "opacity-0"
@@ -140,7 +253,7 @@ export function Header() {
               <SignUpButton mode="modal">
                 <Button
                   size="sm"
-                  className="h-10 px-5 shadow-none hover:bg-ink/90 hover:shadow-none"
+                  className="h-10 px-5 drop-shadow-none hover:bg-ink/90 hover:drop-shadow-none"
                 >
                   Sign Up
                 </Button>
@@ -149,7 +262,7 @@ export function Header() {
           )}
         </div>
 
-        <div className="ml-auto flex items-center gap-1 lg:hidden">
+        <div data-bar-item style={shift(-1)} className={cn("ml-auto flex items-center gap-1 lg:hidden", slide)}>
           {isSignedIn && <Credits onClick={close} />}
           <button
             ref={burgerRef}

@@ -183,7 +183,8 @@ export function GalleryContent() {
             </section>
 
             {/* Filter tabs */}
-            <section className="sticky top-0 z-20 border-y border-line bg-paper/90 backdrop-blur">
+            {/* Sticks just under the site header (66px tall, 76px from 640px). */}
+            <section className="sticky top-[66px] z-20 border-y border-line bg-paper/90 backdrop-blur sm:top-[76px]">
                 <div className="container-page">
                     <div className="flex gap-2 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                         {FILTERS.map((filter) => (
