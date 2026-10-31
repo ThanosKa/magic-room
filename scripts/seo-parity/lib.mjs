@@ -152,6 +152,8 @@ function normaliseDeep(value, baseOrigin) {
     return value;
 }
 
+const QUERY_INSENSITIVE_PATHS = new Set(["/generate"]);
+
 function internalLinks(doc, baseOrigin) {
     const internal = new Set([baseOrigin, ...SITE_ORIGINS]);
     const paths = new Set();
@@ -163,7 +165,10 @@ function internalLinks(doc, baseOrigin) {
             continue;
         }
         if (!internal.has(url.origin)) continue;
-        paths.add(url.pathname + url.search);
+        // The tool is noindex and behind sign-in; its query only preselects a
+        // style/room (ticket 14), so it is not an SEO-relevant difference.
+        const keepQuery = !QUERY_INSENSITIVE_PATHS.has(url.pathname);
+        paths.add(url.pathname + (keepQuery ? url.search : ""));
     }
     return [...paths].sort();
 }

@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
@@ -19,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { ROOM_TYPES, THEMES } from "@/lib/constants";
+import { readDesignSelection } from "@/lib/design-selection";
 import {
     Download,
     RefreshCw,
@@ -90,16 +92,10 @@ async function compressImage(file: File): Promise<File> {
     });
 }
 
-const THEME_IMAGES: Record<Theme, string> = {
-    modern: "/themes/theme_modern.png",
-    minimalist: "/themes/theme_minimalist.png",
-    scandinavian: "/themes/theme_scandinavian.png",
-    industrial: "/themes/theme_industrial.png",
-    tropical: "/themes/theme_tropical.png",
-    bohemian: "/themes/theme_bohemian.png",
-    vintage: "/images/designs/vintage-living-room.jpg",
-    luxury: "/images/designs/luxury-living-room.jpg",
-};
+// Every style card shows that style's living-room design image.
+function themeImage(theme: Theme): string {
+    return `/images/designs/${theme}-living-room.jpg`;
+}
 
 export default function GenerateContent() {
     return (
@@ -120,11 +116,14 @@ function GeneratePageContent() {
         setActiveGeneration,
     } = useGenerationStore();
 
+    // A deep link (/generate?style=japandi&room=bedroom) sets the starting choices.
+    const preselected = readDesignSelection(useSearchParams());
+
     const [originalImage, setOriginalImage] = useState<string | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
-    const [roomType, setRoomType] = useState<RoomType>("living-room");
+    const [roomType, setRoomType] = useState<RoomType>(preselected.roomType ?? "living-room");
     const [quality, setQuality] = useState<Quality>("standard");
-    const [theme, setTheme] = useState<Theme>("modern");
+    const [theme, setTheme] = useState<Theme>(preselected.theme ?? "modern");
     const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
     const onDrop = useCallback(
@@ -342,7 +341,7 @@ function GeneratePageContent() {
                                     >
                                         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                                             <Image
-                                                src={THEME_IMAGES[key as Theme]}
+                                                src={themeImage(key as Theme)}
                                                 alt={label}
                                                 fill
                                                 className={cn(

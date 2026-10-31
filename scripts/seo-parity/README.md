@@ -65,3 +65,5 @@ site level: path `/sitemap.xml` field `sitemap`, path `/robots.txt` field `robot
 Add an entry only for a change the spec allows, with the reason.
 
 Logic and tests: `lib.mjs`, `tests/seo-parity/seo-parity.test.ts`.
+
+- Links to `/generate` are compared without their query string (the query only preselects a style/room; `/generate` is noindex and behind sign-in).

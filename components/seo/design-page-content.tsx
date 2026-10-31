@@ -18,6 +18,7 @@ import { CtaSection } from "@/components/seo/cta-section";
 import { RelatedLinks } from "@/components/seo/related-links";
 import { IDesignPageData, IThemeData, IRoomData } from "@/lib/seo/design-data";
 import { IContextualLink } from "@/lib/seo/internal-links";
+import { generateHref } from "@/lib/design-selection";
 
 interface DesignPageContentProps {
     page: IDesignPageData;
@@ -62,6 +63,7 @@ export function DesignPageContent({
     comparisonLinks = [],
     moreDesignLinks = [],
 }: DesignPageContentProps) {
+    const tryItHref = generateHref({ theme: page.theme, roomType: page.roomType });
     const breadcrumbItems = [
         { name: "Home", href: "/" },
         { name: "Design Ideas", href: "/design" },
@@ -95,7 +97,7 @@ export function DesignPageContent({
                             {page.intro}
                         </p>
                         <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
-                            <Link href="/generate">
+                            <Link href={tryItHref}>
                                 <Button
                                     size="lg"
                                     className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white"
@@ -431,6 +433,7 @@ export function DesignPageContent({
                 heading={`Ready to redesign your ${page.roomName.toLowerCase()}?`}
                 subtext={`Generate ${page.themeName.toLowerCase()} ${page.roomName.toLowerCase()} design ideas from a single photo. No design experience required.`}
                 primaryLabel={`Generate ${page.themeName} Design`}
+                primaryHref={tryItHref}
                 secondaryLabel="View Pricing"
                 secondaryHref="/pricing"
             />

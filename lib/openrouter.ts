@@ -1,4 +1,5 @@
 import { logger } from "@/lib/logger";
+import type { RoomType, Theme } from "@/types";
 
 export const OPENROUTER_MODEL = "google/gemini-3.1-flash-image";
 export const OPENROUTER_MODEL_PREMIUM = "google/gemini-3-pro-image";
@@ -193,13 +194,13 @@ export async function generateDesign(
 }
 
 export function buildDesignPrompt(
-    roomType: string,
-    theme: string,
+    roomType: RoomType,
+    theme: Theme,
     quality: "standard" | "premium" = "standard",
     customPrompt?: string
 ): string {
     void quality; // Parameter used for type safety but not needed in prompt construction
-    const roomDescriptions: Record<string, string> = {
+    const roomDescriptions: Record<RoomType, string> = {
         "living-room": "a modern living room with comfortable seating",
         bedroom: "a relaxing bedroom with a stylish bed",
         kitchen: "a functional kitchen with modern appliances",
@@ -207,9 +208,16 @@ export function buildDesignPrompt(
         "dining-room": "an elegant dining room with a table",
         office: "a productive home office",
         "gaming-room": "a high-tech gaming setup",
+        nursery: "a calm, safe nursery with a crib",
+        "laundry-room": "an organized laundry room with a washer and dryer",
+        basement: "a cozy, well-lit finished basement",
+        sunroom: "a bright sunroom with plenty of natural light",
+        "home-theater": "a comfortable home theater with a large screen",
+        mudroom: "a practical mudroom with storage and a bench",
+        "walk-in-closet": "an organized walk-in closet with open shelving",
     };
 
-    const themeModifiers: Record<string, string> = {
+    const themeModifiers: Record<Theme, string> = {
         modern: "contemporary, sleek, minimalist, clean lines",
         minimalist: "minimalist, clutter-free, simple, elegant",
         scandinavian: "Scandinavian design, light wood, cozy, warm",
@@ -218,6 +226,12 @@ export function buildDesignPrompt(
         bohemian: "bohemian, eclectic, colorful, artistic",
         vintage: "vintage, retro, antique, nostalgic",
         luxury: "luxury, opulent, premium, sophisticated",
+        japandi: "Japandi, Japanese-Scandinavian fusion, natural wood, muted tones, calm",
+        "art-deco": "Art Deco, geometric patterns, brass, velvet, glamorous",
+        coastal: "coastal, airy, light blues and whites, natural textures, breezy",
+        farmhouse: "farmhouse, rustic wood, shiplap, warm, homey",
+        mediterranean: "Mediterranean, terracotta, plaster walls, warm earth tones, sunlit",
+        transitional: "transitional, classic meets contemporary, neutral, balanced",
     };
 
     const roomDesc = roomDescriptions[roomType] || roomType;

@@ -10,6 +10,7 @@ import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { PageTransition } from "@/components/page-transition";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
+import { generateHref } from "@/lib/design-selection";
 
 // Cross-link card, repeated once per card in the grid below.
 const RELATED_CARD_CLASS =
@@ -127,7 +128,7 @@ export default function DesignHubPage() {
                                 </div>
                                 {themePages.length === 0 && (
                                     <Link
-                                        href="/generate"
+                                        href={generateHref({ theme })}
                                         className="text-sm font-medium text-primary hover:underline"
                                     >
                                         Try {themeData.name} on your own room photo
