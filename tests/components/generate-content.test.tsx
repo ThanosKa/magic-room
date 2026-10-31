@@ -51,6 +51,28 @@ function groupNamed(name: string): HTMLFieldSetElement {
     return fieldset;
 }
 
+/** The room type control: one compact select in the panel. */
+function roomSelect(): HTMLSelectElement {
+    const select = container.querySelector("select#generate-room") as HTMLSelectElement | null;
+    if (!select) throw new Error("No room type select");
+    return select;
+}
+
+function chooseRoom(text: string) {
+    const select = roomSelect();
+    const choice = Array.from(select.options).find((o) => o.textContent === text);
+    if (!choice) throw new Error(`No room type "${text}"`);
+    const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "value")!.set!;
+    act(() => {
+        setter.call(select, choice.value);
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+}
+
+function checkedRoom(): string {
+    return roomSelect().selectedOptions[0]?.textContent ?? "";
+}
+
 function checkedLabel(group: string): string {
     const input = groupNamed(group).querySelector("input:checked");
     return input?.closest("label")?.textContent?.trim() ?? "";
@@ -111,11 +133,28 @@ function button(name: string): HTMLButtonElement {
     return found;
 }
 
-/** The sticky bar: quality, note, a summary of the choices and the Generate button. */
-function actionBar(): HTMLElement {
-    const bar = container.querySelector("[data-action-bar]") as HTMLElement | null;
-    if (!bar) throw new Error("No action bar");
-    return bar;
+/** The control panel beside the photo (a bottom sheet on phones): every choice, then the message slot and Generate. */
+function panel(): HTMLElement {
+    const found = container.querySelector("[data-control-panel]") as HTMLElement | null;
+    if (!found) throw new Error("No control panel");
+    return found;
+}
+
+/** The part of the panel that scrolls (and, on a phone, folds away): the choices. */
+function panelBody(): HTMLElement {
+    return panel().querySelector("[data-panel-body]") as HTMLElement;
+}
+
+/** The part of the panel that always stays on screen: the message slot and Generate. */
+function panelFooter(): HTMLElement {
+    return panel().querySelector("[data-panel-footer]") as HTMLElement;
+}
+
+/** On a phone: the summary row that opens and closes the sheet. */
+function sheetToggle(): HTMLButtonElement {
+    const found = panel().querySelector(`button[aria-controls="${panelBody().id}"]`) as HTMLButtonElement | null;
+    if (!found) throw new Error("No sheet toggle");
+    return found;
 }
 
 /** The main button (Generate, Generating…, Regenerate): the one the message slot describes. */
@@ -125,7 +164,7 @@ function generateButton(): HTMLButtonElement {
     return found;
 }
 
-/** Opens the note field from the action bar. */
+/** Opens the note field in the panel. */
 function openNote(): HTMLTextAreaElement {
     if (!container.querySelector("textarea")) click(button("Add a note"));
     const note = container.querySelector("textarea");
@@ -220,32 +259,81 @@ describe("Generate tool", () => {
         expect(container.textContent).not.toContain("Step 4");
     });
 
-    it("keeps quality, the note and the Generate button together in the action bar", () => {
+    it("keeps every choice in one panel, with the message slot and Generate pinned to its foot", () => {
         render();
 
-        const bar = actionBar();
-        expect(bar.contains(groupNamed("Quality"))).toBe(true);
-        expect(bar.contains(button("Add a note"))).toBe(true);
-        expect(bar.contains(generateButton())).toBe(true);
-        expect(bar.contains(message())).toBe(true);
+        expect(container.querySelector("[data-action-bar]")).toBeNull();
+        const body = panelBody();
+        const parts = [roomSelect(), groupNamed("Style"), groupNamed("Quality"), button("Add a note")];
+        for (const part of parts) expect(body.contains(part)).toBe(true);
+        // Top to bottom: room type, style, quality, note.
+        for (let i = 1; i < parts.length; i++) {
+            expect(parts[i - 1].compareDocumentPosition(parts[i]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        }
+
+        const footer = panelFooter();
+        expect(body.contains(footer)).toBe(false);
+        expect(footer.contains(message())).toBe(true);
+        expect(footer.contains(generateButton())).toBe(true);
         // The message slot comes right before the button.
         const slotThenButton = message().compareDocumentPosition(generateButton()) & Node.DOCUMENT_POSITION_FOLLOWING;
         expect(slotThenButton).toBeTruthy();
+        // The photo comes before the panel.
+        const photo = container.querySelector("#step-photo")!;
+        expect(photo.compareDocumentPosition(panel()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
+    it("on a phone, folds the choices into a sheet that opens from the summary and closes for the wait", async () => {
+        stubNetwork();
+        search = "style=japandi&room=bedroom";
+        render();
+        await uploadPhoto();
+
+        const toggle = sheetToggle();
+        expect(toggle.textContent).toContain("Bedroom · Japandi · Standard");
+        expect(toggle.getAttribute("aria-expanded")).toBe("false");
+        expect(panel().dataset.sheet).toBe("collapsed");
+        // Collapsed, the summary and Generate stay outside the folding part.
+        expect(panelBody().contains(toggle)).toBe(false);
+        expect(panelBody().contains(generateButton())).toBe(false);
+
+        click(toggle);
+        expect(toggle.getAttribute("aria-expanded")).toBe("true");
+        expect(panel().dataset.sheet).toBe("expanded");
+
+        click(toggle);
+        expect(panel().dataset.sheet).toBe("collapsed");
+
+        // Generating closes the sheet so the wait shows on the photo.
+        click(toggle);
+        click(generateButton());
+        expect(panel().dataset.sheet).toBe("collapsed");
+        expect(toggle.disabled).toBe(false);
+    });
+
+    it("closes the open sheet with Escape", () => {
+        render();
+        click(sheetToggle());
+
+        act(() => {
+            panel().dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+        });
+        expect(panel().dataset.sheet).toBe("collapsed");
     });
 
     it("offers all 14 room types and 14 styles", () => {
         render();
 
-        expect(groupNamed("Room type").querySelectorAll('input[type="radio"]')).toHaveLength(14);
+        expect(roomSelect().options).toHaveLength(14);
         expect(groupNamed("Style").querySelectorAll('input[type="radio"]')).toHaveLength(14);
-        expect(option("Room type", "Walk-in Closet")).toBeTruthy();
+        expect(Array.from(roomSelect().options).map((o) => o.textContent)).toContain("Walk-in Closet");
         expect(option("Style", "Mediterranean")).toBeTruthy();
     });
 
     it("starts on a living room in the modern style", () => {
         render();
 
-        expect(checkedLabel("Room type")).toBe("Living Room");
+        expect(checkedRoom()).toBe("Living Room");
         expect(checkedLabel("Style")).toContain("Modern");
     });
 
@@ -253,7 +341,7 @@ describe("Generate tool", () => {
         search = "style=japandi&room=bedroom";
         render();
 
-        expect(checkedLabel("Room type")).toBe("Bedroom");
+        expect(checkedRoom()).toBe("Bedroom");
         expect(checkedLabel("Style")).toContain("Japandi");
     });
 
@@ -261,7 +349,7 @@ describe("Generate tool", () => {
         search = "style=gothic&room=garage";
         render();
 
-        expect(checkedLabel("Room type")).toBe("Living Room");
+        expect(checkedRoom()).toBe("Living Room");
         expect(checkedLabel("Style")).toContain("Modern");
     });
 
@@ -278,17 +366,18 @@ describe("Generate tool", () => {
         expect(generateButton().textContent).toContain("2 credits");
     });
 
-    it("sums up the chosen room and style next to the Generate button", () => {
+    it("sums up the chosen room, style and quality in the panel", () => {
         search = "style=japandi&room=bedroom";
         render();
 
-        expect(actionBar().textContent).toContain("Bedroom · Japandi");
+        expect(panel().textContent).toContain("Bedroom · Japandi · Standard");
         click(option("Style", "Coastal"));
-        click(option("Room type", "Kitchen"));
-        expect(actionBar().textContent).toContain("Kitchen · Coastal");
+        chooseRoom("Kitchen");
+        click(option("Quality", "Premium"));
+        expect(panel().textContent).toContain("Kitchen · Coastal · Premium");
     });
 
-    it("opens the note from the action bar, with a 500 character limit and a counter, keeping Generate in place", () => {
+    it("opens the note in the panel, with a 500 character limit and a counter, keeping Generate in place", () => {
         render();
 
         expect(container.querySelector("textarea")).toBeNull();
@@ -297,10 +386,10 @@ describe("Generate tool", () => {
 
         expect(note.maxLength).toBe(500);
         expect(document.activeElement).toBe(note);
-        expect(actionBar().contains(note)).toBe(true);
-        expect(actionBar().contains(generateButton())).toBe(true);
+        expect(panelBody().contains(note)).toBe(true);
+        expect(panelFooter().contains(generateButton())).toBe(true);
         type(note, "green sofa");
-        expect(actionBar().textContent).toContain("10/500");
+        expect(panel().textContent).toContain("10/500");
     });
 
     it("keeps the note when the field is closed, and says a note is added", () => {
@@ -327,20 +416,20 @@ describe("Generate tool", () => {
             viewport.height = 524;
             viewport.dispatchEvent(new Event("resize"));
         });
-        expect(actionBar().style.bottom).toBe("320px");
+        expect(panel().style.bottom).toBe("320px");
 
         act(() => {
             viewport.height = 844;
             viewport.dispatchEvent(new Event("resize"));
         });
-        expect(actionBar().style.bottom).toBe("");
+        expect(panel().style.bottom).toBe("");
     });
     it("generates from the photo with the chosen room, style, quality and note", async () => {
         const network = stubNetwork();
         render();
         await uploadPhoto();
 
-        click(option("Room type", "Bedroom"));
+        chooseRoom("Bedroom");
         click(option("Style", "Japandi"));
         click(option("Quality", "Premium"));
         type(openNote(), "  green sofa, more plants  ");
@@ -378,7 +467,7 @@ describe("Generate tool", () => {
         expect(container.querySelector('img[alt="Your room"]')).not.toBeNull();
         expect(container.textContent).toContain("Sending your photo");
         expect(option("Style", "Coastal").matches(":disabled")).toBe(true);
-        expect(option("Room type", "Kitchen").matches(":disabled")).toBe(true);
+        expect(roomSelect().matches(":disabled")).toBe(true);
         expect(option("Quality", "Premium").matches(":disabled")).toBe(true);
         expect(container.querySelector("textarea")!.matches(":disabled")).toBe(true);
         expect(button("Done").matches(":disabled")).toBe(true);
@@ -485,7 +574,7 @@ describe("Generate tool when something goes wrong", () => {
         stubGenerate(json(401, { error: "Unauthorized" }));
         render();
         await uploadPhoto();
-        click(option("Room type", "Bedroom"));
+        chooseRoom("Bedroom");
         click(option("Style", "Japandi"));
         await generateAndWaitForMessage();
 

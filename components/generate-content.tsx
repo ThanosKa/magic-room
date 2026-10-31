@@ -6,13 +6,14 @@ import { useClerk, useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
 import { AuthGuard } from "@/components/auth-guard";
-import { ActionBar } from "@/components/generate/action-bar";
+import { ControlPanel } from "@/components/generate/control-panel";
 import { PhotoPanel, type ToolState } from "@/components/generate/photo-panel";
-import { RoomTypePicker, StylePicker } from "@/components/generate/option-pickers";
+import { QUALITY_NAMES } from "@/components/generate/option-pickers";
 import { QUALITY_OPTIONS, ROOM_TYPES, THEMES } from "@/lib/constants";
 import { generateHref, readDesignSelection } from "@/lib/design-selection";
 import { MAX_PHOTO_FILE_SIZE, prepareRoomPhoto, type RoomPhoto } from "@/lib/room-photo";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
+import { cn } from "@/lib/utils";
 import {
     DOWNLOAD_FAILED_MESSAGE,
     generateFailureMessage,
@@ -71,7 +72,7 @@ function GenerateTool() {
         [signOut]
     );
 
-    // On a phone the button sits below the choices: bring the photo (wait
+    // On a phone the page may be scrolled past the photo: bring it (wait
     // state, then result) back into view when it changes.
     const showPhoto = useCallback(() => {
         const el = photoRef.current;
@@ -162,65 +163,68 @@ function GenerateTool() {
     }, [resultUrl, theme, roomType]);
 
     return (
-        <div data-tool-state={state} className="container-page pb-16 pt-6 sm:pt-10 lg:pb-24">
-            <div className="mb-6 max-w-2xl sm:mb-10">
-                <h1 className="font-serif text-[clamp(34px,5vw,64px)] font-normal leading-[1] tracking-[-0.025em] text-ink text-balance">
+        /*
+          Desktop (>= 1024): the photo canvas on the left and the control panel
+          on the right fill the screen under the header; the title sits above
+          the panel. Phone: title, canvas, then the panel as a bottom sheet that
+          sticks to the bottom of the screen (it is the tool's last child, so it
+          stays inside the tool and never covers the site footer).
+        */
+        <div
+            data-tool-state={state}
+            className={cn(
+                // Phone: at least a screen tall, so the sheet (pushed to the end) starts at the bottom of the screen.
+                "mx-auto flex min-h-[calc(100svh-66px)] w-full max-w-[1440px] flex-col gap-4 px-5 pt-3 sm:min-h-[calc(100svh-76px)] sm:px-6 sm:pt-4",
+                "lg:grid lg:h-[calc(100svh-76px)] lg:min-h-[600px] lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-5 lg:gap-y-5 lg:px-12 lg:pb-6 xl:grid-cols-[minmax(0,1fr)_392px]"
+            )}
+        >
+            <div className="lg:col-start-2 lg:row-start-1 lg:pt-2">
+                <h1 className="font-serif text-[clamp(30px,4vw,40px)] font-normal leading-[1] tracking-[-0.025em] text-ink text-balance">
                     Redesign your <em className="italic">room</em> in seconds
                 </h1>
-                <p className="mt-3 hidden text-[17px] leading-relaxed tracking-[-0.01em] text-ink-2 sm:block">
+                <p className="mt-2 hidden text-[15px] leading-snug tracking-[-0.01em] text-ink-2 sm:block">
                     Upload a photo, pick a room type and a style, and get a new design in about a minute.
                 </p>
             </div>
 
-            {/*
-              Photo, then the choices (photo left and sticky on desktop). The
-              action bar comes after both, as a child of the tool's root, so it
-              sticks to the bottom of the screen from the very top of the page
-              and, at the end, sits in its own place below the choices.
-            */}
-            <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-12">
-                <div ref={photoRef} className="scroll-mt-24 lg:sticky lg:top-24 lg:self-start">
-                    <PhotoPanel
-                        state={state}
-                        photo={photo}
-                        resultUrl={resultUrl}
-                        styleName={THEMES[theme]}
-                        generationStartedAt={generationStartedAt}
-                        fullscreen={fullscreen}
-                        onFullscreenChange={setFullscreen}
-                        onFile={handleFile}
-                        onReject={(reason) =>
-                            setMessage(reason === "too-many" ? PHOTO_MESSAGES.tooMany : PHOTO_MESSAGES.wrongType)
-                        }
-                        onDownload={handleDownload}
-                    />
-                </div>
-
-                {/* Locked while a design is being made. */}
-                <fieldset disabled={isGenerating} className="min-w-0 space-y-9">
-                    <legend className="sr-only">Your choices</legend>
-                    <RoomTypePicker value={roomType} onChange={setRoomType} />
-                    <StylePicker value={theme} onChange={setTheme} />
-                </fieldset>
+            <div ref={photoRef} className="flex flex-1 scroll-mt-24 flex-col lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:min-h-0">
+                <PhotoPanel
+                    state={state}
+                    photo={photo}
+                    resultUrl={resultUrl}
+                    styleName={THEMES[theme]}
+                    generationStartedAt={generationStartedAt}
+                    fullscreen={fullscreen}
+                    onFullscreenChange={setFullscreen}
+                    onFile={handleFile}
+                    onReject={(reason) =>
+                        setMessage(reason === "too-many" ? PHOTO_MESSAGES.tooMany : PHOTO_MESSAGES.wrongType)
+                    }
+                    onDownload={handleDownload}
+                    className="flex-1"
+                />
             </div>
 
-            <ActionBar
+            <ControlPanel
+                roomType={roomType}
+                onRoomTypeChange={setRoomType}
+                theme={theme}
+                onThemeChange={setTheme}
                 quality={quality}
                 onQualityChange={setQuality}
                 note={note}
                 onNoteChange={setNote}
-                summary={`${ROOM_TYPES[roomType]} · ${THEMES[theme]}`}
+                summary={`${ROOM_TYPES[roomType]} · ${THEMES[theme]} · ${QUALITY_NAMES[quality]}`}
                 generating={isGenerating}
                 hasResult={resultUrl !== null}
                 canGenerate={canGenerate}
                 onGenerate={handleGenerate}
+                className="lg:col-start-2 lg:row-start-2"
                 messages={
                     <>
                         {message && <ToolMessageView message={message} />}
                         {shortOfCredits && !isGenerating && (
-                            <ToolMessageView
-                                message={notEnoughCreditsMessage(quality === "standard" ? "Standard" : "Premium", cost, credits)}
-                            />
+                            <ToolMessageView message={notEnoughCreditsMessage(QUALITY_NAMES[quality], cost, credits)} />
                         )}
                     </>
                 }

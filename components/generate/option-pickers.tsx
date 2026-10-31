@@ -1,36 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { Check } from "lucide-react";
-import { ROOM_TYPES, THEMES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import type { RoomType, Theme } from "@/types";
+import { Check, ChevronDown } from "lucide-react";
+import { QUALITY_OPTIONS, ROOM_TYPES, THEMES } from "@/lib/constants";
+import { cn, formatCredits } from "@/lib/utils";
+import type { Quality, RoomType, Theme } from "@/types";
 
 /*
- * The tool's choices on the page (quality and the note live in the action bar). Each group is a native radio group (arrow keys move the
- * choice, one tab stop per group); the inputs are visually hidden and their
- * labels carry the look, including the focus ring.
+ * The tool's choices, as they sit in the control panel: room type (a native
+ * select, compact and the phone's own picker), style (a picture grid) and
+ * quality (a segmented control). Style and quality are native radio groups
+ * (arrow keys move the choice, one tab stop per group); their inputs are
+ * visually hidden and the labels carry the look, including the focus ring.
  */
 
-const legendClass = "mb-3 flex w-full items-baseline gap-3 text-[15px] font-medium tracking-[-0.01em] text-ink";
-const stepNumberClass = "font-serif text-[22px] leading-none text-ink-3 tabular-nums";
+export const groupTitleClass = "text-[14px] font-medium tracking-[-0.01em] text-ink";
 const focusRingClass =
     "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring";
-
-export function StepTitle({ step, title, aside }: { step: number; title: string; aside?: React.ReactNode }) {
-    return (
-        <>
-            <span className={stepNumberClass} aria-hidden="true">
-                {String(step).padStart(2, "0")}
-            </span>
-            <span>
-                <span className="sr-only">Step {step}: </span>
-                {title}
-            </span>
-            {aside && <span className="ml-auto text-sm font-normal text-ink-2">{aside}</span>}
-        </>
-    );
-}
 
 export function RoomTypePicker({
     value,
@@ -40,36 +26,32 @@ export function RoomTypePicker({
     onChange: (value: RoomType) => void;
 }) {
     return (
-        <fieldset>
-            <legend className={legendClass}>
-                <StepTitle step={2} title="Room type" />
-            </legend>
-            <div className="flex flex-wrap gap-2">
-                {(Object.entries(ROOM_TYPES) as [RoomType, string][]).map(([id, label]) => (
-                    <label
-                        key={id}
-                        className={cn(
-                            "inline-flex min-h-10 cursor-pointer select-none items-center rounded-full border px-4 text-[14px] tracking-[-0.01em] transition-[background-color,border-color,color,transform] duration-160 ease-out active:scale-[0.97] motion-reduce:transition-none",
-                            "has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60 has-[:disabled]:active:scale-100",
-                            focusRingClass,
-                            value === id
-                                ? "border-ink bg-ink text-cream"
-                                : "border-line bg-paper text-ink hover:border-ink/40"
-                        )}
-                    >
-                        <input
-                            type="radio"
-                            name="room-type"
-                            value={id}
-                            checked={value === id}
-                            onChange={() => onChange(id)}
-                            className="sr-only"
-                        />
-                        {label}
-                    </label>
-                ))}
-            </div>
-        </fieldset>
+        <div className="flex items-center justify-between gap-4">
+            <label htmlFor="generate-room" className={groupTitleClass}>
+                Room type
+            </label>
+            <span className="relative min-w-0 flex-1 sm:max-w-[220px]">
+                <select
+                    id="generate-room"
+                    value={value}
+                    onChange={(e) => onChange(e.target.value as RoomType)}
+                    className={cn(
+                        "h-11 w-full cursor-pointer appearance-none truncate rounded-full border border-input bg-paper pl-4 pr-10 text-[15px] tracking-[-0.01em] text-ink transition-[border-color] duration-160 ease-out hover:border-ink/40 motion-reduce:transition-none",
+                        "disabled:cursor-not-allowed disabled:opacity-60"
+                    )}
+                >
+                    {(Object.entries(ROOM_TYPES) as [RoomType, string][]).map(([id, label]) => (
+                        <option key={id} value={id}>
+                            {label}
+                        </option>
+                    ))}
+                </select>
+                <ChevronDown
+                    aria-hidden="true"
+                    className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-2"
+                />
+            </span>
+        </div>
     );
 }
 
@@ -80,11 +62,12 @@ function styleImage(theme: Theme): string {
 
 export function StylePicker({ value, onChange }: { value: Theme; onChange: (value: Theme) => void }) {
     return (
-        <fieldset>
-            <legend className={legendClass}>
-                <StepTitle step={3} title="Style" aside={THEMES[value]} />
+        <fieldset className="min-w-0">
+            <legend className={cn(groupTitleClass, "mb-3 flex w-full items-baseline justify-between gap-3")}>
+                <span>Style</span>
+                <span className="text-[13px] font-normal text-ink-2">{THEMES[value]}</span>
             </legend>
-            <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 lg:grid-cols-5 lg:gap-2 xl:grid-cols-7">
+            <div className="grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-4 lg:grid-cols-3">
                 {(Object.entries(THEMES) as [Theme, string][]).map(([id, label]) => {
                     const selected = value === id;
                     return (
@@ -114,26 +97,62 @@ export function StylePicker({ value, onChange }: { value: Theme; onChange: (valu
                                     src={styleImage(id)}
                                     alt=""
                                     fill
-                                    sizes="(min-width: 1280px) 90px, (min-width: 1024px) 100px, (min-width: 640px) 25vw, 33vw"
-                                    className={cn(
-                                        "object-cover",
-                                        !selected && "group-has-[:disabled]:grayscale-[0.4]"
-                                    )}
+                                    sizes="(min-width: 1024px) 112px, (min-width: 640px) 25vw, 33vw"
+                                    className={cn("object-cover", !selected && "group-has-[:disabled]:grayscale-[0.4]")}
                                 />
                                 {selected && (
-                                    <span className="absolute right-1.5 top-1.5 grid size-6 place-items-center rounded-full bg-ink text-cream shadow-float lg:right-1 lg:top-1 lg:size-5">
-                                        <Check aria-hidden="true" className="size-3.5 lg:size-3" strokeWidth={2.5} />
+                                    <span className="absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-ink text-cream shadow-float">
+                                        <Check aria-hidden="true" className="size-3" strokeWidth={2.5} />
                                     </span>
                                 )}
                             </span>
                             <span
                                 className={cn(
-                                    "line-clamp-2 px-0.5 text-[13px] leading-tight tracking-[-0.01em] lg:text-[12px] xl:text-[11px] xl:tracking-[-0.02em]",
+                                    "line-clamp-2 px-0.5 text-[12px] leading-tight tracking-[-0.01em]",
                                     selected ? "font-medium text-ink" : "text-ink-2"
                                 )}
                             >
                                 {label}
                             </span>
+                        </label>
+                    );
+                })}
+            </div>
+        </fieldset>
+    );
+}
+
+export const QUALITY_NAMES: Record<Quality, string> = { standard: "Standard", premium: "Premium" };
+
+/** Standard / Premium as one segmented control (a native radio group), each with its cost. */
+export function QualitySwitch({ value, onChange }: { value: Quality; onChange: (value: Quality) => void }) {
+    return (
+        <fieldset className="min-w-0">
+            <legend className={cn(groupTitleClass, "mb-3")}>Quality</legend>
+            <div className="grid grid-cols-2 rounded-full bg-ink/5 p-1">
+                {Object.values(QUALITY_OPTIONS).map((q) => {
+                    const selected = value === q.id;
+                    return (
+                        <label
+                            key={q.id}
+                            title={q.description}
+                            className={cn(
+                                "inline-flex h-9 cursor-pointer select-none items-center justify-center gap-1.5 rounded-full px-3 text-[14px] tracking-[-0.01em] transition-[background-color,color,box-shadow] duration-160 ease-out motion-reduce:transition-none",
+                                "has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60",
+                                focusRingClass,
+                                selected ? "bg-paper text-ink shadow-float" : "text-ink-2 hover:text-ink"
+                            )}
+                        >
+                            <input
+                                type="radio"
+                                name="quality"
+                                value={q.id}
+                                checked={selected}
+                                onChange={() => onChange(q.id)}
+                                className="sr-only"
+                            />
+                            <span className="font-medium">{QUALITY_NAMES[q.id]}</span>
+                            <span className="text-[13px] text-ink-3 tabular-nums">{formatCredits(q.credits)}</span>
                         </label>
                     );
                 })}
