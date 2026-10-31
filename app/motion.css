@@ -148,22 +148,31 @@
     clip-path: inset(0 calc(100% - var(--pos)) 0 0);
   }
 
+  /* The handle is a frame-sized layer whose right edge is the divider. It moves
+   * with transform (its own width = the frame's, so the % lands on --pos),
+   * not `left`, so dragging never re-runs layout. */
   .compare-handle {
+    position: absolute;
+    inset: 0;
+    transform: translateX(calc(var(--pos) - 100%));
+    pointer-events: none;
+  }
+
+  .compare-handle::before {
+    content: "";
     position: absolute;
     top: 0;
     bottom: 0;
-    left: var(--pos);
+    right: -1px;
     width: 2px;
-    margin-left: -1px;
     background: var(--cream);
     box-shadow: 0 0 12px rgb(0 0 0 / 0.25);
-    pointer-events: none;
   }
 
   .compare-knob {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 100%;
     display: grid;
     place-items: center;
     width: 52px;

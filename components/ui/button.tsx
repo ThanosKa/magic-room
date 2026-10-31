@@ -10,12 +10,12 @@ import { cn } from "@/lib/utils";
  * Press: scale 0.97 on :active. Hover only on real pointers (see globals.css).
  */
 const buttonVariants = cva(
-  "inline-flex cursor-pointer select-none items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium tracking-[-0.01em] transition-[transform,box-shadow,background-color,color,text-decoration-color] duration-160 ease-out active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none [&_svg]:shrink-0",
+  "inline-flex cursor-pointer select-none items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium tracking-[-0.01em] transition-[transform,filter,background-color,color,text-decoration-color] duration-160 ease-out active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-button hover:shadow-button-hover",
+          "bg-primary text-primary-foreground drop-shadow-button hover:drop-shadow-button-hover",
         cream:
           "bg-cream text-ink shadow-[0_10px_30px_rgb(0_0_0/0.25)] hover:bg-[#fff8ee]",
         destructive:

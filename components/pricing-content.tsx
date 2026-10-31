@@ -165,7 +165,7 @@ export default function PricingContent() {
         <div
           className="mt-12 grid gap-3 sm:grid-cols-2 md:mt-16 lg:grid-cols-4"
         >
-          {CREDIT_PACKAGES.map((pkg, i) => (
+          {CREDIT_PACKAGES.map((pkg) => (
             <div
               key={pkg.id}
               className={cn(

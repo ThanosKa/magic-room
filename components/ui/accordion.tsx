@@ -46,7 +46,9 @@ const AccordionContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
     <AccordionPrimitive.Content
         ref={ref}
-        className="overflow-hidden text-[15px] leading-relaxed text-ink-2 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down motion-reduce:animate-none"
+        // Opens with a fade, not a height animation: animating height re-lays out
+        // the whole page below on every frame. Closing is instant.
+        className="overflow-hidden text-[15px] leading-relaxed text-ink-2 data-[state=open]:animate-fade"
         {...props}
     >
         <div className={cn("pb-6 pt-0 pr-10", className)}>{children}</div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import { memo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -160,7 +160,16 @@ export function CompareSlider({
     );
 }
 
-function CompareLayer({ image, sizes, priority }: { image: CompareImage; sizes: string; priority: boolean }) {
+// Memoised: a drag re-renders the slider on every move, the images must not.
+const CompareLayer = memo(function CompareLayer({
+    image,
+    sizes,
+    priority,
+}: {
+    image: CompareImage;
+    sizes: string;
+    priority: boolean;
+}) {
     // Remember which src failed, so a new src (e.g. a new result) is tried again.
     const [failed, setFailed] = useState<string | null>(null);
     const src = failed === image.src && image.fallback ? image.fallback : image.src;
@@ -175,4 +184,4 @@ function CompareLayer({ image, sizes, priority }: { image: CompareImage; sizes: 
             onError={() => setFailed(image.src)}
         />
     );
-}
+});
