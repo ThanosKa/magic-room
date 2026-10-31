@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { Upload, Palette, Download, DollarSign, Clock, TrendingUp, Home, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
     Accordion,
     AccordionContent,
@@ -13,12 +12,20 @@ import {
 } from "@/components/ui/accordion";
 import { CompareSlider } from "@/components/compare-slider";
 import { PageTransition } from "@/components/page-transition";
-import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
-
-// Anchor-chip class, repeated once per contextual link below.
-const CHIP_CLASS =
-    "rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:border-primary hover:text-primary dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300";
+import {
+    BODY_CLASS,
+    CHIP_CLASS,
+    H1_CLASS,
+    H2_CLASS,
+    H3_CLASS,
+    ComparisonHero,
+    LEAD_CLASS,
+    PageBreadcrumb,
+    Section,
+    Split,
+} from "@/components/seo/comparison-layout";
+import { cn } from "@/lib/utils";
 
 const STEPS = [
     {
@@ -109,78 +116,58 @@ export function VirtualStagingContent() {
 
     return (
         <PageTransition>
-            {/* Breadcrumb */}
-            <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
-                <div className="container px-4 md:px-6">
-                    <BreadcrumbNav items={breadcrumbItems} />
-                </div>
-            </div>
+            <PageBreadcrumb items={breadcrumbItems} />
 
             {/* Hero */}
-            <section className="bg-white py-12 dark:bg-slate-950 md:py-20">
-                <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-3xl text-center">
-                        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                            For real estate agents
-                        </div>
-                        <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl">
-                            AI Virtual Staging for Real Estate
-                        </h1>
-                        <p className="mt-6 text-lg text-slate-600 dark:text-slate-400">
-                            Stage any listing photo in 60 seconds for under $1. Replace $2,000–$5,000 traditional staging
-                            costs with AI that furnishes rooms photo-realistically — no furniture trucks, no scheduling, no waiting.
-                        </p>
-                        <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
-                            <Link href="/generate">
-                                <Button
-                                    size="lg"
-                                    className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white"
-                                >
-                                    Try Free Virtual Staging
-                                </Button>
-                            </Link>
-                            <Link href="/pricing">
-                                <Button size="lg" variant="outline" className="h-12 px-8 text-lg">
-                                    View Pricing
-                                </Button>
-                            </Link>
-                        </div>
-                        <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-                            One free credit included — no credit card required
-                        </p>
-                    </div>
+            <ComparisonHero>
+                <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-ink/5 px-3 py-1 text-sm text-ink-2">
+                    <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
+                    For real estate agents
                 </div>
-            </section>
+                <h1 className={H1_CLASS}>AI Virtual Staging for Real Estate</h1>
+                <p className={cn(LEAD_CLASS, "mt-6")}>
+                    Stage any listing photo in 60 seconds for under $1. Replace $2,000–$5,000 traditional staging
+                    costs with AI that furnishes rooms photo-realistically — no furniture trucks, no scheduling, no waiting.
+                </p>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                    <Button asChild size="lg">
+                        <Link href="/generate">Try Free Virtual Staging</Link>
+                    </Button>
+                    <Button asChild size="lg" variant="outline">
+                        <Link href="/pricing">View Pricing</Link>
+                    </Button>
+                </div>
+                <p className="mt-4 text-sm text-ink-3">
+                    One free credit included — no credit card required
+                </p>
+            </ComparisonHero>
 
             {/* Pain point banner */}
-            <section className="bg-slate-50 py-10 dark:bg-slate-900/50">
-                <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-4xl">
-                        <div className="grid gap-4 sm:grid-cols-3 text-center">
-                            <div className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
-                                <p className="text-3xl font-bold text-slate-900 dark:text-white">$2,000–$5,000</p>
-                                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Traditional staging cost per property</p>
-                            </div>
-                            <div className="rounded-xl border border-primary/30 bg-primary/5 p-6 dark:bg-primary/10">
-                                <p className="text-3xl font-bold text-primary">Under $1</p>
-                                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">AI virtual staging cost per photo</p>
-                            </div>
-                            <div className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
-                                <p className="text-3xl font-bold text-slate-900 dark:text-white">60 seconds</p>
-                                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Time to a staged photo with AI</p>
-                            </div>
-                        </div>
+            <Section>
+                <div className="grid gap-4 sm:grid-cols-3">
+                    <div className="rounded-xl border border-line p-6">
+                        <p className="font-serif text-[34px] leading-none tracking-[-0.02em] text-ink">$2,000–$5,000</p>
+                        <p className="mt-3 text-sm text-ink-2">Traditional staging cost per property</p>
+                    </div>
+                    <div className="rounded-xl border border-line bg-paper-2 p-6">
+                        <p className="font-serif text-[34px] leading-none tracking-[-0.02em] text-ink">
+                            <span aria-hidden="true" className="mr-2 inline-block size-1.5 -translate-y-1.5 rounded-full bg-accent align-middle" />
+                            Under $1
+                        </p>
+                        <p className="mt-3 text-sm text-ink-2">AI virtual staging cost per photo</p>
+                    </div>
+                    <div className="rounded-xl border border-line p-6">
+                        <p className="font-serif text-[34px] leading-none tracking-[-0.02em] text-ink">60 seconds</p>
+                        <p className="mt-3 text-sm text-ink-2">Time to a staged photo with AI</p>
                     </div>
                 </div>
-            </section>
+            </Section>
 
             {/* Before / After */}
-            <section className="bg-white py-12 dark:bg-slate-950 md:py-16">
-                <div className="container px-4 md:px-6">
+            <section className="pb-16 md:pb-24">
+                <div className="container-page">
                     <div className="mx-auto max-w-5xl">
-                        <h2 className="mb-8 text-center text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
-                            See the difference AI staging makes
-                        </h2>
+                        <h2 className={cn(H2_CLASS, "mb-8")}>See the difference AI staging makes</h2>
                         <CompareSlider
                             before={{ src: "/images/room-before.png", alt: "Empty room before AI virtual staging" }}
                             after={{
@@ -191,7 +178,7 @@ export function VirtualStagingContent() {
                             priority
                             className="rounded-3xl md:aspect-[16/10]"
                         />
-                        <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
+                        <p className="mt-4 text-sm text-ink-3">
                             AI-generated staging from a single photo — no physical furniture required
                         </p>
                     </div>
@@ -199,201 +186,146 @@ export function VirtualStagingContent() {
             </section>
 
             {/* How it works */}
-            <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
-                <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-4xl">
-                        <h2 className="mb-10 text-center text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
-                            How AI home staging works
-                        </h2>
-                        <div className="grid gap-6 md:grid-cols-3">
-                            {STEPS.map((step, index) => (
-                                <Card
-                                    key={index}
-                                    className="border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
-                                >
-                                    <CardContent className="p-6">
-                                        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                                            <step.icon className="h-5 w-5 text-primary" />
-                                        </div>
-                                        <h3 className="mb-2 font-semibold text-slate-900 dark:text-white">
-                                            {index + 1}. {step.title}
-                                        </h3>
-                                        <p className="text-sm text-slate-600 dark:text-slate-400">
-                                            {step.description}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            ))}
+            <Section tone="band">
+                <h2 className={cn(H2_CLASS, "mb-10")}>How AI home staging works</h2>
+                <div className="grid gap-4 md:grid-cols-3">
+                    {STEPS.map((step, index) => (
+                        <div key={index} className="rounded-xl border border-line bg-paper p-6">
+                            <div className="mb-5 flex size-10 items-center justify-center rounded-full bg-ink/5">
+                                <step.icon aria-hidden="true" className="size-5 text-ink" />
+                            </div>
+                            <h3 className={cn(H3_CLASS, "mb-2")}>
+                                {index + 1}. {step.title}
+                            </h3>
+                            <p className="text-[15px] leading-relaxed text-ink-2">{step.description}</p>
                         </div>
-                    </div>
+                    ))}
                 </div>
-            </section>
+            </Section>
 
             {/* Benefits for agents */}
-            <section className="bg-white py-12 dark:bg-slate-950 md:py-16">
-                <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-4xl">
-                        <h2 className="mb-4 text-center text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
-                            Why real estate agents choose AI staging
-                        </h2>
-                        <p className="mb-10 text-center text-slate-600 dark:text-slate-400">
-                            Professional results without the professional price tag or scheduling headaches.
-                        </p>
-                        <div className="grid gap-6 md:grid-cols-2">
-                            {BENEFITS.map((benefit, index) => (
-                                <div
-                                    key={index}
-                                    className="flex gap-4 rounded-xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900"
-                                >
-                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                                        <benefit.icon className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <div>
-                                        <h3 className="mb-1 font-semibold text-slate-900 dark:text-white">
-                                            {benefit.title}
-                                        </h3>
-                                        <p className="text-sm text-slate-600 dark:text-slate-400">
-                                            {benefit.description}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+            <Section rule={false}>
+                <Split
+                    heading="Why real estate agents choose AI staging"
+                    intro="Professional results without the professional price tag or scheduling headaches."
+                >
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        {BENEFITS.map((benefit, index) => (
+                            <div key={index} className="rounded-xl border border-line p-6">
+                                <benefit.icon aria-hidden="true" className="mb-4 size-5 text-ink" />
+                                <h3 className={cn(H3_CLASS, "mb-2 !text-[22px]")}>{benefit.title}</h3>
+                                <p className="text-[15px] leading-relaxed text-ink-2">{benefit.description}</p>
+                            </div>
+                        ))}
                     </div>
-                </div>
-            </section>
+                </Split>
+            </Section>
 
             {/* Who it is for */}
-            <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
-                <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-3xl">
-                        <h2 className="mb-8 text-2xl font-bold text-slate-900 dark:text-white">
-                            Built for real estate professionals
-                        </h2>
-                        <div className="grid gap-4 sm:grid-cols-2">
-                            {[
-                                "Independent agents and solo brokers who list multiple properties a month",
-                                "Property managers preparing vacation rentals or long-term rentals for market",
-                                "New construction developers selling units before physical staging is possible",
-                                "Real estate photographers who offer staging as an add-on service",
-                                "Sellers who want to maximise listing price without staging spend",
-                                "Estate agents working with vacant or inherited properties",
-                            ].map((item, i) => (
-                                <div key={i} className="flex items-start gap-3">
-                                    <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                                    <p className="text-sm text-slate-600 dark:text-slate-400">{item}</p>
-                                </div>
-                            ))}
-                        </div>
+            <Section>
+                <Split heading="Built for real estate professionals">
+                    <div className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
+                        {[
+                            "Independent agents and solo brokers who list multiple properties a month",
+                            "Property managers preparing vacation rentals or long-term rentals for market",
+                            "New construction developers selling units before physical staging is possible",
+                            "Real estate photographers who offer staging as an add-on service",
+                            "Sellers who want to maximise listing price without staging spend",
+                            "Estate agents working with vacant or inherited properties",
+                        ].map((item, i) => (
+                            <div key={i} className="flex items-start gap-3">
+                                <CheckCircle aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-accent" />
+                                <p className={cn(BODY_CLASS, "text-[15px]")}>{item}</p>
+                            </div>
+                        ))}
                     </div>
-                </div>
-            </section>
+                </Split>
+            </Section>
 
             {/* FAQ */}
-            <section className="bg-white py-12 dark:bg-slate-950 md:py-16">
-                <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-3xl">
-                        <h2 className="mb-8 text-2xl font-bold text-slate-900 dark:text-white">
-                            Frequently asked questions
-                        </h2>
-                        <Accordion type="single" collapsible className="space-y-2">
-                            {FAQS.map((faq, index) => (
-                                <AccordionItem
-                                    key={index}
-                                    value={`faq-${index}`}
-                                    className="rounded-lg border border-slate-200 bg-slate-50 px-4 dark:border-slate-800 dark:bg-slate-900"
-                                >
-                                    <AccordionTrigger className="text-left text-sm font-medium text-slate-900 hover:no-underline dark:text-white">
-                                        {faq.question}
-                                    </AccordionTrigger>
-                                    <AccordionContent className="text-sm text-slate-600 dark:text-slate-400">
-                                        {faq.answer}
-                                    </AccordionContent>
-                                </AccordionItem>
-                            ))}
-                        </Accordion>
-                    </div>
-                </div>
-            </section>
+            <Section>
+                <Split heading="Frequently asked questions">
+                    <Accordion type="single" collapsible className="border-t border-line">
+                        {FAQS.map((faq, index) => (
+                            <AccordionItem key={index} value={`faq-${index}`}>
+                                <AccordionTrigger>{faq.question}</AccordionTrigger>
+                                <AccordionContent>{faq.answer}</AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                </Split>
+            </Section>
 
             {/* Related links */}
-            <section className="bg-slate-50 py-10 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800">
-                <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-3xl">
-                        <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">
-                            Explore design styles for staging
-                        </h2>
-                        <ul className="flex flex-wrap gap-3">
-                            <li>
-                                <Link href="/design/modern-living-room" className={CHIP_CLASS}>
-                                    Modern Living Room
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/design/scandinavian-bedroom" className={CHIP_CLASS}>
-                                    Scandinavian Bedroom
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/design/scandinavian-living-room" className={CHIP_CLASS}>
-                                    Scandinavian Living Room
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/design/coastal-living-room" className={CHIP_CLASS}>
-                                    Coastal living room design ideas
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/design/farmhouse-kitchen" className={CHIP_CLASS}>
-                                    Farmhouse kitchen design ideas
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/design" className={CHIP_CLASS}>
-                                    All 196 AI interior design combinations
-                                </Link>
-                            </li>
-                        </ul>
+            <Section>
+                <h2 className={cn(H3_CLASS, "mb-5")}>Explore design styles for staging</h2>
+                <ul className="flex flex-wrap gap-3">
+                    <li>
+                        <Link href="/design/modern-living-room" className={CHIP_CLASS}>
+                            Modern Living Room
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/design/scandinavian-bedroom" className={CHIP_CLASS}>
+                            Scandinavian Bedroom
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/design/scandinavian-living-room" className={CHIP_CLASS}>
+                            Scandinavian Living Room
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/design/coastal-living-room" className={CHIP_CLASS}>
+                            Coastal living room design ideas
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/design/farmhouse-kitchen" className={CHIP_CLASS}>
+                            Farmhouse kitchen design ideas
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/design" className={CHIP_CLASS}>
+                            All 196 AI interior design combinations
+                        </Link>
+                    </li>
+                </ul>
 
-                        <h2 className="mb-4 mt-10 text-lg font-semibold text-slate-900 dark:text-white">
-                            Compare staging and redesign tools
-                        </h2>
-                        <ul className="flex flex-wrap gap-3">
-                            <li>
-                                <Link href="/alternatives" className={CHIP_CLASS}>
-                                    RoomGPT alternatives compared
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/alternatives/decorai" className={CHIP_CLASS}>
-                                    DecorAI alternative
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/alternatives/reimaginehome" className={CHIP_CLASS}>
-                                    Reimagine Home alternative
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/blog/virtual-staging-real-estate-guide" className={CHIP_CLASS}>
-                                    Virtual staging for real estate: worth it in 2026?
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/blog/ai-home-staging-before-selling" className={CHIP_CLASS}>
-                                    AI home staging before selling
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/gallery" className={CHIP_CLASS}>
-                                    AI room design gallery
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+                <h2 className={cn(H3_CLASS, "mb-5 mt-12")}>Compare staging and redesign tools</h2>
+                <ul className="flex flex-wrap gap-3">
+                    <li>
+                        <Link href="/alternatives" className={CHIP_CLASS}>
+                            RoomGPT alternatives compared
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/alternatives/decorai" className={CHIP_CLASS}>
+                            DecorAI alternative
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/alternatives/reimaginehome" className={CHIP_CLASS}>
+                            Reimagine Home alternative
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/blog/virtual-staging-real-estate-guide" className={CHIP_CLASS}>
+                            Virtual staging for real estate: worth it in 2026?
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/blog/ai-home-staging-before-selling" className={CHIP_CLASS}>
+                            AI home staging before selling
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/gallery" className={CHIP_CLASS}>
+                            AI room design gallery
+                        </Link>
+                    </li>
+                </ul>
+            </Section>
 
             {/* CTA */}
             <CtaSection
