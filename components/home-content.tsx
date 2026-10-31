@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { PageTransition } from "@/components/animated-card";
-import { HeroComparison } from "@/components/hero-comparison";
+import { CompareSlider } from "@/components/compare-slider";
 import { FeaturesSection } from "@/components/features-section";
 import { FAQSection } from "@/components/faq-section";
 import { Card, CardContent } from "@/components/ui/card";
@@ -93,10 +93,12 @@ export default function HomeContent() {
                         </div>
 
                         <div className="mt-16 w-full max-w-6xl">
-                            <HeroComparison
-                                beforeImage="/images/room-before.png"
-                                afterImage="/images/room-after.png"
-                                className="w-full"
+                            <CompareSlider
+                                before={{ src: "/images/room-before.png", alt: "Room before AI redesign" }}
+                                after={{ src: "/images/room-after.png", alt: "Room after AI redesign" }}
+                                sizes="(min-width: 1200px) 1152px, 100vw"
+                                priority
+                                className="w-full rounded-3xl md:aspect-[16/10]"
                             />
                         </div>
                     </div>

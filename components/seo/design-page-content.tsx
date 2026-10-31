@@ -11,7 +11,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HeroComparison } from "@/components/hero-comparison";
+import { CompareSlider } from "@/components/compare-slider";
 import { PageTransition } from "@/components/page-transition";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
@@ -117,13 +117,20 @@ export function DesignPageContent({
                         <h2 className="mb-8 text-center text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
                             See the transformation
                         </h2>
-                        <HeroComparison
-                            beforeImage={`/images/designs/before-${page.roomType}.jpg`}
-                            afterImage={`/images/designs/${page.slug}.jpg`}
-                            beforeFallback="/images/room-before.png"
-                            afterFallback="/images/room-after.png"
-                            beforeAlt={`${page.themeName} ${page.roomName}: before AI redesign`}
-                            afterAlt={`${page.themeName} ${page.roomName}: after AI redesign`}
+                        <CompareSlider
+                            before={{
+                                src: `/images/designs/before-${page.roomType}.jpg`,
+                                alt: `${page.themeName} ${page.roomName}: before AI redesign`,
+                                fallback: "/images/room-before.png",
+                            }}
+                            after={{
+                                src: `/images/designs/${page.slug}.jpg`,
+                                alt: `${page.themeName} ${page.roomName}: after AI redesign`,
+                                fallback: "/images/room-after.png",
+                            }}
+                            sizes="(min-width: 1072px) 1024px, 100vw"
+                            priority
+                            className="rounded-3xl md:aspect-[16/10]"
                         />
                         <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
                             AI-generated {page.themeName.toLowerCase()} {page.roomName.toLowerCase()} redesign from a single photo

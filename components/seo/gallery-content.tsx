@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { CompareSlider } from "@/components/compare-slider";
 import { PageTransition } from "@/components/page-transition";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
@@ -92,86 +92,54 @@ const FILTERS = [
 ];
 
 function GalleryCard({ item }: { item: GalleryItem }) {
-    const [hovered, setHovered] = useState(false);
     // Only indexable design pages are linked; pruned/noindex combos still show
     // their before/after image but are not a crawl path (lib/seo/pruned.ts).
+    // The link sits on the caption, not the whole card, so dragging the slider
+    // never follows it (and the slider's range input is not nested in a link).
     const linked = isPriorityDesignSlug(item.slug);
     const cardClassName =
         "group block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-lg dark:border-slate-800 dark:bg-slate-900";
 
-    const body = (
-        <>
-            {/* Image area with before/after toggle */}
-            <div className="relative aspect-[4/3] overflow-hidden bg-slate-100 dark:bg-slate-800">
-                {/* Before image */}
-                <Image
-                    src={`/images/designs/before-${item.roomType}.jpg`}
-                    alt={`${item.roomName} before AI redesign`}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className={`object-cover transition-opacity duration-500 ${hovered ? "opacity-0" : "opacity-100"}`}
-                />
-                {/* After image */}
-                <Image
-                    src={`/images/designs/${item.slug}.jpg`}
-                    alt={`${item.themeName} ${item.roomName} AI design`}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className={`object-cover transition-opacity duration-500 ${hovered ? "opacity-100" : "opacity-0"}`}
-                />
-                {/* Hover label */}
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-2">
-                    <span className={`rounded-md bg-black/60 px-2 py-0.5 text-xs font-medium text-white backdrop-blur-sm transition-opacity duration-300 ${hovered ? "opacity-0" : "opacity-100"}`}>
-                        Before
-                    </span>
-                    <span className={`rounded-md bg-primary/80 px-2 py-0.5 text-xs font-medium text-white backdrop-blur-sm transition-opacity duration-300 ${hovered ? "opacity-100" : "opacity-0"}`}>
-                        After
-                    </span>
-                </div>
+    const caption = (
+        <div className="flex items-center justify-between">
+            <div>
+                <p className="text-xs font-medium uppercase tracking-wide text-primary">
+                    {item.themeName}
+                </p>
+                <h3 className="mt-0.5 text-sm font-semibold text-slate-900 dark:text-white">
+                    {item.roomName}
+                </h3>
             </div>
-
-            {/* Card footer */}
-            <div className="p-4">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <p className="text-xs font-medium uppercase tracking-wide text-primary">
-                            {item.themeName}
-                        </p>
-                        <h3 className="mt-0.5 text-sm font-semibold text-slate-900 dark:text-white">
-                            {item.roomName}
-                        </h3>
-                    </div>
-                    {linked && (
-                        <span className="text-xs text-slate-400 group-hover:text-primary transition-colors dark:text-slate-500">
-                            View →
-                        </span>
-                    )}
-                </div>
-            </div>
-        </>
+            {linked && (
+                <span className="text-xs text-slate-400 group-hover:text-primary transition-colors dark:text-slate-500">
+                    View →
+                </span>
+            )}
+        </div>
     );
 
-    if (!linked) {
-        return (
-            <div
-                className={cardClassName}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
-            >
-                {body}
-            </div>
-        );
-    }
-
     return (
-        <Link
-            href={`/design/${item.slug}`}
-            className={cardClassName}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-        >
-            {body}
-        </Link>
+        <div className={cardClassName}>
+            <CompareSlider
+                before={{
+                    src: `/images/designs/before-${item.roomType}.jpg`,
+                    alt: `${item.roomName} before AI redesign`,
+                }}
+                after={{
+                    src: `/images/designs/${item.slug}.jpg`,
+                    alt: `${item.themeName} ${item.roomName} AI design`,
+                }}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                label={`Compare ${item.themeName} ${item.roomName} before and after`}
+            />
+            {linked ? (
+                <Link href={`/design/${item.slug}`} className="block p-4">
+                    {caption}
+                </Link>
+            ) : (
+                <div className="p-4">{caption}</div>
+            )}
+        </div>
     );
 }
 
