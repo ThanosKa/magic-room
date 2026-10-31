@@ -1,0 +1,7 @@
+[
+    {
+        "path": "/",
+        "fields": ["h1", "bodyText"],
+        "reason": "Spec: the homepage takes the new design's copy; its H1 must still contain \"AI interior design\"."
+    }
+]
