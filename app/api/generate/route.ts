@@ -9,28 +9,12 @@ import {
 import { checkRateLimit } from "@/lib/redis";
 import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
 import { logger } from "@/lib/logger";
+import { ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
 
 const GenerateSchema = z.object({
   base64Image: z.string().min(1, "Image is required"),
-  roomType: z.enum([
-    "living-room",
-    "bedroom",
-    "kitchen",
-    "bathroom",
-    "dining-room",
-    "office",
-    "gaming-room",
-  ]),
-  theme: z.enum([
-    "modern",
-    "minimalist",
-    "scandinavian",
-    "industrial",
-    "tropical",
-    "bohemian",
-    "vintage",
-    "luxury",
-  ]),
+  roomType: z.enum(ROOM_TYPE_IDS),
+  theme: z.enum(THEME_IDS),
   quality: z.enum(["standard", "premium"]).default("standard"),
   customPrompt: z.string().optional(),
 });

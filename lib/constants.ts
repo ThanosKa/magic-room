@@ -8,6 +8,13 @@ export const ROOM_TYPES: Record<RoomType, string> = {
   "dining-room": "Dining Room",
   office: "Office",
   "gaming-room": "Gaming Room",
+  nursery: "Nursery",
+  "laundry-room": "Laundry Room",
+  basement: "Basement",
+  sunroom: "Sunroom",
+  "home-theater": "Home Theater",
+  mudroom: "Mudroom",
+  "walk-in-closet": "Walk-in Closet",
 };
 
 export const THEMES: Record<Theme, string> = {
@@ -19,10 +26,6 @@ export const THEMES: Record<Theme, string> = {
   bohemian: "Bohemian",
   vintage: "Vintage",
   luxury: "Luxury",
-};
-
-// SEO-only themes — appear on /design pages but NOT in the generate UI
-export const THEMES_SEO_ONLY: Record<string, string> = {
   japandi: "Japandi",
   "art-deco": "Art Deco",
   coastal: "Coastal",
@@ -31,16 +34,8 @@ export const THEMES_SEO_ONLY: Record<string, string> = {
   transitional: "Transitional",
 };
 
-// SEO-only room types — appear on /design pages but NOT in the generate UI
-export const ROOM_TYPES_SEO_ONLY: Record<string, string> = {
-  nursery: "Nursery",
-  "laundry-room": "Laundry Room",
-  basement: "Basement",
-  sunroom: "Sunroom",
-  "home-theater": "Home Theater",
-  mudroom: "Mudroom",
-  "walk-in-closet": "Walk-in Closet",
-};
+export const ROOM_TYPE_IDS = Object.keys(ROOM_TYPES) as [RoomType, ...RoomType[]];
+export const THEME_IDS = Object.keys(THEMES) as [Theme, ...Theme[]];
 
 export const QUALITY_OPTIONS = {
   standard: {
