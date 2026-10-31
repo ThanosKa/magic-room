@@ -84,6 +84,20 @@ describe("extractPageRecord content", () => {
     });
 });
 
+describe("extractPageRecord tool links", () => {
+    it("treats /generate links with a preselect query as /generate", () => {
+        const html = `<html><body><a href="/generate">a</a><a href="/generate?style=japandi&room=bedroom">b</a><a href="/blog?page=2">c</a></body></html>`;
+        const record = extractPageRecord({
+            path: "/design/japandi-bedroom",
+            baseOrigin: BASE,
+            hops: [{ url: "/design/japandi-bedroom", status: 200, location: null }],
+            headers: {},
+            html,
+        });
+        expect(record.internalLinks).toEqual(["/blog?page=2", "/generate"]);
+    });
+});
+
 describe("extractPageRecord redirects", () => {
     it("records the redirect chain and the final path for an internal redirect", () => {
         const record = extractPageRecord({
