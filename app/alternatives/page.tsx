@@ -440,7 +440,7 @@ export default function AlternativesHubPage() {
                                 },
                                 {
                                     q: "Is there a free RoomGPT alternative?",
-                                    a: "Every tool here has some free access. Magic Room gives 1 free credit on signup with no card, and one credit produces 4–8 variations, so you see real output on your own room before paying. The meaningful difference is the step up afterwards: Magic Room's is €9.99 once for 30 designs, where most competitors move you onto a recurring plan.",
+                                    a: "Every tool here has some free access. Magic Room gives 1 free credit on signup with no card, and one credit produces a full redesign, so you see real output on your own room before paying. The meaningful difference is the step up afterwards: Magic Room's is €9.99 once for 30 designs, where most competitors move you onto a recurring plan.",
                                 },
                                 {
                                     q: "Why do AI room redesigns not look like my actual room?",

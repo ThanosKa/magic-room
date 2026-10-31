@@ -3,8 +3,8 @@
 *Last updated: 2026-05-04 (auto-drafted from codebase — review and correct)*
 
 ## Product Overview
-**One-liner:** AI interior design tool that transforms any room photo into 4–8 styled redesigns in 30–60 seconds.
-**What it does:** Users upload a photo of a room, pick a design style and room type, and Magic Room generates 4–8 AI-redesigned variations using Google Gemini multimodal AI. Photos are processed in-memory and never stored.
+**One-liner:** AI interior design tool that transforms any room photo into a styled redesign in 30–60 seconds.
+**What it does:** Users upload a photo of a room, pick a design style and room type, and Magic Room generates an AI-redesigned version using Google Gemini multimodal AI. Photos are processed in-memory and never stored.
 **Product category:** AI interior design / room redesign / virtual staging tool.
 **Product type:** SaaS web app (Next.js, Clerk auth, Stripe payments).
 **Business model:** Pay-per-use credits, no subscription. Starter €9.99 (30 credits), Growth €19.99, Premium €29.99. 1 free credit on signup. Credits never expire. Full commercial rights on paid generations.
@@ -90,7 +90,7 @@ B2C-leaning, light B2B. Single-decision-maker product.
 **Glossary:**
 | Term | Meaning |
 |------|---------|
-| Credit | One generation = one credit. Each generation produces 4–8 design variations. |
+| Credit | One generation = one credit. Each generation produces one redesign. |
 | Multimodal AI | A model that understands image + text together (vs. diffusion that only generates images). |
 | In-memory processing | Images held in RAM during the request, never written to disk or storage buckets. |
 
@@ -100,7 +100,7 @@ B2C-leaning, light B2B. Single-decision-maker product.
 **Personality:** Privacy-respecting, design-literate, no-bullshit, friendly-technical.
 
 ## Proof Points
-**Metrics:** ~30–60s generation time; 4–8 variations per credit; 196 style+room combinations; €0.33/design at Starter tier.
+**Metrics:** ~30–60s generation time; one redesign per generation; 196 style+room combinations; €0.33/design at Starter tier.
 **Customers:** TBD — collect testimonials.
 **Testimonials:** None on site yet.
 **Value themes:**

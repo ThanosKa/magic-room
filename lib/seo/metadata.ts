@@ -173,7 +173,7 @@ export function aboutMetadata(): Metadata {
             absolute: "What Is Magic Room? The AI Room Designer That Keeps Nothing",
         },
         description:
-            "Magic Room turns one room photo into 4–8 AI redesigns in 60 seconds. Built by one developer, €9.99 once instead of monthly, photos never stored.",
+            "Magic Room turns one room photo into an AI redesign in 60 seconds. Built by one developer, €9.99 once instead of monthly, photos never stored.",
         path: "/about",
         keywords: [
             "what is magic room",

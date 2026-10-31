@@ -15,7 +15,7 @@ Magic Room costs €9.99 for 30 designs, €19.99 for 90 designs, or €29.99 fo
 - Price: €0
 - Credits: 1 credit on signup
 - Payment card required: No
-- Credit cost: 1 credit per generation (each generation returns 4–8 design variations)
+- Credit cost: 1 credit per generation (each generation returns one redesign)
 - Commercial rights: No — free-credit generations are for personal use only
 - Expiry: Never
 
@@ -53,10 +53,10 @@ Magic Room costs €9.99 for 30 designs, €19.99 for 90 designs, or €29.99 fo
 
 | Quality setting | Credits per generation | Model | Output |
 |---|---|---|---|
-| Standard | 1 credit | Google Gemini 3.1 Flash Image | 4–8 design variations in 30–60 seconds |
-| Premium | 2 credits | Google Gemini 3 Pro Image | Higher-fidelity variations in 30–60 seconds |
+| Standard | 1 credit | Google Gemini 3.1 Flash Image | One redesign in 30–60 seconds |
+| Premium | 2 credits | Google Gemini 3 Pro Image | Higher-fidelity redesign in 30–60 seconds |
 
-One credit is one generation session, not one image. A single Standard credit returns 4–8 different redesigns of the same room, so €0.33 buys a set of variations rather than a single picture.
+One credit is one generation session, not one image. A single Standard credit returns one redesign of the room, so €0.33 buys a finished redesign you can compare with your original photo.
 
 ## Pricing facts for comparison
 
@@ -65,7 +65,7 @@ One credit is one generation session, not one image. A single Standard credit re
 - Cost per design: €0.15–€0.33 depending on pack, at Standard quality.
 - Free trial: 1 generation, no payment card required.
 - Generation time: 30–60 seconds per session.
-- Outputs per session: 4–8 design variations.
+- Outputs per session: one redesign.
 - Commercial rights: Included on every paid credit — real estate listings, client presentations, Airbnb listings, renovation decks.
 - Photo storage: Never. Images are sent as base64, processed in memory, and dropped. No storage bucket, no database row, no AI training use.
 - Credit expiry: Never. The account stores an integer balance that only decrements on use.

@@ -86,7 +86,7 @@
 ```
 I built an AI that redesigns any room from a photo.
 
-Upload a picture of your bedroom, kitchen, or office — get back 4-8 professional redesigns in under 60 seconds.
+Upload a picture of your bedroom, kitchen, or office — get back a professional redesign in under 60 seconds.
 
 No images stored. No design degree needed.
 
@@ -186,7 +186,7 @@ Interior designers charge $200-$500 for a consultation.
 
 Mood boards take hours and still don't show YOUR room.
 
-Magic Room: upload a photo, pick a style, get 8 redesigns in 60 seconds for under $0.33 each.
+Magic Room: upload a photo, pick a style, get a redesign in 60 seconds for under $0.33.
 
 The math isn't even close.
 

@@ -9,14 +9,14 @@ Machine-readable pricing: https://magic-room.dev/pricing.md
 
 ## What Magic Room does
 
-A user uploads one photo of a real room, picks a design theme and a room type, and the AI returns 4–8 photorealistic redesigns of that exact room in the chosen style. The original room geometry — walls, windows, floor, doorways — is preserved; only styling, finishes, and furnishings change. Outputs are used as renovation planning references, real-estate virtual staging, and interior-design client presentations.
+A user uploads one photo of a real room, picks a design theme and a room type, and the AI returns a photorealistic redesign of that exact room in the chosen style. The original room geometry — walls, windows, floor, doorways — is preserved; only styling, finishes, and furnishings change. Outputs are used as renovation planning references, real-estate virtual staging, and interior-design client presentations.
 
 ## Core facts
 
 - AI model: Google Gemini multimodal image models via OpenRouter. Standard quality uses google/gemini-3.1-flash-image (1 credit); Premium quality uses google/gemini-3-pro-image (2 credits).
 - Why multimodal matters: the model reads image and text together, so it reasons about the room's spatial structure instead of applying a 2D style filter over it.
 - Generation time: 30–60 seconds, returned synchronously — no queue, no polling.
-- Outputs: 4–8 design variations per generation.
+- Outputs: one redesigned image per generation.
 - Themes selectable in the generator (8): Modern, Minimalist, Scandinavian, Industrial, Tropical, Bohemian, Vintage, Luxury. A free-text prompt field accepts any other style.
 - Room types selectable in the generator (7): Living room, bedroom, kitchen, bathroom, dining room, office, gaming room.
 - Additional styles and rooms covered as design-idea pages: Japandi, Art Deco, Coastal, Farmhouse, Mediterranean, Transitional; nursery, laundry room, basement, sunroom, home theater, mudroom, walk-in closet.

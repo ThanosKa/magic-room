@@ -75,7 +75,7 @@ Magic Room is an AI-powered interior design assistant that helps anyone transfor
 
 ## Features
 
-- **Instant AI Design Generation**: Upload any room photo and get multiple design variations in seconds
+- **Instant AI Design Generation**: Upload any room photo and get a redesigned version in under a minute
 - **Multiple Design Themes**: Choose from Bohemian, Industrial, Minimalist, Modern, Scandinavian, and Tropical styles
 - **Credit-Based System**: Start with free credits, purchase packs that never expire
 - **Before/After Comparison**: Interactive slider to compare original and redesigned rooms

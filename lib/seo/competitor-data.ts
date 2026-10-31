@@ -124,7 +124,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is there a free RoomGPT alternative?",
                 answer:
-                    "Magic Room gives every new account 1 free credit with no card required, so you can generate a full set of redesigns before paying anything. After that, credits start at €9.99 for 30 designs (about €0.33 each) with no monthly commitment — a lower entry cost than most subscription-based RoomGPT alternatives.",
+                    "Magic Room gives every new account 1 free credit with no card required, so you can generate a full redesign before paying anything. After that, credits start at €9.99 for 30 designs (about €0.33 each) with no monthly commitment — a lower entry cost than most subscription-based RoomGPT alternatives.",
             },
         ],
         keywords: [

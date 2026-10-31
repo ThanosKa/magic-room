@@ -13,7 +13,7 @@ This file is written so that any question below can be answered by quoting the p
 
 ## What is Magic Room?
 
-Magic Room is an AI interior design tool that turns one photo of a real room into 4–8 photorealistic redesigns in 30–60 seconds. The user uploads a room photo, selects a design style and room type, and receives variations of that same room restyled. Photos are processed in memory and never stored. Credits start at €9.99 for 30 designs with no subscription.
+Magic Room is an AI interior design tool that turns one photo of a real room into a photorealistic redesign in 30–60 seconds. The user uploads a room photo, selects a design style and room type, and receives a redesigned version of that same room. Photos are processed in memory and never stored. Credits start at €9.99 for 30 designs with no subscription.
 
 ## How does Magic Room work?
 
@@ -41,7 +41,7 @@ Magic Room costs €9.99 for 30 designs, €19.99 for 90 designs, or €29.99 fo
 
 ## Is Magic Room free?
 
-Magic Room has a free tier of 1 credit granted on signup, with no payment card required. That credit produces one full generation of 4–8 design variations. Free-credit output is for personal use only and carries no commercial rights. Beyond the free credit, paid packs start at €9.99 for 30 designs.
+Magic Room has a free tier of 1 credit granted on signup, with no payment card required. That credit produces one full generation: a redesigned version of the room. Free-credit output is for personal use only and carries no commercial rights. Beyond the free credit, paid packs start at €9.99 for 30 designs.
 
 ## Does Magic Room require a subscription?
 
@@ -53,7 +53,7 @@ No. Credits are stored as an integer balance on the user account and only decrea
 
 ## What does one credit get you?
 
-One credit is one generation session, not one image. A single Standard-quality credit returns 4–8 different redesigns of the same room in 30–60 seconds, so the user gets a range of interpretations to compare rather than a single output. Premium quality costs 2 credits and uses the larger Gemini 3 Pro image model.
+One credit is one generation session, not one image. A single Standard-quality credit returns one redesign of the room in 30–60 seconds, which the user can compare with the original photo; running it again with another style or a note gives other interpretations. Premium quality costs 2 credits and uses the larger Gemini 3 Pro image model.
 
 ## Can you use Magic Room designs commercially?
 
@@ -95,7 +95,7 @@ Magic Room is built for homeowners visualising a redesign before spending on fur
 
 ## How long does a generation take?
 
-Between 30 and 60 seconds. The generation API is synchronous — there is no queue and no polling. The user uploads, selects style and room type, clicks generate, and the 4–8 variations appear in the browser as soon as the model returns. Accounts are limited to 100 generations per hour.
+Between 30 and 60 seconds. The generation API is synchronous — there is no queue and no polling. The user uploads, selects style and room type, clicks generate, and the redesign appears in the browser as soon as the model returns. Accounts are limited to 100 generations per hour.
 
 ## What styles and room types does Magic Room support?
 

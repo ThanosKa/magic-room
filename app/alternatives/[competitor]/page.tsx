@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: {
             absolute: `${competitor.name} Alternative — Pay Once, Photos Never Stored`,
         },
-        description: `A ${competitor.name} alternative that charges once, not monthly, and never stores your room photos. Google Gemini AI, 4–8 redesigns in 60s. 1 free credit.`,
+        description: `A ${competitor.name} alternative that charges once, not monthly, and never stores your room photos. Google Gemini AI, one redesign in 60s. 1 free credit.`,
         path: `/alternatives/${slug}`,
         keywords: competitor.keywords,
     });

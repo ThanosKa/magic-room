@@ -21,7 +21,7 @@
    - Calls OpenRouter with base64 image + prompt (synchronous)
    - Deducts 1 credit from user balance
 4. **Generation Phase**: OpenRouter processes image → returns results immediately (no polling)
-5. **Results Display**: Frontend displays generated design variations
+5. **Results Display**: Frontend displays the generated redesign (one image per run)
 6. **Privacy**: Images processed in-memory only, never stored
 
 ## Key API Endpoints

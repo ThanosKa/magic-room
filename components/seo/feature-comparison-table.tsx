@@ -59,7 +59,7 @@ const ROWS: ComparisonRow[] = [
     },
     {
         feature: "Speed",
-        magicRoom: "4–8 variations in 30–60 seconds",
+        magicRoom: "One redesign in 30–60 seconds",
         competitor: "Single output; slower on higher-quality settings",
     },
     {

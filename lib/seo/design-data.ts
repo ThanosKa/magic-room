@@ -2217,13 +2217,13 @@ const TITLE_TEMPLATES = [
 // produced encyclopedic openers that gave nobody a reason to click.
 const META_TEMPLATES = [
     (themeName: string, roomName: string) =>
-        `${themeName} ${roomName} ideas, applied to your own room. Upload one photo and AI returns 4–8 redesigns in 60 seconds. From €9.99, no subscription.`,
+        `${themeName} ${roomName} ideas, applied to your own room. Upload one photo and AI returns a redesign in 60 seconds. From €9.99, no subscription.`,
     (themeName: string, roomName: string) =>
-        `${themeName} ${roomName} ideas you can test on your actual room, not someone else's. Upload a photo, get 4–8 AI redesigns in 60 seconds. 1 free credit.`,
+        `${themeName} ${roomName} ideas you can test on your actual room, not someone else's. Upload a photo, get an AI redesign in 60 seconds. 1 free credit.`,
     (themeName: string, roomName: string) =>
-        `${themeName} ${roomName} design, tried on your own space before you spend a euro on furniture. Upload one photo, get 4–8 AI redesigns in 60 seconds.`,
+        `${themeName} ${roomName} design, tried on your own space before you spend a euro on furniture. Upload one photo, get an AI redesign in 60 seconds.`,
     (themeName: string, roomName: string) =>
-        `${themeName} ${roomName} ideas rendered on your own photo, not a showroom. AI returns 4–8 redesigns in 60 seconds. Photos never stored, 1 free credit.`,
+        `${themeName} ${roomName} ideas rendered on your own photo, not a showroom. AI returns a redesign in 60 seconds. Photos never stored, 1 free credit.`,
 ] as const;
 
 const META_DESCRIPTION_MAX_LENGTH = 158;
