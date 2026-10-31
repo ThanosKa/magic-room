@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useRef, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { SignUpButton } from "@clerk/nextjs";
@@ -8,7 +8,6 @@ import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CheckoutReturnNotice } from "@/components/checkout-return-notice";
-import { useReveal } from "@/hooks/use-reveal";
 import { cn } from "@/lib/utils";
 
 const CREDIT_PACKAGES = [
@@ -117,8 +116,6 @@ export default function PricingContent() {
   const { user: clerkUser, isLoaded } = useUser();
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
-  const plansRef = useRef<HTMLDivElement>(null);
-  useReveal(plansRef);
 
   const handlePurchase = async (packageId: string) => {
     if (!clerkUser) return;
@@ -166,14 +163,11 @@ export default function PricingContent() {
         </div>
 
         <div
-          ref={plansRef}
           className="mt-12 grid gap-3 sm:grid-cols-2 md:mt-16 lg:grid-cols-4"
         >
           {CREDIT_PACKAGES.map((pkg, i) => (
             <div
               key={pkg.id}
-              data-reveal
-              style={{ "--reveal-delay": `${i * 90}ms` } as React.CSSProperties}
               className={cn(
                 "relative flex flex-col rounded-xl border p-6 sm:p-7",
                 pkg.popular

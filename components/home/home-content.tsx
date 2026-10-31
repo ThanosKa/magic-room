@@ -136,9 +136,7 @@ function ListRow({ href, children }: { href: string; children: ReactNode }) {
         href={href}
         className="group flex min-h-[60px] items-center justify-between gap-4 border-b border-line text-base tracking-[-0.015em] text-ink sm:text-lg"
       >
-        <span className="transition-transform duration-300 ease-out group-hover:translate-x-2 motion-reduce:transition-none">
-          {children}
-        </span>
+        <span>{children}</span>
         <ArrowUpRight
           aria-hidden="true"
           className="size-4 flex-none text-ink-3 transition-[transform,color] duration-350 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent motion-reduce:transition-none"

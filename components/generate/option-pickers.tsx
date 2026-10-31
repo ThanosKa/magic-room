@@ -117,7 +117,7 @@ export function StylePicker({ value, onChange }: { value: Theme; onChange: (valu
                                     fill
                                     sizes="(min-width: 1280px) 120px, (min-width: 1024px) 150px, (min-width: 640px) 25vw, 33vw"
                                     className={cn(
-                                        "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04] motion-reduce:transition-none",
+                                        "object-cover",
                                         !selected && "group-has-[:disabled]:grayscale-[0.4]"
                                     )}
                                 />

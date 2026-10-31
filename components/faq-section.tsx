@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export interface FaqSectionItem {
   question: string;
@@ -52,11 +52,9 @@ export function FAQSection({
           </h2>
         </div>
         <div className="border-t border-line">
-          {items.map((item, i) => (
+          {items.map((item) => (
             <details
               key={item.question}
-              data-reveal
-              style={{ "--reveal-delay": `${Math.min(i, 6) * 70}ms` } as CSSProperties}
               className="group border-b border-line"
             >
               <summary className="flex min-h-[76px] cursor-pointer list-none items-center justify-between gap-6 py-[18px] font-serif text-[clamp(22px,2vw,28px)] leading-[1.15] tracking-[-0.01em] text-ink transition-colors duration-200 hover:text-ink-2 motion-reduce:transition-none [&::-webkit-details-marker]:hidden">

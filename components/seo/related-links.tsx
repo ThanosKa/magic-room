@@ -56,7 +56,7 @@ export function RelatedLinks({
                                     className="group flex flex-col border-t border-line py-5 pr-1"
                                 >
                                     <div className="flex items-start justify-between gap-4">
-                                        <h3 className="text-[17px] font-medium leading-snug tracking-[-0.015em] text-ink transition-transform duration-300 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none">
+                                        <h3 className="text-[17px] font-medium leading-snug tracking-[-0.015em] text-ink">
                                             {link.label}
                                         </h3>
                                         <ArrowUpRight

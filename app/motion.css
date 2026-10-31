@@ -14,7 +14,7 @@
   --animate-settle: settle 1.6s var(--ease-expo) both; /* image inside a wipe */
   --animate-fade: fade 300ms ease both;
   --animate-bar-run: bar-run var(--cycle, 3600ms) linear both; /* timer hairline */
-  --animate-menu-in: menu-in 450ms var(--ease-out) both; /* menu items, staggered */
+  --animate-menu-in: menu-in 250ms var(--ease-out) both; /* menu items, staggered */
 
   @keyframes rise {
     from {

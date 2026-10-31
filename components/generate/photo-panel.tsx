@@ -93,7 +93,7 @@ export function PhotoPanel({
                             isDragActive ? "border-ink bg-paper-2" : "border-ink/25 bg-paper-2/60 hover:border-ink/50 hover:bg-paper-2"
                         )}
                     >
-                        <span className="grid size-14 place-items-center rounded-full bg-paper text-ink shadow-float transition-transform duration-300 ease-out group-hover:-translate-y-0.5 motion-reduce:transition-none">
+                        <span className="grid size-14 place-items-center rounded-full bg-paper text-ink shadow-float">
                             <ImagePlus aria-hidden="true" className="size-6" strokeWidth={1.75} />
                         </span>
                         <span className="mt-5 font-serif text-[30px] leading-none tracking-[-0.02em] text-ink sm:text-[36px]">

@@ -190,7 +190,7 @@ export function Header() {
                 href={n.href}
                 onClick={close}
                 aria-current={isCurrent(pathname, n.href) ? "page" : undefined}
-                style={{ animationDelay: `${60 + i * 45}ms` }}
+                style={{ animationDelay: `${60 + i * 30}ms` }}
                 className="block animate-menu-in border-b border-line py-2.5 font-serif text-[40px] leading-[1.1] tracking-[-0.02em] text-ink"
               >
                 {n.label}
@@ -198,7 +198,7 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="grid animate-menu-in gap-2.5" style={{ animationDelay: "300ms" }}>
+          <div className="grid animate-menu-in gap-2.5" style={{ animationDelay: "210ms" }}>
             {isSignedIn ? (
               <div className="flex items-center justify-between">
                 <Credits onClick={close} />
