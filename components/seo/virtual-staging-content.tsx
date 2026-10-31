@@ -11,7 +11,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HeroComparison } from "@/components/hero-comparison";
+import { CompareSlider } from "@/components/compare-slider";
 import { PageTransition } from "@/components/page-transition";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
@@ -181,11 +181,15 @@ export function VirtualStagingContent() {
                         <h2 className="mb-8 text-center text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
                             See the difference AI staging makes
                         </h2>
-                        <HeroComparison
-                            beforeImage="/images/room-before.png"
-                            afterImage="/images/room-after.png"
-                            beforeAlt="Empty room before AI virtual staging"
-                            afterAlt="Room after AI virtual staging — furnished and styled"
+                        <CompareSlider
+                            before={{ src: "/images/room-before.png", alt: "Empty room before AI virtual staging" }}
+                            after={{
+                                src: "/images/room-after.png",
+                                alt: "Room after AI virtual staging — furnished and styled",
+                            }}
+                            sizes="(min-width: 1072px) 1024px, 100vw"
+                            priority
+                            className="rounded-3xl md:aspect-[16/10]"
                         />
                         <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
                             AI-generated staging from a single photo — no physical furniture required
