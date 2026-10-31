@@ -1,0 +1,1570 @@
+[
+  {
+    "theme": "modern",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with contemporary, sleek, minimalist, clean lines style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "modern",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with contemporary, sleek, minimalist, clean lines style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with minimalist, clutter-free, simple, elegant style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "minimalist",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with minimalist, clutter-free, simple, elegant style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with Scandinavian design, light wood, cozy, warm style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "scandinavian",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with Scandinavian design, light wood, cozy, warm style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with industrial style, exposed brick, metal, raw style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "industrial",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with industrial style, exposed brick, metal, raw style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with tropical, vibrant, plants, natural, bright style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "tropical",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with tropical, vibrant, plants, natural, bright style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with bohemian, eclectic, colorful, artistic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "bohemian",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with bohemian, eclectic, colorful, artistic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with vintage, retro, antique, nostalgic style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "vintage",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with vintage, retro, antique, nostalgic style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "living-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a modern living room with comfortable seating with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "living-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a modern living room with comfortable seating with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "bedroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "bedroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a relaxing bedroom with a stylish bed with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "kitchen",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a functional kitchen with modern appliances with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "kitchen",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a functional kitchen with modern appliances with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "bathroom",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a clean, bright bathroom with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "bathroom",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a clean, bright bathroom with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "dining-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into an elegant dining room with a table with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "dining-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into an elegant dining room with a table with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "office",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a productive home office with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "office",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a productive home office with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "gaming-room",
+    "quality": "standard",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": null,
+    "prompt": "Transform this room into a high-tech gaming setup with luxury, opulent, premium, sophisticated style. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  },
+  {
+    "theme": "luxury",
+    "roomType": "gaming-room",
+    "quality": "premium",
+    "customPrompt": "Add a large green velvet sofa, warm pendant lighting and lots of plants",
+    "prompt": "Transform this room into a high-tech gaming setup with luxury, opulent, premium, sophisticated style. Add a large green velvet sofa, warm pendant lighting and lots of plants. beautiful interior design, professional photography, well-lit, \ndetailed textures, high quality, realistic, modern aesthetic, clean composition. Avoid: blurry, distorted, ugly, deformed, low quality, poorly lit, \ncluttered, amateur, watermark, text"
+  }
+]
