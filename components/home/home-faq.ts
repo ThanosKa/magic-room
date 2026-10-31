@@ -11,12 +11,12 @@ export const HOME_FAQ: HomeFaqItem[] = [
   {
     question: "What is Magic Room?",
     answer:
-      "Magic Room is an AI interior design tool that transforms any room from a single photo. Upload a picture of your room, pick a design style, and the AI generates 4–8 redesigned variations in 30–60 seconds. Magic Room uses Google Gemini multimodal AI and never stores your photos — images are processed in-memory and deleted immediately. Pricing starts at €9.99 for 30 credits, with no subscription and commercial rights included.",
+      "Magic Room is an AI interior design tool that transforms any room from a single photo. Upload a picture of your room, pick a design style, and the AI generates a redesigned version of that room in 30–60 seconds. Magic Room uses Google Gemini multimodal AI and never stores your photos — images are processed in-memory and deleted immediately. Pricing starts at €9.99 for 30 credits, with no subscription and commercial rights included.",
   },
   {
     question: "How does Magic Room work?",
     answer:
-      "Magic Room uses Google Gemini multimodal AI via OpenRouter to analyze your uploaded room photo and generate professional interior design variations. The AI preserves your room's original structure and layout while applying your chosen style. Each generation takes 30-60 seconds and produces 4-8 unique design variations you can compare side by side.",
+      "Magic Room uses Google Gemini multimodal AI via OpenRouter to analyze your uploaded room photo and generate professional interior design variations. The AI preserves your room's original structure and layout while applying your chosen style. Each generation takes 30-60 seconds and produces a redesigned image you can compare with your original photo.",
   },
   {
     question: "Is it free to use?",
@@ -36,7 +36,7 @@ export const HOME_FAQ: HomeFaqItem[] = [
   {
     question: "How long does it take?",
     answer:
-      "Most generations complete in 30-60 seconds. Each run produces 4-8 design variations powered by Google Gemini AI, so you get a range of interpretations to choose from in under a minute — no waiting, no polling, results appear as soon as processing finishes.",
+      "Most generations complete in 30-60 seconds. Each run produces one redesign powered by Google Gemini AI, and you can run it again with another style or a note to explore other interpretations — no waiting, no polling, results appear as soon as processing finishes.",
   },
   {
     question: "What AI model does Magic Room use?",

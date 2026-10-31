@@ -22,7 +22,7 @@ export const metadata: Metadata = homeMetadata();
  */
 const HOME_SOFTWARE = softwareApplicationSchema({
   description:
-    "AI interior design tool that turns one room photo into 4–8 redesigned variations in 30–60 seconds using Google Gemini multimodal AI. Photos are processed in-memory and never stored.",
+    "AI interior design tool that turns one room photo into a redesigned version in 30–60 seconds using Google Gemini multimodal AI. Photos are processed in-memory and never stored.",
   includeOffers: true,
 });
 
