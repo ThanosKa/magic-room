@@ -72,23 +72,23 @@ const faqs: FaqItem[] = [
 
 export function FAQSection() {
   return (
-    <section className="py-16 md:py-20 bg-slate-50 dark:bg-slate-900/50">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center md:mb-16">
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl text-slate-900 dark:text-white">
+    <section className="bg-background py-20 md:py-28">
+      <div className="container-page grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-[72px]">
+        <div className="lg:sticky lg:top-28">
+          <h2 className="max-w-[14ch] font-serif text-[clamp(40px,4.3vw,66px)] font-normal leading-none tracking-[-0.022em] text-ink text-balance">
             Frequently Asked Questions
           </h2>
-          <p className="mt-4 text-slate-600 dark:text-slate-400">
+          <p className="mt-5 max-w-[30ch] text-base leading-relaxed text-ink-2">
             Everything you need to know about Magic Room
           </p>
         </div>
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion type="single" collapsible className="w-full border-t border-line">
           {faqs.map((item) => (
             <AccordionItem key={item.id} value={item.id}>
-              <AccordionTrigger className="text-left text-base font-semibold hover:no-underline hover:text-primary md:text-lg cursor-pointer">
+              <AccordionTrigger className="min-h-[76px] py-[18px] text-[clamp(22px,2vw,28px)] leading-[1.15]">
                 {item.question}
               </AccordionTrigger>
-              <AccordionContent className="text-sm text-slate-600 dark:text-slate-400 md:text-base">
+              <AccordionContent className="max-w-[58ch] text-base leading-relaxed">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>
