@@ -94,24 +94,21 @@ export async function ensureUserExists(clerkUserId: string) {
     return user;
   }
 
-  if (process.env.NODE_ENV !== "development") {
-    logger.warn(
-      { clerkUserId },
-      "User not found in production - webhook may have failed"
-    );
-    return null;
-  }
-
-  logger.info(
+  // The Clerk webhook normally creates the row. If it was missed (endpoint
+  // disabled, delivery failed), create it here from the Clerk API so the user
+  // is never stuck with "User not found".
+  logger.warn(
     { clerkUserId },
-    "User not found in dev mode, creating from Clerk API"
+    "User missing in Supabase - webhook may have failed, creating from Clerk API"
   );
 
   try {
     const { clerkClient } = await import("@clerk/nextjs/server");
     const client = await clerkClient();
     const clerkUser = await client.users.getUser(clerkUserId);
-    const email = clerkUser.emailAddresses[0]?.emailAddress;
+    const email =
+      clerkUser.primaryEmailAddress?.emailAddress ??
+      clerkUser.emailAddresses[0]?.emailAddress;
 
     if (!email) {
       logger.error(
@@ -121,20 +118,20 @@ export async function ensureUserExists(clerkUserId: string) {
       return null;
     }
 
-    logger.info({ clerkUserId, email }, "Creating user in dev mode");
-
     const newUser = await createUser(clerkUserId, email, 1);
 
     if (newUser) {
       logger.info(
-        { clerkUserId, email, userId: newUser.id },
-        "User created successfully in dev mode"
+        { clerkUserId, userId: newUser.id },
+        "User created from Clerk API fallback"
       );
+      return newUser;
     }
 
-    return newUser;
+    // Insert can fail if the webhook created the row at the same moment.
+    return await getUserByClerkId(clerkUserId);
   } catch (error) {
-    logger.error({ err: error, clerkUserId }, "Dev mode user creation failed");
+    logger.error({ err: error, clerkUserId }, "Fallback user creation failed");
     return null;
   }
 }
