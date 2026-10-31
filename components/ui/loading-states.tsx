@@ -10,7 +10,7 @@ export function Skeleton({
   return (
     <div
       className={cn(
-        "animate-pulse rounded-md bg-slate-200 dark:bg-slate-800",
+        "animate-pulse rounded-md bg-ink/8 motion-reduce:animate-none",
         className
       )}
       {...props}
@@ -37,7 +37,7 @@ export function LoadingSpinner({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
     <div className="flex items-center justify-center">
       <div
         className={cn(
-          "animate-spin rounded-full border-2 border-slate-300 border-t-primary dark:border-slate-700 dark:border-t-primary",
+          "animate-spin rounded-full border-2 border-ink/15 border-t-ink",
           sizeClasses[size]
         )}
       />
@@ -47,7 +47,7 @@ export function LoadingSpinner({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
 
 export function LoadingCard() {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-950">
+    <div className="rounded-xl border border-line bg-card p-6">
       <Skeleton className="mb-4 h-6 w-3/4" />
       <Skeleton className="mb-3 h-4 w-full" />
       <Skeleton className="h-4 w-5/6" />

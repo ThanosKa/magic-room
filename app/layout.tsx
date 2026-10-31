@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
@@ -54,10 +54,72 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+/** Display face for headlines and italic emphasis: Tailwind `font-serif`. */
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument",
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/*
+ * Clerk sign-in / sign-up windows and the UserButton, in the design tokens.
+ * Variables drive Clerk's own styles; the few element overrides are style
+ * objects (not Tailwind classes) so they win over Clerk's injected CSS.
+ */
+const clerkAppearance = {
+  variables: {
+    colorPrimary: "var(--ink)",
+    colorPrimaryForeground: "var(--cream)",
+    colorForeground: "var(--ink)",
+    colorMutedForeground: "var(--ink-2)",
+    colorMuted: "var(--paper-2)",
+    colorBackground: "var(--paper)",
+    colorInput: "var(--paper)",
+    colorInputForeground: "var(--ink)",
+    colorNeutral: "var(--ink)",
+    colorBorder: "var(--ink)",
+    colorRing: "var(--accent)",
+    colorDanger: "var(--destructive)",
+    colorModalBackdrop: "rgb(20 17 13 / 0.5)",
+    fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
+    fontFamilyButtons: "var(--font-geist-sans), system-ui, sans-serif",
+    borderRadius: "14px",
+  },
+  elements: {
+    headerTitle: {
+      fontFamily: "var(--font-instrument), 'Times New Roman', serif",
+      fontWeight: 400,
+      fontSize: "28px",
+      lineHeight: 1.05,
+      letterSpacing: "-0.02em",
+    },
+    formButtonPrimary: {
+      borderRadius: "999px",
+      height: "44px",
+      fontSize: "15px",
+      fontWeight: 500,
+      textTransform: "none" as const,
+    },
+    socialButtonsIconButton: { borderRadius: "999px" },
+    footerActionLink: {
+      color: "var(--ink)",
+      fontWeight: 500,
+      textDecoration: "underline",
+      textUnderlineOffset: "4px",
+    },
+  },
+  layout: {
+    socialButtonsPlacement: "top" as const,
+    socialButtonsVariant: "iconButton" as const,
+  },
+};
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#7C3AED",
+  themeColor: "#f4f0e9",
 };
 
 export const metadata: Metadata = {
@@ -115,31 +177,11 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
-      appearance={{
-        baseTheme: undefined,
-        elements: {
-          rootBox: "flex items-center justify-center min-h-screen",
-          card: "bg-white dark:bg-slate-950 border border-purple-200 dark:border-purple-900 shadow-lg rounded-lg",
-          headerTitle: "text-2xl font-bold text-slate-900 dark:text-white",
-          headerSubtitle: "text-slate-600 dark:text-slate-400",
-          socialButtonsBlockButton:
-            "border border-purple-200 dark:border-purple-900 bg-white dark:bg-slate-900 hover:bg-purple-50 dark:hover:bg-slate-800",
-          formButtonPrimary:
-            "bg-purple-600 hover:bg-purple-700 text-white rounded-md",
-          footerActionLink:
-            "text-purple-600 dark:text-purple-400 hover:text-purple-700",
-          input:
-            "border border-purple-200 dark:border-purple-900 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400",
-        },
-        layout: {
-          socialButtonsPlacement: "top",
-          socialButtonsVariant: "iconButton",
-        },
-      }}
+      appearance={clerkAppearance}
     >
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} flex flex-col antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} flex flex-col antialiased`}
         >
           <JsonLd schemas={[globalSchema]} />
           <ThemeProviderComponent>
