@@ -110,6 +110,33 @@ function button(name: string): HTMLButtonElement {
     return found;
 }
 
+/** The sticky bar: quality, note, a summary of the choices and the Generate button. */
+function actionBar(): HTMLElement {
+    const bar = container.querySelector("[data-action-bar]") as HTMLElement | null;
+    if (!bar) throw new Error("No action bar");
+    return bar;
+}
+
+/** The main button (Generate, Generating…, Regenerate): the one the message slot describes. */
+function generateButton(): HTMLButtonElement {
+    const found = container.querySelector('button[aria-describedby="generate-message"]') as HTMLButtonElement | null;
+    if (!found) throw new Error("No Generate button");
+    return found;
+}
+
+/** Opens the note field from the action bar. */
+function openNote(): HTMLTextAreaElement {
+    if (!container.querySelector("textarea")) click(button("Add a note"));
+    const note = container.querySelector("textarea");
+    if (!note) throw new Error("The note did not open");
+    return note;
+}
+
+/** The message shown above the Generate button. */
+function message(): HTMLElement {
+    return container.querySelector("#generate-message") as HTMLElement;
+}
+
 function click(el: Element) {
     act(() => {
         (el as HTMLElement).click();
@@ -181,7 +208,7 @@ afterEach(() => {
 });
 
 describe("Generate tool", () => {
-    it("asks for the photo first, then room type, style, and quality with a note", () => {
+    it("asks for the photo first, then room type and style, with no separate quality step", () => {
         render();
 
         const steps = stepHeadings();
@@ -189,8 +216,20 @@ describe("Generate tool", () => {
         expect(at("Photo")).toBeGreaterThanOrEqual(0);
         expect(at("Photo")).toBeLessThan(at("Room type"));
         expect(at("Room type")).toBeLessThan(at("Style"));
-        expect(at("Style")).toBeLessThan(at("Quality"));
-        expect(at("Quality")).toBeLessThan(at("Note"));
+        expect(container.textContent).not.toContain("Step 4");
+    });
+
+    it("keeps quality, the note and the Generate button together in the action bar", () => {
+        render();
+
+        const bar = actionBar();
+        expect(bar.contains(groupNamed("Quality"))).toBe(true);
+        expect(bar.contains(button("Add a note"))).toBe(true);
+        expect(bar.contains(generateButton())).toBe(true);
+        expect(bar.contains(message())).toBe(true);
+        // The message slot comes right before the button.
+        const slotThenButton = message().compareDocumentPosition(generateButton()) & Node.DOCUMENT_POSITION_FOLLOWING;
+        expect(slotThenButton).toBeTruthy();
     });
 
     it("offers all 14 room types and 14 styles", () => {
@@ -225,18 +264,75 @@ describe("Generate tool", () => {
         expect(checkedLabel("Style")).toContain("Modern");
     });
 
-    it("shows the credit cost next to each quality", () => {
+    it("shows the credit cost next to each quality and on the Generate button", () => {
         render();
 
         expect(option("Quality", "Standard").closest("label")?.textContent).toContain("1 credit");
         expect(option("Quality", "Premium").closest("label")?.textContent).toContain("2 credits");
+        expect(option("Quality", "Standard").checked).toBe(true);
+        expect(generateButton().textContent).toContain("Generate");
+        expect(generateButton().textContent).toContain("1 credit");
+
+        click(option("Quality", "Premium"));
+        expect(generateButton().textContent).toContain("2 credits");
     });
 
-    it("limits the note to 500 characters", () => {
+    it("sums up the chosen room and style next to the Generate button", () => {
+        search = "style=japandi&room=bedroom";
         render();
 
-        const note = container.querySelector("textarea") as HTMLTextAreaElement;
+        expect(actionBar().textContent).toContain("Bedroom · Japandi");
+        click(option("Style", "Coastal"));
+        click(option("Room type", "Kitchen"));
+        expect(actionBar().textContent).toContain("Kitchen · Coastal");
+    });
+
+    it("opens the note from the action bar, with a 500 character limit and a counter, keeping Generate in place", () => {
+        render();
+
+        expect(container.querySelector("textarea")).toBeNull();
+        expect(button("Add a note").getAttribute("aria-expanded")).toBe("false");
+        const note = openNote();
+
         expect(note.maxLength).toBe(500);
+        expect(document.activeElement).toBe(note);
+        expect(actionBar().contains(note)).toBe(true);
+        expect(actionBar().contains(generateButton())).toBe(true);
+        type(note, "green sofa");
+        expect(actionBar().textContent).toContain("10/500");
+    });
+
+    it("keeps the note when the field is closed, and says a note is added", () => {
+        render();
+
+        type(openNote(), "green sofa");
+        click(button("Done"));
+
+        expect(container.querySelector("textarea")).toBeNull();
+        expect(button("Edit note").getAttribute("aria-expanded")).toBe("false");
+        click(button("Edit note"));
+        expect(container.querySelector("textarea")!.value).toBe("green sofa");
+    });
+
+    it("keeps the Generate button above the phone keyboard while writing the note", () => {
+        // The keyboard covers the bottom 320 px of an 844 px tall screen.
+        const viewport = Object.assign(new EventTarget(), { height: 844, offsetTop: 0 });
+        vi.stubGlobal("visualViewport", viewport);
+        vi.stubGlobal("innerHeight", 844);
+        render();
+        openNote();
+
+        act(() => {
+            viewport.height = 524;
+            viewport.dispatchEvent(new Event("resize"));
+        });
+        expect(actionBar().style.bottom).toBe("320px");
+
+        act(() => {
+            viewport.height = 844;
+            viewport.dispatchEvent(new Event("resize"));
+        });
+        expect(actionBar().style.bottom).toBe("");
     });
     it("generates from the photo with the chosen room, style, quality and note", async () => {
         const network = stubNetwork();
@@ -246,8 +342,8 @@ describe("Generate tool", () => {
         click(option("Room type", "Bedroom"));
         click(option("Style", "Japandi"));
         click(option("Quality", "Premium"));
-        type(container.querySelector("textarea")!, "  green sofa, more plants  ");
-        click(button("Generate design"));
+        type(openNote(), "  green sofa, more plants  ");
+        click(generateButton());
 
         const sent = network.requests.find((r) => r.url === "/api/generate")!;
         expect(sent.body).toMatchObject({
@@ -264,8 +360,8 @@ describe("Generate tool", () => {
         render();
         await uploadPhoto();
 
-        type(container.querySelector("textarea")!, "   ");
-        click(button("Generate design"));
+        type(openNote(), "   ");
+        click(generateButton());
 
         const sent = network.requests.find((r) => r.url === "/api/generate")!;
         expect(sent.body).not.toHaveProperty("customPrompt");
@@ -275,7 +371,8 @@ describe("Generate tool", () => {
         stubNetwork();
         render();
         await uploadPhoto();
-        click(button("Generate design"));
+        openNote();
+        click(generateButton());
 
         expect(container.querySelector('img[alt="Your room"]')).not.toBeNull();
         expect(container.textContent).toContain("Sending your photo");
@@ -283,14 +380,16 @@ describe("Generate tool", () => {
         expect(option("Room type", "Kitchen").matches(":disabled")).toBe(true);
         expect(option("Quality", "Premium").matches(":disabled")).toBe(true);
         expect(container.querySelector("textarea")!.matches(":disabled")).toBe(true);
-        expect(button("Generating…").disabled).toBe(true);
+        expect(button("Done").matches(":disabled")).toBe(true);
+        expect(generateButton().textContent).toContain("Generating…");
+        expect(generateButton().disabled).toBe(true);
     });
 
     it("shows the result next to the original, refreshes the balance and offers to regenerate", async () => {
         const network = stubNetwork();
         render();
         await uploadPhoto();
-        click(button("Generate design"));
+        click(generateButton());
         await network.finish();
 
         await waitFor(() => expect(container.querySelector('input[type="range"]')).not.toBeNull());
@@ -306,7 +405,9 @@ describe("Generate tool", () => {
 
         // The choices unlock, so the next run can use another style.
         click(option("Style", "Coastal"));
-        click(button("Regenerate"));
+        expect(generateButton().textContent).toContain("Regenerate");
+        expect(generateButton().textContent).toContain("1 credit");
+        click(generateButton());
         const runs = network.requests.filter((r) => r.url === "/api/generate");
         expect(runs).toHaveLength(2);
         expect(runs[1].body).toMatchObject({ theme: "coastal" });
@@ -333,13 +434,8 @@ function json(status: number, body: unknown) {
     return () => Promise.resolve(new Response(JSON.stringify(body), { status }));
 }
 
-/** The message shown above the Generate button. */
-function message(): HTMLElement {
-    return container.querySelector("#generate-message") as HTMLElement;
-}
-
 async function generateAndWaitForMessage() {
-    click(button("Generate design"));
+    click(generateButton());
     await waitFor(() => expect(message().textContent).not.toBe(""));
     await waitFor(() => expect(container.querySelector("[data-tool-state]")!.getAttribute("data-tool-state")).toBe("ready"));
 }
@@ -364,7 +460,7 @@ describe("Generate tool when something goes wrong", () => {
 
         expect(message().textContent).toMatch(/check your connection and try again/i);
         expect(container.querySelector('img[alt="Your room"]')).not.toBeNull();
-        expect(button("Generate design").disabled).toBe(false);
+        expect(generateButton().disabled).toBe(false);
     });
 
     it("asks to wait when there were too many designs in a short time", async () => {
@@ -416,8 +512,7 @@ describe("Generate tool when something goes wrong", () => {
         expect(message().textContent).toMatch(/premium uses 2 credits and you have 1/i);
         const buy = Array.from(message().querySelectorAll("a")).find((a) => a.textContent === "Buy credits");
         expect(buy?.getAttribute("href")).toBe("/pricing");
-        expect(button("Generate design").getAttribute("aria-describedby")).toBe("generate-message");
-        click(button("Generate design"));
+        click(generateButton());
         expect(network.requests).not.toContain("/api/generate");
 
         // Standard fits the balance again.
@@ -497,7 +592,7 @@ describe("Generate tool when something goes wrong", () => {
         const network = stubNetwork();
         render();
         await uploadPhoto();
-        click(button("Generate design"));
+        click(generateButton());
         await network.finish();
         await waitFor(() => expect(button("Download")).toBeTruthy());
 

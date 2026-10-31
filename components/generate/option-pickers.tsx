@@ -2,13 +2,12 @@
 
 import Image from "next/image";
 import { Check } from "lucide-react";
-import { NOTE_MAX_LENGTH, QUALITY_OPTIONS, ROOM_TYPES, THEMES } from "@/lib/constants";
-import { Textarea } from "@/components/ui/textarea";
-import { cn, formatCredits } from "@/lib/utils";
-import type { Quality, RoomType, Theme } from "@/types";
+import { ROOM_TYPES, THEMES } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+import type { RoomType, Theme } from "@/types";
 
 /*
- * The tool's choices. Each group is a native radio group (arrow keys move the
+ * The tool's choices on the page (quality and the note live in the action bar). Each group is a native radio group (arrow keys move the
  * choice, one tab stop per group); the inputs are visually hidden and their
  * labels carry the look, including the focus ring.
  */
@@ -85,7 +84,7 @@ export function StylePicker({ value, onChange }: { value: Theme; onChange: (valu
             <legend className={legendClass}>
                 <StepTitle step={3} title="Style" aside={THEMES[value]} />
             </legend>
-            <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 lg:grid-cols-5 lg:gap-2 xl:grid-cols-7">
                 {(Object.entries(THEMES) as [Theme, string][]).map(([id, label]) => {
                     const selected = value === id;
                     return (
@@ -115,21 +114,21 @@ export function StylePicker({ value, onChange }: { value: Theme; onChange: (valu
                                     src={styleImage(id)}
                                     alt=""
                                     fill
-                                    sizes="(min-width: 1280px) 120px, (min-width: 1024px) 150px, (min-width: 640px) 25vw, 33vw"
+                                    sizes="(min-width: 1280px) 90px, (min-width: 1024px) 100px, (min-width: 640px) 25vw, 33vw"
                                     className={cn(
                                         "object-cover",
                                         !selected && "group-has-[:disabled]:grayscale-[0.4]"
                                     )}
                                 />
                                 {selected && (
-                                    <span className="absolute right-1.5 top-1.5 grid size-6 place-items-center rounded-full bg-ink text-cream shadow-float">
-                                        <Check aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
+                                    <span className="absolute right-1.5 top-1.5 grid size-6 place-items-center rounded-full bg-ink text-cream shadow-float lg:right-1 lg:top-1 lg:size-5">
+                                        <Check aria-hidden="true" className="size-3.5 lg:size-3" strokeWidth={2.5} />
                                     </span>
                                 )}
                             </span>
                             <span
                                 className={cn(
-                                    "truncate px-0.5 text-[13px] tracking-[-0.01em]",
+                                    "line-clamp-2 px-0.5 text-[13px] leading-tight tracking-[-0.01em] lg:text-[12px] xl:text-[11px] xl:tracking-[-0.02em]",
                                     selected ? "font-medium text-ink" : "text-ink-2"
                                 )}
                             >
@@ -140,74 +139,5 @@ export function StylePicker({ value, onChange }: { value: Theme; onChange: (valu
                 })}
             </div>
         </fieldset>
-    );
-}
-
-export function QualityPicker({ value, onChange }: { value: Quality; onChange: (value: Quality) => void }) {
-    return (
-        <fieldset>
-            <legend className={legendClass}>
-                <StepTitle step={4} title="Quality" />
-            </legend>
-            <div className="grid grid-cols-2 gap-2.5">
-                {Object.values(QUALITY_OPTIONS).map((q) => {
-                    const selected = value === q.id;
-                    return (
-                        <label
-                            key={q.id}
-                            className={cn(
-                                "flex cursor-pointer select-none flex-col gap-0.5 rounded-lg border px-4 py-3 transition-[border-color,background-color,transform] duration-160 ease-out active:scale-[0.97] motion-reduce:transition-none",
-                                "has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60 has-[:disabled]:active:scale-100",
-                                focusRingClass,
-                                selected ? "border-ink bg-paper-2" : "border-line bg-paper hover:border-ink/40"
-                            )}
-                        >
-                            <input
-                                type="radio"
-                                name="quality"
-                                value={q.id}
-                                checked={selected}
-                                onChange={() => onChange(q.id)}
-                                className="sr-only"
-                            />
-                            <span className="flex items-baseline justify-between gap-2 text-[15px] font-medium tracking-[-0.01em] text-ink">
-                                {q.id === "standard" ? "Standard" : "Premium"}
-                                <span className="text-[13px] font-normal text-ink-2 tabular-nums">
-                                    {formatCredits(q.credits)}
-                                </span>
-                            </span>
-                            <span className="text-[13px] text-ink-3">{q.description}</span>
-                        </label>
-                    );
-                })}
-            </div>
-        </fieldset>
-    );
-}
-
-export function NoteField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
-    return (
-        <div>
-            <div className="mb-2 flex items-baseline justify-between gap-3">
-                <label htmlFor="generate-note" className="text-[15px] font-medium tracking-[-0.01em] text-ink">
-                    Note <span className="font-normal text-ink-3">(optional)</span>
-                </label>
-                <span className="text-xs text-ink-3 tabular-nums" aria-hidden="true">
-                    {value.length}/{NOTE_MAX_LENGTH}
-                </span>
-            </div>
-            <Textarea
-                id="generate-note"
-                value={value}
-                maxLength={NOTE_MAX_LENGTH}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder="For example: a green sofa, more plants, warm lighting"
-                aria-describedby="generate-note-hint"
-                className="min-h-20 resize-none"
-            />
-            <p id="generate-note-hint" className="mt-1.5 text-xs text-ink-3">
-                Up to {NOTE_MAX_LENGTH} characters. Leave it empty to let the style decide.
-            </p>
-        </div>
     );
 }
