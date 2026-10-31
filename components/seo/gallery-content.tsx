@@ -4,13 +4,23 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { CompareSlider } from "@/components/compare-slider";
 import { PageTransition } from "@/components/page-transition";
-import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
+import {
+    BODY_CLASS,
+    CHIP_CLASS,
+    H1_CLASS,
+    H2_CLASS,
+    LABEL_CLASS,
+    LEAD_CLASS,
+    PageBreadcrumb,
+    Rule,
+} from "@/components/seo/comparison-layout";
+import { cn } from "@/lib/utils";
 import { isPriorityDesignSlug } from "@/lib/seo/priority-pages";
 
 // Cross-link card, repeated once per card in the grid below.
 const RELATED_CARD_CLASS =
-    "rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800";
+    "group block rounded-xl border border-line p-5 transition-[border-color,background-color,transform] duration-200 ease-out hover:border-ink/30 hover:bg-paper-2 active:scale-[0.98] motion-reduce:transition-none";
 
 interface GalleryItem {
     slug: string;
@@ -97,21 +107,17 @@ function GalleryCard({ item }: { item: GalleryItem }) {
     // The link sits on the caption, not the whole card, so dragging the slider
     // never follows it (and the slider's range input is not nested in a link).
     const linked = isPriorityDesignSlug(item.slug);
-    const cardClassName =
-        "group block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-lg dark:border-slate-800 dark:bg-slate-900";
 
     const caption = (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
             <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-primary">
-                    {item.themeName}
-                </p>
-                <h3 className="mt-0.5 text-sm font-semibold text-slate-900 dark:text-white">
+                <p className={LABEL_CLASS}>{item.themeName}</p>
+                <h3 className="mt-1 font-serif text-[22px] font-normal leading-tight tracking-[-0.01em] text-ink">
                     {item.roomName}
                 </h3>
             </div>
             {linked && (
-                <span className="text-xs text-slate-400 group-hover:text-primary transition-colors dark:text-slate-500">
+                <span className="shrink-0 text-sm text-ink-3 transition-colors duration-200 group-hover/link:text-ink motion-reduce:transition-none">
                     View →
                 </span>
             )}
@@ -119,7 +125,7 @@ function GalleryCard({ item }: { item: GalleryItem }) {
     );
 
     return (
-        <div className={cardClassName}>
+        <div className="overflow-hidden rounded-2xl border border-line bg-paper-2">
             <CompareSlider
                 before={{
                     src: `/images/designs/before-${item.roomType}.jpg`,
@@ -131,9 +137,13 @@ function GalleryCard({ item }: { item: GalleryItem }) {
                 }}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 label={`Compare ${item.themeName} ${item.roomName} before and after`}
+                className="rounded-none"
             />
             {linked ? (
-                <Link href={`/design/${item.slug}`} className="block p-4">
+                <Link
+                    href={`/design/${item.slug}`}
+                    className="group/link block p-4 transition-colors duration-200 hover:bg-paper motion-reduce:transition-none"
+                >
                     {caption}
                 </Link>
             ) : (
@@ -153,45 +163,39 @@ export function GalleryContent() {
 
     return (
         <PageTransition>
-            {/* Breadcrumb */}
-            <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
-                <div className="container px-4 md:px-6">
-                    <BreadcrumbNav
-                        items={[
-                            { name: "Home", href: "/" },
-                            { name: "Gallery", href: "/gallery" },
-                        ]}
-                    />
-                </div>
-            </div>
+            <PageBreadcrumb
+                items={[
+                    { name: "Home", href: "/" },
+                    { name: "Gallery", href: "/gallery" },
+                ]}
+            />
 
             {/* Hero */}
-            <section className="bg-white py-12 dark:bg-slate-950 md:py-16">
-                <div className="container px-4 md:px-6">
+            <section className="pb-12 pt-6 md:pb-16 md:pt-12">
+                <div className="container-page">
                     <div className="mx-auto max-w-3xl text-center">
-                        <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl">
-                            AI Interior Design Gallery
-                        </h1>
-                        <p className="mt-6 text-lg text-slate-600 dark:text-slate-400">
-                            Real before-and-after room transformations generated by AI. Hover any card to reveal the redesign, then click to explore full details and generate your own.
+                        <h1 className={H1_CLASS}>AI Interior Design Gallery</h1>
+                        <p className={cn(LEAD_CLASS, "mt-6")}>
+                            Real before-and-after room transformations generated by AI. Drag any card to reveal the redesign, then click to explore full details and generate your own.
                         </p>
                     </div>
                 </div>
             </section>
 
             {/* Filter tabs */}
-            <section className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95">
-                <div className="container px-4 md:px-6">
-                    <div className="flex gap-2 overflow-x-auto py-3 scrollbar-none">
+            <section className="sticky top-0 z-20 border-y border-line bg-paper/90 backdrop-blur">
+                <div className="container-page">
+                    <div className="flex gap-2 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                         {FILTERS.map((filter) => (
                             <button
                                 key={filter.key}
                                 onClick={() => setActiveFilter(filter.key)}
-                                className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                                className={cn(
+                                    "min-h-10 shrink-0 rounded-full px-4 text-sm font-medium transition-[background-color,color,transform] duration-160 ease-out active:scale-[0.97] motion-reduce:transition-none",
                                     activeFilter === filter.key
-                                        ? "bg-primary text-white"
-                                        : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                                }`}
+                                        ? "bg-ink text-cream"
+                                        : "bg-ink/5 text-ink hover:bg-ink/10"
+                                )}
                             >
                                 {filter.label}
                             </button>
@@ -201,14 +205,14 @@ export function GalleryContent() {
             </section>
 
             {/* Gallery grid */}
-            <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
-                <div className="container px-4 md:px-6">
-                    <p className="mb-6 text-sm text-slate-500 dark:text-slate-400">
+            <section className="py-10 md:py-14">
+                <div className="container-page">
+                    <p className="mb-6 text-sm text-ink-2">
                         Showing {filtered.length} design{filtered.length !== 1 ? "s" : ""}
                         {activeFilter !== "all" ? ` in ${FILTERS.find((f) => f.key === activeFilter)?.label}` : ""}
-                        . Hover a card to see the AI transformation.
+                        . Drag a card to see the AI transformation.
                     </p>
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {filtered.map((item) => (
                             <GalleryCard key={item.slug} item={item} />
                         ))}
@@ -216,55 +220,43 @@ export function GalleryContent() {
                 </div>
             </section>
 
+            <Rule />
+
             {/* Cross-links */}
-            <section className="bg-white py-12 dark:bg-slate-950 md:py-16">
-                <div className="container px-4 md:px-6">
-                    <div className="mx-auto max-w-3xl">
-                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                            Explore more
-                        </h2>
-                        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                            <Link
-                                href="/design"
-                                className={RELATED_CARD_CLASS}
-                            >
-                                <h3 className="font-semibold text-slate-900 dark:text-white">
+            <section className="py-16 md:py-24">
+                <div className="container-page">
+                    <div className="mx-auto max-w-5xl">
+                        <h2 className={H2_CLASS}>Explore more</h2>
+                        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                            <Link href="/design" className={RELATED_CARD_CLASS}>
+                                <h3 className="font-serif text-[22px] font-normal leading-tight text-ink">
                                     All Design Styles
                                 </h3>
-                                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                <p className={cn(BODY_CLASS, "mt-2 text-[15px]")}>
                                     Browse all 196 design combinations across 14 styles and 14 room types.
                                 </p>
                             </Link>
-                            <Link
-                                href="/blog"
-                                className={RELATED_CARD_CLASS}
-                            >
-                                <h3 className="font-semibold text-slate-900 dark:text-white">
+                            <Link href="/blog" className={RELATED_CARD_CLASS}>
+                                <h3 className="font-serif text-[22px] font-normal leading-tight text-ink">
                                     Interior Design Blog
                                 </h3>
-                                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                <p className={cn(BODY_CLASS, "mt-2 text-[15px]")}>
                                     Guides on AI room design, styling tips, and redesigning on any budget.
                                 </p>
                             </Link>
-                            <Link
-                                href="/alternatives"
-                                className={RELATED_CARD_CLASS}
-                            >
-                                <h3 className="font-semibold text-slate-900 dark:text-white">
+                            <Link href="/alternatives" className={RELATED_CARD_CLASS}>
+                                <h3 className="font-serif text-[22px] font-normal leading-tight text-ink">
                                     RoomGPT alternatives compared
                                 </h3>
-                                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                <p className={cn(BODY_CLASS, "mt-2 text-[15px]")}>
                                     RoomGPT, Interior AI, DecorAI and Reimagine Home on model, privacy and price.
                                 </p>
                             </Link>
-                            <Link
-                                href="/virtual-staging"
-                                className={RELATED_CARD_CLASS}
-                            >
-                                <h3 className="font-semibold text-slate-900 dark:text-white">
+                            <Link href="/virtual-staging" className={RELATED_CARD_CLASS}>
+                                <h3 className="font-serif text-[22px] font-normal leading-tight text-ink">
                                     AI virtual staging for real estate
                                 </h3>
-                                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                                <p className={cn(BODY_CLASS, "mt-2 text-[15px]")}>
                                     Staging listing photos with AI instead of paying per room.
                                 </p>
                             </Link>
@@ -273,10 +265,10 @@ export function GalleryContent() {
                         {/* Gallery was a complete orphan — zero inbound internal
                             links despite being in the sitemap. These give it a
                             reason to pass equity onward as well. */}
-                        <h3 className="mt-10 text-lg font-semibold text-slate-900 dark:text-white">
+                        <h3 className="mt-12 font-serif text-[24px] font-normal leading-tight text-ink">
                             Popular styles from the gallery
                         </h3>
-                        <ul className="mt-4 flex flex-wrap gap-3">
+                        <ul className="mt-5 flex flex-wrap gap-3">
                             {[
                                 { slug: "art-deco-bedroom", label: "Art Deco bedroom ideas" },
                                 {
@@ -289,10 +281,7 @@ export function GalleryContent() {
                                 { slug: "farmhouse-kitchen", label: "Farmhouse kitchen design ideas" },
                             ].map((item) => (
                                 <li key={item.slug}>
-                                    <Link
-                                        href={`/design/${item.slug}`}
-                                        className="inline-block rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 transition-colors hover:border-primary hover:text-primary dark:border-slate-800 dark:text-slate-300"
-                                    >
+                                    <Link href={`/design/${item.slug}`} className={CHIP_CLASS}>
                                         {item.label}
                                     </Link>
                                 </li>

@@ -1,17 +1,39 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { createMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
 import { getSortedBlogPosts } from "@/lib/seo/blog-data";
 import { BlogCard } from "@/components/seo/blog-card";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
+import { RelatedLinks } from "@/components/seo/related-links";
+import { IContextualLink } from "@/lib/seo/internal-links";
 import { PageTransition } from "@/components/page-transition";
 import { JsonLd } from "@/components/seo/json-ld";
 
-// Cross-link card, repeated once per card in the grid below.
-const RELATED_CARD_CLASS =
-    "rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md dark:border-slate-800";
+// Cross-links to the other content sections, rendered as the shared
+// hairline-row link list (same h2/h3 structure and anchors as before).
+const EXPLORE_LINKS: IContextualLink[] = [
+    {
+        href: "/design",
+        label: "AI Design Ideas",
+        description: "Browse 196 AI design combinations across 14 styles and 14 room types.",
+    },
+    {
+        href: "/alternatives",
+        label: "RoomGPT alternatives compared",
+        description: "RoomGPT, Interior AI, DecorAI and Reimagine Home on model, privacy and price.",
+    },
+    {
+        href: "/virtual-staging",
+        label: "AI virtual staging for real estate",
+        description: "What AI staging replaces on a listing, and where it still falls short.",
+    },
+    {
+        href: "/gallery",
+        label: "AI room design gallery",
+        description: "Before-and-after examples generated from real room photos.",
+    },
+];
 
 export const metadata: Metadata = createMetadata({
     // "Interior Design Blog | Magic Room" is a filing label — it names the
@@ -40,9 +62,10 @@ export default function BlogHubPage() {
         <>
             <JsonLd schemas={[schema]} />
             <PageTransition>
-                {/* Breadcrumb */}
-                <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
-                    <div className="container px-4 md:px-6">
+                {/* Index content shares the 5xl column the RelatedLinks block uses,
+                    so breadcrumb, hero, grid and cross-links line up. */}
+                <div className="container-page">
+                    <div className="mx-auto max-w-5xl">
                         <BreadcrumbNav
                             items={[
                                 { name: "Home", href: "/" },
@@ -53,88 +76,32 @@ export default function BlogHubPage() {
                 </div>
 
                 {/* Hero */}
-                <section className="bg-white py-12 dark:bg-slate-950 md:py-16">
-                    <div className="container px-4 md:px-6">
-                        <div className="mx-auto max-w-3xl">
-                            <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl">
-                                Interior Design Blog
-                            </h1>
-                            <p className="mt-6 text-lg text-slate-600 dark:text-slate-400">
-                                Practical guides on AI room design, interior styles, and how to redesign spaces
-                                without a designer. New posts every week.
-                            </p>
-                        </div>
+                <section className="container-page pb-12 pt-8 md:pb-16 md:pt-14">
+                    <div className="mx-auto max-w-5xl">
+                        <h1 className="max-w-[14ch] animate-rise font-serif text-[clamp(48px,6.4vw,96px)] font-normal leading-[0.95] tracking-[-0.025em] text-ink text-balance">
+                            Interior Design Blog
+                        </h1>
+                        <p
+                            className="mt-6 max-w-[34rem] animate-rise text-[17px] leading-[1.55] text-ink-2 text-pretty"
+                            style={{ animationDelay: "90ms" }}
+                        >
+                            Practical guides on AI room design, interior styles, and how to redesign spaces
+                            without a designer. New posts every week.
+                        </p>
                     </div>
                 </section>
 
                 {/* Posts grid */}
-                <section className="bg-slate-50 py-12 dark:bg-slate-900/50 md:py-16">
-                    <div className="container px-4 md:px-6">
-                        <div className="mx-auto max-w-5xl">
-                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                                {posts.map((post) => (
-                                    <BlogCard key={post.slug} post={post} />
-                                ))}
-                            </div>
-                        </div>
+                <section className="container-page pb-20 md:pb-28">
+                    <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-3">
+                        {posts.map((post) => (
+                            <BlogCard key={post.slug} post={post} />
+                        ))}
                     </div>
                 </section>
+
                 {/* Cross-links to other content sections */}
-                <section className="bg-white py-12 dark:bg-slate-950 md:py-16">
-                    <div className="container px-4 md:px-6">
-                        <div className="mx-auto max-w-3xl">
-                            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                                Explore more
-                            </h2>
-                            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                                <Link
-                                    href="/design"
-                                    className={RELATED_CARD_CLASS}
-                                >
-                                    <h3 className="font-semibold text-slate-900 dark:text-white">
-                                        AI Design Ideas
-                                    </h3>
-                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                                        Browse 196 AI design combinations across 14 styles and 14 room types.
-                                    </p>
-                                </Link>
-                                <Link
-                                    href="/alternatives"
-                                    className={RELATED_CARD_CLASS}
-                                >
-                                    <h3 className="font-semibold text-slate-900 dark:text-white">
-                                        RoomGPT alternatives compared
-                                    </h3>
-                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                                        RoomGPT, Interior AI, DecorAI and Reimagine Home on model, privacy and price.
-                                    </p>
-                                </Link>
-                                <Link
-                                    href="/virtual-staging"
-                                    className={RELATED_CARD_CLASS}
-                                >
-                                    <h3 className="font-semibold text-slate-900 dark:text-white">
-                                        AI virtual staging for real estate
-                                    </h3>
-                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                                        What AI staging replaces on a listing, and where it still falls short.
-                                    </p>
-                                </Link>
-                                <Link
-                                    href="/gallery"
-                                    className={RELATED_CARD_CLASS}
-                                >
-                                    <h3 className="font-semibold text-slate-900 dark:text-white">
-                                        AI room design gallery
-                                    </h3>
-                                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                                        Before-and-after examples generated from real room photos.
-                                    </p>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <RelatedLinks heading="Explore more" links={EXPLORE_LINKS} className="pb-20 md:pb-28" />
             </PageTransition>
         </>
     );
