@@ -160,13 +160,17 @@
     @apply border-border;
   }
 
+  /*
+   * `clip`, not `hidden`: `hidden` on both html and body turns body into its
+   * own scroll container, which stops the sticky site header from sticking.
+   */
   html {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
     @apply bg-background text-foreground font-sans;
-    overflow-x: hidden;
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

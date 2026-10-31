@@ -1,241 +1,149 @@
 "use client";
 
-import React from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useClerk, useUser } from "@clerk/nextjs";
-import { Logo } from "@/components/logo";
+import { BrandMark } from "@/components/brand-mark";
+
+type FooterLink = { href: string; label: string };
+
+/*
+ * Column order, headings and link text are part of every page's visible text
+ * and internal links (the SEO parity check compares them), so keep them as is.
+ */
+const PRODUCT: FooterLink[] = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/pricing", label: "Pricing" },
+];
+
+const COLUMNS: { title: string; links: FooterLink[] }[] = [
+  {
+    title: "Legal",
+    links: [
+      { href: "/terms", label: "Terms of service" },
+      { href: "/privacy", label: "Privacy policy" },
+    ],
+  },
+  {
+    title: "Design Ideas",
+    links: [
+      { href: "/design", label: "All design styles" },
+      { href: "/design/modern-living-room", label: "Modern living room" },
+      { href: "/design/scandinavian-bedroom", label: "Scandinavian bedroom" },
+      { href: "/design/art-deco-bedroom", label: "Art Deco bedroom" },
+      /*
+       * Both of these are in the XML sitemap but had, respectively, zero and
+       * one inbound internal link anywhere on the site (/gallery's only
+       * occurrence was inside its own breadcrumb). A sitewide footer link is
+       * the cheapest crawl path from every page; without it they stay in
+       * "Discovered - not indexed".
+       */
+      { href: "/gallery", label: "AI room design gallery" },
+      { href: "/virtual-staging", label: "AI virtual staging" },
+      { href: "/blog", label: "Blog" },
+    ],
+  },
+  {
+    title: "Compare",
+    links: [
+      { href: "/alternatives", label: "All alternatives" },
+      { href: "/alternatives/roomgpt", label: "RoomGPT alternative" },
+      { href: "/alternatives/decorai", label: "DecorAI alternative" },
+    ],
+  },
+  {
+    title: "Connect",
+    links: [
+      { href: "https://github.com/ThanosKa/magic-room", label: "GitHub" },
+      { href: "https://x.com/KazakisThanos", label: "Twitter / X" },
+      { href: "mailto:kazakis.th@gmail.com", label: "Support" },
+    ],
+  },
+];
+
+const linkClass =
+  "inline-flex min-h-8 cursor-pointer items-center text-left text-[14.5px] text-ink-2 transition-colors duration-200 hover:text-ink motion-reduce:transition-none";
+
+function ColumnTitle({ children }: { children: ReactNode }) {
+  return (
+    <h3 className="mb-3 text-xs font-medium uppercase tracking-[0.16em] text-ink-3">
+      {children}
+    </h3>
+  );
+}
+
+function LinkList({ links, children }: { links: FooterLink[]; children?: ReactNode }) {
+  return (
+    <ul className="grid gap-1">
+      {links.map((l) => (
+        <li key={l.href}>
+          <Link href={l.href} className={linkClass}>
+            {l.label}
+          </Link>
+        </li>
+      ))}
+      {children}
+    </ul>
+  );
+}
 
 export function Footer() {
   const { openSignIn } = useClerk();
   const { isSignedIn } = useUser();
+  const router = useRouter();
 
   return (
-    <footer className="border-t border-slate-200 bg-white py-12 dark:border-slate-800 dark:bg-slate-950">
-      <div className="container px-4 md:px-6">
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6">
-          <div>
-            <div className="flex items-center gap-2">
-              <Logo className="h-8 w-8" />
-              <span className="text-lg font-bold dark:text-white">
-                Magic Room
-              </span>
-            </div>
-            <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
-              Transform your space with AI-powered interior design.
-            </p>
-          </div>
+    <footer className="overflow-hidden px-5 pb-7 pt-[88px] sm:px-6 sm:pt-[120px] lg:px-12">
+      <div className="mx-auto grid max-w-[1240px] gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] xl:gap-16">
+        <div>
+          <BrandMark />
+          <p className="mt-4 max-w-[26ch] text-[15px] leading-[1.55] text-ink-2">
+            Transform your space with AI-powered interior design.
+          </p>
+        </div>
 
+        <div className="grid grid-cols-2 gap-x-5 gap-y-9 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_1.35fr_1.25fr_0.9fr] lg:gap-x-8">
           <div>
-            <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
-              Product
-            </h3>
-
-            <ul className="mt-4 space-y-2">
+            <ColumnTitle>Product</ColumnTitle>
+            <LinkList links={PRODUCT}>
               <li>
-                <Link
-                  href="/"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/pricing"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Pricing
-                </Link>
-              </li>
-              <li>
+                {/* Signed out: opens the sign-in window instead of the auth redirect. */}
                 <button
-                  onClick={() => {
-                    if (!isSignedIn) {
-                      openSignIn();
-                    } else {
-                      window.location.href = "/generate";
-                    }
-                  }}
-                  className="cursor-pointer text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
+                  type="button"
+                  onClick={() => (isSignedIn ? router.push("/generate") : openSignIn())}
+                  className={linkClass}
                 >
                   Generate
                 </button>
               </li>
-            </ul>
+            </LinkList>
           </div>
 
-          <div>
-            <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
-              Legal
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href="/terms"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Terms of service
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Privacy policy
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
-              Design Ideas
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href="/design"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  All design styles
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/design/modern-living-room"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Modern living room
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/design/scandinavian-bedroom"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Scandinavian bedroom
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/design/art-deco-bedroom"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Art Deco bedroom
-                </Link>
-              </li>
-              {/*
-                Both of these are in the XML sitemap but had, respectively,
-                zero and one inbound internal link anywhere on the site —
-                /gallery's only occurrence was inside its own breadcrumb.
-                A sitewide footer link is the cheapest crawl path from every
-                page; without it they stay in "Discovered - not indexed".
-              */}
-              <li>
-                <Link
-                  href="/gallery"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  AI room design gallery
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/virtual-staging"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  AI virtual staging
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Blog
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
-              Compare
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href="/alternatives"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  All alternatives
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/alternatives/roomgpt"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  RoomGPT alternative
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/alternatives/decorai"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  DecorAI alternative
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold tracking-wider text-slate-900 dark:text-slate-100">
-              Connect
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  href="https://github.com/ThanosKa/magic-room"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  GitHub
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://x.com/KazakisThanos"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Twitter / X
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="mailto:kazakis.th@gmail.com"
-                  className="text-sm text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-                >
-                  Support
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {COLUMNS.map((col) => (
+            <div key={col.title}>
+              <ColumnTitle>{col.title}</ColumnTitle>
+              <LinkList links={col.links} />
+            </div>
+          ))}
         </div>
-        <div className="mt-12 border-t border-slate-200 pt-8 text-center dark:border-slate-800">
-          <p className="text-sm text-slate-600 dark:text-slate-400">
-            &copy; 2026 Thaka — All rights reserved.
-          </p>
-        </div>
+      </div>
+
+      {/*
+       * Decorative wordmark. Drawn with CSS generated content (not text nodes)
+       * so it adds nothing to the page's text for search engines or screen readers.
+       */}
+      <p
+        aria-hidden="true"
+        className="mx-auto mt-16 max-w-[1240px] select-none whitespace-nowrap pb-[0.14em] font-serif text-[clamp(72px,21.5vw,320px)] leading-[0.8] tracking-[-0.045em] text-ink sm:mt-24"
+      >
+        <span className="before:content-['Magic_']" />
+        <em className="text-ink-3 before:content-['Room']" />
+      </p>
+
+      <div className="mx-auto mt-6 flex max-w-[1240px] flex-wrap justify-between gap-x-6 gap-y-2 border-t border-line pt-5 text-[13px] text-ink-3">
+        <p>&copy; 2026 Thaka — All rights reserved.</p>
       </div>
     </footer>
   );
