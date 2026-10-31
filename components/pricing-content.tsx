@@ -1,13 +1,13 @@
 "use client";
 
 import React, { Suspense, useState } from "react";
-import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { SignUpButton } from "@clerk/nextjs";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CheckoutReturnNotice } from "@/components/checkout-return-notice";
+import { useHydratedUser } from "@/hooks/use-hydrated-user";
 import { cn } from "@/lib/utils";
 
 const CREDIT_PACKAGES = [
@@ -113,7 +113,7 @@ const H2 =
   "font-serif text-[clamp(34px,4.4vw,56px)] font-normal leading-[1.02] tracking-[-0.022em] text-balance";
 
 export default function PricingContent() {
-  const { user: clerkUser, isLoaded } = useUser();
+  const { user: clerkUser, isLoaded } = useHydratedUser();
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
 

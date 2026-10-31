@@ -1,8 +1,8 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { useAuth } from "@clerk/nextjs";
 import { RedirectToSignIn } from "@clerk/nextjs";
+import { useHydratedUser } from "@/hooks/use-hydrated-user";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface AuthGuardProps {
@@ -11,7 +11,7 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children, fallback }: AuthGuardProps) {
-  const { isSignedIn, isLoaded } = useAuth();
+  const { isSignedIn, isLoaded } = useHydratedUser();
 
   if (!isLoaded) {
     return fallback || <AuthLoadingFallback />;

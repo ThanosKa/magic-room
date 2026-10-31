@@ -7,6 +7,7 @@ import { ToastProvider } from "@/components/toast-provider";
 import { UserDataProvider } from "@/components/user-data-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { SiteMain } from "@/components/site-main";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
   SITE_URL,
@@ -186,7 +187,7 @@ export default function RootLayout({
             <UserDataProvider>
               <div className="flex min-h-screen flex-col">
                 <Header />
-                <main className="flex-1">{children}</main>
+                <SiteMain>{children}</SiteMain>
                 <Footer />
               </div>
               <ToastProvider />

@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand-mark";
+import { useHydratedUser } from "@/hooks/use-hydrated-user";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { cn, formatCredits } from "@/lib/utils";
 
@@ -109,7 +110,7 @@ function Credits({ onClick, className }: { onClick?: () => void; className?: str
 }
 
 export function Header() {
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded } = useHydratedUser();
   const pathname = usePathname();
 
   // The menu belongs to the page it was opened on: navigating anywhere closes it.
