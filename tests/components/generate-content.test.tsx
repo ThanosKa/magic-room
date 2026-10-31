@@ -14,8 +14,7 @@ let search = "";
 const signOut = vi.fn();
 
 vi.mock("@clerk/nextjs", () => ({
-    useAuth: () => ({ isLoaded: true, isSignedIn: true }),
-    useUser: () => ({ user: { id: "clerk_user_123" } }),
+    useUser: () => ({ isLoaded: true, isSignedIn: true, user: { id: "clerk_user_123" } }),
     useClerk: () => ({ signOut }),
     RedirectToSignIn: () => null,
 }));
