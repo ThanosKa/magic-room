@@ -11,10 +11,12 @@ import { useGenerationStore } from "@/stores/generation-store";
  */
 
 let search = "";
+const signOut = vi.fn();
 
 vi.mock("@clerk/nextjs", () => ({
     useAuth: () => ({ isLoaded: true, isSignedIn: true }),
     useUser: () => ({ user: { id: "clerk_user_123" } }),
+    useClerk: () => ({ signOut }),
     RedirectToSignIn: () => null,
 }));
 
@@ -89,13 +91,17 @@ class LoadedImage {
     }
 }
 
-async function uploadPhoto() {
+/** Picks `file` in the photo step's file picker. */
+async function chooseFile(file: File) {
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
-    const file = new File([new Uint8Array([137, 80, 78, 71])], "room.png", { type: "image/png" });
     Object.defineProperty(input, "files", { value: [file], configurable: true });
     await act(async () => {
         input.dispatchEvent(new Event("change", { bubbles: true }));
     });
+}
+
+async function uploadPhoto() {
+    await chooseFile(new File([new Uint8Array([137, 80, 78, 71])], "room.png", { type: "image/png" }));
     await waitFor(() => expect(container.querySelector('img[alt="Your room"]')).not.toBeNull());
 }
 
@@ -305,5 +311,240 @@ describe("Generate tool", () => {
         const runs = network.requests.filter((r) => r.url === "/api/generate");
         expect(runs).toHaveLength(2);
         expect(runs[1].body).toMatchObject({ theme: "coastal" });
+    });
+});
+
+/** /api/generate answers with `answer` (a Response, or a rejection for a network error). */
+function stubGenerate(answer: () => Promise<Response>, { creditsAfter = 5 } = {}) {
+    const requests: string[] = [];
+    vi.stubGlobal("fetch", (url: string) => {
+        requests.push(url);
+        if (url === "/api/generate") return answer();
+        if (url.startsWith("/api/user")) {
+            return Promise.resolve(
+                new Response(JSON.stringify({ user: { id: "u1", credits: creditsAfter } }), { status: 200 })
+            );
+        }
+        return Promise.reject(new Error(`Unexpected request ${url}`));
+    });
+    return { requests };
+}
+
+function json(status: number, body: unknown) {
+    return () => Promise.resolve(new Response(JSON.stringify(body), { status }));
+}
+
+/** The message shown above the Generate button. */
+function message(): HTMLElement {
+    return container.querySelector("#generate-message") as HTMLElement;
+}
+
+async function generateAndWaitForMessage() {
+    click(button("Generate design"));
+    await waitFor(() => expect(message().textContent).not.toBe(""));
+    await waitFor(() => expect(container.querySelector("[data-tool-state]")!.getAttribute("data-tool-state")).toBe("ready"));
+}
+
+describe("Generate tool when something goes wrong", () => {
+    it("says the design failed and the credits were refunded", async () => {
+        stubGenerate(json(500, { error: "Failed to generate images", success: false }));
+        render();
+        await uploadPhoto();
+        click(option("Quality", "Premium"));
+        await generateAndWaitForMessage();
+
+        expect(message().textContent).toMatch(/could not be made/i);
+        expect(message().textContent).toMatch(/2 credits were refunded/i);
+    });
+
+    it("asks to check the connection when the request never arrives, and keeps the photo", async () => {
+        stubGenerate(() => Promise.reject(new TypeError("Failed to fetch")));
+        render();
+        await uploadPhoto();
+        await generateAndWaitForMessage();
+
+        expect(message().textContent).toMatch(/check your connection and try again/i);
+        expect(container.querySelector('img[alt="Your room"]')).not.toBeNull();
+        expect(button("Generate design").disabled).toBe(false);
+    });
+
+    it("asks to wait when there were too many designs in a short time", async () => {
+        stubGenerate(
+            json(429, {
+                error: "Rate limit exceeded",
+                message: "You're making requests too quickly. Please wait a moment.",
+                remaining: 0,
+                resetAt: Date.now() + 20 * 60 * 1000,
+            })
+        );
+        render();
+        await uploadPhoto();
+        await generateAndWaitForMessage();
+
+        expect(message().textContent).toMatch(/too many designs/i);
+        expect(message().textContent).toMatch(/try again in about 20 minutes/i);
+    });
+
+    it("asks to sign in again when the session has ended, and comes back to the tool with the same choices", async () => {
+        stubGenerate(json(401, { error: "Unauthorized" }));
+        render();
+        await uploadPhoto();
+        click(option("Room type", "Bedroom"));
+        click(option("Style", "Japandi"));
+        await generateAndWaitForMessage();
+
+        expect(message().textContent).toMatch(/sign in again/i);
+        click(button("Sign in again"));
+        expect(signOut).toHaveBeenCalledWith({ redirectUrl: "/generate?style=japandi&room=bedroom" });
+
+        // Choices changed after the message keep their new values.
+        click(option("Style", "Coastal"));
+        click(button("Sign in again"));
+        expect(signOut).toHaveBeenLastCalledWith({ redirectUrl: "/generate?style=coastal&room=bedroom" });
+    });
+
+    it("says up front when the balance is too low for the chosen quality, with a way to buy credits", async () => {
+        const network = stubGenerate(json(200, { success: true, predictionId: "gen_1", outputUrls: [RESULT] }));
+        useUserStore.getState().setUser({ id: "u1", credits: 1 } as never);
+        useUserStore.getState().setCredits(1);
+        render();
+        await uploadPhoto();
+        expect(message().textContent).toBe("");
+
+        click(option("Quality", "Premium"));
+
+        expect(message().textContent).toMatch(/not enough credits/i);
+        expect(message().textContent).toMatch(/premium uses 2 credits and you have 1/i);
+        const buy = Array.from(message().querySelectorAll("a")).find((a) => a.textContent === "Buy credits");
+        expect(buy?.getAttribute("href")).toBe("/pricing");
+        expect(button("Generate design").getAttribute("aria-describedby")).toBe("generate-message");
+        click(button("Generate design"));
+        expect(network.requests).not.toContain("/api/generate");
+
+        // Standard fits the balance again.
+        click(option("Quality", "Standard"));
+        expect(message().textContent).toBe("");
+    });
+
+    it("shows the real balance and a way to buy credits when the API says the balance is too low", async () => {
+        // The screen thought there were 5 credits; the account has none left.
+        stubGenerate(json(402, { error: "Insufficient credits" }), { creditsAfter: 0 });
+        useUserStore.getState().setUser({ id: "u1", credits: 5 } as never);
+        render();
+        await uploadPhoto();
+        await generateAndWaitForMessage();
+
+        await waitFor(() => expect(message().textContent).toMatch(/standard uses 1 credit and you have 0/i));
+        expect(message().textContent).not.toMatch(/went wrong/i);
+        const buy = Array.from(message().querySelectorAll("a")).filter((a) => a.textContent === "Buy credits");
+        expect(buy).toHaveLength(1);
+        expect(buy[0].getAttribute("href")).toBe("/pricing");
+    });
+
+    it("still offers to buy credits after a 402 when the balance cannot be re-read", async () => {
+        vi.stubGlobal("fetch", (url: string) =>
+            url === "/api/generate"
+                ? json(402, { error: "Insufficient credits" })()
+                : Promise.resolve(new Response("{}", { status: 500 }))
+        );
+        useUserStore.getState().setUser({ id: "u1", credits: 5 } as never);
+        render();
+        await uploadPhoto();
+        await generateAndWaitForMessage();
+
+        await waitFor(() => expect(message().textContent).toMatch(/not enough credits/i));
+        const buy = Array.from(message().querySelectorAll("a")).filter((a) => a.textContent === "Buy credits");
+        expect(buy).toHaveLength(1);
+    });
+
+    it("says why a photo over 20 MB was not used, and keeps the current photo", async () => {
+        render();
+        await uploadPhoto();
+
+        const huge = new File([new Uint8Array([137, 80, 78, 71])], "huge.png", { type: "image/png" });
+        Object.defineProperty(huge, "size", { value: 21 * 1024 * 1024 });
+        await chooseFile(huge);
+
+        await waitFor(() => expect(message().textContent).toMatch(/over 20 MB/i));
+        expect(container.querySelector('img[alt="Your room"]')?.getAttribute("src")).toBe(PHOTO);
+    });
+
+    it("says which files it takes when the file is not a JPG, PNG or WebP", async () => {
+        render();
+        await uploadPhoto();
+
+        await chooseFile(new File(["GIF89a"], "room.gif", { type: "image/gif" }));
+
+        await waitFor(() => expect(message().textContent).toMatch(/JPG, PNG or WebP/i));
+        expect(container.querySelector('img[alt="Your room"]')?.getAttribute("src")).toBe(PHOTO);
+    });
+
+    it("asks for another photo when the photo cannot be read", async () => {
+        class BrokenImage extends LoadedImage {
+            set src(_value: string) {
+                setTimeout(() => this.onerror?.(), 0);
+            }
+        }
+        vi.stubGlobal("Image", BrokenImage);
+        render();
+
+        await chooseFile(new File([new Uint8Array([1, 2, 3])], "room.jpg", { type: "image/jpeg" }));
+
+        await waitFor(() => expect(message().textContent).toMatch(/try another photo/i));
+        expect(container.querySelector('img[alt="Your room"]')).toBeNull();
+    });
+
+    it("says when the download did not work", async () => {
+        const network = stubNetwork();
+        render();
+        await uploadPhoto();
+        click(button("Generate design"));
+        await network.finish();
+        await waitFor(() => expect(button("Download")).toBeTruthy());
+
+        vi.stubGlobal("fetch", () => Promise.reject(new TypeError("Failed to fetch")));
+        click(button("Download"));
+
+        await waitFor(() => expect(message().textContent).toMatch(/download didn't work/i));
+    });
+
+    it("says the request timed out when the server gives up before answering", async () => {
+        stubGenerate(() => Promise.resolve(new Response("<html>An error occurred</html>", { status: 504 })));
+        render();
+        await uploadPhoto();
+        await generateAndWaitForMessage();
+
+        expect(message().textContent).toMatch(/took too long/i);
+        expect(message().textContent).toMatch(/check your connection and try again/i);
+    });
+
+    it("says no design was made when the answer has no image", async () => {
+        stubGenerate(json(200, { success: true, predictionId: "gen_1", outputUrls: [] }));
+        render();
+        await uploadPhoto();
+        await generateAndWaitForMessage();
+
+        expect(message().textContent).toMatch(/no design was made/i);
+        expect(container.querySelector('input[type="range"]')).toBeNull();
+    });
+
+    it("asks for another photo when the request is not accepted", async () => {
+        stubGenerate(json(400, { error: "Invalid input", issues: [] }));
+        render();
+        await uploadPhoto();
+        await generateAndWaitForMessage();
+
+        expect(message().textContent).toMatch(/try another photo/i);
+        expect(message().textContent).toMatch(/not charged/i);
+    });
+
+    it("asks to sign in again when the account cannot be found", async () => {
+        stubGenerate(json(404, { error: "User not found" }));
+        render();
+        await uploadPhoto();
+        await generateAndWaitForMessage();
+
+        expect(message().textContent).toMatch(/couldn't find your account/i);
+        expect(button("Sign in again")).toBeTruthy();
     });
 });

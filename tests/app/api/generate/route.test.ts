@@ -323,6 +323,63 @@ describe("Generate Route - Quality Feature", () => {
         expect.any(Object)
       );
     });
+
+    // The screen tells the user "your credits were refunded" on this answer,
+    // so it must also hold when the AI call throws (network, API error).
+    it("refunds the credits and says so when the AI call throws", async () => {
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
+      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue(TEST_USER);
+      vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
+      vi.mocked(openrouterLib.generateDesign).mockRejectedValue(new Error("OpenRouter API error: 502"));
+
+      const request = new Request("http://localhost:3000/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          base64Image: TEST_BASE64_IMAGE,
+          roomType: "living-room",
+          theme: "modern",
+          quality: "premium",
+        }),
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toBe(500);
+      expect(await response.json()).toMatchObject({ success: false });
+      expect(supabaseLib.updateUserCredits).toHaveBeenCalledWith(TEST_USER.id, TEST_USER.credits + 2);
+      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(
+        TEST_USER.id,
+        "refund",
+        2,
+        undefined,
+        expect.any(Object)
+      );
+    });
+
+    it("does not refund or claim a refund when it fails before charging", async () => {
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
+      vi.mocked(redisLib.checkRateLimit).mockRejectedValue(new Error("Redis down"));
+
+      const request = new Request("http://localhost:3000/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          base64Image: TEST_BASE64_IMAGE,
+          roomType: "living-room",
+          theme: "modern",
+        }),
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toBe(500);
+      expect(await response.json()).not.toHaveProperty("success");
+      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.updateUserCredits).not.toHaveBeenCalled();
+    });
   });
 
   describe("Validation", () => {

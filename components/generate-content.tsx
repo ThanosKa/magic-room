@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
@@ -11,21 +11,17 @@ import { Button } from "@/components/ui/button";
 import { PhotoPanel, type ToolState } from "@/components/generate/photo-panel";
 import { NoteField, QualityPicker, RoomTypePicker, StylePicker } from "@/components/generate/option-pickers";
 import { QUALITY_OPTIONS, THEMES } from "@/lib/constants";
-import { readDesignSelection } from "@/lib/design-selection";
+import { generateHref, readDesignSelection } from "@/lib/design-selection";
 import { MAX_PHOTO_FILE_SIZE, prepareRoomPhoto, type RoomPhoto } from "@/lib/room-photo";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { cn } from "@/lib/utils";
+import {
+    DOWNLOAD_FAILED_MESSAGE,
+    generateFailureMessage,
+    NETWORK_MESSAGE,
+    notEnoughCreditsMessage,
+    PHOTO_MESSAGES,
+    ToolMessageView, type ToolMessage } from "@/components/generate/tool-messages";
 import type { Quality, RoomType, Theme } from "@/types";
-
-/**
- * A message shown in the slot above the Generate button (`#generate-message`).
- * The slot is always on screen next to the main action, on desktop and phone.
- */
-export interface ToolMessage {
-    tone: "error" | "info";
-    text: string;
-    action?: { label: string; href: string };
-}
 
 export default function GenerateContent() {
     return (
@@ -37,7 +33,8 @@ export default function GenerateContent() {
 
 function GenerateTool() {
     const { user: clerkUser } = useUser();
-    const { credits, refreshUser } = useUserStore();
+    const { signOut } = useClerk();
+    const { user, credits, refreshUser } = useUserStore();
     const { activeGeneration, setActiveGeneration } = useGenerationStore();
     const reducedMotion = usePrefersReducedMotion();
 
@@ -60,7 +57,20 @@ function GenerateTool() {
     const state: ToolState = !photo ? "empty" : isGenerating ? "generating" : resultUrl ? "result" : "ready";
 
     const cost = QUALITY_OPTIONS[quality].credits;
+    // Only once the balance has loaded, so it never flashes "you have 0".
+    const shortOfCredits = user !== null && credits < cost;
     const canGenerate = photo !== null && !isGenerating && credits >= cost;
+
+    // "Sign in again" sends the user through sign-in and back to the tool
+    // with the room type and style chosen at the moment of the click.
+    const choicesRef = useRef({ theme, roomType });
+    useEffect(() => {
+        choicesRef.current = { theme, roomType };
+    }, [theme, roomType]);
+    const signInAgain = useCallback(
+        () => signOut({ redirectUrl: generateHref(choicesRef.current) }),
+        [signOut]
+    );
 
     // On a phone the button sits below the choices: bring the photo (wait
     // state, then result) back into view when it changes.
@@ -72,13 +82,18 @@ function GenerateTool() {
 
     const handleFile = useCallback(
         async (file: File) => {
-            if (file.size > MAX_PHOTO_FILE_SIZE) return;
+            if (file.size > MAX_PHOTO_FILE_SIZE) {
+                setMessage(PHOTO_MESSAGES.tooLarge);
+                return;
+            }
             try {
                 const prepared = await prepareRoomPhoto(file);
                 setActiveGeneration(null);
                 setPhoto(prepared);
                 setMessage(null);
-            } catch {}
+            } catch {
+                setMessage(PHOTO_MESSAGES.unreadable);
+            }
         },
         [setActiveGeneration]
     );
@@ -91,6 +106,8 @@ function GenerateTool() {
         requestAnimationFrame(showPhoto);
 
         const customPrompt = note.trim();
+        const failure = { cost, signInAgain };
+        let balanceRead = false;
         try {
             const response = await fetch("/api/generate", {
                 method: "POST",
@@ -103,24 +120,30 @@ function GenerateTool() {
                     ...(customPrompt ? { customPrompt } : {}),
                 }),
             });
+            // A host timeout page is not JSON: the status alone decides then.
+            const data = await response.json().catch(() => null);
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Failed to generate");
+            if (response.ok && data?.success && data.outputUrls?.length > 0) {
+                setActiveGeneration({ id: data.predictionId, status: "succeeded", outputUrls: data.outputUrls });
+            } else if (response.status === 402 && clerkUser?.id) {
+                // Re-read the balance first: once it is below the cost, the
+                // "Not enough credits" message shows it with the real number.
+                await refreshUser(clerkUser.id);
+                balanceRead = true;
+                if (useUserStore.getState().credits >= cost) {
+                    setMessage(generateFailureMessage(response.status, data, failure));
+                }
+            } else {
+                setMessage(generateFailureMessage(response.status, data, failure));
             }
-
-            const data = await response.json();
-            if (!(data.success && data.outputUrls?.length > 0)) {
-                throw new Error(data.error || "No images generated");
-            }
-
-            setActiveGeneration({ id: data.predictionId, status: "succeeded", outputUrls: data.outputUrls });
-            if (clerkUser?.id) refreshUser(clerkUser.id);
         } catch {
+            setMessage(NETWORK_MESSAGE);
         } finally {
             setGenerationStartedAt(null);
+            // The balance may have changed either way (charged, or refunded).
+            if (!balanceRead && clerkUser?.id) refreshUser(clerkUser.id);
         }
-    }, [photo, isGenerating, credits, cost, note, roomType, theme, quality, setActiveGeneration, clerkUser?.id, refreshUser, showPhoto]);
+    }, [photo, isGenerating, credits, cost, note, roomType, theme, quality, setActiveGeneration, clerkUser?.id, refreshUser, showPhoto, signInAgain]);
 
     const handleDownload = useCallback(async () => {
         if (!resultUrl) return;
@@ -134,7 +157,9 @@ function GenerateTool() {
             link.click();
             link.remove();
             URL.revokeObjectURL(blobUrl);
-        } catch {}
+        } catch {
+            setMessage(DOWNLOAD_FAILED_MESSAGE);
+        }
     }, [resultUrl, theme, roomType]);
 
     return (
@@ -165,6 +190,9 @@ function GenerateTool() {
                         fullscreen={fullscreen}
                         onFullscreenChange={setFullscreen}
                         onFile={handleFile}
+                        onReject={(reason) =>
+                            setMessage(reason === "too-many" ? PHOTO_MESSAGES.tooMany : PHOTO_MESSAGES.wrongType)
+                        }
                         onDownload={handleDownload}
                     />
                 </div>
@@ -182,23 +210,12 @@ function GenerateTool() {
                     </fieldset>
 
                     <div className="sticky bottom-0 z-30 -mx-5 border-t border-line bg-paper px-5 pb-[max(16px,env(safe-area-inset-bottom))] pt-4 sm:-mx-6 sm:px-6 lg:-mx-4 lg:mt-8 lg:px-4">
-                        <div id="generate-message" role="status" aria-live="polite" className="empty:hidden mb-3">
-                            {message && (
-                                <p
-                                    className={cn(
-                                        "rounded-lg border px-4 py-3 text-[14px] leading-snug",
-                                        message.tone === "error"
-                                            ? "border-destructive/30 bg-destructive/5 text-ink"
-                                            : "border-line bg-paper-2 text-ink"
-                                    )}
-                                >
-                                    {message.text}
-                                    {message.action && (
-                                        <a href={message.action.href} className="ml-2 font-medium underline underline-offset-4">
-                                            {message.action.label}
-                                        </a>
-                                    )}
-                                </p>
+                        <div id="generate-message" role="status" aria-live="polite" className="empty:hidden mb-3 space-y-2">
+                            {message && <ToolMessageView message={message} />}
+                            {shortOfCredits && !isGenerating && (
+                                <ToolMessageView
+                                    message={notEnoughCreditsMessage(quality === "standard" ? "Standard" : "Premium", cost, credits)}
+                                />
                             )}
                         </div>
                         <div className="flex items-center gap-4">
@@ -214,7 +231,13 @@ function GenerateTool() {
                                     "Add a photo of your room to start."
                                 )}
                             </p>
-                            <Button size="lg" onClick={handleGenerate} disabled={!canGenerate} className="min-w-[180px]">
+                            <Button
+                                size="lg"
+                                onClick={handleGenerate}
+                                disabled={!canGenerate}
+                                aria-describedby="generate-message"
+                                className="min-w-[180px]"
+                            >
                                 {isGenerating ? (
                                     <>
                                         <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />

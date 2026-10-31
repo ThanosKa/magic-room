@@ -23,6 +23,8 @@ interface PhotoPanelProps {
     fullscreen: boolean;
     onFullscreenChange: (open: boolean) => void;
     onFile: (file: File) => void;
+    /** A dropped or picked file the tool cannot take (not an image, or several). */
+    onReject: (reason: "wrong-type" | "too-many") => void;
     onDownload: () => void;
 }
 
@@ -45,13 +47,19 @@ export function PhotoPanel({
     fullscreen,
     onFullscreenChange,
     onFile,
+    onReject,
     onDownload,
 }: PhotoPanelProps) {
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
         onDrop: (files) => {
             if (files[0]) onFile(files[0]);
         },
-        accept: { "image/*": [".jpeg", ".jpg", ".png", ".webp"] },
+        onDropRejected: (rejections) => {
+            const tooMany = rejections.some((r) => r.errors.some((e) => e.code === "too-many-files"));
+            onReject(tooMany ? "too-many" : "wrong-type");
+        },
+        // Exactly the types the copy promises (an `image/*` key would let any image through).
+        accept: { "image/jpeg": [".jpeg", ".jpg"], "image/png": [".png"], "image/webp": [".webp"] },
         maxFiles: 1,
         noClick: true,
         noKeyboard: true,
