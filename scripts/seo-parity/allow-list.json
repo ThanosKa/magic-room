@@ -5,6 +5,11 @@
         "reason": "Spec: the homepage takes the new design's copy; its H1 must still contain \"AI interior design\"."
     },
     {
+        "path": "/",
+        "fields": ["description", "jsonLd"],
+        "reason": "Ticket 07: every homepage claim must match the tool. One run returns one redesign, not 4–8, so the meta description, the SoftwareApplication description and three FAQ answers (FAQ JSON-LD = visible FAQ) say so. Same entities and questions."
+    },
+    {
         "path": "/gallery",
         "fields": ["bodyText"],
         "reason": "Ticket 12: cards are drag sliders, so the two gallery lines say Drag instead of Hover (hero line and the Showing-N line)."
