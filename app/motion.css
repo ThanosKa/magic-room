@@ -14,7 +14,7 @@
   --animate-settle: settle 1.6s var(--ease-expo) both; /* image inside a wipe */
   --animate-fade: fade 300ms ease both;
   --animate-bar-run: bar-run var(--cycle, 3600ms) linear both; /* timer hairline */
-  --animate-menu-in: menu-in 250ms var(--ease-out) both; /* menu items, staggered */
+  --animate-lift-in: lift-in 250ms var(--ease-out) both; /* UI entrance: menu items, the wait card */
 
   @keyframes rise {
     from {
@@ -87,7 +87,7 @@
     }
   }
 
-  @keyframes menu-in {
+  @keyframes lift-in {
     from {
       opacity: 0;
       transform: translate3d(0, 16px, 0);
@@ -230,7 +230,7 @@
   .animate-word-in,
   .animate-settle,
   .animate-bar-run,
-  .animate-menu-in {
+  .animate-lift-in {
     animation: none !important;
   }
 

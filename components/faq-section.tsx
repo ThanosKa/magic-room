@@ -64,7 +64,7 @@ export function FAQSection({
                   className="relative size-3.5 flex-none transition-transform duration-350 ease-out group-open:rotate-45 motion-reduce:transition-none before:absolute before:left-0 before:top-[6.25px] before:h-[1.5px] before:w-3.5 before:bg-ink before:content-[''] after:absolute after:left-0 after:top-[6.25px] after:h-[1.5px] after:w-3.5 after:rotate-90 after:bg-ink after:content-['']"
                 />
               </summary>
-              <p className="mb-7 max-w-[58ch] pr-8 text-base leading-relaxed text-ink-2">
+              <p className="mb-7 max-w-[58ch] pr-8 text-base leading-relaxed text-ink-2 group-open:animate-fade">
                 {item.answer}
               </p>
             </details>

@@ -48,7 +48,7 @@ export function WaitState({ startedAt, styleName }: { startedAt: number; styleNa
     const progress = Math.min(0.95, elapsed / EXPECTED_SECONDS);
 
     return (
-        <div className="w-full max-w-sm rounded-xl bg-paper/95 p-5 shadow-float backdrop-blur-md sm:p-6">
+        <div className="w-full max-w-sm animate-lift-in rounded-xl bg-paper/95 p-5 shadow-float backdrop-blur-md sm:p-6">
             <div className="flex items-baseline justify-between gap-4">
                 <p className="font-serif text-[26px] leading-none tracking-[-0.02em] text-ink">Designing your room</p>
                 <span className="text-sm font-medium text-accent tabular-nums" aria-hidden="true">

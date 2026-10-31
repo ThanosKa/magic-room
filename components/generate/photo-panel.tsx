@@ -107,15 +107,27 @@ export function PhotoPanel({
                         </span>
                     </button>
                 ) : state === "result" && resultUrl ? (
-                    <div className="mx-auto" style={frameWidth(photo)}>
-                        <CompareSlider
-                            before={{ src: photo.dataUrl, alt: "Your room before the redesign" }}
-                            after={{ src: resultUrl, alt: `Your room redesigned in the ${styleName} style` }}
-                            aspectRatio={photo.width / photo.height}
+                    // The result wipes in from the right edge over the photo it
+                    // came from (the homepage dial's wipe; a fade under reduced motion).
+                    <div className="relative mx-auto overflow-hidden rounded-2xl bg-paper-2" style={frameWidth(photo)}>
+                        <Image
+                            src={photo.dataUrl}
+                            alt=""
+                            aria-hidden="true"
+                            fill
                             sizes="(min-width: 1024px) 720px, 100vw"
-                            label="Compare your photo and the redesign"
-                            className="rounded-2xl"
+                            className="object-cover"
                         />
+                        <div className="relative animate-wipe">
+                            <CompareSlider
+                                before={{ src: photo.dataUrl, alt: "Your room before the redesign" }}
+                                after={{ src: resultUrl, alt: `Your room redesigned in the ${styleName} style` }}
+                                aspectRatio={photo.width / photo.height}
+                                sizes="(min-width: 1024px) 720px, 100vw"
+                                label="Compare your photo and the redesign"
+                                className="rounded-2xl"
+                            />
+                        </div>
                     </div>
                 ) : (
                     <div className="relative mx-auto overflow-hidden rounded-2xl bg-paper-2" style={frameWidth(photo)}>

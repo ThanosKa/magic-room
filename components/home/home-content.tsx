@@ -163,7 +163,7 @@ export function HomeContent() {
               <li
                 key={step.title}
                 data-reveal
-                style={reveal(i * 110)}
+                style={reveal(i * 100)}
                 className="grid grid-cols-[56px_minmax(0,1fr)] gap-x-2 border-t border-line pb-5 pt-6 sm:block sm:pb-0 sm:pt-7"
               >
                 <span className="row-span-2 block font-serif text-[40px] leading-[0.9] tracking-[-0.03em] text-ink-3 sm:text-[64px]">
@@ -273,7 +273,7 @@ export function HomeContent() {
         <div className="container-page">
           <ul className="grid gap-10 lg:grid-cols-3 lg:gap-12">
             {FACTS.map((fact, i) => (
-              <li key={fact.value} data-reveal style={reveal(i * 130)} className="flex flex-col gap-5">
+              <li key={fact.value} data-reveal style={reveal(i * 100)} className="flex flex-col gap-5">
                 <span className="font-serif text-[clamp(72px,8.4vw,128px)] leading-[0.85] tracking-[-0.04em] text-ink tabular-nums">
                   {fact.value}
                 </span>
