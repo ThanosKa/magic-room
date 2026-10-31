@@ -9,14 +9,14 @@ import {
 import { checkRateLimit } from "@/lib/redis";
 import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
 import { logger } from "@/lib/logger";
-import { ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
+import { NOTE_MAX_LENGTH, ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
 
 const GenerateSchema = z.object({
   base64Image: z.string().min(1, "Image is required"),
   roomType: z.enum(ROOM_TYPE_IDS),
   theme: z.enum(THEME_IDS),
   quality: z.enum(["standard", "premium"]).default("standard"),
-  customPrompt: z.string().optional(),
+  customPrompt: z.string().max(NOTE_MAX_LENGTH).optional(),
 });
 
 export async function POST(request: Request): Promise<Response> {

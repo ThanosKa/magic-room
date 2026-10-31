@@ -37,6 +37,9 @@ export const THEMES: Record<Theme, string> = {
 export const ROOM_TYPE_IDS = Object.keys(ROOM_TYPES) as [RoomType, ...RoomType[]];
 export const THEME_IDS = Object.keys(THEMES) as [Theme, ...Theme[]];
 
+/** Longest optional note ("customPrompt") the tool and the generate API accept. */
+export const NOTE_MAX_LENGTH = 500;
+
 export const QUALITY_OPTIONS = {
   standard: {
     id: "standard" as const,
