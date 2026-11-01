@@ -270,7 +270,7 @@ export default function AlternativesHubPage() {
                                         Magic Room
                                     </span>,
                                     "Google Gemini multimodal — reads image and instruction together",
-                                    "One-time credits from €9.99 / 30 designs",
+                                    "One-time credits from €9.99 / 20 credits",
                                     "Never",
                                     "Homeowners redesigning in bursts; anyone who cares where their room photo goes",
                                 ],
@@ -440,7 +440,7 @@ export default function AlternativesHubPage() {
                                 },
                                 {
                                     q: "Is there a free RoomGPT alternative?",
-                                    a: "Every tool here has some free access. Magic Room gives 1 free credit on signup with no card, and one credit produces a full redesign, so you see real output on your own room before paying. The meaningful difference is the step up afterwards: Magic Room's is €9.99 once for 30 designs, where most competitors move you onto a recurring plan.",
+                                    a: "Every tool here has some free access. Magic Room gives 1 free credit on signup with no card, and one credit produces a full redesign, so you see real output on your own room before paying. The meaningful difference is the step up afterwards: Magic Room's is €9.99 once for 20 credits, where most competitors move you onto a recurring plan.",
                                 },
                                 {
                                     q: "Why do AI room redesigns not look like my actual room?",
@@ -452,7 +452,7 @@ export default function AlternativesHubPage() {
                                 },
                                 {
                                     q: "Which AI interior design tool is cheapest?",
-                                    a: "Cheapest depends entirely on how often you use it. For continuous professional use, a subscription with a large monthly allocation wins. For occasional use — which is most homeowners — one-time credits win, because a subscription charges you for months in which you redesign nothing. At €9.99 for 30 designs with no expiry, Magic Room works out at about €0.33 per design regardless of how long you take to use them.",
+                                    a: "Cheapest depends entirely on how often you use it. For continuous professional use, a subscription with a large monthly allocation wins. For occasional use — which is most homeowners — one-time credits win, because a subscription charges you for months in which you redesign nothing. At €9.99 for 20 credits with no expiry, Magic Room works out at about €0.50 per Quick design regardless of how long you take to use them.",
                                 },
                                 {
                                     q: "Can I use AI interior design outputs commercially?",

@@ -18,6 +18,8 @@ interface PhotoPanelProps {
     photo: RoomPhoto | null;
     resultUrl: string | null;
     styleName: string;
+    /** The chosen tier's usual wait, in seconds and in words. */
+    wait: { seconds: number; text: string };
     generationStartedAt: number | null;
     fullscreen: boolean;
     onFullscreenChange: (open: boolean) => void;
@@ -48,6 +50,7 @@ export function PhotoPanel({
     photo,
     resultUrl,
     styleName,
+    wait,
     generationStartedAt,
     fullscreen,
     onFullscreenChange,
@@ -159,7 +162,12 @@ export function PhotoPanel({
                         {/* On the photo on desktop; under it on a phone, where the photo is small. */}
                         {state === "generating" && generationStartedAt !== null && (
                             <div className="flex w-full justify-center lg:absolute lg:inset-0 lg:items-center lg:p-6">
-                                <WaitState startedAt={generationStartedAt} styleName={styleName} />
+                                <WaitState
+                                    startedAt={generationStartedAt}
+                                    styleName={styleName}
+                                    expectedSeconds={wait.seconds}
+                                    expectedText={wait.text}
+                                />
                             </div>
                         )}
                     </div>

@@ -242,7 +242,7 @@ export function VsPageContent({
                             {
                                 term: "How you are billed",
                                 magicRoom:
-                                    "One-time credit packs from €9.99 for 30 designs. No subscription.",
+                                    "One-time credit packs from €9.99 for 20 credits. No subscription.",
                                 competitor: competitor.pricingModel.billing,
                             },
                             {

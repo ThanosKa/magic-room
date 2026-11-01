@@ -47,7 +47,8 @@ export default function PrivacyPage() {
           <li>To process your payments and manage credits</li>
           <li>To authenticate your account via Clerk</li>
           <li>
-            To generate design variations using Google Gemini AI via OpenRouter
+            To generate design variations using Google Gemini or OpenAI image
+            models via OpenRouter
           </li>
           <li>To improve our service quality and user experience</li>
           <li>To comply with legal obligations</li>
@@ -69,7 +70,8 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>Processing</strong>: Images are sent directly to
-            OpenRouter/Gemini AI for processing (in-memory only)
+            OpenRouter (Google Gemini or OpenAI, depending on the quality you
+            choose) for processing (in-memory only)
           </li>
           <li>
             <strong>Results</strong>: Generated designs are returned as base64
@@ -116,10 +118,11 @@ export default function PrivacyPage() {
           </a>
         </p>
 
-        <h3>4.3 OpenRouter & Google (AI Processing)</h3>
+        <h3>4.3 OpenRouter, Google & OpenAI (AI Processing)</h3>
         <p>
           Your room images are sent to OpenRouter, which routes them to
-          Google&apos;s Gemini AI for processing. Images are processed in-memory
+          Google&apos;s Gemini models (Quick and Pro) or OpenAI&apos;s image model
+          (Ultra) for processing. Images are processed in-memory
           and not stored. See{" "}
           <a
             href="https://openrouter.ai/privacy"

@@ -122,14 +122,18 @@ export function StylePicker({ value, onChange }: { value: Theme; onChange: (valu
     );
 }
 
-export const QUALITY_NAMES: Record<Quality, string> = { standard: "Standard", premium: "Premium" };
+export const QUALITY_NAMES: Record<Quality, string> = {
+    standard: QUALITY_OPTIONS.standard.name,
+    premium: QUALITY_OPTIONS.premium.name,
+    ultra: QUALITY_OPTIONS.ultra.name,
+};
 
-/** Standard / Premium as one segmented control (a native radio group), each with its cost. */
+/** Quick / Pro / Ultra as one segmented control (a native radio group), each with its cost. */
 export function QualitySwitch({ value, onChange }: { value: Quality; onChange: (value: Quality) => void }) {
     return (
         <fieldset className="min-w-0">
             <legend className={cn(groupTitleClass, "mb-3")}>Quality</legend>
-            <div className="grid grid-cols-2 rounded-full bg-ink/5 p-1">
+            <div className="grid grid-cols-3 rounded-full bg-ink/5 p-1">
                 {Object.values(QUALITY_OPTIONS).map((q) => {
                     const selected = value === q.id;
                     return (
@@ -137,7 +141,9 @@ export function QualitySwitch({ value, onChange }: { value: Quality; onChange: (
                             key={q.id}
                             title={q.description}
                             className={cn(
-                                "inline-flex h-9 cursor-pointer select-none items-center justify-center gap-1.5 rounded-full px-3 text-[14px] tracking-[-0.01em] transition-[background-color,color,box-shadow] duration-160 ease-out motion-reduce:transition-none",
+                                // `relative` keeps the hidden radio inside the label: without it the radio
+                                // sits outside the panel's scroll area and focusing it scrolls the page.
+                                "relative inline-flex h-11 cursor-pointer select-none flex-col items-center justify-center rounded-full px-2 text-[14px] leading-tight tracking-[-0.01em] transition-[background-color,color,box-shadow] duration-160 ease-out motion-reduce:transition-none",
                                 "has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60",
                                 focusRingClass,
                                 selected ? "bg-paper text-ink shadow-float" : "text-ink-2 hover:text-ink"
@@ -152,7 +158,7 @@ export function QualitySwitch({ value, onChange }: { value: Quality; onChange: (
                                 className="sr-only"
                             />
                             <span className="font-medium">{QUALITY_NAMES[q.id]}</span>
-                            <span className="text-[13px] text-ink-3 tabular-nums">{formatCredits(q.credits)}</span>
+                            <span className="text-[12px] text-ink-3 tabular-nums">{formatCredits(q.credits)}</span>
                         </label>
                     );
                 })}

@@ -8,7 +8,23 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CheckoutReturnNotice } from "@/components/checkout-return-notice";
 import { useHydratedUser } from "@/hooks/use-hydrated-user";
-import { cn } from "@/lib/utils";
+import { CREDIT_PACKAGES as PACKS, QUALITY_OPTIONS } from "@/lib/constants";
+import { cn, formatCredits } from "@/lib/utils";
+
+/** A pack's size in credits and its price per credit, from the same table checkout uses. */
+function pack(id: "starter" | "growth" | "premium") {
+  const pkg = PACKS.find((p) => p.id === id)!;
+  return { credits: pkg.credits, perCredit: euros(pkg.priceCents / pkg.credits) };
+}
+
+function euros(cents: number): string {
+  return `€${(Math.round(cents) / 100).toFixed(2)}`;
+}
+
+const STARTER = pack("starter");
+const GROWTH = pack("growth");
+const PREMIUM = pack("premium");
+const TIERS = Object.values(QUALITY_OPTIONS);
 
 const CREDIT_PACKAGES = [
   {
@@ -20,8 +36,7 @@ const CREDIT_PACKAGES = [
     priceId: null,
     description: "Perfect for trying out",
     features: [
-      "1 free design included",
-      "High-quality results",
+      "1 free Quick design included",
       "All design themes",
       "No credit card required",
     ],
@@ -31,14 +46,14 @@ const CREDIT_PACKAGES = [
   {
     id: "starter",
     name: "Starter",
-    credits: 30,
+    credits: STARTER.credits,
     price: 9.99,
     priceDisplay: "€9.99",
     description: "Best for occasional use",
     features: [
-      "30 design generations",
+      `${STARTER.credits} credits`,
+      `Up to ${STARTER.credits} designs`,
       "Credits never expire",
-      "Full resolution images",
       "All design themes",
     ],
     popular: false,
@@ -46,40 +61,40 @@ const CREDIT_PACKAGES = [
   {
     id: "growth",
     name: "Growth",
-    credits: 90,
+    credits: GROWTH.credits,
     price: 19.99,
     priceDisplay: "€19.99",
     description: "Best for regular users",
     features: [
-      "90 design generations",
+      `${GROWTH.credits} credits`,
+      `Up to ${GROWTH.credits} designs`,
       "Credits never expire",
       "Priority support",
-      "All design themes",
     ],
     popular: true,
   },
   {
     id: "premium",
     name: "Premium",
-    credits: 200,
+    credits: PREMIUM.credits,
     price: 29.99,
     priceDisplay: "€29.99",
     description: "Best for professionals",
     features: [
-      "200 design generations",
+      `${PREMIUM.credits} credits`,
+      `Up to ${PREMIUM.credits} designs`,
       "Credits never expire",
       "24/7 priority support",
-      "Early access to new features",
     ],
     popular: false,
   },
 ];
 
 const COST_ROWS = [
-  { pack: "Free", price: "€0", designs: "1", perDesign: "€0" },
-  { pack: "Starter", price: "€9.99 one-time", designs: "30", perDesign: "€0.33" },
-  { pack: "Growth", price: "€19.99 one-time", designs: "90", perDesign: "€0.22" },
-  { pack: "Premium", price: "€29.99 one-time", designs: "200", perDesign: "€0.15" },
+  { pack: "Free", price: "€0", credits: "1", perCredit: "€0" },
+  { pack: "Starter", price: "€9.99 one-time", credits: String(STARTER.credits), perCredit: STARTER.perCredit },
+  { pack: "Growth", price: "€19.99 one-time", credits: String(GROWTH.credits), perCredit: GROWTH.perCredit },
+  { pack: "Premium", price: "€29.99 one-time", credits: String(PREMIUM.credits), perCredit: PREMIUM.perCredit },
 ];
 
 const FAQS = [
@@ -89,7 +104,7 @@ const FAQS = [
   },
   {
     q: "Is there a free version of Magic Room?",
-    a: "Yes. Every new account gets 1 free credit on signup with no payment card required. That credit produces one full generation: a redesigned version of your room. Free-credit output is for personal use only and carries no commercial rights.",
+    a: "Yes. Every new account gets 1 free credit on signup with no payment card required. That credit produces one full Quick design: a redesigned version of your room. Free-credit output is for personal use only and carries no commercial rights.",
   },
   {
     q: "Is there a subscription?",
@@ -155,10 +170,11 @@ export default function PricingContent() {
             Magic Room Pricing
           </h1>
           <p className="max-w-[38rem] text-[16px] leading-[1.6] text-ink-2 sm:text-[17px] lg:col-span-6 lg:pb-2">
-            Magic Room costs €9.99 for 30 designs, €19.99 for 90 designs, or €29.99 for 200
-            designs — all one-time payments, never a subscription. That works out to €0.33,
-            €0.22, and €0.15 per design. Credits never expire, and every new account gets 1
-            free design with no card required.
+            Magic Room costs €9.99 for {STARTER.credits} credits, €19.99 for {GROWTH.credits} credits, or
+            €29.99 for {PREMIUM.credits} credits — all one-time payments, never a subscription. That
+            works out to {STARTER.perCredit}, {GROWTH.perCredit}, and {PREMIUM.perCredit} per credit. A Quick
+            design uses 1 credit, Pro 2 and Ultra 3. Credits never expire, and every new account
+            gets 1 free design with no card required.
           </p>
         </div>
 
@@ -265,10 +281,22 @@ export default function PricingContent() {
           <div className="lg:col-span-5">
             <h2 className={H2}>What does one credit get you?</h2>
             <p className="mt-5 max-w-[34rem] text-[16px] leading-[1.6] text-ink-2">
-              One credit is one generation session, not one image. A single Standard-quality
-              credit returns one redesign of your room in 30–60 seconds, so €0.33
-              buys a finished redesign you can compare with your original photo.
+              Each design returns one redesign of your room you can compare with your original
+              photo. What it costs depends on the quality you pick:
             </p>
+            <ul className="mt-5 max-w-[34rem] divide-y divide-line border-y border-line">
+              {TIERS.map((tier) => (
+                <li key={tier.id} className="flex items-baseline justify-between gap-4 py-3.5">
+                  <span className="shrink-0 whitespace-nowrap">
+                    <span className="font-medium text-ink">{tier.name}</span>{" "}
+                    <span className="text-ink-2">{formatCredits(tier.credits)}</span>
+                  </span>
+                  <span className="text-right text-[14px] text-ink-3">
+                    {tier.description}, {tier.waitText}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="overflow-x-auto rounded-xl border border-line lg:col-span-7 lg:self-end">
             <table className="w-full text-left text-[14px] sm:text-[14.5px]">
@@ -276,8 +304,8 @@ export default function PricingContent() {
                 <tr className="border-b border-line bg-paper-2 text-[11px] uppercase tracking-[0.14em] text-ink-3">
                   <th className="px-3 py-3.5 align-bottom font-medium sm:px-5">Pack</th>
                   <th className="px-3 py-3.5 align-bottom font-medium sm:px-5">Price</th>
-                  <th className="px-3 py-3.5 align-bottom font-medium sm:px-5">Designs</th>
-                  <th className="px-3 py-3.5 align-bottom font-medium sm:px-5">Cost per design</th>
+                  <th className="px-3 py-3.5 align-bottom font-medium sm:px-5">Credits</th>
+                  <th className="px-3 py-3.5 align-bottom font-medium sm:px-5">Cost per credit</th>
                 </tr>
               </thead>
               <tbody className="tabular-nums">
@@ -285,9 +313,9 @@ export default function PricingContent() {
                   <tr key={row.pack} className="border-b border-line last:border-b-0">
                     <td className="px-3 py-4 font-medium sm:px-5">{row.pack}</td>
                     <td className="px-3 py-4 text-ink-2 sm:px-5">{row.price}</td>
-                    <td className="px-3 py-4 text-ink-2 sm:px-5">{row.designs}</td>
+                    <td className="px-3 py-4 text-ink-2 sm:px-5">{row.credits}</td>
                     <td className="px-3 py-4 font-serif text-[22px] leading-none sm:px-5">
-                      {row.perDesign}
+                      {row.perCredit}
                     </td>
                   </tr>
                 ))}
@@ -308,7 +336,7 @@ export default function PricingContent() {
               one-time credits. RoomGPT, Interior AI, Reimagine Home, and DecorAI all require a
               subscription for full access, and Reimagine Home resets unused credits every month.
               Traditional virtual staging services charge €75–150 per room with a 24–72 hour
-              turnaround, against €0.15–€0.33 and under a minute here.
+              turnaround, against {PREMIUM.perCredit}–{STARTER.perCredit} for a Quick design in under a minute here.
             </p>
             <p className="text-sm leading-[1.6] text-cream-2 md:col-span-4 md:col-start-9 md:self-end">
               Competitor plans change often — check each vendor&apos;s own pricing page for their

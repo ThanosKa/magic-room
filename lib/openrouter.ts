@@ -1,8 +1,6 @@
 import { logger } from "@/lib/logger";
-import type { RoomType, Theme } from "@/types";
-
-export const OPENROUTER_MODEL = "google/gemini-3.1-flash-image";
-export const OPENROUTER_MODEL_PREMIUM = "google/gemini-3-pro-image";
+import { QUALITY_OPTIONS } from "@/lib/constants";
+import type { Quality, RoomType, Theme } from "@/types";
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 export const POSITIVE_PROMPT = `beautiful interior design, professional photography, well-lit, 
@@ -37,7 +35,7 @@ interface OpenRouterResponse {
 export async function generateDesign(
     base64Image: string,
     prompt: string,
-    quality: "standard" | "premium" = "standard"
+    quality: Quality = "standard"
 ): Promise<GenerationResult> {
     const apiKey = process.env.OPENROUTER_API_KEY;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -47,7 +45,7 @@ export async function generateDesign(
         throw new Error("Missing OpenRouter API key");
     }
 
-    const selectedModel = quality === "premium" ? OPENROUTER_MODEL_PREMIUM : OPENROUTER_MODEL;
+    const selectedModel = QUALITY_OPTIONS[quality].model;
 
     logger.info(
         {
@@ -196,7 +194,7 @@ export async function generateDesign(
 export function buildDesignPrompt(
     roomType: RoomType,
     theme: Theme,
-    quality: "standard" | "premium" = "standard",
+    quality: Quality = "standard",
     customPrompt?: string
 ): string {
     void quality; // Parameter used for type safety but not needed in prompt construction

@@ -289,7 +289,7 @@ describe("Generate tool", () => {
         await uploadPhoto();
 
         const toggle = sheetToggle();
-        expect(toggle.textContent).toContain("Bedroom · Japandi · Standard");
+        expect(toggle.textContent).toContain("Bedroom · Japandi · Quick");
         expect(toggle.getAttribute("aria-expanded")).toBe("false");
         expect(panel().dataset.sheet).toBe("collapsed");
         // Collapsed, the summary and Generate stay outside the folding part.
@@ -352,28 +352,42 @@ describe("Generate tool", () => {
         expect(checkedLabel("Style")).toContain("Modern");
     });
 
-    it("shows the credit cost next to each quality and on the Generate button", () => {
+    it("offers Quick, Pro and Ultra, with each one's credit cost on it and on the Generate button", () => {
         render();
 
-        expect(option("Quality", "Standard").closest("label")?.textContent).toContain("1 credit");
-        expect(option("Quality", "Premium").closest("label")?.textContent).toContain("2 credits");
-        expect(option("Quality", "Standard").checked).toBe(true);
+        expect(option("Quality", "Quick").closest("label")?.textContent).toContain("1 credit");
+        expect(option("Quality", "Pro").closest("label")?.textContent).toContain("2 credits");
+        expect(option("Quality", "Ultra").closest("label")?.textContent).toContain("3 credits");
+        expect(option("Quality", "Quick").checked).toBe(true);
         expect(generateButton().textContent).toContain("Generate");
         expect(generateButton().textContent).toContain("1 credit");
 
-        click(option("Quality", "Premium"));
+        click(option("Quality", "Pro"));
         expect(generateButton().textContent).toContain("2 credits");
+        click(option("Quality", "Ultra"));
+        expect(generateButton().textContent).toContain("3 credits");
+    });
+
+    it("sends the chosen quality and tells an Ultra wait it takes about 2 minutes", async () => {
+        const network = stubNetwork();
+        render();
+        await uploadPhoto();
+        click(option("Quality", "Ultra"));
+        click(generateButton());
+
+        expect(network.requests.find((r) => r.url === "/api/generate")?.body?.quality).toBe("ultra");
+        expect(container.textContent).toContain("about 2 minutes");
     });
 
     it("sums up the chosen room, style and quality in the panel", () => {
         search = "style=japandi&room=bedroom";
         render();
 
-        expect(panel().textContent).toContain("Bedroom · Japandi · Standard");
+        expect(panel().textContent).toContain("Bedroom · Japandi · Quick");
         click(option("Style", "Coastal"));
         chooseRoom("Kitchen");
-        click(option("Quality", "Premium"));
-        expect(panel().textContent).toContain("Kitchen · Coastal · Premium");
+        click(option("Quality", "Pro"));
+        expect(panel().textContent).toContain("Kitchen · Coastal · Pro");
     });
 
     it("opens the note in the panel, with a 500 character limit and a counter, keeping Generate in place", () => {
@@ -430,7 +444,7 @@ describe("Generate tool", () => {
 
         chooseRoom("Bedroom");
         click(option("Style", "Japandi"));
-        click(option("Quality", "Premium"));
+        click(option("Quality", "Pro"));
         type(openNote(), "  green sofa, more plants  ");
         click(generateButton());
 
@@ -467,7 +481,7 @@ describe("Generate tool", () => {
         expect(container.textContent).toContain("Sending your photo");
         expect(option("Style", "Coastal").matches(":disabled")).toBe(true);
         expect(roomSelect().matches(":disabled")).toBe(true);
-        expect(option("Quality", "Premium").matches(":disabled")).toBe(true);
+        expect(option("Quality", "Pro").matches(":disabled")).toBe(true);
         expect(container.querySelector("textarea")!.matches(":disabled")).toBe(true);
         expect(button("Done").matches(":disabled")).toBe(true);
         expect(generateButton().textContent).toContain("Generating…");
@@ -534,7 +548,7 @@ describe("Generate tool when something goes wrong", () => {
         stubGenerate(json(500, { error: "Failed to generate images", success: false }));
         render();
         await uploadPhoto();
-        click(option("Quality", "Premium"));
+        click(option("Quality", "Pro"));
         await generateAndWaitForMessage();
 
         expect(message().textContent).toMatch(/could not be made/i);
@@ -595,17 +609,17 @@ describe("Generate tool when something goes wrong", () => {
         await uploadPhoto();
         expect(message().textContent).toBe("");
 
-        click(option("Quality", "Premium"));
+        click(option("Quality", "Pro"));
 
         expect(message().textContent).toMatch(/not enough credits/i);
-        expect(message().textContent).toMatch(/premium uses 2 credits and you have 1/i);
+        expect(message().textContent).toMatch(/pro uses 2 credits and you have 1/i);
         const buy = Array.from(message().querySelectorAll("a")).find((a) => a.textContent === "Buy credits");
         expect(buy?.getAttribute("href")).toBe("/pricing");
         click(generateButton());
         expect(network.requests).not.toContain("/api/generate");
 
-        // Standard fits the balance again.
-        click(option("Quality", "Standard"));
+        // Quick fits the balance again.
+        click(option("Quality", "Quick"));
         expect(message().textContent).toBe("");
     });
 
@@ -617,7 +631,7 @@ describe("Generate tool when something goes wrong", () => {
         await uploadPhoto();
         await generateAndWaitForMessage();
 
-        await waitFor(() => expect(message().textContent).toMatch(/standard uses 1 credit and you have 0/i));
+        await waitFor(() => expect(message().textContent).toMatch(/quick uses 1 credit and you have 0/i));
         expect(message().textContent).not.toMatch(/went wrong/i);
         const buy = Array.from(message().querySelectorAll("a")).filter((a) => a.textContent === "Buy credits");
         expect(buy).toHaveLength(1);

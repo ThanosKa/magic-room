@@ -391,7 +391,7 @@ describe("Generate Route - Quality Feature", () => {
           base64Image: TEST_BASE64_IMAGE,
           roomType: "living-room",
           theme: "modern",
-          quality: "ultra",
+          quality: "deluxe",
         }),
       });
 
@@ -476,5 +476,44 @@ describe("Generate Route - Quality Feature", () => {
       expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
     });
   });
-});
 
+  describe("Ultra Quality (3 credits)", () => {
+    const ultraRequest = () =>
+      new Request("http://localhost:3000/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          base64Image: TEST_BASE64_IMAGE,
+          roomType: "living-room",
+          theme: "modern",
+          quality: "ultra",
+        }),
+      });
+
+    it("charges 3 credits and asks for an ultra design", async () => {
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
+      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
+      vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
+        success: true,
+        images: ["data:image/png;base64,result"],
+      });
+
+      const response = await POST(ultraRequest());
+
+      expect(response.status).toBe(200);
+      expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 3);
+      expect(openrouterLib.generateDesign).toHaveBeenCalledWith(TEST_BASE64_IMAGE, "test prompt", "ultra");
+    });
+
+    it("refuses an ultra design with only 2 credits", async () => {
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue({ ...TEST_USER, credits: 2 });
+
+      const response = await POST(ultraRequest());
+
+      expect(response.status).toBe(402);
+      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+    });
+  });
+});

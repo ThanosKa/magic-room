@@ -11,7 +11,7 @@ export const HOME_FAQ: HomeFaqItem[] = [
   {
     question: "What is Magic Room?",
     answer:
-      "Magic Room is an AI interior design tool that transforms any room from a single photo. Upload a picture of your room, pick a design style, and the AI generates a redesigned version of that room in 30–60 seconds. Magic Room uses Google Gemini multimodal AI and never stores your photos — images are processed in-memory and deleted immediately. Pricing starts at €9.99 for 30 credits, with no subscription and commercial rights included.",
+      "Magic Room is an AI interior design tool that transforms any room from a single photo. Upload a picture of your room, pick a design style, and the AI generates a redesigned version of that room in 30–60 seconds. Magic Room uses Google Gemini multimodal AI and never stores your photos — images are processed in-memory and deleted immediately. Pricing starts at €9.99 for 20 credits, with no subscription and commercial rights included.",
   },
   {
     question: "How does Magic Room work?",
@@ -21,7 +21,7 @@ export const HOME_FAQ: HomeFaqItem[] = [
   {
     question: "Is it free to use?",
     answer:
-      "Yes — every new account receives 1 free credit on signup so you can try the AI before purchasing. Additional credits start at €9.99 for 30 credits (roughly €0.33 per design). Credits never expire, so you can use them at your own pace with no subscription required.",
+      "Yes — every new account receives 1 free credit on signup so you can try the AI before purchasing. Additional credits start at €9.99 for 20 credits (roughly €0.50 per Quick design). Credits never expire, so you can use them at your own pace with no subscription required.",
   },
   {
     question: "What happens to my photos?",
@@ -41,12 +41,12 @@ export const HOME_FAQ: HomeFaqItem[] = [
   {
     question: "What AI model does Magic Room use?",
     answer:
-      "Magic Room uses Google Gemini multimodal AI (google/gemini-3.1-flash-image) accessed via the OpenRouter API. Gemini processes both your room image and your text prompt simultaneously, allowing it to understand spatial context, maintain the room's structure, and apply design styles accurately without distorting walls, windows, or furniture placement.",
+      "Magic Room uses Google Gemini multimodal AI for Quick and Pro designs and OpenAI's GPT image model for Ultra, accessed via the OpenRouter API. The model processes both your room image and your text prompt simultaneously, allowing it to understand spatial context, maintain the room's structure, and apply design styles accurately without distorting walls, windows, or furniture placement.",
   },
   {
     question: "How is Magic Room different from RoomGPT?",
     answer:
-      "Magic Room is pay-per-use (from €9.99 for 30 credits) with no monthly subscription, while RoomGPT charges a recurring fee. Crucially, Magic Room never stores your photos — images are processed in-memory and deleted immediately, making it the privacy-first alternative. All 14 design themes are available on every plan with no upsells.",
+      "Magic Room is pay-per-use (from €9.99 for 20 credits) with no monthly subscription, while RoomGPT charges a recurring fee. Crucially, Magic Room never stores your photos — images are processed in-memory and deleted immediately, making it the privacy-first alternative. All 14 design themes are available on every plan with no upsells.",
   },
   {
     question: "Can I use Magic Room for real estate virtual staging?",

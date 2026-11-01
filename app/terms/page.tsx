@@ -80,7 +80,7 @@ export default function TermsPage() {
         <h3>4.1 Credit System</h3>
         <p>
           Our Service operates on a credit-based system. Each design generation
-          costs 1 credit. Credits are purchased separately and do not expire.
+          costs 1 credit (Quick), 2 credits (Pro) or 3 credits (Ultra). Credits are purchased separately and do not expire.
           Unused credits remain in your account indefinitely.
         </p>
 

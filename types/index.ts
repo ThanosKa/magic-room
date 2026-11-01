@@ -30,7 +30,7 @@ export type Theme =
   | "mediterranean"
   | "transitional";
 
-export type Quality = "standard" | "premium";
+export type Quality = "standard" | "premium" | "ultra";
 
 export interface IDesignOptions {
   roomType: RoomType;

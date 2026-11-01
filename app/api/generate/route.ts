@@ -10,13 +10,16 @@ import {
 import { checkRateLimit } from "@/lib/redis";
 import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
 import { logger } from "@/lib/logger";
-import { NOTE_MAX_LENGTH, ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
+import { NOTE_MAX_LENGTH, QUALITY_IDS, QUALITY_OPTIONS, ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
+
+// Ultra (GPT-5.4 Image 2) takes about 2 minutes; give a design up to 5 before the platform cuts it off.
+export const maxDuration = 300;
 
 const GenerateSchema = z.object({
   base64Image: z.string().min(1, "Image is required"),
   roomType: z.enum(ROOM_TYPE_IDS),
   theme: z.enum(THEME_IDS),
-  quality: z.enum(["standard", "premium"]).default("standard"),
+  quality: z.enum(QUALITY_IDS).default("standard"),
   customPrompt: z.string().max(NOTE_MAX_LENGTH).optional(),
 });
 
@@ -71,7 +74,7 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     const { base64Image, roomType, theme, quality, customPrompt } = parsed.data;
-    const creditCost = quality === "premium" ? 2 : 1;
+    const creditCost = QUALITY_OPTIONS[quality].credits;
     logger.info(
       { roomType, theme, quality, creditCost, hasCustomPrompt: !!customPrompt },
       "[Generate] Request validated"

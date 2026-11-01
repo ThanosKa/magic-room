@@ -124,7 +124,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is there a free RoomGPT alternative?",
                 answer:
-                    "Magic Room gives every new account 1 free credit with no card required, so you can generate a full redesign before paying anything. After that, credits start at €9.99 for 30 designs (about €0.33 each) with no monthly commitment — a lower entry cost than most subscription-based RoomGPT alternatives.",
+                    "Magic Room gives every new account 1 free credit with no card required, so you can generate a full redesign before paying anything. After that, credits start at €9.99 for 20 credits (about €0.50 per Quick design) with no monthly commitment — a lower entry cost than most subscription-based RoomGPT alternatives.",
             },
         ],
         keywords: [
@@ -270,7 +270,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "How does Magic Room pricing compare to Reimagine Home?",
                 answer:
-                    "Reimagine Home uses a monthly subscription where unused credits typically reset at the end of each billing period. Magic Room sells one-time credit packages from €9.99 for 30 designs (about €0.33 each) that never expire, so occasional users do not pay for months they do not use. Both include a free way to try the tool before paying.",
+                    "Reimagine Home uses a monthly subscription where unused credits typically reset at the end of each billing period. Magic Room sells one-time credit packages from €9.99 for 20 credits (about €0.50 per Quick design) that never expire, so occasional users do not pay for months they do not use. Both include a free way to try the tool before paying.",
             },
             {
                 question: "Is Magic Room a free Reimagine Home alternative?",

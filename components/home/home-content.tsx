@@ -43,8 +43,8 @@ const FACTS = [
     label: "photos stored. Your image is processed in memory and deleted as soon as your result comes back.",
   },
   {
-    value: "€0.33",
-    label: "per standard design on the starter pack. No subscription, and credits never expire.",
+    value: "€0.50",
+    label: "per Quick design on the starter pack. No subscription, and credits never expire.",
   },
   {
     value: "60s",

@@ -66,7 +66,7 @@ export function AlternativePageContent({
                         Magic Room is the closest {competitor.name} alternative for anyone who wants the
                         same upload-a-photo workflow without the trade-offs. It runs Google Gemini
                         multimodal AI so your room&apos;s actual layout survives the redesign, never stores
-                        your uploaded photo, and costs €9.99 one-time for 30 designs instead of a
+                        your uploaded photo, and costs €9.99 one-time for 20 credits instead of a
                         subscription.
                     </p>
                     <p className={`${BODY_CLASS} mt-5`}>
@@ -190,7 +190,7 @@ export function AlternativePageContent({
                         {
                             label: "How you are billed",
                             magicRoom:
-                                "One-time credit packages: €9.99 for 30 designs, €19.99 and €29.99 for larger packs. No subscription exists to cancel.",
+                                "One-time credit packages: €9.99 for 20 credits, €19.99 and €29.99 for larger packs. No subscription exists to cancel.",
                             competitor: competitor.pricingModel.billing,
                         },
                         {
@@ -218,8 +218,8 @@ export function AlternativePageContent({
                             competitor: competitor.pricingModel.ifYouStopPaying,
                         },
                         {
-                            label: "Cost of 30 designs",
-                            magicRoom: "€9.99 total, about €0.33 per design, paid once.",
+                            label: "Cost of 20 designs",
+                            magicRoom: "€9.99 total, about €0.50 per Quick design, paid once.",
                             competitor:
                                 "One or more billing periods at the plan rate, depending on the monthly allocation. Multiply the monthly price by the number of months needed to accumulate 30 generations.",
                         },

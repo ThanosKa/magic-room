@@ -1068,7 +1068,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "How much does AI home staging cost compared to traditional staging?",
                 answer:
-                    "Traditional staging for a mid-size property typically costs £1,500 to £5,000 including furniture rental for the marketing period. AI staging with Magic Room costs EUR 9.99 for 30 credits, with each room redesign requiring one credit. A complete property of five rooms can be AI-staged for under EUR 1.",
+                    "Traditional staging for a mid-size property typically costs £1,500 to £5,000 including furniture rental for the marketing period. AI staging with Magic Room costs EUR 9.99 for 20 credits, with each Quick room redesign requiring one credit. A complete property of five rooms can be AI-staged for under EUR 3.",
             },
             {
                 question: "Can AI staging replace traditional staging entirely?",

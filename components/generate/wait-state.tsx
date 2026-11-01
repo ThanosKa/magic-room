@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 
 /**
- * Shown over the user's photo while the redesign is being made (30 to 60 s).
- * Status lines appear on a schedule measured from the start time, so the
- * screen is right again as soon as a background tab comes back to the front.
+ * Shown over the user's photo while the redesign is being made (30 to 60 s,
+ * about 2 minutes on Ultra). Status lines appear on a schedule measured from
+ * the start time and stretched to the tier's usual wait, so the screen is right
+ * again as soon as a background tab comes back to the front.
  */
 
-const EXPECTED_SECONDS = 60;
+// The step times below are written for a one-minute wait.
+const BASE_SECONDS = 60;
 
 function waitSteps(styleName: string) {
     return [
@@ -40,12 +42,25 @@ function clock(seconds: number): string {
     return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
-export function WaitState({ startedAt, styleName }: { startedAt: number; styleName: string }) {
+export function WaitState({
+    startedAt,
+    styleName,
+    expectedSeconds = BASE_SECONDS,
+    expectedText = "30 to 60 seconds",
+}: {
+    startedAt: number;
+    styleName: string;
+    /** The tier's usual wait. */
+    expectedSeconds?: number;
+    /** The same wait in words: "30 to 60 seconds", "about 2 minutes". */
+    expectedText?: string;
+}) {
     const elapsed = useElapsedSeconds(startedAt);
-    const steps = waitSteps(styleName);
+    const pace = expectedSeconds / BASE_SECONDS;
+    const steps = waitSteps(styleName).map((s) => ({ ...s, at: Math.round(s.at * pace) }));
     const reached = steps.filter((s) => elapsed >= s.at);
     const current = reached[reached.length - 1];
-    const progress = Math.min(0.95, elapsed / EXPECTED_SECONDS);
+    const progress = Math.min(0.95, elapsed / expectedSeconds);
 
     return (
         <div className="w-full max-w-sm animate-lift-in rounded-xl bg-paper/95 p-5 shadow-float backdrop-blur-md sm:p-6">
@@ -88,7 +103,7 @@ export function WaitState({ startedAt, styleName }: { startedAt: number; styleNa
             </p>
 
             <p className="mt-4 border-t border-line pt-3 text-[13px] leading-snug text-ink-2">
-                This usually takes 30 to 60 seconds. You can switch tabs; your design will be here when you come back.
+                This usually takes {expectedText}. You can switch tabs; your design will be here when you come back.
             </p>
         </div>
     );

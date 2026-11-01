@@ -193,6 +193,7 @@ function GenerateTool() {
                     photo={photo}
                     resultUrl={resultUrl}
                     styleName={THEMES[theme]}
+                    wait={{ seconds: QUALITY_OPTIONS[quality].waitSeconds, text: QUALITY_OPTIONS[quality].waitText }}
                     generationStartedAt={generationStartedAt}
                     fullscreen={fullscreen}
                     onFullscreenChange={setFullscreen}

@@ -128,7 +128,7 @@ export function buildWelcomeEmailHtml(params: {
         <td style="padding:16px 20px;">
           <p style="margin:0;font-size:14px;color:#7c3aed;font-weight:600;">Your free credit is ready</p>
           <p style="margin:4px 0 0;font-size:13px;color:#6b7280;line-height:19px;">
-            Every new account gets 1 free credit so you can try the AI before purchasing. Additional credits start at just &euro;9.99 for 30 credits.
+            Every new account gets 1 free credit so you can try the AI before purchasing. Additional credits start at just &euro;9.99 for 20 credits.
           </p>
         </td>
       </tr>

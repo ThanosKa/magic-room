@@ -9,7 +9,7 @@ interface ComparisonRow {
 const ROWS: ComparisonRow[] = [
     {
         feature: "Starting price",
-        magicRoom: "€9.99 one-time for 30 credits (~€0.33/design)",
+        magicRoom: "€9.99 one-time for 20 credits (~€0.50/Quick design)",
         competitor: "Subscription, typically billed monthly",
     },
     {
