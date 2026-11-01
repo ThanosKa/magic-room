@@ -400,7 +400,7 @@ export default function AlternativesHubPage() {
                             },
                             {
                                 who: "You are an estate agent staging listings",
-                                pick: "Check commercial rights first, on every tool. Magic Room includes full commercial rights on every paid credit with no tier gate; most competitors restrict this to higher tiers. DecorAI is worth a look if you need staging-specific output formats rather than a redesign.",
+                                pick: "Check commercial rights first, on every tool. Magic Room includes full commercial rights on every design, free credit included, with no tier gate; most competitors restrict this to higher tiers. DecorAI is worth a look if you need staging-specific output formats rather than a redesign.",
                             },
                             {
                                 who: "You need exteriors, gardens or landscaping",
@@ -456,7 +456,7 @@ export default function AlternativesHubPage() {
                                 },
                                 {
                                     q: "Can I use AI interior design outputs commercially?",
-                                    a: "Only if the tool grants commercial rights on your tier. This is the single most commonly missed detail for estate agents and designers, and free tiers usually exclude it or apply a watermark. Magic Room grants full commercial rights on every paid generation on every pack.",
+                                    a: "Only if the tool grants commercial rights on your tier. This is the single most commonly missed detail for estate agents and designers, and free tiers usually exclude it or apply a watermark. Magic Room grants full commercial rights on every design, including the free one.",
                                 },
                             ].map((item) => (
                                 <div key={item.q} className="border-t border-line py-6">

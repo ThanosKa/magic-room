@@ -208,7 +208,7 @@ export function AlternativePageContent({
                         {
                             label: "Commercial rights",
                             magicRoom:
-                                "Full commercial rights on every paid generation, on every pack. No tier gate.",
+                                "Full commercial rights on every design, free credit included. No tier gate.",
                             competitor: competitor.pricingModel.commercialRights,
                         },
                         {

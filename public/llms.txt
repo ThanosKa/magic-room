@@ -22,7 +22,7 @@ A user uploads one photo of a real room, picks a design theme and a room type, a
 - Privacy: images are transmitted as base64, held in memory for the duration of the request, then dropped. No storage bucket write, no database write, no use for AI training.
 - Pricing: one-time credit packs — €9.99 / 20 credits, €19.99 / 60 credits, €29.99 / 120 credits. No subscription. Credits never expire. A Quick design costs €0.25–€0.50 depending on the pack; Pro costs twice that, Ultra three times.
 - Free trial: 1 credit on signup (one Quick design), no payment card required.
-- Commercial rights: included on every paid credit. Free-credit generations are personal use only.
+- Commercial rights: included on every design, free credit too.
 - Rate limit: 100 generations per hour per account.
 - Stack: Next.js on Vercel, Clerk authentication, Stripe one-time checkout, Supabase for the credit balance only.
 

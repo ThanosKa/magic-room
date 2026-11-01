@@ -31,7 +31,7 @@ export const HOME_FAQ: HomeFaqItem[] = [
   {
     question: "Can I use the designs for commercial projects?",
     answer:
-      "Yes, you own full commercial rights to every design generated with your paid credits. Common commercial uses include real estate listing photos, interior design client presentations, Airbnb listing imagery, and renovation planning decks. Free-credit generations are for personal use only.",
+      "Yes, you own full commercial rights to every design you generate, including the one from your free credit. Common commercial uses include real estate listing photos, interior design client presentations, Airbnb listing imagery, and renovation planning decks.",
   },
   {
     question: "How long does it take?",

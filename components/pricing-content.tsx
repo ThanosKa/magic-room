@@ -104,7 +104,7 @@ const FAQS = [
   },
   {
     q: "Is there a free version of Magic Room?",
-    a: "Yes. Every new account gets 1 free credit on signup with no payment card required. That credit produces one full Quick design: a redesigned version of your room. Free-credit output is for personal use only and carries no commercial rights.",
+    a: "Yes. Every new account gets 1 free credit on signup with no payment card required. That credit produces one full Quick design: a redesigned version of your room.",
   },
   {
     q: "Is there a subscription?",
@@ -112,7 +112,7 @@ const FAQS = [
   },
   {
     q: "Can you use the designs commercially?",
-    a: "Yes, on paid credits. Every design generated with a purchased credit carries full commercial rights — real estate listing photos, client presentations, Airbnb listing imagery, and renovation decks are all permitted.",
+    a: "Yes. Every design carries full commercial rights, including the one from your free credit — real estate listing photos, client presentations, Airbnb listing imagery, and renovation decks are all permitted.",
   },
   {
     q: "What happens to your photo when you generate a design?",

@@ -11,7 +11,7 @@ export const metadata: Metadata = termsMetadata();
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of Service" updated="Last Updated: December 2024">
+    <LegalPage title="Terms of Service" updated="Last Updated: November 2026">
       <section>
         <p className={legalLeadClass}>
           These Terms of Service (&ldquo;Terms&rdquo;) govern your use of Magic
@@ -58,7 +58,6 @@ export default function TermsPage() {
           <li>Harass, threaten, or harm individuals</li>
           <li>Attempt to gain unauthorized access to systems</li>
           <li>Scrape, crawl, or automate access without permission</li>
-          <li>Use the Service for commercial purposes without authorization</li>
           <li>
             Upload content that is illegal, explicit, or violates others&apos;
             rights
