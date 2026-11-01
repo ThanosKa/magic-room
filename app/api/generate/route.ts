@@ -5,39 +5,43 @@ import {
   ensureUserExists,
   deductCredits,
   createTransaction,
+  updateUserCredits,
 } from "@/lib/supabase";
 import { checkRateLimit } from "@/lib/redis";
 import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
 import { logger } from "@/lib/logger";
+import { NOTE_MAX_LENGTH, QUALITY_IDS, QUALITY_OPTIONS, ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
+
+// Ultra (GPT-5.4 Image 2) takes about 2 minutes; give a design up to 5 before the platform cuts it off.
+export const maxDuration = 300;
 
 const GenerateSchema = z.object({
   base64Image: z.string().min(1, "Image is required"),
-  roomType: z.enum([
-    "living-room",
-    "bedroom",
-    "kitchen",
-    "bathroom",
-    "dining-room",
-    "office",
-    "gaming-room",
-  ]),
-  theme: z.enum([
-    "modern",
-    "minimalist",
-    "scandinavian",
-    "industrial",
-    "tropical",
-    "bohemian",
-    "vintage",
-    "luxury",
-  ]),
-  quality: z.enum(["standard", "premium"]).default("standard"),
-  customPrompt: z.string().optional(),
+  roomType: z.enum(ROOM_TYPE_IDS),
+  theme: z.enum(THEME_IDS),
+  quality: z.enum(QUALITY_IDS).default("standard"),
+  customPrompt: z.string().max(NOTE_MAX_LENGTH).optional(),
 });
+
+/** Gives back credits taken for a generation that produced nothing. */
+async function refundCredits(
+  userId: string,
+  clerkUserId: string,
+  amount: number,
+  generationId: string | null
+): Promise<void> {
+  await createTransaction(userId, "refund", amount, undefined, { generationId });
+  const latestUser = await ensureUserExists(clerkUserId);
+  if (latestUser) {
+    await updateUserCredits(latestUser.id, latestUser.credits + amount);
+  }
+}
 
 export async function POST(request: Request): Promise<Response> {
   const startTime = Date.now();
   let generationId: string | null = null;
+  // Set once credits are taken, so any later failure gives them back.
+  let charge: { userId: string; clerkUserId: string; amount: number } | null = null;
 
   try {
     logger.info({}, "[Generate] POST request received");
@@ -70,7 +74,7 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     const { base64Image, roomType, theme, quality, customPrompt } = parsed.data;
-    const creditCost = quality === "premium" ? 2 : 1;
+    const creditCost = QUALITY_OPTIONS[quality].credits;
     logger.info(
       { roomType, theme, quality, creditCost, hasCustomPrompt: !!customPrompt },
       "[Generate] Request validated"
@@ -127,6 +131,7 @@ export async function POST(request: Request): Promise<Response> {
         }
       );
     }
+    charge = { userId: user.id, clerkUserId, amount: creditCost };
     logger.info({ creditCost }, "[Generate] Credits deducted");
 
     await createTransaction(user.id, "usage", creditCost);
@@ -152,12 +157,8 @@ export async function POST(request: Request): Promise<Response> {
     );
 
     if (!result.success || result.images.length === 0) {
-      await createTransaction(user.id, "refund", creditCost, undefined, { generationId });
-      const latestUser = await ensureUserExists(clerkUserId);
-      if (latestUser) {
-        const { updateUserCredits } = await import("@/lib/supabase");
-        await updateUserCredits(latestUser.id, latestUser.credits + creditCost);
-      }
+      charge = null;
+      await refundCredits(user.id, clerkUserId, creditCost, generationId);
 
       logger.warn({ generationId, error: result.error, creditCost }, "[Generate] Generation failed - credits refunded");
 
@@ -192,6 +193,20 @@ export async function POST(request: Request): Promise<Response> {
   } catch (error) {
     const totalDuration = Date.now() - startTime;
     logger.error({ err: error, totalDuration, generationId }, "[Generate] Route error");
+
+    // `success: false` tells the screen the credits were given back.
+    if (charge) {
+      try {
+        await refundCredits(charge.userId, charge.clerkUserId, charge.amount, generationId);
+        logger.warn({ generationId, creditCost: charge.amount }, "[Generate] Route error - credits refunded");
+        return new Response(
+          JSON.stringify({ error: "Failed to generate images", success: false }),
+          { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+      } catch (refundError) {
+        logger.error({ err: refundError, generationId }, "[Generate] Refund failed");
+      }
+    }
 
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,

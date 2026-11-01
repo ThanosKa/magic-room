@@ -113,7 +113,7 @@ export function homeMetadata(): Metadata {
             absolute: "AI Interior Design: Redesign Any Room From One Photo (2026)",
         },
         description:
-            "Turn one room photo into 4–8 AI redesigns in 60 seconds, powered by Google Gemini. Photos never stored. €9.99 once, not monthly. 1 free credit, no card.",
+            "Turn one room photo into an AI redesign in 60 seconds, powered by Gemini and OpenAI. Photos never stored. €9.99 once, not monthly. 1 free credit, no card.",
         path: "",
         keywords: [
             "ai interior design tools",
@@ -132,7 +132,7 @@ export function pricingMetadata(): Metadata {
     return createMetadata({
         title: "Pricing — From €9.99 for 30 AI Designs",
         description:
-            "AI interior design from €9.99 for 30 credits (~€0.33 per design). No subscription, credits never expire, full commercial rights included.",
+            "AI interior design from €9.99 for 20 credits (~€0.50 per design). No subscription, credits never expire, full commercial rights included.",
         path: "/pricing",
     });
 }
@@ -173,7 +173,7 @@ export function aboutMetadata(): Metadata {
             absolute: "What Is Magic Room? The AI Room Designer That Keeps Nothing",
         },
         description:
-            "Magic Room turns one room photo into 4–8 AI redesigns in 60 seconds. Built by one developer, €9.99 once instead of monthly, photos never stored.",
+            "Magic Room turns one room photo into an AI redesign in 60 seconds. Built by one developer, €9.99 once instead of monthly, photos never stored.",
         path: "/about",
         keywords: [
             "what is magic room",

@@ -1,547 +1,235 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import Image from "next/image";
-import { useUser } from "@clerk/nextjs";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useClerk, useUser } from "@clerk/nextjs";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
 import { AuthGuard } from "@/components/auth-guard";
-import { RoomType, Theme, Quality } from "@/types";
-
-import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { ROOM_TYPES, THEMES } from "@/lib/constants";
-import {
-    Download,
-    RefreshCw,
-    Loader2,
-    ImagePlus,
-} from "lucide-react";
-import { useDropzone } from "react-dropzone";
-import { fileToBase64 } from "@/lib/supabase-client";
+import { ControlPanel } from "@/components/generate/control-panel";
+import { PhotoPanel, type ToolState } from "@/components/generate/photo-panel";
+import { QUALITY_NAMES } from "@/components/generate/option-pickers";
+import { QUALITY_OPTIONS, ROOM_TYPES, THEMES } from "@/lib/constants";
+import { generateHref, readDesignSelection } from "@/lib/design-selection";
+import { MAX_PHOTO_FILE_SIZE, prepareRoomPhoto, type RoomPhoto } from "@/lib/room-photo";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { cn } from "@/lib/utils";
-
-const MAX_UPLOAD_SIZE = 2.5 * 1024 * 1024;
-const RESIZE_MAX_DIMENSION = 1536;
-
-async function compressImage(file: File): Promise<File> {
-    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
-        const i = new window.Image();
-        i.onload = () => resolve(i);
-        i.onerror = () => reject(new Error("Failed to load image"));
-        i.src = URL.createObjectURL(file);
-    });
-
-    const needsResize =
-        img.width > RESIZE_MAX_DIMENSION ||
-        img.height > RESIZE_MAX_DIMENSION ||
-        file.size > MAX_UPLOAD_SIZE;
-
-    if (!needsResize) {
-        URL.revokeObjectURL(img.src);
-        return file;
-    }
-
-    let w = img.width;
-    let h = img.height;
-    if (w > RESIZE_MAX_DIMENSION || h > RESIZE_MAX_DIMENSION) {
-        if (w >= h) {
-            h = Math.round((h / w) * RESIZE_MAX_DIMENSION);
-            w = RESIZE_MAX_DIMENSION;
-        } else {
-            w = Math.round((w / h) * RESIZE_MAX_DIMENSION);
-            h = RESIZE_MAX_DIMENSION;
-        }
-    }
-
-    const canvas = document.createElement("canvas");
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext("2d")!;
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(0, 0, w, h);
-    ctx.drawImage(img, 0, 0, w, h);
-    URL.revokeObjectURL(img.src);
-
-    const blob = await new Promise<Blob>((resolve, reject) =>
-        canvas.toBlob(
-            (b) => {
-                if (b) resolve(b);
-                else reject(new Error("Image compression failed"));
-            },
-            "image/jpeg",
-            0.9,
-        )
-    );
-
-    canvas.width = 0;
-    canvas.height = 0;
-
-    return new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
-        type: "image/jpeg",
-    });
-}
-
-const THEME_IMAGES: Record<Theme, string> = {
-    modern: "/themes/theme_modern.png",
-    minimalist: "/themes/theme_minimalist.png",
-    scandinavian: "/themes/theme_scandinavian.png",
-    industrial: "/themes/theme_industrial.png",
-    tropical: "/themes/theme_tropical.png",
-    bohemian: "/themes/theme_bohemian.png",
-    vintage: "/images/designs/vintage-living-room.jpg",
-    luxury: "/images/designs/luxury-living-room.jpg",
-};
+import {
+    DOWNLOAD_FAILED_MESSAGE,
+    generateFailureMessage,
+    NETWORK_MESSAGE,
+    notEnoughCreditsMessage,
+    PHOTO_MESSAGES,
+    ToolMessageView, type ToolMessage } from "@/components/generate/tool-messages";
+import type { Quality, RoomType, Theme } from "@/types";
 
 export default function GenerateContent() {
     return (
         <AuthGuard>
-            <GeneratePageContent />
+            <GenerateTool />
         </AuthGuard>
     );
 }
 
-function GeneratePageContent() {
+function GenerateTool() {
     const { user: clerkUser } = useUser();
-    const { credits, refreshUser } = useUserStore();
-    const {
-        activeGeneration,
-        uploadedImageUrl,
-        setUploadedImage,
-        clearUploadedImage,
-        setActiveGeneration,
-    } = useGenerationStore();
+    const { signOut } = useClerk();
+    const { user, credits, refreshUser } = useUserStore();
+    const { activeGeneration, setActiveGeneration } = useGenerationStore();
+    const reducedMotion = usePrefersReducedMotion();
 
-    const [originalImage, setOriginalImage] = useState<string | null>(null);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [roomType, setRoomType] = useState<RoomType>("living-room");
+    // A deep link (/generate?style=japandi&room=bedroom) sets the starting choices.
+    const preselected = readDesignSelection(useSearchParams());
+
+    const [photo, setPhoto] = useState<RoomPhoto | null>(null);
+    const [roomType, setRoomType] = useState<RoomType>(preselected.roomType ?? "living-room");
+    const [theme, setTheme] = useState<Theme>(preselected.theme ?? "modern");
     const [quality, setQuality] = useState<Quality>("standard");
-    const [theme, setTheme] = useState<Theme>("modern");
-    const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+    const [note, setNote] = useState("");
+    const [generationStartedAt, setGenerationStartedAt] = useState<number | null>(null);
+    const [fullscreen, setFullscreen] = useState(false);
+    const [message, setMessage] = useState<ToolMessage | null>(null);
+    const photoRef = useRef<HTMLDivElement>(null);
 
-    const onDrop = useCallback(
-        async (acceptedFiles: File[]) => {
-            const file = acceptedFiles[0];
-            if (!file) return;
+    const resultUrl =
+        activeGeneration?.status === "succeeded" ? (activeGeneration.outputUrls?.[0] ?? null) : null;
+    const isGenerating = generationStartedAt !== null;
+    const state: ToolState = !photo ? "empty" : isGenerating ? "generating" : resultUrl ? "result" : "ready";
 
-            if (file.size > 20 * 1024 * 1024) {
-                return;
-            }
+    const cost = QUALITY_OPTIONS[quality].credits;
+    // Only once the balance has loaded, so it never flashes "you have 0".
+    const shortOfCredits = user !== null && credits < cost;
+    const canGenerate = photo !== null && !isGenerating && credits >= cost;
 
-            try {
-                setActiveGeneration(null);
-
-                const compressed = await compressImage(file);
-                const base64 = await fileToBase64(compressed);
-                setUploadedImage(base64, "");
-                setOriginalImage(base64);
-            } catch {
-            }
-        },
-        [setUploadedImage, setActiveGeneration]
+    // "Sign in again" sends the user through sign-in and back to the tool
+    // with the room type and style chosen at the moment of the click.
+    const choicesRef = useRef({ theme, roomType });
+    useEffect(() => {
+        choicesRef.current = { theme, roomType };
+    }, [theme, roomType]);
+    const signInAgain = useCallback(
+        () => signOut({ redirectUrl: generateHref(choicesRef.current) }),
+        [signOut]
     );
 
-    const {
-        getRootProps,
-        getInputProps,
-        isDragActive,
-        open: openUpload,
-    } = useDropzone({
-        onDrop,
-        accept: { "image/*": [".jpeg", ".jpg", ".png", ".webp"] },
-        maxFiles: 1,
-        noClick: true,
-        noKeyboard: true,
-    });
+    // On a phone the page may be scrolled past the photo: bring it (wait
+    // state, then result) back into view when it changes.
+    const showPhoto = useCallback(() => {
+        const el = photoRef.current;
+        if (!el || el.getBoundingClientRect().top >= 0) return;
+        el.scrollIntoView({ block: "start", behavior: reducedMotion ? "auto" : "smooth" });
+    }, [reducedMotion]);
+
+    const handleFile = useCallback(
+        async (file: File) => {
+            if (file.size > MAX_PHOTO_FILE_SIZE) {
+                setMessage(PHOTO_MESSAGES.tooLarge);
+                return;
+            }
+            try {
+                const prepared = await prepareRoomPhoto(file);
+                setActiveGeneration(null);
+                setPhoto(prepared);
+                setMessage(null);
+            } catch {
+                setMessage(PHOTO_MESSAGES.unreadable);
+            }
+        },
+        [setActiveGeneration]
+    );
 
     const handleGenerate = useCallback(async () => {
-        const requiredCredits = quality === "premium" ? 2 : 1;
-        if (!originalImage || credits < requiredCredits) {
-            return;
-        }
+        if (!photo || isGenerating || credits < cost) return;
 
-        setIsGenerating(true);
+        setMessage(null);
+        setGenerationStartedAt(Date.now());
+        requestAnimationFrame(showPhoto);
 
+        const customPrompt = note.trim();
+        const failure = { cost, signInAgain };
+        let balanceRead = false;
         try {
             const response = await fetch("/api/generate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    base64Image: originalImage,
+                    base64Image: photo.dataUrl,
                     roomType,
                     theme,
                     quality,
+                    ...(customPrompt ? { customPrompt } : {}),
                 }),
             });
+            // A host timeout page is not JSON: the status alone decides then.
+            const data = await response.json().catch(() => null);
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Failed to generate");
-            }
-
-            const data = await response.json();
-
-            if (data.success && data.outputUrls?.length > 0) {
-                setActiveGeneration({
-                    id: data.predictionId,
-                    status: "succeeded",
-                    outputUrls: data.outputUrls,
-                });
-                if (clerkUser?.id) refreshUser(clerkUser.id);
+            if (response.ok && data?.success && data.outputUrls?.length > 0) {
+                setActiveGeneration({ id: data.predictionId, status: "succeeded", outputUrls: data.outputUrls });
+            } else if (response.status === 402 && clerkUser?.id) {
+                // Re-read the balance first: once it is below the cost, the
+                // "Not enough credits" message shows it with the real number.
+                await refreshUser(clerkUser.id);
+                balanceRead = true;
+                if (useUserStore.getState().credits >= cost) {
+                    setMessage(generateFailureMessage(response.status, data, failure));
+                }
             } else {
-                throw new Error(data.error || "No images generated");
+                setMessage(generateFailureMessage(response.status, data, failure));
             }
         } catch {
+            setMessage(NETWORK_MESSAGE);
         } finally {
-            setIsGenerating(false);
+            setGenerationStartedAt(null);
+            // The balance may have changed either way (charged, or refunded).
+            if (!balanceRead && clerkUser?.id) refreshUser(clerkUser.id);
         }
-    }, [
-        originalImage,
-        credits,
-        roomType,
-        theme,
-        quality,
-        setActiveGeneration,
-        clerkUser?.id,
-        refreshUser,
-    ]);
+    }, [photo, isGenerating, credits, cost, note, roomType, theme, quality, setActiveGeneration, clerkUser?.id, refreshUser, showPhoto, signInAgain]);
 
-    const handleReset = useCallback(() => {
-        clearUploadedImage();
-        setActiveGeneration(null);
-        setOriginalImage(null);
-        setIsGenerating(false);
-    }, [clearUploadedImage, setActiveGeneration]);
-
-    const handleDownload = async () => {
-        const url = activeGeneration?.outputUrls?.[0];
-        if (!url) return;
-
+    const handleDownload = useCallback(async () => {
+        if (!resultUrl) return;
         try {
-            const response = await fetch(url);
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
+            const blob = await (await fetch(resultUrl)).blob();
+            const blobUrl = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = blobUrl;
-            link.download = `magic-room-${Date.now()}.png`;
+            link.download = `magic-room-${theme}-${roomType}-${Date.now()}.png`;
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(blobUrl);
+            link.remove();
+            URL.revokeObjectURL(blobUrl);
         } catch {
+            setMessage(DOWNLOAD_FAILED_MESSAGE);
         }
-    };
-
-    const hasResult =
-        activeGeneration?.status === "succeeded" &&
-        activeGeneration.outputUrls?.length;
+    }, [resultUrl, theme, roomType]);
 
     return (
-        <div className="container mx-auto max-w-6xl px-4 py-8 lg:py-12">
-            <div className="mb-8 text-center">
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-                    Redesign your <span className="text-primary">room</span> in seconds
-                </h1>
-            </div>
-
-            <div className="grid gap-8 lg:grid-cols-[1fr_1.5fr] lg:gap-12">
-                <div className="space-y-8">
-                    <div className="text-center md:text-left">
-                        <h2 className="text-2xl font-bold tracking-tight text-foreground">
-                            Design Studio
-                        </h2>
-                        <p className="mt-2 text-muted-foreground">
-                            Customize your room details below.
-                        </p>
-                    </div>
-
-                    <div className="space-y-6 rounded-xl border bg-card p-6 shadow-sm">
-                        <div className="space-y-3">
-                            <div className="text-base font-semibold">1. Room Type</div>
-                            <Select
-                                value={roomType}
-                                onValueChange={(v) => setRoomType(v as RoomType)}
-                            >
-                                <SelectTrigger className="h-11 cursor-pointer">
-                                    <SelectValue placeholder="Select a room type" />
-                                </SelectTrigger>
-                                <SelectContent position="popper" className="z-[100]">
-                                    <SelectGroup>
-                                        {Object.entries(ROOM_TYPES).map(([key, label]) => (
-                                            <SelectItem
-                                                key={key}
-                                                value={key}
-                                                className="cursor-pointer"
-                                            >
-                                                {label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className="space-y-3">
-                            <div className="text-base font-semibold">2. Quality</div>
-                            <Select
-                                value={quality}
-                                onValueChange={(v) => setQuality(v as Quality)}
-                            >
-                                <SelectTrigger className="h-11 w-full cursor-pointer">
-                                    <SelectValue placeholder="Select quality">
-                                        {quality === "standard" ? (
-                                            <span>Standard Quality <span className="text-muted-foreground">- 1 credit</span></span>
-                                        ) : (
-                                            <span>Premium Quality <span className="text-muted-foreground">- 2 credits</span></span>
-                                        )}
-                                    </SelectValue>
-                                </SelectTrigger>
-                                <SelectContent position="popper" className="z-[100]">
-                                    <SelectGroup>
-                                        <SelectItem value="standard" className="cursor-pointer">
-                                            <div className="flex flex-col">
-                                                <span>Standard Quality</span>
-                                                <span className="text-muted-foreground text-sm">1 credit</span>
-                                            </div>
-                                        </SelectItem>
-                                        <SelectItem value="premium" className="cursor-pointer">
-                                            <div className="flex items-start justify-between w-full">
-                                                <div className="flex flex-col">
-                                                    <span>Premium Quality</span>
-                                                    <span className="text-muted-foreground text-sm">2 credits</span>
-                                                </div>
-                                                <Badge variant="default" className="ml-2">PREMIUM</Badge>
-                                            </div>
-                                        </SelectItem>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className="space-y-3">
-                            <div className="text-base font-semibold">3. Choose Style</div>
-                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4">
-                                {Object.entries(THEMES).map(([key, label]) => (
-                                    <button
-                                        key={key}
-                                        onClick={() => setTheme(key as Theme)}
-                                        className={cn(
-                                            "group relative flex flex-col overflow-hidden rounded-lg border-2 transition-all hover:border-primary/50 cursor-pointer",
-                                            theme === key
-                                                ? "border-primary bg-primary/5 ring-0"
-                                                : "border-input bg-transparent"
-                                        )}
-                                    >
-                                        <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-                                            <Image
-                                                src={THEME_IMAGES[key as Theme]}
-                                                alt={label}
-                                                fill
-                                                className={cn(
-                                                    "object-cover transition-transform duration-300 group-hover:scale-110",
-                                                    theme !== key && "opacity-80 grayscale-[0.3]"
-                                                )}
-                                                sizes="(max-width: 768px) 50vw, 33vw"
-                                            />
-                                            {theme === key && (
-                                                <div className="absolute inset-0 bg-primary/10" />
-                                            )}
-                                        </div>
-                                        <div
-                                            className={cn(
-                                                "w-full py-2 text-center text-xs font-medium transition-colors",
-                                                theme === key
-                                                    ? "text-primary font-bold"
-                                                    : "text-muted-foreground"
-                                            )}
-                                        >
-                                            {label}
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex flex-col gap-6">
-                    <div
-                        {...getRootProps()}
-                        className="relative w-full overflow-hidden rounded-2xl border bg-muted/20 shadow-sm min-h-[400px] flex flex-col"
-                    >
-                        {hasResult ? (
-                            <div
-                                className="relative group w-full h-full cursor-pointer"
-                                onClick={() =>
-                                    setFullscreenImage(activeGeneration!.outputUrls![0])
-                                }
-                            >
-                                <Image
-                                    src={activeGeneration!.outputUrls![0]}
-                                    alt="Generated design"
-                                    width={800}
-                                    height={600}
-                                    className="w-full h-auto object-contain max-h-[70vh] bg-black/5"
-                                />
-                                {isGenerating && (
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-20">
-                                        <div className="flex flex-col items-center gap-4">
-                                            <Loader2 className="h-12 w-12 animate-spin text-white" />
-                                            <p className="text-white font-medium">Loading...</p>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        ) : uploadedImageUrl ? (
-                            <div
-                                className="relative w-full h-full min-h-[300px] bg-black/5 flex items-center justify-center group cursor-pointer"
-                                onClick={() => setFullscreenImage(uploadedImageUrl)}
-                            >
-                                <Image
-                                    src={uploadedImageUrl}
-                                    alt="Uploaded room"
-                                    width={800}
-                                    height={600}
-                                    className="w-full h-auto max-h-[60vh] object-contain"
-                                />
-
-                                {isGenerating && (
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-20">
-                                        <div className="flex flex-col items-center gap-4">
-                                            <Loader2 className="h-12 w-12 animate-spin text-white" />
-                                            <p className="text-white font-medium">Loading...</p>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <div
-                                className={cn(
-                                    "flex-1 flex flex-col items-center justify-center p-10 text-center transition-all cursor-pointer border-2 border-dashed border-transparent hover:border-primary/20 hover:bg-muted/30",
-                                    isDragActive && "border-primary bg-primary/5"
-                                )}
-                                onClick={openUpload}
-                            >
-                                <input {...getInputProps()} />
-                                <div className="mb-6 rounded-full bg-muted p-6 transition-transform group-hover:scale-110">
-                                    <ImagePlus className="h-10 w-10 text-muted-foreground" />
-                                </div>
-                                <h3 className="text-xl font-semibold">Upload your room</h3>
-                                <p className="mt-2 max-w-sm text-muted-foreground">
-                                    Drag & drop an image here, or click to browse.
-                                    <br />
-                                    We recommend high quality photos.
-                                </p>
-                                <Button variant="outline" className="mt-8 pointer-events-none">
-                                    Select Image
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-
-                    {(uploadedImageUrl || hasResult) && (
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 p-4">
-                                {hasResult ? (
-                                    <>
-                                        <Button
-                                            variant="outline"
-                                            size="lg"
-                                            onClick={handleReset}
-                                            className="cursor-pointer"
-                                        >
-                                            Upload New
-                                        </Button>
-
-                                        <Button
-                                            variant="secondary"
-                                            size="lg"
-                                            onClick={handleDownload}
-                                            className="cursor-pointer"
-                                        >
-                                            <Download className="mr-2 h-4 w-4" />
-                                            Download
-                                        </Button>
-
-                                        <Button
-                                            size="lg"
-                                            onClick={handleGenerate}
-                                            disabled={isGenerating || credits < (quality === "premium" ? 2 : 1)}
-                                            className="h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white cursor-pointer"
-                                        >
-                                            {isGenerating ? (
-                                                <>
-                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                    Generating...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <RefreshCw className="mr-2 h-4 w-4" />
-                                                    Regenerate
-                                                </>
-                                            )}
-                                        </Button>
-                                    </>
-                                ) : (
-                                    uploadedImageUrl && (
-                                        <div className="flex flex-col sm:flex-row items-center gap-3 ml-auto">
-                                            <Button
-                                                variant="outline"
-                                                size="lg"
-                                                onClick={handleReset}
-                                                className="cursor-pointer"
-                                            >
-                                                Upload New
-                                            </Button>
-                                            <Button
-                                                size="lg"
-                                                className="min-w-[200px] h-12 bg-primary px-8 text-lg hover:bg-primary/90 text-white shadow-lg cursor-pointer"
-                                                onClick={handleGenerate}
-                                                disabled={isGenerating || credits < (quality === "premium" ? 2 : 1)}
-                                            >
-                                                {isGenerating ? (
-                                                    <>
-                                                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                                        Generating...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        Generate Design
-                                                    </>
-                                                )}
-                                            </Button>
-                                        </div>
-                                    )
-                                )}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {fullscreenImage && (
-                <div
-                    className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-                    onClick={() => setFullscreenImage(null)}
-                >
-                    <Image
-                        src={fullscreenImage}
-                        alt="Fullscreen view"
-                        width={1024}
-                        height={768}
-                        className="max-w-full max-h-[90vh] object-contain"
-                        onClick={(e) => e.stopPropagation()}
-                    />
-                </div>
+        /*
+          Desktop (>= 1024): the photo canvas on the left and the control panel
+          on the right fill the screen under the header; the title sits above
+          the panel. Phone: title, canvas, then the panel as a bottom sheet that
+          sticks to the bottom of the screen (it is the tool's last child, so it
+          stays inside the tool and never covers the site footer).
+        */
+        <div
+            data-tool-state={state}
+            className={cn(
+                // Phone: at least a screen tall, so the sheet (pushed to the end) starts at the bottom of the screen.
+                "mx-auto flex min-h-[calc(100svh-66px)] w-full max-w-[1440px] flex-col gap-4 px-5 pt-3 sm:min-h-[calc(100svh-76px)] sm:px-6 sm:pt-4",
+                "lg:grid lg:h-[calc(100svh-76px)] lg:min-h-[600px] lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-5 lg:gap-y-5 lg:px-12 lg:pb-6 xl:grid-cols-[minmax(0,1fr)_392px]"
             )}
+        >
+            <div className="lg:col-start-2 lg:row-start-1 lg:pt-2">
+                <h1 className="font-serif text-[clamp(30px,4vw,40px)] font-normal leading-[1] tracking-[-0.025em] text-ink text-balance">
+                    Redesign your <em className="italic">room</em> in seconds
+                </h1>
+                <p className="mt-2 hidden text-[15px] leading-snug tracking-[-0.01em] text-ink-2 sm:block">
+                    Upload a photo, pick a room type and a style, and get a new design in about a minute.
+                </p>
+            </div>
+
+            <div ref={photoRef} className="flex flex-1 scroll-mt-24 flex-col lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:min-h-0">
+                <PhotoPanel
+                    state={state}
+                    photo={photo}
+                    resultUrl={resultUrl}
+                    styleName={THEMES[theme]}
+                    wait={{ seconds: QUALITY_OPTIONS[quality].waitSeconds, text: QUALITY_OPTIONS[quality].waitText }}
+                    generationStartedAt={generationStartedAt}
+                    fullscreen={fullscreen}
+                    onFullscreenChange={setFullscreen}
+                    onFile={handleFile}
+                    onReject={(reason) =>
+                        setMessage(reason === "too-many" ? PHOTO_MESSAGES.tooMany : PHOTO_MESSAGES.wrongType)
+                    }
+                    onDownload={handleDownload}
+                    className="flex-1"
+                />
+            </div>
+
+            <ControlPanel
+                roomType={roomType}
+                onRoomTypeChange={setRoomType}
+                theme={theme}
+                onThemeChange={setTheme}
+                quality={quality}
+                onQualityChange={setQuality}
+                note={note}
+                onNoteChange={setNote}
+                summary={`${ROOM_TYPES[roomType]} · ${THEMES[theme]} · ${QUALITY_NAMES[quality]}`}
+                generating={isGenerating}
+                hasResult={resultUrl !== null}
+                canGenerate={canGenerate}
+                onGenerate={handleGenerate}
+                className="lg:col-start-2 lg:row-start-2"
+                messages={
+                    <>
+                        {message && <ToolMessageView message={message} />}
+                        {shortOfCredits && !isGenerating && (
+                            <ToolMessageView message={notEnoughCreditsMessage(QUALITY_NAMES[quality], cost, credits)} />
+                        )}
+                    </>
+                }
+            />
         </div>
     );
 }

@@ -1,31 +1,30 @@
 # Magic Room
 
-> Magic Room is an AI interior design tool that redesigns any room from a single photo in 30–60 seconds using Google Gemini multimodal AI. Uploaded photos are processed in memory and never stored on a server. Pricing is one-time credits from €9.99 with no subscription.
+> Magic Room is an AI interior design tool that redesigns any room from a single photo in 30–60 seconds (about 2 minutes at Ultra quality) using multimodal image models from Google Gemini and OpenAI. Uploaded photos are processed in memory and never stored on a server. Pricing is one-time credits from €9.99 with no subscription.
 
-Last updated: 2026-07-29
+Last updated: 2026-11-01
 Founder and author: Thanos Kazakis (https://www.linkedin.com/in/thanos-kazakis-922977205/)
 Full knowledge file: https://magic-room.dev/llms-full.txt
 Machine-readable pricing: https://magic-room.dev/pricing.md
 
 ## What Magic Room does
 
-A user uploads one photo of a real room, picks a design theme and a room type, and the AI returns 4–8 photorealistic redesigns of that exact room in the chosen style. The original room geometry — walls, windows, floor, doorways — is preserved; only styling, finishes, and furnishings change. Outputs are used as renovation planning references, real-estate virtual staging, and interior-design client presentations.
+A user uploads one photo of a real room, picks a design theme and a room type, and the AI returns a photorealistic redesign of that exact room in the chosen style. The original room geometry — walls, windows, floor, doorways — is preserved; only styling, finishes, and furnishings change. Outputs are used as renovation planning references, real-estate virtual staging, and interior-design client presentations.
 
 ## Core facts
 
-- AI model: Google Gemini multimodal image models via OpenRouter. Standard quality uses google/gemini-3.1-flash-image (1 credit); Premium quality uses google/gemini-3-pro-image (2 credits).
+- Quality tiers and models (via OpenRouter): Quick uses google/gemini-nano-banana-2.1 (1 credit); Pro uses google/gemini-3-pro-image (2 credits); Ultra uses openai/gpt-5.4-image-2 (3 credits) and keeps the room's layout most closely.
 - Why multimodal matters: the model reads image and text together, so it reasons about the room's spatial structure instead of applying a 2D style filter over it.
-- Generation time: 30–60 seconds, returned synchronously — no queue, no polling.
-- Outputs: 4–8 design variations per generation.
-- Themes selectable in the generator (8): Modern, Minimalist, Scandinavian, Industrial, Tropical, Bohemian, Vintage, Luxury. A free-text prompt field accepts any other style.
-- Room types selectable in the generator (7): Living room, bedroom, kitchen, bathroom, dining room, office, gaming room.
-- Additional styles and rooms covered as design-idea pages: Japandi, Art Deco, Coastal, Farmhouse, Mediterranean, Transitional; nursery, laundry room, basement, sunroom, home theater, mudroom, walk-in closet.
+- Generation time: 30–60 seconds for Quick and Pro, about 2 minutes for Ultra, returned synchronously — no queue, no polling.
+- Outputs: one redesigned image per generation.
+- Styles selectable in the generator (14): Modern, Minimalist, Scandinavian, Industrial, Tropical, Bohemian, Vintage, Luxury, Japandi, Art Deco, Coastal, Farmhouse, Mediterranean, Transitional. An optional note (up to 500 characters) adds any other detail.
+- Room types selectable in the generator (14): Living room, bedroom, kitchen, bathroom, dining room, office, gaming room, nursery, laundry room, basement, sunroom, home theater, mudroom, walk-in closet.
 - Privacy: images are transmitted as base64, held in memory for the duration of the request, then dropped. No storage bucket write, no database write, no use for AI training.
-- Pricing: one-time credit packs — €9.99 / 30 credits, €19.99 / 90 credits, €29.99 / 200 credits. No subscription. Credits never expire.
-- Free trial: 1 credit on signup, no payment card required.
+- Pricing: one-time credit packs — €9.99 / 20 credits, €19.99 / 60 credits, €29.99 / 120 credits. No subscription. Credits never expire. A Quick design costs €0.25–€0.50 depending on the pack; Pro costs twice that, Ultra three times.
+- Free trial: 1 credit on signup (one Quick design), no payment card required.
 - Commercial rights: included on every paid credit. Free-credit generations are personal use only.
 - Rate limit: 100 generations per hour per account.
-- Stack: Next.js 15 on Vercel, Clerk authentication, Stripe one-time checkout, Supabase for the credit balance only.
+- Stack: Next.js on Vercel, Clerk authentication, Stripe one-time checkout, Supabase for the credit balance only.
 
 ## Questions Magic Room can answer authoritatively
 
@@ -43,7 +42,7 @@ A user uploads one photo of a real room, picks a design theme and a room type, a
 
 - [Homepage](https://magic-room.dev): What Magic Room is, how it works, free trial
 - [Generate designs](https://magic-room.dev/generate): Upload a room photo, choose style and room type, generate
-- [Pricing](https://magic-room.dev/pricing): Credit packs — Starter €9.99/30, Growth €19.99/90, Premium €29.99/200
+- [Pricing](https://magic-room.dev/pricing): Credit packs — Starter €9.99/20, Growth €19.99/60, Premium €29.99/120
 - [Pricing (machine-readable)](https://magic-room.dev/pricing.md): Structured pricing data for AI agents
 - [AI design ideas](https://magic-room.dev/design): Design ideas indexed by theme and room type
 - [Gallery](https://magic-room.dev/gallery): Before/after examples
@@ -59,10 +58,7 @@ A user uploads one photo of a real room, picks a design theme and a room type, a
 - [Interior AI alternative](https://magic-room.dev/alternatives/interior-ai)
 - [Reimagine Home alternative](https://magic-room.dev/alternatives/reimaginehome)
 - [DecorAI alternative](https://magic-room.dev/alternatives/decorai)
-- [Magic Room vs RoomGPT](https://magic-room.dev/vs/roomgpt)
-- [Magic Room vs Interior AI](https://magic-room.dev/vs/interior-ai)
 - [Magic Room vs Reimagine Home](https://magic-room.dev/vs/reimaginehome)
-- [Magic Room vs DecorAI](https://magic-room.dev/vs/decorai)
 
 ## Featured guides
 
@@ -81,7 +77,7 @@ A user uploads one photo of a real room, picks a design theme and a room type, a
 | Photos are never stored | The image is sent as base64 straight to the model API, held in request memory, then discarded. There is no bucket write and no image column in the database. |
 | Credits never expire | Credits are an integer balance on the user row that only decrements on use. There is no monthly reset job. |
 | No subscription exists | Stripe Checkout is configured for one-time payments only; no recurring subscription object is ever created. |
-| Room geometry is preserved | Gemini processes the photo and the prompt together, reasoning about the room's spatial structure rather than overlaying a style. |
+| Room geometry is preserved | The model processes the photo and the prompt together, reasoning about the room's spatial structure rather than overlaying a style. |
 | Failed generations are refunded | If the model call fails, the credit is returned to the account automatically. |
 
 ## Honest limitations

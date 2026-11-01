@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDown } from "lucide-react"
+import { Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -14,7 +14,7 @@ const AccordionItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <AccordionPrimitive.Item
         ref={ref}
-        className={cn("border-b", className)}
+        className={cn("border-b border-line", className)}
         {...props}
     />
 ))
@@ -28,13 +28,13 @@ const AccordionTrigger = React.forwardRef<
         <AccordionPrimitive.Trigger
             ref={ref}
             className={cn(
-                "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+                "flex flex-1 cursor-pointer items-center justify-between gap-6 py-5 text-left font-serif text-[22px] font-normal leading-tight tracking-[-0.01em] text-ink transition-colors duration-200 hover:text-ink-2 [&[data-state=open]>svg]:rotate-45",
                 className
             )}
             {...props}
         >
             {children}
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+            <Plus aria-hidden="true" className="size-5 shrink-0 text-ink-2 transition-transform duration-300 ease-out motion-reduce:transition-none" />
         </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
 ))
@@ -46,10 +46,12 @@ const AccordionContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
     <AccordionPrimitive.Content
         ref={ref}
-        className="overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+        // Opens with a fade, not a height animation: animating height re-lays out
+        // the whole page below on every frame. Closing is instant.
+        className="overflow-hidden text-[15px] leading-relaxed text-ink-2 data-[state=open]:animate-fade"
         {...props}
     >
-        <div className={cn("pb-4 pt-0", className)}>{children}</div>
+        <div className={cn("pb-6 pt-0 pr-10", className)}>{children}</div>
     </AccordionPrimitive.Content>
 ))
 

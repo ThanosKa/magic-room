@@ -1,0 +1,259 @@
+/*
+ * Motion: only what Tailwind can't express on its own.
+ * Keyframes (exposed as Tailwind `animate-*` utilities), reveal-on-scroll,
+ * the before/after compare slider, and their reduced-motion fallbacks.
+ * Everything else (hover, press, fades, menus, dialogs) is Tailwind classes.
+ * Values ported from the approved test-page design (now the homepage).
+ */
+
+@theme static {
+  --animate-rise: rise 0.9s var(--ease-out) both; /* hero entrance */
+  --animate-frame-in: frame-in 1.2s var(--ease-expo) 0.2s both; /* hero image frame */
+  --animate-word-in: word-in 0.7s var(--ease-expo) both; /* rotating word */
+  --animate-wipe: wipe 0.9s var(--ease-wipe) both; /* style-change wipe, left edge */
+  --animate-settle: settle 1.6s var(--ease-expo) both; /* image inside a wipe */
+  --animate-fade: fade 300ms ease both;
+  --animate-bar-run: bar-run var(--cycle, 3600ms) linear both; /* timer hairline */
+  --animate-lift-in: lift-in 250ms var(--ease-out) both; /* UI entrance: menu items, the wait card */
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 26px, 0);
+      filter: blur(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+
+  @keyframes frame-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 36px, 0) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes word-in {
+    from {
+      transform: translate3d(0, 105%, 0);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  @keyframes wipe {
+    from {
+      clip-path: inset(0 0 0 100%);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes settle {
+    from {
+      transform: scale(1.08);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes bar-run {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes lift-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 16px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* In the components layer, so Tailwind utilities can still override. */
+@layer components {
+  /* ───────── Reveal on scroll ─────────
+   * Mark elements with `data-reveal` and call useReveal(ref) on a wrapper.
+   * The hook adds `.reveal-ready` to the wrapper (so content stays visible
+   * without JS) and `.is-in` to each element once it scrolls into view.
+   * Per element: style={{ "--reveal-delay": "120ms", "--reveal-y": "48px" }}.
+   */
+  .reveal-ready [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y, 28px), 0);
+    transition:
+      opacity 0.8s var(--ease-out) var(--reveal-delay, 0s),
+      transform 0.8s var(--ease-out) var(--reveal-delay, 0s);
+  }
+
+  .reveal-ready [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ───────── Before/after compare slider ─────────
+   * Markup: .compare (set --pos: 0–100%) > after image, .compare-before > before
+   * image, .compare-tag (+ -left / -right), .compare-handle > .compare-knob,
+   * and a native range input.compare-range for keyboard and screen readers.
+   * Size, aspect ratio and radius are set with Tailwind on .compare.
+   */
+  .compare {
+    --pos: 50%;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--paper-2);
+    touch-action: pan-y;
+    cursor: ew-resize;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .compare img {
+    pointer-events: none;
+  }
+
+  .compare-before {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  }
+
+  /* The handle is a frame-sized layer whose right edge is the divider. It moves
+   * with transform (its own width = the frame's, so the % lands on --pos),
+   * not `left`, so dragging never re-runs layout. */
+  .compare-handle {
+    position: absolute;
+    inset: 0;
+    transform: translateX(calc(var(--pos) - 100%));
+    pointer-events: none;
+  }
+
+  .compare-handle::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -1px;
+    width: 2px;
+    background: var(--cream);
+    box-shadow: 0 0 12px rgb(0 0 0 / 0.25);
+  }
+
+  .compare-knob {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--cream);
+    color: var(--ink);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+    transition: transform 0.2s var(--ease-out);
+  }
+
+  .compare:active .compare-knob {
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+
+  .compare:has(.compare-range:focus-visible) .compare-knob {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .compare-tag {
+    position: absolute;
+    top: 18px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgb(244 240 233 / 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    pointer-events: none;
+  }
+
+  .compare-tag-left {
+    left: 18px;
+  }
+
+  .compare-tag-right {
+    right: 18px;
+  }
+
+  .compare-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    pointer-events: none;
+  }
+}
+
+/* ───────── Reduced motion ─────────
+ * Built in, so every use of the utilities above gets it for free.
+ * The wipe becomes a short fade; entrances, timers and reveals stop.
+ * (The timer bar not running also stops anything that advances on its end.)
+ */
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-frame-in,
+  .animate-word-in,
+  .animate-settle,
+  .animate-bar-run,
+  .animate-lift-in {
+    animation: none !important;
+  }
+
+  .animate-wipe {
+    animation: fade 300ms ease both !important;
+  }
+
+  .reveal-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .compare-knob {
+    transition: none;
+  }
+}

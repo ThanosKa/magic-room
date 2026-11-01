@@ -8,6 +8,13 @@ export const ROOM_TYPES: Record<RoomType, string> = {
   "dining-room": "Dining Room",
   office: "Office",
   "gaming-room": "Gaming Room",
+  nursery: "Nursery",
+  "laundry-room": "Laundry Room",
+  basement: "Basement",
+  sunroom: "Sunroom",
+  "home-theater": "Home Theater",
+  mudroom: "Mudroom",
+  "walk-in-closet": "Walk-in Closet",
 };
 
 export const THEMES: Record<Theme, string> = {
@@ -19,10 +26,6 @@ export const THEMES: Record<Theme, string> = {
   bohemian: "Bohemian",
   vintage: "Vintage",
   luxury: "Luxury",
-};
-
-// SEO-only themes — appear on /design pages but NOT in the generate UI
-export const THEMES_SEO_ONLY: Record<string, string> = {
   japandi: "Japandi",
   "art-deco": "Art Deco",
   coastal: "Coastal",
@@ -31,39 +34,55 @@ export const THEMES_SEO_ONLY: Record<string, string> = {
   transitional: "Transitional",
 };
 
-// SEO-only room types — appear on /design pages but NOT in the generate UI
-export const ROOM_TYPES_SEO_ONLY: Record<string, string> = {
-  nursery: "Nursery",
-  "laundry-room": "Laundry Room",
-  basement: "Basement",
-  sunroom: "Sunroom",
-  "home-theater": "Home Theater",
-  mudroom: "Mudroom",
-  "walk-in-closet": "Walk-in Closet",
-};
+export const ROOM_TYPE_IDS = Object.keys(ROOM_TYPES) as [RoomType, ...RoomType[]];
+export const THEME_IDS = Object.keys(THEMES) as [Theme, ...Theme[]];
 
+/** Longest optional note ("customPrompt") the tool and the generate API accept. */
+export const NOTE_MAX_LENGTH = 500;
+
+/**
+ * The three quality tiers: what each costs in credits and which OpenRouter
+ * model makes the image. Ids stay "standard" / "premium" for old data; the
+ * names people see are Quick / Pro / Ultra.
+ */
 export const QUALITY_OPTIONS = {
   standard: {
     id: "standard" as const,
-    label: "Standard Quality",
-    description: "Quick generation",
+    name: "Quick",
+    description: "Fast ideas for your room",
     credits: 1,
-    model: "google/gemini-3.1-flash-image"
+    /** How long a design usually takes: sets the wait screen's pace and its note. */
+    waitSeconds: 60,
+    waitText: "30 to 60 seconds",
+    model: "google/gemini-nano-banana-2.1"
   },
   premium: {
     id: "premium" as const,
-    label: "Premium Quality",
-    description: "Higher quality redesign",
+    name: "Pro",
+    description: "A bolder, magazine-style makeover",
     credits: 2,
+    waitSeconds: 60,
+    waitText: "30 to 60 seconds",
     model: "google/gemini-3-pro-image"
+  },
+  ultra: {
+    id: "ultra" as const,
+    name: "Ultra",
+    description: "Keeps your room's layout and looks the most real",
+    credits: 3,
+    waitSeconds: 120,
+    waitText: "about 2 minutes",
+    model: "openai/gpt-5.4-image-2"
   }
 } as const;
+
+export const QUALITY_IDS = ["standard", "premium", "ultra"] as const;
 
 export const CREDIT_PACKAGES: ICreditPackage[] = [
   {
     id: "starter",
     name: "Starter",
-    credits: 30,
+    credits: 20,
     priceCents: 999,
     stripePriceId: process.env.STRIPE_PRICE_STARTER || "",
     active: true,
@@ -71,7 +90,7 @@ export const CREDIT_PACKAGES: ICreditPackage[] = [
   {
     id: "growth",
     name: "Growth",
-    credits: 90,
+    credits: 60,
     priceCents: 1999,
     stripePriceId: process.env.STRIPE_PRICE_GROWTH || "",
     active: true,
@@ -79,7 +98,7 @@ export const CREDIT_PACKAGES: ICreditPackage[] = [
   {
     id: "premium",
     name: "Premium",
-    credits: 200,
+    credits: 120,
     priceCents: 2999,
     stripePriceId: process.env.STRIPE_PRICE_PREMIUM || "",
     active: true,

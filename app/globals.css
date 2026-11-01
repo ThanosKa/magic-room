@@ -1,59 +1,78 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./motion.css";
 
-@custom-variant dark (&:is(.dark *));
+/*
+ * Hover effects only on devices that can really hover (mouse, trackpad).
+ * This redefines Tailwind's `hover:` (and `group-hover:` / `peer-hover:`),
+ * so touch screens never get a stuck hover state.
+ */
+@custom-variant hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
 
+/* ───────── Design tokens (the one place the look is defined) ───────── */
 :root {
-  /* User defined OKLCH for Light Mode */
-  --primary: oklch(0.45 0.2 280);
-  --primary-foreground: oklch(0.99 0 0);
-  /* White */
+  color-scheme: light;
 
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.13 0 0);
+  /* Palette */
+  --paper: #f4f0e9; /* page background */
+  --paper-2: #ebe5da; /* cards, bands */
+  --ink: #17140f; /* text, primary buttons */
+  --ink-2: rgb(23 20 15 / 0.68); /* secondary text */
+  --ink-3: rgb(23 20 15 / 0.48); /* tertiary text, numerals, labels */
+  --line: rgb(23 20 15 / 0.12); /* hairlines, borders */
+  --night: #14110d; /* dark bands */
+  --cream: #efe8dc; /* text and buttons on night */
+  --cream-2: rgb(239 232 220 / 0.66); /* secondary text on night */
+  --accent: #7c3aed; /* brand purple: focus ring, dots, credit pill, small highlights only */
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.13 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.13 0 0);
+  /* shadcn semantic names, pointed at the palette */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-2);
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--cream);
+  --secondary: var(--paper-2);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-2);
+  --muted-foreground: var(--ink-2);
+  --accent-foreground: var(--paper);
+  --destructive: #b42318;
+  --destructive-foreground: var(--paper);
+  --border: var(--line);
+  --input: rgb(23 20 15 / 0.24); /* form field borders: stronger than a hairline */
+  --ring: var(--accent);
 
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.92 0.03 280);
-  /* Very light purple tint */
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.45 0.2 280);
-
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.875rem;
 }
 
 @theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-night: var(--night);
+  --color-cream: var(--cream);
+  --color-cream-2: var(--cream-2);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -61,35 +80,55 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --heading-font: "Inter", sans-serif;
-  /* Example font */
-  --font-sans: var(--font-geist-sans);
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-serif: var(--font-instrument), "Times New Roman", serif;
   --font-mono: var(--font-geist-mono);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: var(--radius);
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 28px;
+  --radius-4xl: 40px;
 }
 
+/* Values hand-written CSS also reads (motion.css), so always emitted. */
+@theme static {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-wipe: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --shadow-button: 0 1px 2px rgb(23 20 15 / 0.12), 0 8px 24px rgb(23 20 15 / 0.14);
+  /* Same shadows as filters, for the primary button: a hover change of a
+   * drop-shadow filter can be composited, a box-shadow change repaints. */
+  --drop-shadow-button: 0 1px 2px rgb(23 20 15 / 0.12), 0 8px 24px rgb(23 20 15 / 0.14);
+  --drop-shadow-button-hover: 0 1px 2px rgb(23 20 15 / 0.12), 0 14px 30px rgb(23 20 15 / 0.2);
+  --shadow-float: 0 10px 30px rgb(23 20 15 / 0.18);
+
+  --container-page: 1240px;
+}
+
+/* Page container: 1240px max, gutters 20 / 24 / 48px. */
+@utility container-page {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: 20px;
+  @media (width >= 40rem) {
+    padding-inline: 24px;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 48px;
+  }
+}
+
+/* Old container, still used by pages until they are restyled. */
 @utility container {
   margin-inline: auto;
   width: 100%;
@@ -113,15 +152,31 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
 
+  /*
+   * `clip`, not `hidden`: `hidden` on both html and body turns body into its
+   * own scroll container, which stops the sticky site header from sticking.
+   */
   html {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
-    @apply bg-background text-foreground;
-    overflow-x: hidden;
+    @apply bg-background text-foreground font-sans;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: rgb(124 58 237 / 0.18);
+  }
+
+  /* A visible keyboard focus ring on every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 }

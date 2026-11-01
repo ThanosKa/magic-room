@@ -91,7 +91,7 @@ export const COMPETITORS: ICompetitorData[] = [
             "There is nothing to export. Both tools take the same input — a photo of your room — so switching means uploading the same photo somewhere else. Magic Room gives every new account 1 free credit with no card required, so you can run the identical photo through both and compare outputs side by side before spending anything. If you are on a RoomGPT recurring plan, cancel it after you have compared, not before.",
         magicRoomAdvantages: [
             "Magic Room processes images in-memory and never stores your room photos — RoomGPT retains uploaded images on their servers",
-            "Magic Room uses Google Gemini multimodal AI, which produces more architecturally coherent outputs than diffusion-only approaches",
+            "Magic Room uses Google Gemini and OpenAI multimodal AI, which produces more architecturally coherent outputs than diffusion-only approaches",
             "Magic Room credits never expire and are not tied to a monthly subscription",
             "Magic Room provides 14 distinct design themes with AI that understands each style's specific design principles",
         ],
@@ -99,7 +99,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is Magic Room better than RoomGPT?",
                 answer:
-                    "Magic Room and RoomGPT take different approaches to AI room redesign. RoomGPT uses a diffusion model that excels at quick stylistic variation but can produce inconsistent architectural results. Magic Room uses Google Gemini multimodal AI, which better preserves the room's structure while applying design themes. For users who want privacy guarantees and predictable results, Magic Room's approach is more suitable.",
+                    "Magic Room and RoomGPT take different approaches to AI room redesign. RoomGPT uses a diffusion model that excels at quick stylistic variation but can produce inconsistent architectural results. Magic Room uses Google Gemini and OpenAI multimodal AI, which better preserves the room's structure while applying design themes. For users who want privacy guarantees and predictable results, Magic Room's approach is more suitable.",
             },
             {
                 question: "Does RoomGPT store your photos?",
@@ -124,7 +124,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is there a free RoomGPT alternative?",
                 answer:
-                    "Magic Room gives every new account 1 free credit with no card required, so you can generate a full set of redesigns before paying anything. After that, credits start at €9.99 for 30 designs (about €0.33 each) with no monthly commitment — a lower entry cost than most subscription-based RoomGPT alternatives.",
+                    "Magic Room gives every new account 1 free credit with no card required, so you can generate a full redesign before paying anything. After that, credits start at €9.99 for 20 credits (about €0.50 per Quick design) with no monthly commitment — a lower entry cost than most subscription-based RoomGPT alternatives.",
             },
         ],
         keywords: [
@@ -138,7 +138,7 @@ export const COMPETITORS: ICompetitorData[] = [
     {
         slug: "decorai",
         name: "DecorAI",
-        website: "decorai.com",
+        website: "decorai.io",
         description:
             "DecorAI is an AI interior design platform that offers multiple design modes including room redesign, virtual staging, and interior concept generation. It targets both homeowners and property professionals.",
         pros: [
@@ -148,30 +148,30 @@ export const COMPETITORS: ICompetitorData[] = [
         ],
         cons: [
             "More complex interface aimed at professional users rather than homeowners",
-            "Higher price point than tools focused on consumer use",
-            "Subscription model required for most functionality",
+            "Subscription required after a short trial, and the trial asks for a payment card",
+            "Paying monthly is poor value if you only redesign a room or two",
             "Longer generation times for higher-quality outputs",
         ],
         pricing:
-            "DecorAI uses a subscription model with different tiers for personal and professional use. Professional plans with team access are considerably more expensive.",
+            "DecorAI is a subscription billed monthly, half-yearly or yearly. Paid plans include unlimited images; AI videos are capped per plan. New users get a short trial with 3 designs, and the trial asks for a card (decorai.io/pricing, as of November 2026).",
         pricingModel: {
             billing:
-                "Tiered subscription, separated into personal and professional plans. Team access sits on the higher tiers.",
+                "Subscription billed monthly, half-yearly or yearly. Every paid plan includes unlimited AI images; the plans differ in how many AI videos you get (decorai.io/pricing, as of November 2026).",
             freeTier:
-                "Limited trial access. Most of the platform's output types are behind a paid tier.",
+                "A 1-day trial with 3 full-quality designs. The trial asks for a payment card, and the subscription starts when it ends unless you cancel.",
             creditsExpire:
-                "Monthly allocation. Unused generations reset at the end of the billing period on standard plans.",
+                "Images do not use credits on a paid plan, so there is nothing to expire. What you lose is the subscription itself: a month you do not use is still paid for. AI videos come from a per-plan allowance.",
             commercialRights:
                 "Generally tied to the professional tiers. Verify before using outputs on a live listing.",
             ifYouStopPaying:
                 "Access to the professional output types ends with the subscription.",
-            officialPricingUrl: "https://decorai.com",
+            officialPricingUrl: "https://decorai.io/pricing/",
         },
         whySwitch: [
             "The interface is built for professional staging workflows, which is significant overhead if all you want is to see your living room in a different style",
             "The subscription is priced for continuous professional use and is poor value for two or three redesigns",
+            "The free trial asks for a payment card and turns into a subscription unless you cancel in time",
             "Generation times are longer on the higher-quality settings",
-            "Uploaded photos are retained rather than processed and discarded",
         ],
         migration:
             "No data to move — Magic Room works from the same room photo. The practical difference is workflow: DecorAI expects you to configure a staging job, Magic Room expects you to pick a room type and a style. If you use DecorAI specifically for real-estate staging output formats, run one listing photo through both before cancelling, since that is the use case where DecorAI's extra configuration earns its keep.",
@@ -195,7 +195,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "How does Magic Room's pricing compare to DecorAI?",
                 answer:
-                    "Magic Room offers one-time credit packages with no subscription requirement. DecorAI primarily uses subscription pricing. For users who need occasional room redesign rather than frequent professional use, Magic Room's model is likely to be more cost-effective.",
+                    "DecorAI is a subscription with unlimited images on every paid plan (decorai.io/pricing, as of November 2026). Magic Room sells one-time credit packs from €9.99 for 20 credits that never expire. If you redesign rooms every week, DecorAI's unlimited plan can work out cheaper. If you redesign a few rooms a year, paying once is cheaper, and there is no trial to remember to cancel.",
             },
         ],
         keywords: [
@@ -248,7 +248,7 @@ export const COMPETITORS: ICompetitorData[] = [
         magicRoomAdvantages: [
             "Magic Room focuses specifically on interior room redesign and delivers better results in that specific use case than a multi-purpose platform",
             "Magic Room credits never expire — they do not reset at the end of a billing period",
-            "Magic Room uses Google Gemini multimodal AI rather than diffusion models, providing more architecturally coherent outputs",
+            "Magic Room uses Google Gemini and OpenAI multimodal AI rather than diffusion models, providing more architecturally coherent outputs",
             "Magic Room does not retain your uploaded room photos after processing",
         ],
         faqs: [
@@ -265,12 +265,12 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Which AI model does Magic Room use versus Reimagine Home?",
                 answer:
-                    "Magic Room uses Google Gemini multimodal AI via OpenRouter, which handles image understanding and generation as a unified process. This produces outputs that better preserve the physical structure of your room while applying the selected design style.",
+                    "Magic Room uses Google Gemini and OpenAI multimodal AI via OpenRouter, which handles image understanding and generation as a unified process. This produces outputs that better preserve the physical structure of your room while applying the selected design style.",
             },
             {
                 question: "How does Magic Room pricing compare to Reimagine Home?",
                 answer:
-                    "Reimagine Home uses a monthly subscription where unused credits typically reset at the end of each billing period. Magic Room sells one-time credit packages from €9.99 for 30 designs (about €0.33 each) that never expire, so occasional users do not pay for months they do not use. Both include a free way to try the tool before paying.",
+                    "Reimagine Home uses a monthly subscription where unused credits typically reset at the end of each billing period. Magic Room sells one-time credit packages from €9.99 for 20 credits (about €0.50 per Quick design) that never expire, so occasional users do not pay for months they do not use. Both include a free way to try the tool before paying.",
             },
             {
                 question: "Is Magic Room a free Reimagine Home alternative?",
@@ -326,7 +326,7 @@ export const COMPETITORS: ICompetitorData[] = [
         migration:
             "Switching is immediate — there is no library to migrate, since both tools generate from a photo you already have. If you use Interior AI's example catalogue for inspiration, that remains freely browsable after you stop paying. Run the same source photo through Magic Room's free credit and compare how closely each output preserves your room's actual walls, windows and proportions; that is the dimension where the two approaches diverge most.",
         magicRoomAdvantages: [
-            "Magic Room uses Google Gemini multimodal AI, a more recent model that better preserves architectural structure than the diffusion approach Interior AI uses",
+            "Magic Room uses Google Gemini and OpenAI multimodal models, a more recent approach that better preserves architectural structure than the diffusion approach Interior AI uses",
             "Magic Room guarantees that uploaded room photos are not retained after processing — Interior AI does not make equivalent privacy guarantees",
             "Magic Room's design themes include specific guidance that shapes the AI output more precisely than generic style presets",
             "Magic Room provides more consistent results between generation attempts",
@@ -335,7 +335,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is Magic Room better than Interior AI?",
                 answer:
-                    "Magic Room uses a more recent AI approach (Google Gemini multimodal) that produces outputs with better structural coherence than the diffusion models Interior AI uses. For users who want results that respect the physical dimensions and layout of their existing room, Magic Room tends to produce more useful outputs. Interior AI has a larger catalogue of generated examples to browse for inspiration.",
+                    "Magic Room uses a more recent AI approach (Google Gemini and OpenAI multimodal models) that produces outputs with better structural coherence than the diffusion models Interior AI uses. For users who want results that respect the physical dimensions and layout of their existing room, Magic Room tends to produce more useful outputs. Interior AI has a larger catalogue of generated examples to browse for inspiration.",
             },
             {
                 question: "Does Interior AI keep your uploaded photos?",
@@ -345,7 +345,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "How does Magic Room handle image quality compared to Interior AI?",
                 answer:
-                    "Both tools accept standard room photographs. Magic Room uses Google Gemini's multimodal processing, which tends to produce higher-resolution outputs with better texture and material coherence than diffusion-based approaches. The practical difference is most visible in how well room features — flooring, walls, windows — are preserved in the redesigned output.",
+                    "Both tools accept standard room photographs. Magic Room uses multimodal Google Gemini and OpenAI image models, which tend to produce higher-resolution outputs with better texture and material coherence than diffusion-based approaches. The practical difference is most visible in how well room features — flooring, walls, windows — are preserved in the redesigned output.",
             },
         ],
         keywords: [

@@ -85,7 +85,7 @@ export const TEST_PACKAGES = {
   starter: {
     id: "starter",
     name: "Starter",
-    credits: 30,
+    credits: 20,
     priceCents: 999,
     stripePriceId: "price_test_starter",
     active: true,
@@ -93,7 +93,7 @@ export const TEST_PACKAGES = {
   growth: {
     id: "growth",
     name: "Growth",
-    credits: 90,
+    credits: 60,
     priceCents: 1999,
     stripePriceId: "price_test_growth",
     active: true,
@@ -101,7 +101,7 @@ export const TEST_PACKAGES = {
   premium: {
     id: "premium",
     name: "Premium",
-    credits: 200,
+    credits: 120,
     priceCents: 2999,
     stripePriceId: "price_test_premium",
     active: true,

@@ -5,7 +5,14 @@ export type RoomType =
   | "bathroom"
   | "dining-room"
   | "office"
-  | "gaming-room";
+  | "gaming-room"
+  | "nursery"
+  | "laundry-room"
+  | "basement"
+  | "sunroom"
+  | "home-theater"
+  | "mudroom"
+  | "walk-in-closet";
 
 export type Theme =
   | "modern"
@@ -15,9 +22,15 @@ export type Theme =
   | "tropical"
   | "bohemian"
   | "vintage"
-  | "luxury";
+  | "luxury"
+  | "japandi"
+  | "art-deco"
+  | "coastal"
+  | "farmhouse"
+  | "mediterranean"
+  | "transitional";
 
-export type Quality = "standard" | "premium";
+export type Quality = "standard" | "premium" | "ultra";
 
 export interface IDesignOptions {
   roomType: RoomType;

@@ -13,22 +13,22 @@ interface BreadcrumbNavProps {
 export function BreadcrumbNav({ items }: BreadcrumbNavProps) {
     return (
         <nav aria-label="Breadcrumb" className="py-4">
-            <ol className="flex flex-wrap items-center gap-1 text-sm text-slate-500 dark:text-slate-400">
+            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] tracking-[-0.005em] text-ink-3">
                 {items.map((item, index) => (
-                    <li key={item.href} className="flex items-center gap-1">
+                    <li key={item.href} className="flex items-center gap-2">
                         {index > 0 && (
-                            <span className="text-slate-300 dark:text-slate-600" aria-hidden="true">
+                            <span className="text-ink/25" aria-hidden="true">
                                 /
                             </span>
                         )}
                         {index === items.length - 1 ? (
-                            <span className="text-slate-700 dark:text-slate-300" aria-current="page">
+                            <span className="text-ink-2" aria-current="page">
                                 {item.name}
                             </span>
                         ) : (
                             <Link
                                 href={item.href}
-                                className="hover:text-primary transition-colors"
+                                className="inline-flex min-h-6 items-center rounded-sm underline decoration-transparent decoration-1 underline-offset-4 transition-[color,text-decoration-color] duration-200 ease-out hover:text-ink hover:decoration-ink/35 motion-reduce:transition-none"
                             >
                                 {item.name}
                             </Link>

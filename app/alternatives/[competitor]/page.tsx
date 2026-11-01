@@ -7,6 +7,7 @@ import {
     softwareApplicationSchema,
 } from "@/lib/seo/schema";
 import { SITE_URL } from "@/lib/seo/config";
+import { CREDIT_PACKAGES } from "@/lib/constants";
 import {
     getCompetitorBySlug,
     getAllCompetitorSlugs,
@@ -19,6 +20,11 @@ import {
 } from "@/lib/seo/internal-links";
 import { AlternativePageContent } from "@/components/seo/alternative-page-content";
 import { JsonLd } from "@/components/seo/json-ld";
+
+// Cheapest pack, read from the same table checkout uses so the meta line
+// cannot drift from the real price.
+const ENTRY_PACK = CREDIT_PACKAGES[0];
+const ENTRY_PRICE = `€${(ENTRY_PACK.priceCents / 100).toFixed(2)}`;
 
 interface Props {
     params: Promise<{ competitor: string }>;
@@ -44,7 +50,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: {
             absolute: `${competitor.name} Alternative — Pay Once, Photos Never Stored`,
         },
-        description: `A ${competitor.name} alternative that charges once, not monthly, and never stores your room photos. Google Gemini AI, 4–8 redesigns in 60s. 1 free credit.`,
+        // Leads with the two facts a switcher compares first (what it costs and
+        // whether it is a subscription), then privacy and the free try. The old
+        // line named one AI vendor, which stopped being the whole story when the
+        // Ultra tier moved to an OpenAI model.
+        description: `${/^[AEIOU]/i.test(competitor.name) ? "An" : "A"} ${competitor.name} alternative you pay for once: ${ENTRY_PRICE} for ${ENTRY_PACK.credits} credits that never expire. Your room photos are never stored. 1 free design, no card.`,
         path: `/alternatives/${slug}`,
         keywords: competitor.keywords,
     });

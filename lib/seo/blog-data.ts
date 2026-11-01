@@ -240,7 +240,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "How much does AI virtual staging cost per image?",
                 answer:
-                    "The cost per image with AI tools varies by tool and volume. With Magic Room, a credit costs between EUR 0.10 and EUR 0.33 depending on the package purchased. A single room can be staged in multiple styles for the cost of several credits.",
+                    "The cost per image with AI tools varies by tool and volume. With Magic Room, a credit costs between EUR 0.25 and EUR 0.50 depending on the pack, and a Quick design uses 1 credit (Pro uses 2, Ultra 3). A single room can be staged in several styles for a few credits.",
             },
             {
                 question: "Does virtual staging work for furnished properties?",
@@ -447,12 +447,12 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "Which AI model is best for room design?",
                 answer:
-                    "Multimodal models (Google Gemini, GPT-4o) tend to produce better results for room design than diffusion-only models because they better understand three-dimensional space. Magic Room uses Google Gemini multimodal AI, which produces outputs with stronger structural coherence than diffusion-based alternatives.",
+                    "Multimodal models (Google Gemini, GPT-4o) tend to produce better results for room design than diffusion-only models because they better understand three-dimensional space. Magic Room uses Google Gemini and OpenAI multimodal AI, which produces outputs with stronger structural coherence than diffusion-based alternatives.",
             },
             {
                 question: "How long does AI room design generation take?",
                 answer:
-                    "Processing time depends on the model and the server load. Most tools produce results within 30 to 90 seconds. Magic Room typically generates a complete redesigned room in 30 to 60 seconds using Google Gemini's synchronous processing.",
+                    "Processing time depends on the model and the server load. Most tools produce results within 30 to 90 seconds. Magic Room typically generates a complete redesigned room in 30 to 60 seconds (about 2 minutes at Ultra quality), returned synchronously.",
             },
         ],
     },
@@ -1068,7 +1068,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "How much does AI home staging cost compared to traditional staging?",
                 answer:
-                    "Traditional staging for a mid-size property typically costs £1,500 to £5,000 including furniture rental for the marketing period. AI staging with Magic Room costs EUR 9.99 for 30 credits, with each room redesign requiring one credit. A complete property of five rooms can be AI-staged for under EUR 1.",
+                    "Traditional staging for a mid-size property typically costs £1,500 to £5,000 including furniture rental for the marketing period. AI staging with Magic Room costs EUR 9.99 for 20 credits, with each Quick room redesign requiring one credit. A complete property of five rooms can be AI-staged for under EUR 3.",
             },
             {
                 question: "Can AI staging replace traditional staging entirely?",
@@ -1147,7 +1147,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "Magic Room uses Google Gemini multimodal AI to process uploaded room photos. The key advantage of a multimodal model is that it understands the spatial and structural context of the room rather than applying a style overlay to a flat image. Results preserve room geometry with significantly higher accuracy than diffusion-based tools. Photos are processed in-memory and not stored. Pricing is credit-based from EUR 9.99, with one free credit on signup.",
+                    "Magic Room uses Google Gemini and OpenAI multimodal AI to process uploaded room photos. The key advantage of a multimodal model is that it understands the spatial and structural context of the room rather than applying a style overlay to a flat image. Results preserve room geometry with significantly higher accuracy than diffusion-based tools. Photos are processed in-memory and not stored. Pricing is credit-based from EUR 9.99, with one free credit on signup.",
             },
             {
                 type: "h3",
@@ -1182,7 +1182,7 @@ export const BLOG_POSTS: IBlogPost[] = [
                 rows: [
                     [
                         "Magic Room",
-                        "Google Gemini multimodal AI",
+                        "Google Gemini and OpenAI multimodal AI",
                         "Never stored — in-memory only",
                         "Credits from EUR 9.99, no subscription",
                         "1 credit on signup",
@@ -1214,7 +1214,7 @@ export const BLOG_POSTS: IBlogPost[] = [
                 type: "cta",
                 heading: "Try Magic Room free",
                 subtext:
-                    "Upload a photo of your room and generate 4–8 AI design variations in under a minute. One free credit with every account — no card required.",
+                    "Upload a photo of your room and generate an AI redesign in under a minute. One free credit with every account — no card required.",
             },
             {
                 type: "h2",
@@ -1236,7 +1236,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "Which AI interior design tool has the best output quality in 2026?",
                 answer:
-                    "Tools using multimodal AI models (like Magic Room with Google Gemini) tend to produce outputs that better preserve room geometry and structural accuracy compared to diffusion-based tools. However, quality varies by room type and input photo quality — testing with your specific room is the best approach.",
+                    "Tools using multimodal AI models (like Magic Room with Google Gemini and OpenAI) tend to produce outputs that better preserve room geometry and structural accuracy compared to diffusion-based tools. However, quality varies by room type and input photo quality — testing with your specific room is the best approach.",
             },
             {
                 question: "Are there free AI interior design tools?",
@@ -1329,7 +1329,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "How long does AI bedroom redesign take?",
                 answer:
-                    "With Magic Room, AI bedroom redesigns are generated in 30 to 60 seconds from a single uploaded photo. You receive multiple design variations in the style you selected.",
+                    "With Magic Room, AI bedroom redesigns are generated in 30 to 60 seconds from a single uploaded photo. You receive a redesign in the style you selected.",
             },
             {
                 question: "Can AI redesign a small bedroom effectively?",
@@ -1339,7 +1339,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "Will AI keep my bedroom's actual layout and dimensions?",
                 answer:
-                    "Higher-quality tools using multimodal AI models (like Magic Room with Google Gemini) preserve room geometry more accurately than diffusion-based alternatives. Window positions, room proportions, and architectural features should remain consistent in the redesigned output.",
+                    "Higher-quality tools using multimodal AI models (like Magic Room with Google Gemini and OpenAI) preserve room geometry more accurately than diffusion-based alternatives. Window positions, room proportions, and architectural features should remain consistent in the redesigned output.",
             },
         ],
     },
@@ -1350,7 +1350,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         // own room.
         title: "AI Home Office Design: 10 Ideas for 2026 Workspaces",
         metaDescription:
-            "Home office ideas you can test on your own room before buying a desk. Upload one photo, get 4–8 AI redesigns in 60 seconds. 1 free credit, no card.",
+            "Home office ideas you can test on your own room before buying a desk. Upload one photo, get an AI redesign in 60 seconds. 1 free credit, no card.",
         publishedDate: "2026-02-22",
         updatedDate: "2026-03-25",
         readingTime: 7,

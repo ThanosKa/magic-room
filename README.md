@@ -18,7 +18,7 @@
 [![Stars](https://img.shields.io/github/stars/ThanosKa/magic-room?style=for-the-badge&logo=github)](https://github.com/ThanosKa/magic-room/stargazers)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge)](CONTRIBUTING.md)
 
-<p>AI-powered interior design assistant that transforms your room photos into stunning design variations using Google's Gemini Vision model. Upload a room image, choose your style, and get professional design suggestions instantly.</p>
+<p>AI-powered interior design assistant that transforms your room photos into stunning design variations using Google Gemini and OpenAI image models. Upload a room image, choose your style, and get professional design suggestions instantly.</p>
 
 [Report Bug](https://github.com/ThanosKa/magic-room/issues/new?template=bug_report.md) · [Request Feature](https://github.com/ThanosKa/magic-room/issues/new?template=feature_request.md) · [Discussions](https://github.com/ThanosKa/magic-room/discussions)
 
@@ -71,11 +71,11 @@
 
 ## About
 
-Magic Room is an AI-powered interior design assistant that helps anyone transform their living spaces. Upload a photo of your room, select a design theme, and get instant professional design suggestions powered by Google's Gemini Vision model. With a transparent credit system, secure authentication, and privacy-first approach, redesigning your space has never been easier.
+Magic Room is an AI-powered interior design assistant that helps anyone transform their living spaces. Upload a photo of your room, select a design theme, and get instant professional design suggestions powered by Google Gemini and OpenAI image models. With a transparent credit system, secure authentication, and privacy-first approach, redesigning your space has never been easier.
 
 ## Features
 
-- **Instant AI Design Generation**: Upload any room photo and get multiple design variations in seconds
+- **Instant AI Design Generation**: Upload any room photo and get a redesigned version in under a minute
 - **Multiple Design Themes**: Choose from Bohemian, Industrial, Minimalist, Modern, Scandinavian, and Tropical styles
 - **Credit-Based System**: Start with free credits, purchase packs that never expire
 - **Before/After Comparison**: Interactive slider to compare original and redesigned rooms
@@ -112,7 +112,7 @@ Quick preview: Upload room photo → Select design theme → AI generates variat
 1. User uploads a room image via drag-and-drop (converted to base64 client-side)
 2. User selects room type and design theme, optionally adds custom prompt
 3. System validates authentication and credit balance
-4. Image is sent to OpenRouter's Google Gemini Vision model for processing
+4. Image is sent to OpenRouter's image models (Google Gemini or OpenAI, depending on quality tier) for processing
 5. AI generates design variations and returns results immediately
 6. Credits are deducted and generation metadata is stored
 7. User can compare designs with before/after slider and download results
@@ -127,7 +127,7 @@ Quick preview: Upload room photo → Select design theme → AI generates variat
 | State Management | Zustand                                  |
 | Auth             | Clerk                                    |
 | Database         | Supabase (PostgreSQL)                    |
-| AI Model         | Google Gemini 3.1 Flash (via OpenRouter) |
+| AI Model         | Quick: google/gemini-nano-banana-2.1 (1 credit), Pro: google/gemini-3-pro-image (2), Ultra: openai/gpt-5.4-image-2 (3), via OpenRouter |
 | Rate Limiting    | Upstash Redis                            |
 | Payments         | Stripe                                   |
 | Validation       | Zod                                      |
@@ -224,7 +224,7 @@ magic-room/
 - **App Router**: Next.js 15 App Router for routing and API endpoints
 - **Authentication**: Clerk middleware for session management
 - **Credit System**: Atomic operations in Supabase with non-expiring credits
-- **AI Processing**: Synchronous OpenRouter API calls with Google Gemini Vision
+- **AI Processing**: Synchronous OpenRouter API calls with Google Gemini and OpenAI image models
 - **Privacy**: Images processed in-memory only, no persistent storage
 - **Rate Limiting**: Upstash Redis for abuse prevention (100 generations/hour per user)
 - **State Management**: Zustand for client-side state (credits, generation status)
@@ -285,7 +285,7 @@ Report security vulnerabilities privately as described in [SECURITY.md](SECURITY
 
 ## Acknowledgments
 
-- [Google Gemini](https://gemini.google.com/) for the AI vision model
+- [Google Gemini](https://gemini.google.com/) and [OpenAI](https://openai.com/) for the AI image models
 - [OpenRouter](https://openrouter.ai/) for API access
 - [shadcn/ui](https://ui.shadcn.com) for beautiful UI components
 - [Vercel](https://vercel.com) for hosting and deployment

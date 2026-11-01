@@ -19,7 +19,7 @@ const jsonLd = graphSchema([
     url: `${SITE_URL}/about`,
     jobTitle: "Software Developer",
     description:
-      "Thanos Kazakis is the founder of Magic Room, an AI-powered interior design tool built with Google Gemini.",
+      "Thanos Kazakis is the founder of Magic Room, an AI-powered interior design tool built with Google Gemini and OpenAI image models.",
     sameAs: [
       "https://x.com/KazakisThanos",
       "https://github.com/ThanosKa",
