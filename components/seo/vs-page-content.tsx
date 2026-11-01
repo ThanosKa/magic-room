@@ -257,7 +257,7 @@ export function VsPageContent({
                             },
                             {
                                 term: "Commercial rights",
-                                magicRoom: "Included on every paid generation, every pack.",
+                                magicRoom: "Included on every design, free credit too.",
                                 competitor: competitor.pricingModel.commercialRights,
                             },
                             {

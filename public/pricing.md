@@ -15,7 +15,7 @@ Magic Room costs €9.99 for 20 credits, €19.99 for 60 credits, or €29.99 fo
 - Price: €0
 - Credits: 1 credit on signup (one Quick design)
 - Payment card required: No
-- Commercial rights: No — free-credit generations are for personal use only
+- Commercial rights: Yes, the same as paid credits
 - Expiry: Never
 
 ## Starter pack
@@ -67,7 +67,7 @@ Quick gives fast ideas for your room. Pro gives a bolder, magazine-style makeove
 - Generation time: 30–60 seconds at Quick and Pro, about 2 minutes at Ultra.
 - Outputs per run: one redesign.
 - Failed runs: the credits are refunded to the balance automatically.
-- Commercial rights: Included on every paid credit — real estate listings, client presentations, Airbnb listings, renovation decks.
+- Commercial rights: Included on every design, free credit too — real estate listings, client presentations, Airbnb listings, renovation decks.
 - Photo storage: Never. Images are sent as base64, processed in memory, and dropped. No storage bucket, no database row, no AI training use.
 - Credit expiry: Never. The account stores an integer balance that only decrements on use.
 - Rate limit: 100 generations per hour per account.
@@ -86,7 +86,7 @@ Competitor pricing changes often; check each vendor's own pricing page for curre
 
 ## Comparison to traditional virtual staging
 
-Traditional virtual staging services charge €75–150 per room and take 24–72 hours. Magic Room stages a room for €0.25–€1.50 depending on quality and pack, in 30 seconds to 2 minutes, with full commercial rights on paid credits. The trade-off is that traditional services include a human editor; Magic Room does not.
+Traditional virtual staging services charge €75–150 per room and take 24–72 hours. Magic Room stages a room for €0.25–€1.50 depending on quality and pack, in 30 seconds to 2 minutes, with full commercial rights. The trade-off is that traditional services include a human editor; Magic Room does not.
 
 ## Contact
 

@@ -35,14 +35,14 @@ Source: `lib/constants.ts` `CREDIT_PACKAGES`, `components/pricing-content.tsx`. 
 
 | Pack | Price | Credits | Per Quick design | Extras on pricing page |
 |---|---|---|---|---|
-| Free | €0 | 1 on signup, no card | - | personal use only (pricing FAQ) |
+| Free | €0 | 1 on signup, no card | - | full commercial rights, same as paid |
 | Starter | €9.99 | 20 | €0.50 | - |
 | Growth | €19.99 | 60 | €0.33 | Priority support |
 | Premium | €29.99 | 120 | €0.25 | 24/7 priority support |
 
 Old packs (30 / 90 / 200, before 2026-11-01) must not appear anywhere. The home hero says "from €0.25 a design" (`components/home/home-hero.tsx`).
 
-Commercial rights: pricing FAQ says paid credits carry full commercial rights and free-credit output is personal use only (`components/pricing-content.tsx`). `app/terms/page.tsx` §5.2 says designs may be used "for personal or commercial purposes" with no free-credit carve-out. Owner question: which is right? Until answered, do not add new claims about this.
+Commercial rights: every design, including the free signup credit, carries full commercial rights (owner decision 2026-11-01). Pricing FAQ, home FAQ, `public/pricing.md`, `public/llms*.txt` and `app/terms/page.tsx` §5.2 all say this; the terms no longer forbid commercial use in §3.2.
 
 ## Buyer
 

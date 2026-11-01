@@ -31,10 +31,13 @@ import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-page
 //   - PASS_2026_10: surfaces edited in the 2026-10 SEO pass (HowTo JSON-LD
 //     removed, /vs consolidated into /alternatives, internal links and hub
 //     listings changed, pruned combos removed from the design hub).
-//   - LEGAL: matches the "Last Updated: December 2024" line on /privacy and /terms.
+//   - LEGAL: matches the "Last Updated: December 2024" line on /privacy.
+//   - RIGHTS_2026_11: free-credit commercial rights made consistent on
+//     /pricing and /terms (matches "Last Updated: November 2026" on /terms).
 const BASELINE_LAST_UPDATED = new Date("2026-07-29");
 const PASS_2026_10_LAST_UPDATED = new Date("2026-10-01");
 const LEGAL_LAST_UPDATED = new Date("2024-12-01");
+const RIGHTS_2026_11_LAST_UPDATED = new Date("2026-11-01");
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
@@ -52,7 +55,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/pricing`,
-            lastModified: BASELINE_LAST_UPDATED,
+            lastModified: RIGHTS_2026_11_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
@@ -82,7 +85,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/terms`,
-            lastModified: LEGAL_LAST_UPDATED,
+            lastModified: RIGHTS_2026_11_LAST_UPDATED,
             changeFrequency: "yearly",
             priority: 0.3,
         },
