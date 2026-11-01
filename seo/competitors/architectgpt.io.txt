@@ -1,0 +1,1 @@
+# snapshot 2026-11-01: sitemap not reachable (Cloudflare "Just a moment" challenge, HTTP 403 on /sitemap.xml and /sitemap_index.xml; robots.txt lists no Sitemap line)

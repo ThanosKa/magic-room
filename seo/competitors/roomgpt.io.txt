@@ -1,0 +1,1 @@
+# snapshot 2026-11-01: sitemap not reachable (/sitemap.xml, /sitemap_index.xml, /sitemap-0.xml and /robots.txt all return 404 on https://www.roomgpt.io)

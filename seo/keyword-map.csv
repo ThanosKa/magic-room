@@ -1,0 +1,58 @@
+query,intent,monthly volume,difficulty,target URL,status,current position,last checked
+magic room,brand,unknown,unknown,/,live,6.7 (GSC 90d),2026-11-01
+magicroom,brand,unknown,unknown,/,live,4.5 (GSC 90d),2026-11-01
+magic room ai,brand,unknown,unknown,/,live,1.1 (GSC 90d),2026-11-01
+what is magic room,brand-info,unknown,unknown,/about,live,6.2 (GSC 90d),2026-11-01
+ai interior design,category,unknown,unknown,/,live,not ranking in GSC,2026-11-01
+ai room design,category,unknown,unknown,/,live,not ranking in GSC,2026-11-01
+ai interior design free,category-free,unknown,unknown,/,gap,not ranking in GSC,2026-11-01
+redesign my room ai,problem,unknown,unknown,/,live,not ranking in GSC,2026-11-01
+redesign room from photo ai,problem,unknown,unknown,/,live,not ranking in GSC,2026-11-01
+ai room planner from photo,problem,unknown,unknown,/,gap,not ranking in GSC,2026-11-01
+ai interior design no subscription,problem,unknown,unknown,/pricing,planned,not ranking in GSC,2026-11-01
+magic room pricing,brand-commercial,unknown,unknown,/pricing,live,not in GSC,2026-11-01
+how much does ai interior design cost,question,unknown,unknown,/pricing,gap,not ranking in GSC,2026-11-01
+virtual staging ai,category,unknown,unknown,/virtual-staging,live,not indexed (GSC: URL unknown to Google),2026-11-01
+free virtual staging,category-free,unknown,unknown,/virtual-staging,live,not indexed,2026-11-01
+ai virtual staging cost,question,unknown,unknown,/virtual-staging,live,not indexed,2026-11-01
+virtual staging for real estate,info,unknown,unknown,/blog/virtual-staging-real-estate-guide,live,not indexed (URL unknown to Google),2026-11-01
+ai home staging before selling,info,unknown,unknown,/blog/ai-home-staging-before-selling,live,crawled - not indexed,2026-11-01
+best ai interior design tools 2026,commercial,unknown,unknown,/blog/best-ai-interior-design-tools-2026,live,45.3 (GSC 90d),2026-11-01
+how ai interior design tools work,info,unknown,unknown,/blog/ai-interior-design-tools-how-they-work,live,not indexed (URL unknown to Google),2026-11-01
+roomgpt alternative,alternative,unknown,unknown,/alternatives,live,16.9 (GSC 90d),2026-11-01
+roomgpt alternatives,alternative,unknown,unknown,/alternatives,live,27.9 (GSC 90d),2026-11-01
+roomgpt pricing,competitor-pricing,unknown,unknown,/alternatives/roomgpt,live,9.5 (GSC 90d; page not indexed),2026-11-01
+reimagine home alternative,alternative,unknown,unknown,/alternatives/reimaginehome,live,8.2 (GSC 90d),2026-11-01
+reimagine home ai alternative,alternative,unknown,unknown,/alternatives/reimaginehome,live,16.9 (GSC 90d),2026-11-01
+reimaginehome pricing,competitor-pricing,unknown,unknown,/vs/reimaginehome,live,5.5-35.5 (GSC 90d; variants),2026-11-01
+reimagine home vs magic room,vs,unknown,unknown,/vs/reimaginehome,live,not in GSC,2026-11-01
+interior ai alternative,alternative,unknown,unknown,/alternatives/interior-ai,live,20.8 (GSC 90d),2026-11-01
+interior ai pricing,competitor-pricing,unknown,unknown,/alternatives/interior-ai,live,7.5 (GSC 90d),2026-11-01
+decorai alternative,alternative,unknown,unknown,/alternatives/decorai,live,not in GSC,2026-11-01
+genroom alternative,alternative,unknown,unknown,/alternatives/genroom,gap,no page,2026-11-01
+visualizee alternative,alternative,unknown,unknown,/alternatives/visualizee,gap,no page,2026-11-01
+homedesigns ai alternative,alternative,unknown,unknown,/alternatives/homedesigns-ai,gap,no page,2026-11-01
+ai interior design ideas,category,unknown,unknown,/design,live,not ranking in GSC,2026-11-01
+scandinavian living room,style-room,unknown,unknown,/design/scandinavian-living-room,live,30.6 (GSC 90d),2026-11-01
+scandinavian living room ideas,style-room,unknown,unknown,/design/scandinavian-living-room,live,37 (GSC 90d),2026-11-01
+art deco bedroom ideas,style-room,unknown,unknown,/design/art-deco-bedroom,live,33.7 (GSC 90d),2026-11-01
+art deco bedroom design,style-room,unknown,unknown,/design/art-deco-bedroom,live,34.5 (GSC 90d),2026-11-01
+art deco bedroom,style-room,unknown,unknown,/design/art-deco-bedroom,live,24.1 (GSC 90d),2026-11-01
+modern bathroom design,style-room,unknown,unknown,/design/modern-bathroom,live,9.4 for "bathroom design magic" (GSC 90d),2026-11-01
+scandinavian bedroom design,style-room,unknown,unknown,/design/scandinavian-bedroom,live,19.5 (GSC 90d),2026-11-01
+modern living room design,style-room,unknown,unknown,/design/modern-living-room,live,13.1 page avg (GSC 90d),2026-11-01
+farmhouse kitchen design,style-room,unknown,unknown,/design/farmhouse-kitchen,live,9.2 page avg (GSC 90d),2026-11-01
+coastal living room,style-room,unknown,unknown,/design/coastal-living-room,live,15.7 page avg (GSC 90d),2026-11-01
+modern sunroom,style-room,unknown,unknown,/design/modern-sunroom,live,20.4 (GSC 90d),2026-11-01
+farmhouse gaming room,style-room,unknown,unknown,/design/farmhouse-gaming-room,live,6.1 page avg (GSC 90d),2026-11-01
+ai interior design gallery before and after,examples,unknown,unknown,/gallery,live,discovered - not indexed,2026-11-01
+how to redesign living room with ai,how-to,unknown,unknown,/blog/how-to-redesign-living-room-with-ai,live,not indexed (URL unknown to Google),2026-11-01
+bedroom redesign ai,how-to,unknown,unknown,/blog/bedroom-redesign-with-ai,live,discovered - not indexed,2026-11-01
+modern vs minimalist interior design,info,unknown,unknown,/blog/modern-vs-minimalist-interior-design,live,not indexed (URL unknown to Google),2026-11-01
+scandinavian design small spaces,info,unknown,unknown,/blog/scandinavian-design-small-spaces,live,not indexed (URL unknown to Google),2026-11-01
+how to choose interior design style,info,unknown,unknown,/blog/how-to-choose-interior-design-theme,live,43.6 page avg (GSC 90d),2026-11-01
+interior design on a budget,info,unknown,unknown,/blog/interior-design-on-a-budget-ai,live,not indexed (URL unknown to Google),2026-11-01
+industrial kitchen design ideas,info,unknown,unknown,/blog/industrial-kitchen-design-ideas,live,not indexed (URL unknown to Google),2026-11-01
+bohemian bedroom decor,info,unknown,unknown,/blog/bohemian-bedroom-decor-guide,live,7 page avg (GSC 90d),2026-11-01
+ai home office design,info,unknown,unknown,/blog/home-office-ai-design,live,13.2 page avg (GSC 90d),2026-11-01
+what interior design style is my room,tool,unknown,unknown,/tools/style-quiz,gap,no page,2026-11-01
