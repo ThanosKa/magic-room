@@ -41,7 +41,7 @@ Magic Room costs €9.99 for 20 credits, €19.99 for 60 credits, or €29.99 fo
 
 ## Is Magic Room free?
 
-Magic Room has a free tier of 1 credit granted on signup, with no payment card required. That credit produces one full Quick design: a redesigned version of the room. Free-credit output is for personal use only and carries no commercial rights. Beyond the free credit, paid packs start at €9.99 for 20 credits.
+Magic Room has a free tier of 1 credit granted on signup, with no payment card required. That credit produces one full Quick design: a redesigned version of the room. That design comes with full commercial rights, like every paid one. Beyond the free credit, paid packs start at €9.99 for 20 credits.
 
 ## Does Magic Room require a subscription?
 
@@ -57,7 +57,7 @@ One Quick design costs 1 credit and returns one redesign of the room in 30–60 
 
 ## Can you use Magic Room designs commercially?
 
-Yes, on paid credits. Every design generated with a purchased credit carries full commercial rights — real estate listing photos, interior design client presentations, Airbnb listing imagery, and renovation planning decks are all permitted. Designs generated with the free signup credit are for personal use only. Full terms: https://magic-room.dev/terms.
+Yes. Every design carries full commercial rights, including the one from the free signup credit — real estate listing photos, interior design client presentations, Airbnb listing imagery, and renovation planning decks are all permitted. Full terms: https://magic-room.dev/terms.
 
 ## What is the best RoomGPT alternative?
 
@@ -83,7 +83,7 @@ Choose Reimagine Home if you need exterior or landscape design, which Magic Room
 
 ## Is Magic Room good for real estate virtual staging?
 
-Yes. Real estate agents use Magic Room to stage empty or dated rooms for listing photos. Traditional virtual staging services charge €75–150 per room and take 24–72 hours; Magic Room costs €0.25–€1.50 per room depending on quality and pack and returns results in 30 seconds to 2 minutes, with full commercial rights on paid credits. Details: https://magic-room.dev/virtual-staging.
+Yes. Real estate agents use Magic Room to stage empty or dated rooms for listing photos. Traditional virtual staging services charge €75–150 per room and take 24–72 hours; Magic Room costs €0.25–€1.50 per room depending on quality and pack and returns results in 30 seconds to 2 minutes, with full commercial rights. Details: https://magic-room.dev/virtual-staging.
 
 ## How much does AI virtual staging cost compared with a staging service?
 

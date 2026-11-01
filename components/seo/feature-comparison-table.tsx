@@ -29,7 +29,7 @@ const ROWS: ComparisonRow[] = [
     },
     {
         feature: "Commercial rights",
-        magicRoom: "Full commercial rights on every paid design",
+        magicRoom: "Full commercial rights on every design",
         competitor: "Often restricted to higher-tier plans",
     },
     {
