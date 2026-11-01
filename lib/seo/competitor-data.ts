@@ -326,7 +326,7 @@ export const COMPETITORS: ICompetitorData[] = [
         migration:
             "Switching is immediate — there is no library to migrate, since both tools generate from a photo you already have. If you use Interior AI's example catalogue for inspiration, that remains freely browsable after you stop paying. Run the same source photo through Magic Room's free credit and compare how closely each output preserves your room's actual walls, windows and proportions; that is the dimension where the two approaches diverge most.",
         magicRoomAdvantages: [
-            "Magic Room uses Google Gemini and OpenAI multimodal AI, a more recent model that better preserves architectural structure than the diffusion approach Interior AI uses",
+            "Magic Room uses Google Gemini and OpenAI multimodal models, a more recent approach that better preserves architectural structure than the diffusion approach Interior AI uses",
             "Magic Room guarantees that uploaded room photos are not retained after processing — Interior AI does not make equivalent privacy guarantees",
             "Magic Room's design themes include specific guidance that shapes the AI output more precisely than generic style presets",
             "Magic Room provides more consistent results between generation attempts",
@@ -345,7 +345,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "How does Magic Room handle image quality compared to Interior AI?",
                 answer:
-                    "Both tools accept standard room photographs. Magic Room uses multimodal Google Gemini and OpenAI image models, which tends to produce higher-resolution outputs with better texture and material coherence than diffusion-based approaches. The practical difference is most visible in how well room features — flooring, walls, windows — are preserved in the redesigned output.",
+                    "Both tools accept standard room photographs. Magic Room uses multimodal Google Gemini and OpenAI image models, which tend to produce higher-resolution outputs with better texture and material coherence than diffusion-based approaches. The practical difference is most visible in how well room features — flooring, walls, windows — are preserved in the redesigned output.",
             },
         ],
         keywords: [

@@ -452,7 +452,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "How long does AI room design generation take?",
                 answer:
-                    "Processing time depends on the model and the server load. Most tools produce results within 30 to 90 seconds. Magic Room typically generates a complete redesigned room in 30 to 60 seconds using Google Gemini and OpenAI image models' synchronous processing.",
+                    "Processing time depends on the model and the server load. Most tools produce results within 30 to 90 seconds. Magic Room typically generates a complete redesigned room in 30 to 60 seconds (about 2 minutes at Ultra quality), returned synchronously.",
             },
         ],
     },
