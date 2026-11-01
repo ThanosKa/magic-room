@@ -39,7 +39,7 @@ interface VsRow {
 const VS_ROWS: VsRow[] = [
     {
         feature: "AI model",
-        magicRoom: "Google Gemini multimodal",
+        magicRoom: "Google Gemini and OpenAI multimodal",
         competitor: "Diffusion-based model",
     },
     {
@@ -126,7 +126,7 @@ export function VsPageContent({
                     </h2>
                     <p className={`${BODY_CLASS} mt-3`}>
                         Magic Room is the better choice if photo privacy and one-time pricing matter to
-                        you: it runs Google Gemini multimodal AI for architecturally accurate results,
+                        you: it runs Google Gemini and OpenAI image models for architecturally accurate results,
                         never stores your uploaded photos, and sells one-time credits from €9.99 instead
                         of a subscription. {competitor.name} is the better choice if you need its
                         specific extra features or already have a workflow built around it.

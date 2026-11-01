@@ -64,8 +64,8 @@ export function AlternativePageContent({
                 <div className="animate-rise motion-reduce:animate-none" style={{ animationDelay: "120ms" }}>
                     <p className={`${LEAD_CLASS} mt-8`}>
                         Magic Room is the closest {competitor.name} alternative for anyone who wants the
-                        same upload-a-photo workflow without the trade-offs. It runs Google Gemini
-                        multimodal AI so your room&apos;s actual layout survives the redesign, never stores
+                        same upload-a-photo workflow without the trade-offs. It runs Google Gemini and
+                        OpenAI image models so your room&apos;s actual layout survives the redesign, never stores
                         your uploaded photo, and costs €9.99 one-time for 20 credits instead of a
                         subscription.
                     </p>

@@ -33,7 +33,7 @@ const STEPS = [
   },
   {
     title: "Get your redesign",
-    body: "Google Gemini keeps your walls, windows and layout, and restyles everything else in 30–60 seconds. Run it again for another take.",
+    body: "Magic Room keeps your walls, windows and layout, and restyles everything else in 30–60 seconds. Run it again for another take.",
   },
 ];
 

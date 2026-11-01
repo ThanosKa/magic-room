@@ -100,7 +100,7 @@ export function AboutContent() {
           <h2 className={H2_CLASS}>How It Works</h2>
           <p className={PROSE}>
             Magic Room is powered by{" "}
-            <strong className={STRONG}>Google Gemini</strong> — a
+            <strong className={STRONG}>Google Gemini and OpenAI image models</strong> —
             state-of-the-art multimodal AI that understands both images and
             text. When you upload a photo, it&apos;s sent directly to the model
             alongside your chosen style. The AI analyzes the room&apos;s
