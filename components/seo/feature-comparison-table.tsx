@@ -44,7 +44,7 @@ const ROWS: ComparisonRow[] = [
     },
     {
         feature: "AI model",
-        magicRoom: "Google Gemini multimodal (architecture-aware)",
+        magicRoom: "Google Gemini and OpenAI multimodal (architecture-aware)",
         competitor: "Diffusion-based models (variable structure preservation)",
     },
     {

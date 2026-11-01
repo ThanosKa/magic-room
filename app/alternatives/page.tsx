@@ -269,7 +269,7 @@ export default function AlternativesHubPage() {
                                         <AccentDot />
                                         Magic Room
                                     </span>,
-                                    "Google Gemini multimodal — reads image and instruction together",
+                                    "Google Gemini and OpenAI multimodal models — read image and instruction together",
                                     "One-time credits from €9.99 / 20 credits",
                                     "Never",
                                     "Homeowners redesigning in bursts; anyone who cares where their room photo goes",

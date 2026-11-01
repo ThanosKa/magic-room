@@ -113,7 +113,7 @@ export function homeMetadata(): Metadata {
             absolute: "AI Interior Design: Redesign Any Room From One Photo (2026)",
         },
         description:
-            "Turn one room photo into an AI redesign in 60 seconds, powered by Google Gemini. Photos never stored. €9.99 once, not monthly. 1 free credit, no card.",
+            "Turn one room photo into an AI redesign in 60 seconds, powered by Gemini and OpenAI. Photos never stored. €9.99 once, not monthly. 1 free credit, no card.",
         path: "",
         keywords: [
             "ai interior design tools",

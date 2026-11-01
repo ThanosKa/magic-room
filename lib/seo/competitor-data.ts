@@ -91,7 +91,7 @@ export const COMPETITORS: ICompetitorData[] = [
             "There is nothing to export. Both tools take the same input — a photo of your room — so switching means uploading the same photo somewhere else. Magic Room gives every new account 1 free credit with no card required, so you can run the identical photo through both and compare outputs side by side before spending anything. If you are on a RoomGPT recurring plan, cancel it after you have compared, not before.",
         magicRoomAdvantages: [
             "Magic Room processes images in-memory and never stores your room photos — RoomGPT retains uploaded images on their servers",
-            "Magic Room uses Google Gemini multimodal AI, which produces more architecturally coherent outputs than diffusion-only approaches",
+            "Magic Room uses Google Gemini and OpenAI multimodal AI, which produces more architecturally coherent outputs than diffusion-only approaches",
             "Magic Room credits never expire and are not tied to a monthly subscription",
             "Magic Room provides 14 distinct design themes with AI that understands each style's specific design principles",
         ],
@@ -99,7 +99,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is Magic Room better than RoomGPT?",
                 answer:
-                    "Magic Room and RoomGPT take different approaches to AI room redesign. RoomGPT uses a diffusion model that excels at quick stylistic variation but can produce inconsistent architectural results. Magic Room uses Google Gemini multimodal AI, which better preserves the room's structure while applying design themes. For users who want privacy guarantees and predictable results, Magic Room's approach is more suitable.",
+                    "Magic Room and RoomGPT take different approaches to AI room redesign. RoomGPT uses a diffusion model that excels at quick stylistic variation but can produce inconsistent architectural results. Magic Room uses Google Gemini and OpenAI multimodal AI, which better preserves the room's structure while applying design themes. For users who want privacy guarantees and predictable results, Magic Room's approach is more suitable.",
             },
             {
                 question: "Does RoomGPT store your photos?",
@@ -248,7 +248,7 @@ export const COMPETITORS: ICompetitorData[] = [
         magicRoomAdvantages: [
             "Magic Room focuses specifically on interior room redesign and delivers better results in that specific use case than a multi-purpose platform",
             "Magic Room credits never expire — they do not reset at the end of a billing period",
-            "Magic Room uses Google Gemini multimodal AI rather than diffusion models, providing more architecturally coherent outputs",
+            "Magic Room uses Google Gemini and OpenAI multimodal AI rather than diffusion models, providing more architecturally coherent outputs",
             "Magic Room does not retain your uploaded room photos after processing",
         ],
         faqs: [
@@ -265,7 +265,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Which AI model does Magic Room use versus Reimagine Home?",
                 answer:
-                    "Magic Room uses Google Gemini multimodal AI via OpenRouter, which handles image understanding and generation as a unified process. This produces outputs that better preserve the physical structure of your room while applying the selected design style.",
+                    "Magic Room uses Google Gemini and OpenAI multimodal AI via OpenRouter, which handles image understanding and generation as a unified process. This produces outputs that better preserve the physical structure of your room while applying the selected design style.",
             },
             {
                 question: "How does Magic Room pricing compare to Reimagine Home?",
@@ -326,7 +326,7 @@ export const COMPETITORS: ICompetitorData[] = [
         migration:
             "Switching is immediate — there is no library to migrate, since both tools generate from a photo you already have. If you use Interior AI's example catalogue for inspiration, that remains freely browsable after you stop paying. Run the same source photo through Magic Room's free credit and compare how closely each output preserves your room's actual walls, windows and proportions; that is the dimension where the two approaches diverge most.",
         magicRoomAdvantages: [
-            "Magic Room uses Google Gemini multimodal AI, a more recent model that better preserves architectural structure than the diffusion approach Interior AI uses",
+            "Magic Room uses Google Gemini and OpenAI multimodal models, a more recent approach that better preserves architectural structure than the diffusion approach Interior AI uses",
             "Magic Room guarantees that uploaded room photos are not retained after processing — Interior AI does not make equivalent privacy guarantees",
             "Magic Room's design themes include specific guidance that shapes the AI output more precisely than generic style presets",
             "Magic Room provides more consistent results between generation attempts",
@@ -335,7 +335,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is Magic Room better than Interior AI?",
                 answer:
-                    "Magic Room uses a more recent AI approach (Google Gemini multimodal) that produces outputs with better structural coherence than the diffusion models Interior AI uses. For users who want results that respect the physical dimensions and layout of their existing room, Magic Room tends to produce more useful outputs. Interior AI has a larger catalogue of generated examples to browse for inspiration.",
+                    "Magic Room uses a more recent AI approach (Google Gemini and OpenAI multimodal models) that produces outputs with better structural coherence than the diffusion models Interior AI uses. For users who want results that respect the physical dimensions and layout of their existing room, Magic Room tends to produce more useful outputs. Interior AI has a larger catalogue of generated examples to browse for inspiration.",
             },
             {
                 question: "Does Interior AI keep your uploaded photos?",
@@ -345,7 +345,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "How does Magic Room handle image quality compared to Interior AI?",
                 answer:
-                    "Both tools accept standard room photographs. Magic Room uses Google Gemini's multimodal processing, which tends to produce higher-resolution outputs with better texture and material coherence than diffusion-based approaches. The practical difference is most visible in how well room features — flooring, walls, windows — are preserved in the redesigned output.",
+                    "Both tools accept standard room photographs. Magic Room uses multimodal Google Gemini and OpenAI image models, which tend to produce higher-resolution outputs with better texture and material coherence than diffusion-based approaches. The practical difference is most visible in how well room features — flooring, walls, windows — are preserved in the redesigned output.",
             },
         ],
         keywords: [
