@@ -138,7 +138,7 @@ export const COMPETITORS: ICompetitorData[] = [
     {
         slug: "decorai",
         name: "DecorAI",
-        website: "decorai.com",
+        website: "decorai.io",
         description:
             "DecorAI is an AI interior design platform that offers multiple design modes including room redesign, virtual staging, and interior concept generation. It targets both homeowners and property professionals.",
         pros: [
@@ -148,30 +148,30 @@ export const COMPETITORS: ICompetitorData[] = [
         ],
         cons: [
             "More complex interface aimed at professional users rather than homeowners",
-            "Higher price point than tools focused on consumer use",
-            "Subscription model required for most functionality",
+            "Subscription required after a short trial, and the trial asks for a payment card",
+            "Paying monthly is poor value if you only redesign a room or two",
             "Longer generation times for higher-quality outputs",
         ],
         pricing:
-            "DecorAI uses a subscription model with different tiers for personal and professional use. Professional plans with team access are considerably more expensive.",
+            "DecorAI is a subscription billed monthly, half-yearly or yearly. Paid plans include unlimited images; AI videos are capped per plan. New users get a short trial with 3 designs, and the trial asks for a card (decorai.io/pricing, as of November 2026).",
         pricingModel: {
             billing:
-                "Tiered subscription, separated into personal and professional plans. Team access sits on the higher tiers.",
+                "Subscription billed monthly, half-yearly or yearly. Every paid plan includes unlimited AI images; the plans differ in how many AI videos you get (decorai.io/pricing, as of November 2026).",
             freeTier:
-                "Limited trial access. Most of the platform's output types are behind a paid tier.",
+                "A 1-day trial with 3 full-quality designs. The trial asks for a payment card, and the subscription starts when it ends unless you cancel.",
             creditsExpire:
-                "Monthly allocation. Unused generations reset at the end of the billing period on standard plans.",
+                "Images do not use credits on a paid plan, so there is nothing to expire. What you lose is the subscription itself: a month you do not use is still paid for. AI videos come from a per-plan allowance.",
             commercialRights:
                 "Generally tied to the professional tiers. Verify before using outputs on a live listing.",
             ifYouStopPaying:
                 "Access to the professional output types ends with the subscription.",
-            officialPricingUrl: "https://decorai.com",
+            officialPricingUrl: "https://decorai.io/pricing/",
         },
         whySwitch: [
             "The interface is built for professional staging workflows, which is significant overhead if all you want is to see your living room in a different style",
             "The subscription is priced for continuous professional use and is poor value for two or three redesigns",
+            "The free trial asks for a payment card and turns into a subscription unless you cancel in time",
             "Generation times are longer on the higher-quality settings",
-            "Uploaded photos are retained rather than processed and discarded",
         ],
         migration:
             "No data to move — Magic Room works from the same room photo. The practical difference is workflow: DecorAI expects you to configure a staging job, Magic Room expects you to pick a room type and a style. If you use DecorAI specifically for real-estate staging output formats, run one listing photo through both before cancelling, since that is the use case where DecorAI's extra configuration earns its keep.",
@@ -195,7 +195,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "How does Magic Room's pricing compare to DecorAI?",
                 answer:
-                    "Magic Room offers one-time credit packages with no subscription requirement. DecorAI primarily uses subscription pricing. For users who need occasional room redesign rather than frequent professional use, Magic Room's model is likely to be more cost-effective.",
+                    "DecorAI is a subscription with unlimited images on every paid plan (decorai.io/pricing, as of November 2026). Magic Room sells one-time credit packs from €9.99 for 20 credits that never expire. If you redesign rooms every week, DecorAI's unlimited plan can work out cheaper. If you redesign a few rooms a year, paying once is cheaper, and there is no trial to remember to cancel.",
             },
         ],
         keywords: [

@@ -240,7 +240,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "How much does AI virtual staging cost per image?",
                 answer:
-                    "The cost per image with AI tools varies by tool and volume. With Magic Room, a credit costs between EUR 0.10 and EUR 0.33 depending on the package purchased. A single room can be staged in multiple styles for the cost of several credits.",
+                    "The cost per image with AI tools varies by tool and volume. With Magic Room, a credit costs between EUR 0.25 and EUR 0.50 depending on the pack, and a Quick design uses 1 credit (Pro uses 2, Ultra 3). A single room can be staged in several styles for a few credits.",
             },
             {
                 question: "Does virtual staging work for furnished properties?",
