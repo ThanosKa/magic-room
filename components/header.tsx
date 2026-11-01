@@ -48,7 +48,11 @@ function useBarFit(bar: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
     const el = bar.current;
     if (!el) return;
-    const items = Array.from(el.querySelectorAll<HTMLElement>(":scope > [data-bar-item]"));
+    // Direct children only. Not `:scope > ...`: jsdom's selector engine rejects
+    // it, which throws in the hydration tests (browsers are fine either way).
+    const items = Array.from(el.children).filter(
+      (child): child is HTMLElement => child instanceof HTMLElement && child.hasAttribute("data-bar-item")
+    );
 
     const measure = () => {
       const cs = getComputedStyle(el);
