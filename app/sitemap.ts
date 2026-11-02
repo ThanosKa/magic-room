@@ -34,10 +34,12 @@ import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-page
 //   - LEGAL: matches the "Last Updated: December 2024" line on /privacy.
 //   - RIGHTS_2026_11: free-credit commercial rights made consistent on
 //     /pricing and /terms (matches "Last Updated: November 2026" on /terms).
+//   - HOME_2026_11: homepage Explore section gained a Guides list.
 const BASELINE_LAST_UPDATED = new Date("2026-07-29");
 const PASS_2026_10_LAST_UPDATED = new Date("2026-10-01");
 const LEGAL_LAST_UPDATED = new Date("2024-12-01");
 const RIGHTS_2026_11_LAST_UPDATED = new Date("2026-11-01");
+const HOME_2026_11_LAST_UPDATED = new Date("2026-11-02");
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
@@ -49,7 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             // Search Console Pages report) and the canonical emitted by
             // createMetadata({ path: "" }). The bare origin does not.
             url: `${baseUrl}/`,
-            lastModified: PASS_2026_10_LAST_UPDATED,
+            lastModified: HOME_2026_11_LAST_UPDATED,
             changeFrequency: "weekly",
             priority: 1,
         },

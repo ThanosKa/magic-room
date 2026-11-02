@@ -72,6 +72,22 @@ const COMPARE = [
   { href: "/virtual-staging", label: "AI virtual staging for real estate" },
 ];
 
+/*
+ * Guides linked from the homepage body (not only from /blog), so Google finds
+ * the posts it had not crawled yet (GSC URL inspection, 2026-11-01). Anchors
+ * carry each post's target query.
+ */
+const GUIDES = [
+  { slug: "how-to-redesign-living-room-with-ai", label: "How to redesign a living room with AI" },
+  { slug: "bedroom-redesign-with-ai", label: "Bedroom redesign with AI: 8 styles" },
+  { slug: "virtual-staging-real-estate-guide", label: "Virtual staging for real estate" },
+  { slug: "ai-home-staging-before-selling", label: "AI home staging before selling" },
+  { slug: "interior-design-on-a-budget-ai", label: "Interior design on a budget with AI" },
+  { slug: "industrial-kitchen-design-ideas", label: "Industrial kitchen design ideas" },
+  { slug: "scandinavian-design-small-spaces", label: "Scandinavian design for small spaces" },
+  { slug: "modern-vs-minimalist-interior-design", label: "Modern vs minimalist interior design" },
+];
+
 /**
  * Every style tile shows that style's living room. It links to the style's
  * design page when that page is indexable; otherwise (pruned pages are never
@@ -291,7 +307,7 @@ export function HomeContent() {
           <h2 id="explore-title" data-reveal className={cn(H2, "text-ink [&_em]:text-ink-3")}>
             Ideas to start from. <em>Tools to compare.</em>
           </h2>
-          <div className="mt-12 grid gap-16 sm:mt-[72px] lg:grid-cols-2 lg:gap-[72px]">
+          <div className="mt-12 grid gap-16 sm:mt-[72px] lg:grid-cols-2 lg:gap-[72px] xl:grid-cols-3">
             <div data-reveal>
               <div className="flex items-center justify-between gap-4 pb-2">
                 <h3 className="text-[13px] font-medium uppercase tracking-[0.14em] text-ink-3">Popular design ideas</h3>
@@ -325,6 +341,21 @@ export function HomeContent() {
                 {COMPARE.map((c) => (
                   <ListRow key={c.href} href={c.href}>
                     {c.label}
+                  </ListRow>
+                ))}
+              </ul>
+            </div>
+            <div data-reveal style={reveal(240)} className="lg:col-span-2 xl:col-span-1">
+              <div className="flex items-center justify-between gap-4 pb-2">
+                <h3 className="text-[13px] font-medium uppercase tracking-[0.14em] text-ink-3">Guides</h3>
+                <Link href="/blog" className={cn(TEXT_LINK, "text-sm text-ink decoration-ink/35 hover:decoration-ink")}>
+                  All guides
+                </Link>
+              </div>
+              <ul className="border-t border-line lg:grid lg:grid-cols-2 lg:gap-x-[72px] xl:block">
+                {GUIDES.map((g) => (
+                  <ListRow key={g.slug} href={`/blog/${g.slug}`}>
+                    {g.label}
                   </ListRow>
                 ))}
               </ul>
