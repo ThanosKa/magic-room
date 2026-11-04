@@ -7,6 +7,13 @@ import {
     OG_IMAGE,
     TWITTER_HANDLE,
 } from "./config";
+import { CREDIT_PACKAGES } from "@/lib/constants";
+
+// Entry pack, read from the source of truth so the pricing title and
+// description can never drift from what Stripe actually sells.
+const ENTRY_PACK = CREDIT_PACKAGES[0];
+const ENTRY_PRICE = `€${(ENTRY_PACK.priceCents / 100).toFixed(2)}`;
+const ENTRY_PER_DESIGN = `€${(ENTRY_PACK.priceCents / 100 / ENTRY_PACK.credits).toFixed(2)}`;
 
 interface CreateMetadataInput {
     title?: string | { absolute: string };
@@ -130,9 +137,8 @@ export function homeMetadata(): Metadata {
 
 export function pricingMetadata(): Metadata {
     return createMetadata({
-        title: "Pricing — From €9.99 for 30 AI Designs",
-        description:
-            "AI interior design from €9.99 for 20 credits (~€0.50 per design). No subscription, credits never expire, full commercial rights included.",
+        title: `Pricing — From ${ENTRY_PRICE} for ${ENTRY_PACK.credits} AI Designs`,
+        description: `AI interior design from ${ENTRY_PRICE} for ${ENTRY_PACK.credits} credits (~${ENTRY_PER_DESIGN} per design). No subscription, credits never expire, full commercial rights included.`,
         path: "/pricing",
     });
 }

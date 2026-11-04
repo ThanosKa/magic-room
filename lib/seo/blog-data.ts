@@ -33,7 +33,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         slug: "how-to-redesign-living-room-with-ai",
         title: "Redesign Your Living Room with AI: 7 Steps (2026 Guide)",
         metaDescription:
-            "A practical guide to using AI tools to redesign your living room. Covers how to photograph your space, choose a style, and get useful results from AI design generation.",
+            "How to redesign your living room with AI: take a photo the AI can use, pick a style that fits your space, read the output and decide what to do next.",
         publishedDate: "2026-02-10",
         updatedDate: "2026-03-25",
         readingTime: 7,
@@ -253,7 +253,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         slug: "modern-vs-minimalist-interior-design",
         title: "Modern vs Minimalist Design: 5 Real Differences (2026)",
         metaDescription:
-            "Modern and minimalist are the two most frequently confused interior design styles. Here is a clear explanation of what distinguishes them and how to choose between them.",
+            "Modern vs minimalist interior design: what each style really means, the practical differences between them, and how to pick the right one for your space.",
         publishedDate: "2026-02-06",
         updatedDate: "2026-03-25",
         readingTime: 6,
@@ -460,7 +460,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         slug: "scandinavian-design-small-spaces",
         title: "Scandinavian Design: 12 Ideas for Small Spaces (2026)",
         metaDescription:
-            "How to apply Scandinavian interior design principles in small rooms and apartments. Practical guidance on light, storage, furniture scale, and material choices.",
+            "Scandinavian design for small rooms and apartments: how to use light, furniture scale, storage and materials to make a tight space work.",
         publishedDate: "2026-02-02",
         updatedDate: "2026-03-25",
         readingTime: 6,
@@ -1254,7 +1254,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         slug: "bedroom-redesign-with-ai",
         title: "Redesign Your Bedroom with AI: 8 Styles to Try in 2026",
         metaDescription:
-            "A practical guide to using AI to redesign your bedroom. Covers how to photograph your space, which styles work best, and how to translate AI output into purchasing decisions.",
+            "How to redesign your bedroom with AI: photograph the room the right way, pick styles that translate well, and turn the AI result into what to buy.",
         publishedDate: "2026-02-18",
         updatedDate: "2026-03-25",
         readingTime: 6,
