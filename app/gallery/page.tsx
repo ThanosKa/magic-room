@@ -6,9 +6,9 @@ import { GalleryContent } from "@/components/seo/gallery-content";
 import { JsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = createMetadata({
-    title: "AI Interior Design Gallery | Before & After Room Transformations",
+    title: "AI Interior Design Gallery: Before and After Rooms",
     description:
-        "Browse real AI-generated room transformations. See before and after photos for modern, Scandinavian, minimalist, bohemian, farmhouse, and more interior design styles.",
+        "Browse real AI room redesigns: before and after photos in modern, Scandinavian, minimalist, bohemian, farmhouse and more interior design styles.",
     path: "/gallery",
     keywords: [
         "ai room design gallery",
