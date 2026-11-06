@@ -1,87 +1,61 @@
 import React from "react";
 
+import type { ICompetitorData } from "@/lib/seo/competitor-data";
+
 interface ComparisonRow {
     feature: string;
     magicRoom: string;
     competitor: string;
 }
 
-const ROWS: ComparisonRow[] = [
-    {
-        feature: "Starting price",
-        magicRoom: "€9.99 one-time for 20 credits (~€0.50/Quick design)",
-        competitor: "Subscription, typically billed monthly",
-    },
-    {
-        feature: "Pricing model",
-        magicRoom: "One-time credit packages — no subscription",
-        competitor: "Subscription-based for most functionality",
-    },
-    {
-        feature: "Free trial",
-        magicRoom: "1 free credit on signup — no card required",
-        competitor: "Limited free tier with watermark or low cap",
-    },
-    {
-        feature: "Credits expire",
-        magicRoom: "No — credits never expire",
-        competitor: "Monthly credits often reset each billing period",
-    },
-    {
-        feature: "Commercial rights",
-        magicRoom: "Full commercial rights on every design",
-        competitor: "Often restricted to higher-tier plans",
-    },
-    {
-        feature: "Image storage",
-        magicRoom: "Never stored — processed in memory only",
-        competitor: "Varies — most store uploaded images on servers",
-    },
-    {
-        feature: "Privacy policy",
-        magicRoom: "Explicit no-storage guarantee",
-        competitor: "Does not typically make equivalent commitment",
-    },
-    {
-        feature: "AI model",
-        magicRoom: "Google Gemini and OpenAI multimodal (architecture-aware)",
-        competitor: "Diffusion-based models (variable structure preservation)",
-    },
-    {
-        feature: "Design themes",
-        magicRoom: "14 themes with design-principle guidance",
-        competitor: "Style presets without detailed design guidance",
-    },
-    {
-        feature: "Room types",
-        magicRoom: "14 room types (196 style × room combinations)",
-        competitor: "Fewer room types, less granular control",
-    },
-    {
-        feature: "Speed",
-        magicRoom: "One redesign in 30–60 seconds",
-        competitor: "Single output; slower on higher-quality settings",
-    },
-    {
-        feature: "Output quality",
-        magicRoom: "Preserves room geometry and materials accurately",
-        competitor: "Variable — can alter room dimensions inconsistently",
-    },
-];
-
 interface FeatureComparisonTableProps {
-    competitorName: string;
-    competitorPricing?: string;
+    competitor: ICompetitorData;
 }
 
-export function FeatureComparisonTable({ competitorName, competitorPricing }: FeatureComparisonTableProps) {
-    const rows: ComparisonRow[] = competitorPricing
-        ? ROWS.map((row) =>
-            row.feature === "Starting price"
-                ? { ...row, competitor: competitorPricing }
-                : row
-        )
-        : ROWS;
+/**
+ * Every competitor cell comes from that competitor's entry in
+ * `lib/seo/competitor-data.ts`, where each claim names its source and date.
+ * Do not add rows with a generic competitor column: a claim that is true of
+ * one vendor is false of another.
+ */
+function buildRows(competitor: ICompetitorData): ComparisonRow[] {
+    return [
+        {
+            feature: "Starting price",
+            magicRoom: "€9.99 one-time for 20 credits (~€0.50/Quick design)",
+            competitor: competitor.pricing,
+        },
+        {
+            feature: "Free trial",
+            magicRoom: "1 free credit on signup — no card required",
+            competitor: competitor.pricingModel.freeTier,
+        },
+        {
+            feature: "Credits expire",
+            magicRoom: "No — credits never expire",
+            competitor: competitor.pricingModel.creditsExpire,
+        },
+        {
+            feature: "Commercial rights",
+            magicRoom: "Full commercial rights on every design",
+            competitor: competitor.pricingModel.commercialRights,
+        },
+        {
+            feature: "Image storage",
+            magicRoom: "Never stored — processed in memory only",
+            competitor: competitor.imageStorage,
+        },
+        {
+            feature: "AI model",
+            magicRoom: "Google Gemini and OpenAI multimodal models",
+            competitor: competitor.aiModel,
+        },
+    ];
+}
+
+export function FeatureComparisonTable({ competitor }: FeatureComparisonTableProps) {
+    const rows = buildRows(competitor);
+    const competitorName = competitor.name;
     return (
         <>
             {/* Stacked rows for phones: hairline list, nothing to scroll */}

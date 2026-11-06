@@ -38,6 +38,10 @@ export interface ICompetitorData {
     cons: string[];
     pricing: string;
     pricingModel: IPricingModel;
+    /** What the vendor says it does with uploaded photos, with source and date. */
+    imageStorage: string;
+    /** Which model the vendor says it uses, with source and date. */
+    aiModel: string;
     /** Concrete reasons people give for moving off this tool. */
     whySwitch: string[];
     /** What switching actually involves. */
@@ -53,45 +57,48 @@ export const COMPETITORS: ICompetitorData[] = [
         name: "RoomGPT",
         website: "roomgpt.io",
         description:
-            "RoomGPT is an AI room redesign tool that became popular for its simple drag-and-drop interface and fast generation. It uses a stable diffusion-based approach to reimagine room photos in different styles.",
+            "RoomGPT is an AI room redesign tool that became popular for its simple drag-and-drop interface and fast generation. It started as an open-source project that ran ControlNet, a diffusion model, on Replicate (github.com/Nutlope/roomGPT); the paid version at roomgpt.io does not say which model it uses today (as of November 2026).",
         pros: [
             "Simple interface with no account required for basic use",
-            "Fast generation using diffusion models",
+            "One-step flow: upload a photo, pick a style",
             "Widely known and has an established user base",
         ],
         cons: [
             "Limited style options compared to newer tools",
             "Image quality is inconsistent — results vary significantly between generations",
-            "Generated images are stored on the service's servers",
-            "No privacy guarantees around uploaded room photos",
+            "roomgpt.io has no privacy policy page saying how long uploaded room photos are kept (checked November 2026)",
             "Less control over specific design direction",
         ],
         pricing:
-            "RoomGPT offers a free tier with limited generations. Paid plans are available for more generations per month, typically subscription-based.",
+            "RoomGPT sells credits on roomgpt.io/buy-credits. That page lists no prices and does not say whether plans renew (as of November 2026).",
         pricingModel: {
             billing:
-                "Credit packs and recurring plans. The free tier is capped at a small number of generations, after which continued use requires payment.",
+                "Credits bought on roomgpt.io/buy-credits. The page lists no prices and does not say whether a plan renews (as of November 2026).",
             freeTier:
                 "A handful of free generations, typically gated behind a Google sign-in. Enough to evaluate output quality, not enough to redesign a house.",
             creditsExpire:
-                "Recurring plans allocate credits per billing period; unused allocation generally does not carry forward.",
+                "Not stated on roomgpt.io (as of November 2026).",
             commercialRights:
                 "Not clearly stated for the free tier. If you are staging a listing or producing client work, confirm this before you rely on an output.",
             ifYouStopPaying:
-                "Generation stops at the free-tier cap. Previously generated images remain on RoomGPT's servers rather than being deleted.",
-            officialPricingUrl: "https://roomgpt.io",
+                "Generation stops when your credits run out. roomgpt.io does not say whether past uploads and outputs are kept or deleted.",
+            officialPricingUrl: "https://www.roomgpt.io/buy-credits",
         },
+        imageStorage:
+            "Not stated: roomgpt.io has no privacy policy page (checked November 2026)",
+        aiModel:
+            "Not stated for the paid version; the open-source original ran ControlNet, a diffusion model (github.com/Nutlope/roomGPT)",
         whySwitch: [
             "Room geometry drifts between attempts — walls move, windows relocate, and the output stops being usable as a planning reference for your actual room",
-            "Uploaded room photos are retained on the service's servers rather than discarded after processing",
-            "The free tier runs out quickly and the paid step-up is recurring, which is poor value for someone redesigning two or three rooms once",
+            "roomgpt.io publishes no policy on what happens to uploaded room photos, which matters if the photo shows your home or a client's listing",
+            "The credits page lists no prices, so you cannot compare cost before you sign in",
             "Limited control over specific design direction — you get a style, not a set of decisions you can steer",
         ],
         migration:
-            "There is nothing to export. Both tools take the same input — a photo of your room — so switching means uploading the same photo somewhere else. Magic Room gives every new account 1 free credit with no card required, so you can run the identical photo through both and compare outputs side by side before spending anything. If you are on a RoomGPT recurring plan, cancel it after you have compared, not before.",
+            "There is nothing to export. Both tools take the same input — a photo of your room — so switching means uploading the same photo somewhere else. Magic Room gives every new account 1 free credit with no card required, so you can run the identical photo through both and compare outputs side by side before spending anything. If you still have RoomGPT credits, use them up first; nothing carries over between the two tools.",
         magicRoomAdvantages: [
-            "Magic Room processes images in-memory and never stores your room photos — RoomGPT retains uploaded images on their servers",
-            "Magic Room uses Google Gemini and OpenAI multimodal AI, which produces more architecturally coherent outputs than diffusion-only approaches",
+            "Magic Room processes images in memory and never stores your room photos; roomgpt.io publishes no policy on how long it keeps uploads",
+            "Magic Room uses Google Gemini and OpenAI multimodal models, which read your photo and your instruction together so walls, windows and layout stay in place",
             "Magic Room credits never expire and are not tied to a monthly subscription",
             "Magic Room provides 14 distinct design themes with AI that understands each style's specific design principles",
         ],
@@ -99,22 +106,22 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is Magic Room better than RoomGPT?",
                 answer:
-                    "Magic Room and RoomGPT take different approaches to AI room redesign. RoomGPT uses a diffusion model that excels at quick stylistic variation but can produce inconsistent architectural results. Magic Room uses Google Gemini and OpenAI multimodal AI, which better preserves the room's structure while applying design themes. For users who want privacy guarantees and predictable results, Magic Room's approach is more suitable.",
+                    "It depends on what you need. RoomGPT does not say which model its paid version uses (its open-source predecessor ran ControlNet, a diffusion model). Magic Room uses Google Gemini and OpenAI multimodal models, which keep the room's structure while applying the style, never stores your photos, and lists its prices up front. Run the same photo through both with the free credit and compare.",
             },
             {
                 question: "Does RoomGPT store your photos?",
                 answer:
-                    "Based on publicly available information, RoomGPT stores uploaded images on its servers. Magic Room processes all images in memory and does not retain copies of your room photos after the design generation is complete.",
+                    "roomgpt.io does not publish a privacy policy that answers this (checked November 2026), so we cannot say either way. Magic Room processes every photo in memory and keeps no copy after the design is generated.",
             },
             {
                 question: "Which tool is cheaper: Magic Room or RoomGPT?",
                 answer:
-                    "Pricing changes over time on both platforms. Magic Room offers one-time credit packages starting from EUR 9.99 with no subscription requirement and credits that never expire. RoomGPT primarily operates on a subscription basis for full access.",
+                    "Pricing changes over time on both platforms. Magic Room offers one-time credit packages starting from EUR 9.99 with no subscription requirement and credits that never expire. RoomGPT sells credits too, but its buy-credits page lists no prices and does not say whether plans renew (as of November 2026).",
             },
             {
                 question: "Can I use Magic Room instead of RoomGPT?",
                 answer:
-                    "Yes. Magic Room accepts the same input — a photo of your room — and produces redesigned outputs in a range of styles. The workflow is similar: upload a photo, select a style, and download the result. The main differences are the AI model used, the privacy approach, and the pricing structure.",
+                    "Yes. Magic Room accepts the same input — a photo of your room — and produces redesigned outputs in a range of styles. The workflow is similar: upload a photo, select a style, and download the result. The main differences are the AI model used, the privacy approach, and how openly prices are shown.",
             },
             {
                 question: "How do I switch from RoomGPT to Magic Room?",
@@ -162,11 +169,14 @@ export const COMPETITORS: ICompetitorData[] = [
             creditsExpire:
                 "Images do not use credits on a paid plan, so there is nothing to expire. What you lose is the subscription itself: a month you do not use is still paid for. AI videos come from a per-plan allowance.",
             commercialRights:
-                "Generally tied to the professional tiers. Verify before using outputs on a live listing.",
+                "Every plan, the trial included, carries commercial usage rights (decorai.io/pricing, as of November 2026).",
             ifYouStopPaying:
                 "Access to the professional output types ends with the subscription.",
             officialPricingUrl: "https://decorai.io/pricing/",
         },
+        imageStorage:
+            "Uploads and outputs kept while your account is active, deleted on request; not used for training (decorai.io/privacy, as of November 2026)",
+        aiModel: "Not named on decorai.io (as of November 2026)",
         whySwitch: [
             "The interface is built for professional staging workflows, which is significant overhead if all you want is to see your living room in a different style",
             "The subscription is priced for continuous professional use and is poor value for two or three redesigns",
@@ -179,7 +189,7 @@ export const COMPETITORS: ICompetitorData[] = [
             "Magic Room is designed for straightforward room redesign without the complexity of a professional platform",
             "Magic Room's credit model is pay-as-you-go with no ongoing subscription commitment",
             "Magic Room provides a faster path from photo to redesigned room for homeowners who do not need professional staging features",
-            "Magic Room's privacy-first approach means uploaded photos are not retained after processing",
+            "Magic Room never stores uploaded photos; DecorAI keeps uploads and outputs while your account is active unless you ask for deletion (decorai.io/privacy, as of November 2026)",
         ],
         faqs: [
             {
@@ -223,33 +233,36 @@ export const COMPETITORS: ICompetitorData[] = [
             "Limited control over the direction of specific design choices",
         ],
         pricing:
-            "Reimagine Home uses a subscription model with monthly credit allocations. Credits do not roll over between billing periods on most plans.",
+            "Reimagine Home is a monthly subscription from $14 to $99 a month with 30, 200, 400 or 900 credits a month; one generation is one credit. New users get 5 free designs with no card (reimaginehome.ai/pricing, as of November 2026).",
         pricingModel: {
             billing:
-                "Monthly or annual subscription with a credit allocation per period. Higher tiers raise the allocation and unlock additional rendering modes.",
+                "Monthly subscription with a credit allowance per month: Essential 30, Pro 200, Advanced 400, Agency 900 credits, $14 to $99 a month. One generation is one credit (reimaginehome.ai/pricing, as of November 2026).",
             freeTier:
-                "A small number of free credits on signup, sufficient to evaluate output quality on one or two rooms.",
+                "5 free designs for new users, same model as paid plans, no card required (reimaginehome.ai/pricing, as of November 2026).",
             creditsExpire:
-                "Yes — this is the detail worth checking before you subscribe. On most plans the monthly credit allocation resets at the end of the billing period and unused credits do not carry forward. If your redesign happens in bursts, you pay for months you do not use.",
+                "The pricing page does not say whether unused credits roll over (as of November 2026), so check before you subscribe. Either way the fee is monthly: if your redesigns come in bursts, you pay for months you do not use.",
             commercialRights:
-                "Tied to plan tier. Confirm the tier you are on covers listing photos before publishing an output.",
+                "Not addressed on the pricing page; the Essential plan lists watermark-free, shareable images. Confirm before publishing an output on a listing.",
             ifYouStopPaying:
-                "Credit allocation stops immediately at the end of the billing period. Remaining unused credits from that period are not refunded or carried over.",
+                "New credits stop with the subscription. Uploads and projects stay stored while the account is active, until you delete them (reimaginehome.ai/privacy-policy, as of November 2026).",
             officialPricingUrl: "https://www.reimaginehome.ai/pricing",
         },
+        imageStorage:
+            "Uploads kept while your account is active or until you delete them; may train its own models unless you opt out (reimaginehome.ai/privacy-policy, as of November 2026)",
+        aiModel: "Not named on reimaginehome.ai (as of November 2026)",
         whySwitch: [
-            "Monthly credits reset — you pay a recurring fee whether or not you redesign anything that month, which suits agencies and penalises homeowners",
+            "It is a monthly fee whether or not you redesign anything that month, which suits agencies and penalises homeowners",
             "The platform covers interiors, exteriors and landscaping, so the interior redesign specifically is less refined than a tool that only does interiors",
             "Getting a usable output often takes several attempts, which consumes the monthly allocation faster than the plan implies",
             "Limited control over specific design direction within a chosen style",
         ],
         migration:
-            "Nothing to export or import — both tools start from a room photo. The one thing worth timing: because Reimagine Home credits reset at the end of the billing period, use whatever allocation you have left before cancelling. Magic Room's 1 free credit lets you run the same photo through both in parallel first, and Magic Room credits are bought once and never expire, so there is no equivalent deadline afterwards.",
+            "Nothing to export or import — both tools start from a room photo. The one thing worth timing: use whatever credits you have left before you cancel the subscription. Magic Room's 1 free credit lets you run the same photo through both in parallel first, and Magic Room credits are bought once and never expire, so there is no equivalent deadline afterwards.",
         magicRoomAdvantages: [
             "Magic Room focuses specifically on interior room redesign and delivers better results in that specific use case than a multi-purpose platform",
-            "Magic Room credits never expire — they do not reset at the end of a billing period",
-            "Magic Room uses Google Gemini and OpenAI multimodal AI rather than diffusion models, providing more architecturally coherent outputs",
-            "Magic Room does not retain your uploaded room photos after processing",
+            "Magic Room credits never expire and there is no monthly fee",
+            "Magic Room uses Google Gemini and OpenAI multimodal models, which read your photo and your instruction together so the room's structure stays in place",
+            "Magic Room never stores your room photos; Reimagine Home keeps uploads while your account is active and may use them to train its own models unless you opt out (reimaginehome.ai/privacy-policy, as of November 2026)",
         ],
         faqs: [
             {
@@ -260,7 +273,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "What happens to Reimagine Home credits that are unused?",
                 answer:
-                    "On most Reimagine Home plans, monthly credits expire at the end of each billing period and do not carry over. Magic Room credits are purchased as packages and never expire, allowing you to use them at your own pace.",
+                    "Reimagine Home's pricing page does not say whether unused monthly credits roll over (as of November 2026); ask them before you rely on it. Magic Room credits are purchased as packages and never expire, allowing you to use them at your own pace.",
             },
             {
                 question: "Which AI model does Magic Room use versus Reimagine Home?",
@@ -270,7 +283,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "How does Magic Room pricing compare to Reimagine Home?",
                 answer:
-                    "Reimagine Home uses a monthly subscription where unused credits typically reset at the end of each billing period. Magic Room sells one-time credit packages from €9.99 for 20 credits (about €0.50 per Quick design) that never expire, so occasional users do not pay for months they do not use. Both include a free way to try the tool before paying.",
+                    "Reimagine Home is a monthly subscription from $14 to $99 a month for 30 to 900 credits (reimaginehome.ai/pricing, as of November 2026). Magic Room sells one-time credit packages from €9.99 for 20 credits (about €0.50 per Quick design) that never expire, so occasional users do not pay for months they do not use. Both include a free way to try the tool before paying.",
             },
             {
                 question: "Is Magic Room a free Reimagine Home alternative?",
@@ -290,44 +303,47 @@ export const COMPETITORS: ICompetitorData[] = [
         name: "Interior AI",
         website: "interiorai.com",
         description:
-            "Interior AI is one of the earlier AI room redesign tools, offering virtual staging and style transformation through a diffusion model approach. It was one of the first tools to demonstrate AI-powered interior design generation at scale.",
+            "Interior AI is one of the earlier AI room redesign tools, offering virtual staging and style transformation. Its Pro plan renders with the Flux model (interiorai.com/pricing, as of November 2026). It was one of the first tools to demonstrate AI-powered interior design generation at scale.",
         pros: [
             "Established tool with a large base of generated examples for reference",
             "Simple interface focused on the core redesign use case",
             "Wide variety of style presets",
         ],
         cons: [
-            "Diffusion model approach can produce results that alter room geometry inconsistently",
             "Output resolution and quality have been surpassed by newer model approaches",
-            "Less privacy transparency around image storage",
+            "Uploads and renders are stored on the service; it says only you can access them (interiorai.com/pricing, as of November 2026)",
             "Generation results are inconsistent — significant variation between attempts with the same prompt",
         ],
         pricing:
-            "Interior AI offers both free limited access and paid plans. Pricing has changed since launch; current plans vary by generation volume.",
+            "Interior AI is a subscription: Pro $49, Premium $99, Ultra $199 a month, or $29, $49, $99 a month billed yearly, for 1,000 to 25,000 designs a month (interiorai.com/pricing, as of November 2026).",
         pricingModel: {
             billing:
-                "Subscription tiers scaled by generation volume and output resolution. Pricing has been revised several times since launch, so a figure quoted elsewhere is likely out of date.",
+                "Monthly or yearly subscription. Plans differ by designs per month (1,000, 5,000, 25,000), render quality and features such as virtual staging, which starts on Premium (interiorai.com/pricing, as of November 2026).",
             freeTier:
-                "Limited free access, generally with watermarking or reduced resolution on outputs.",
+                "No free tier is listed on the pricing page (as of November 2026).",
             creditsExpire:
-                "Volume allowances are per billing period and do not accumulate.",
+                "Allowances are per month; the pricing page does not say whether unused designs carry over.",
             commercialRights:
-                "Restricted on the free tier. Higher tiers remove watermarking, which is the practical gate on commercial use.",
+                "Every paid plan includes a commercial use license (interiorai.com/pricing, as of November 2026).",
             ifYouStopPaying:
-                "You revert to the limited free tier, including any watermarking that applies to it.",
+                "Generation stops with the subscription.",
             officialPricingUrl: "https://interiorai.com/pricing",
         },
+        imageStorage:
+            "Photos and renders stored, accessible only by you, not used for training (interiorai.com/pricing, as of November 2026)",
+        aiModel:
+            "Flux on the Pro plan; \"Hyper Realism\" on Premium and Ultra (interiorai.com/pricing, as of November 2026)",
         whySwitch: [
-            "Diffusion-based generation alters room geometry inconsistently, so outputs are inspiration rather than a reference for your actual space",
+            "The cheapest plan is $29 a month billed yearly, a lot for someone redesigning two or three rooms",
             "Output resolution and quality have been overtaken by newer multimodal models",
             "Results vary significantly between attempts with the same prompt, which burns through a monthly allowance",
-            "No equivalent commitment on what happens to uploaded room photos",
+            "Uploads and renders are kept on the service, where Magic Room keeps nothing",
         ],
         migration:
             "Switching is immediate — there is no library to migrate, since both tools generate from a photo you already have. If you use Interior AI's example catalogue for inspiration, that remains freely browsable after you stop paying. Run the same source photo through Magic Room's free credit and compare how closely each output preserves your room's actual walls, windows and proportions; that is the dimension where the two approaches diverge most.",
         magicRoomAdvantages: [
-            "Magic Room uses Google Gemini and OpenAI multimodal models, a more recent approach that better preserves architectural structure than the diffusion approach Interior AI uses",
-            "Magic Room guarantees that uploaded room photos are not retained after processing — Interior AI does not make equivalent privacy guarantees",
+            "Magic Room uses Google Gemini and OpenAI multimodal models, which read your photo and your instruction together so walls, windows and layout stay in place",
+            "Magic Room never stores uploaded room photos; Interior AI stores them and says only you can access them",
             "Magic Room's design themes include specific guidance that shapes the AI output more precisely than generic style presets",
             "Magic Room provides more consistent results between generation attempts",
         ],
@@ -335,17 +351,17 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is Magic Room better than Interior AI?",
                 answer:
-                    "Magic Room uses a more recent AI approach (Google Gemini and OpenAI multimodal models) that produces outputs with better structural coherence than the diffusion models Interior AI uses. For users who want results that respect the physical dimensions and layout of their existing room, Magic Room tends to produce more useful outputs. Interior AI has a larger catalogue of generated examples to browse for inspiration.",
+                    "They suit different users. Interior AI is a subscription from $29 a month (billed yearly) with high monthly volumes and extras like walkthrough videos, which fits professionals. Magic Room is pay-once credits from €9.99 that never expire, uses Google Gemini and OpenAI multimodal models that keep your room's layout, and never stores your photos, which fits homeowners redesigning a few rooms.",
             },
             {
                 question: "Does Interior AI keep your uploaded photos?",
                 answer:
-                    "Interior AI does not publish explicit privacy commitments around photo retention comparable to Magic Room's in-memory processing guarantee. Magic Room explicitly does not retain uploaded room photos after the generation is complete.",
+                    "Yes, it stores them: its pricing page says it does not train on your photos and that your photos and renders are only accessible by you (interiorai.com/pricing, as of November 2026). Magic Room keeps no copy at all: photos are processed in memory and discarded after the design is generated.",
             },
             {
                 question: "How does Magic Room handle image quality compared to Interior AI?",
                 answer:
-                    "Both tools accept standard room photographs. Magic Room uses multimodal Google Gemini and OpenAI image models, which tend to produce higher-resolution outputs with better texture and material coherence than diffusion-based approaches. The practical difference is most visible in how well room features — flooring, walls, windows — are preserved in the redesigned output.",
+                    "Both tools accept standard room photographs. Magic Room uses multimodal Google Gemini and OpenAI image models, which read your photo and your instruction together. The practical difference is most visible in how well room features — flooring, walls, windows — are preserved in the redesigned output.",
             },
         ],
         keywords: [
