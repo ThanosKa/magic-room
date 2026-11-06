@@ -36,43 +36,36 @@ interface VsRow {
     competitor: string;
 }
 
-const VS_ROWS: VsRow[] = [
-    {
-        feature: "AI model",
-        magicRoom: "Google Gemini and OpenAI multimodal",
-        competitor: "Diffusion-based model",
-    },
-    {
-        feature: "Image storage",
-        magicRoom: "Never stored — in-memory processing",
-        competitor: "Images stored on servers",
-    },
-    {
-        feature: "Credits expire",
-        magicRoom: "No",
-        competitor: "Monthly reset on most plans",
-    },
-    {
-        feature: "Pricing",
-        magicRoom: "One-time credit packages from EUR 9.99",
-        competitor: "Subscription required for full access",
-    },
-    {
-        feature: "Room structure preservation",
-        magicRoom: "High — architectural geometry maintained",
-        competitor: "Variable — can alter proportions inconsistently",
-    },
-    {
-        feature: "Design themes",
-        magicRoom: "14 themes (modern, scandinavian, industrial, bohemian, etc.)",
-        competitor: "Style presets without design guidance",
-    },
-    {
-        feature: "Free trial",
-        magicRoom: "1 free credit with account signup",
-        competitor: "Limited free tier available",
-    },
-];
+/** Competitor cells come from `lib/seo/competitor-data.ts`, where each claim names its source. */
+function buildVsRows(competitor: ICompetitorData): VsRow[] {
+    return [
+        {
+            feature: "AI model",
+            magicRoom: "Google Gemini and OpenAI multimodal",
+            competitor: competitor.aiModel,
+        },
+        {
+            feature: "Image storage",
+            magicRoom: "Never stored — in-memory processing",
+            competitor: competitor.imageStorage,
+        },
+        {
+            feature: "Credits expire",
+            magicRoom: "No",
+            competitor: competitor.pricingModel.creditsExpire,
+        },
+        {
+            feature: "Pricing",
+            magicRoom: "One-time credit packages from EUR 9.99",
+            competitor: competitor.pricing,
+        },
+        {
+            feature: "Free trial",
+            magicRoom: "1 free credit with account signup",
+            competitor: competitor.pricingModel.freeTier,
+        },
+    ];
+}
 
 interface VsPageContentProps {
     competitor: ICompetitorData;
@@ -126,7 +119,7 @@ export function VsPageContent({
                     </h2>
                     <p className={`${BODY_CLASS} mt-3`}>
                         Magic Room is the better choice if photo privacy and one-time pricing matter to
-                        you: it runs Google Gemini and OpenAI image models for architecturally accurate results,
+                        you: it runs Google Gemini and OpenAI image models that keep your room&apos;s layout,
                         never stores your uploaded photos, and sells one-time credits from €9.99 instead
                         of a subscription. {competitor.name} is the better choice if you need its
                         specific extra features or already have a workflow built around it.
@@ -140,7 +133,7 @@ export function VsPageContent({
                     Magic Room vs {competitor.name}: side-by-side comparison
                 </h2>
                 <p className={`${BODY_CLASS} mb-10 mt-5 max-w-3xl`}>
-                    The table below compares both tools on the seven factors people actually decide on.
+                    The table below compares both tools on the five factors people actually decide on.
                     Competitor plans change over time — check {competitor.name}&apos;s own pricing page
                     for their current figures.
                 </p>
@@ -155,7 +148,7 @@ export function VsPageContent({
                         },
                         { label: competitor.name, mobileLabel: competitor.name },
                     ]}
-                    rows={VS_ROWS.map((row, index) => ({
+                    rows={buildVsRows(competitor).map((row, index) => ({
                         key: String(index),
                         cells: [row.feature, row.magicRoom, row.competitor],
                     }))}

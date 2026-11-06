@@ -1095,7 +1095,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             "RoomGPT, Interior AI and Reimagine Home compared on AI model, photo retention and real cost — by someone who built one of them. No affiliate links.",
         authorName: "Thanos Kazakis",
         publishedDate: "2026-02-15",
-        updatedDate: "2026-05-19",
+        updatedDate: "2026-11-06",
         readingTime: 8,
         keywords: [
             "best AI interior design tools 2026",
@@ -1156,7 +1156,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "RoomGPT was one of the first AI interior design tools to gain mainstream attention. It uses a diffusion model, which means outputs can vary considerably in how closely they match the original room's structure. It has a large library of user-generated examples and a free tier, which accounts for its wide user base. The underlying model has not been updated as recently as some newer tools.",
+                    "RoomGPT was one of the first AI interior design tools to gain mainstream attention. It began as an open-source project that ran ControlNet, a diffusion model (github.com/Nutlope/roomGPT); the paid version at roomgpt.io does not say which model it uses now. It sells credits, but its buy-credits page lists no prices, and the site has no privacy policy page saying what happens to uploaded photos (checked November 2026).",
             },
             {
                 type: "h3",
@@ -1165,7 +1165,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "Interior AI focuses on providing multiple style options with a straightforward upload-and-select interface. Like RoomGPT, it uses diffusion-based models. It has been popular with real estate professionals who need quick, visually appealing outputs rather than architecturally precise results.",
+                    "Interior AI focuses on providing multiple style options with a straightforward upload-and-select interface. It is a subscription from $49 a month ($29 a month billed yearly) for 1,000 designs a month, rendered with the Flux model on that plan. It stores your photos and renders, says only you can access them and does not train on them (interiorai.com/pricing, as of November 2026).",
             },
             {
                 type: "h3",
@@ -1174,7 +1174,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "REimagine Home offers a wider feature set including empty room furnishing, style transfer, and object removal. It targets a slightly more professional user base, including interior designers and staging professionals. Pricing is subscription-based.",
+                    "REimagine Home offers a wider feature set including empty room furnishing, style transfer, and object removal. It targets a slightly more professional user base, including interior designers and staging professionals. It is a subscription from $14 to $99 a month for 30 to 900 credits, with 5 free designs to start (reimaginehome.ai/pricing), and it keeps uploads while your account is active (reimaginehome.ai/privacy-policy, both as of November 2026).",
             },
             {
                 type: "table",
@@ -1189,24 +1189,24 @@ export const BLOG_POSTS: IBlogPost[] = [
                     ],
                     [
                         "RoomGPT",
-                        "Diffusion model",
-                        "Images retained on servers",
-                        "Subscription required for full access",
+                        "Not stated (open-source original: ControlNet)",
+                        "No privacy policy page found",
+                        "Credits; prices not listed",
                         "Limited free tier",
                     ],
                     [
                         "Interior AI",
-                        "Diffusion model",
-                        "Not explicitly committed",
-                        "Subscription or credits",
-                        "Limited free tier",
+                        "Flux (Pro plan)",
+                        "Stored, private to you",
+                        "Subscription from $29/month (yearly)",
+                        "None listed",
                     ],
                     [
                         "Reimagine Home",
-                        "Multiple AI modes",
-                        "Not explicitly committed",
-                        "Subscription, credits expire monthly",
-                        "Limited free tier",
+                        "Not named",
+                        "Kept while account is active",
+                        "Subscription, $14-$99/month",
+                        "5 free designs, no card",
                     ],
                 ],
             },
@@ -1246,7 +1246,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "Do AI interior design tools store my photos?",
                 answer:
-                    "This varies by tool. Magic Room processes photos in-memory and deletes them immediately after generation — they are never stored on servers. Other tools, including some free ones, retain uploaded images. Always check the privacy policy before uploading photos of your home.",
+                    "This varies by tool. Magic Room processes photos in-memory and deletes them immediately after generation — they are never stored on servers. DecorAI and Reimagine Home say they keep uploads while your account is active (their privacy pages, November 2026). Interior AI says it stores photos and only you can access them, with no retention period given (interiorai.com/pricing, November 2026). Always check the privacy policy before uploading photos of your home.",
             },
         ],
     },
