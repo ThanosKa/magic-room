@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { RATE_LIMIT, RATE_LIMIT_WINDOW } from "@/lib/constants";
-import { logger } from "./logger";
+import { logger } from "@/lib/logger";
 
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -53,7 +53,7 @@ export async function checkRateLimit(
       resetAt,
     };
   } catch (error) {
-    console.error("Redis error:", error);
+    logger.error({ err: error }, "Redis error");
     return {
       success: true,
       remaining: RATE_LIMIT,
@@ -91,7 +91,7 @@ export async function checkRateLimitByIp(ip: string): Promise<RateLimitResult> {
       remaining: RATE_LIMIT - current,
     };
   } catch (error) {
-    console.error("IP rate limit check error:", error);
+    logger.error({ err: error }, "IP rate limit check error");
     return {
       success: true,
       remaining: -1,
@@ -105,7 +105,7 @@ export async function resetRateLimit(userId: string): Promise<boolean> {
     await redis.del(key);
     return true;
   } catch (error) {
-    console.error("Error resetting rate limit:", error);
+    logger.error({ err: error }, "Error resetting rate limit");
     return false;
   }
 }
@@ -123,7 +123,7 @@ export async function getRateLimitStatus(userId: string) {
       resetsIn: ttl > 0 ? ttl : 0,
     };
   } catch (error) {
-    console.error("Error getting rate limit status:", error);
+    logger.error({ err: error }, "Error getting rate limit status");
     return null;
   }
 }
