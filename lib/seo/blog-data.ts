@@ -1246,7 +1246,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "Do AI interior design tools store my photos?",
                 answer:
-                    "This varies by tool. Magic Room processes photos in-memory and deletes them immediately after generation — they are never stored on servers. DecorAI, Reimagine Home and Interior AI say they keep uploads while your account is active (their privacy and pricing pages, November 2026). Always check the privacy policy before uploading photos of your home.",
+                    "This varies by tool. Magic Room processes photos in-memory and deletes them immediately after generation — they are never stored on servers. DecorAI and Reimagine Home say they keep uploads while your account is active (their privacy pages, November 2026). Interior AI says it stores photos and only you can access them, with no retention period given (interiorai.com/pricing, November 2026). Always check the privacy policy before uploading photos of your home.",
             },
         ],
     },

@@ -176,7 +176,7 @@ export default function AlternativesHubPage() {
                                 },
                                 {
                                     title: "They realised the photos are stored",
-                                    body: "A photo of your living room shows your possessions, your layout, and often your family. DecorAI, Reimagine Home and Interior AI say they keep uploads while your account is active; RoomGPT has no privacy policy page at all (checked November 2026). Almost nobody reads these before uploading.",
+                                    body: "A photo of your living room shows your possessions, your layout, and often your family. DecorAI and Reimagine Home say they keep uploads while your account is active; Interior AI says it stores photos and only you can access them, with no retention period; RoomGPT has no privacy policy page at all (checked November 2026). Almost nobody reads these before uploading.",
                                 },
                                 {
                                     title: "The free tier ran out mid-evaluation",
@@ -448,7 +448,7 @@ export default function AlternativesHubPage() {
                                 },
                                 {
                                     q: "Do these tools store my room photos?",
-                                    a: "Most do. DecorAI, Reimagine Home and Interior AI keep uploads while your account is active, and Reimagine Home may use them to train its own models unless you opt out; RoomGPT publishes no policy (checked November 2026). Magic Room processes images in memory for the duration of the request only — nothing is written to storage and nothing is used for training. Check each tool's policy directly before uploading photos of a home you live in.",
+                                    a: "Most do. DecorAI and Reimagine Home keep uploads while your account is active, and Reimagine Home may use them to train its own models unless you opt out; Interior AI stores photos, says only you can access them, and gives no retention period; RoomGPT publishes no policy (checked November 2026). Magic Room processes images in memory for the duration of the request only — nothing is written to storage and nothing is used for training. Check each tool's policy directly before uploading photos of a home you live in.",
                                 },
                                 {
                                     q: "Which AI interior design tool is cheapest?",
