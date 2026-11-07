@@ -1,10 +1,9 @@
 import { parseWebhookEvent } from "@/lib/stripe";
 import { CREDIT_PACKAGES } from "@/lib/constants";
 import {
-  updateUserCredits,
   ensureUserExists,
   getUserById,
-  createTransaction,
+  grantPurchaseCredits,
 } from "@/lib/supabase";
 import { isWebhookProcessed, markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
@@ -105,43 +104,34 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("User not found", { status: 404 });
       }
 
-      const newCredits = user.credits + pkg.credits;
-      const creditsUpdateResult = await updateUserCredits(user.id, newCredits);
-
-      if (!creditsUpdateResult) {
-        logger.error(
-          { userId: user.id, newCredits, sessionId: session.id },
-          "Failed to update user credits"
-        );
-        return new Response("Failed to update credits", { status: 500 });
-      }
-
       // Use payment_intent if available, else use session.id as the stable idempotency key
       const stripePaymentId = typeof session.payment_intent === "string"
         ? session.payment_intent
         : session.id;
 
-      const transactionResult = await createTransaction(
-        user.id,
-        "purchase",
-        pkg.credits,
-        stripePaymentId,
-        {
-          packageId,
-          packageName: pkg.name,
-          stripePriceId: undefined,
-        }
-      );
+      const grant = await grantPurchaseCredits(user.id, stripePaymentId, pkg.credits, {
+        packageId,
+        packageName: pkg.name,
+      });
 
-      if (!transactionResult) {
-        logger.warn(
+      if (!grant) {
+        logger.error(
           { userId: user.id, packageId, sessionId: session.id },
-          "Failed to record transaction (credits still added)"
+          "Failed to grant purchased credits"
         );
-        return new Response("Failed to record transaction", { status: 500 });
+        return new Response("Failed to grant credits", { status: 500 });
       }
 
-      // Only mark as processed after credits and transaction are successfully recorded
+      if (!grant.granted) {
+        logger.info(
+          { userId: user.id, stripePaymentId, sessionId: session.id },
+          "Payment already granted, skipping"
+        );
+        await markWebhookProcessed("stripe", event.id);
+        return new Response("Payment already granted", { status: 200 });
+      }
+
+      // Only mark as processed after the grant is recorded
       await markWebhookProcessed("stripe", event.id);
 
       // Fire-and-forget purchase confirmation email

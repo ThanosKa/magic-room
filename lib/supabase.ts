@@ -272,6 +272,32 @@ export async function createTransaction(
   return data;
 }
 
+// Records a purchase and adds its credits in one transaction. `granted` is false
+// when this payment was already granted; null means the grant failed.
+export async function grantPurchaseCredits(
+  userId: string,
+  stripePaymentId: string,
+  credits: number,
+  metadata: Record<string, unknown>
+) {
+  const { data, error } = await supabase.rpc("grant_purchase_credits", {
+    p_user_id: userId,
+    p_stripe_payment_id: stripePaymentId,
+    p_credits: credits,
+    p_metadata: metadata,
+  });
+
+  if (error) {
+    logger.error(
+      { err: error, userId, stripePaymentId, credits },
+      "Error granting purchased credits"
+    );
+    return null;
+  }
+
+  return { granted: data === true };
+}
+
 export async function hasRefundForPrediction(
   userId: string,
   predictionId: string
