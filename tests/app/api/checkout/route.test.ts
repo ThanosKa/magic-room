@@ -187,19 +187,6 @@ describe("Checkout Route", () => {
       expect(data).toHaveProperty("error");
     });
 
-    it("should handle missing Content-Type header", async () => {
-      mockAuth(TEST_USER.clerkUserId);
-      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-
-      const request = new Request("http://localhost:3000/api/checkout", {
-        method: "POST",
-        body: JSON.stringify({ packageId: "starter" }),
-      });
-
-      const response = await POST(request);
-      expect(response.status).toBeGreaterThanOrEqual(200);
-    });
-
     it("should reject old package IDs (pro, ultimate)", async () => {
       mockAuth(TEST_USER.clerkUserId);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);

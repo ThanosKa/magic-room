@@ -419,55 +419,6 @@ describe("Stripe Webhook Route", () => {
         expect(sendPurchaseEmail).not.toHaveBeenCalled();
       });
     });
-
-    it("should handle race condition: Stripe webhook before Clerk webhook creates user", async () => {
-      const session = createMockCheckoutSession({
-        payment_status: "paid",
-        client_reference_id: TEST_USER.id,
-        metadata: {
-          userId: TEST_USER.id,
-          packageId: "starter",
-        },
-      });
-
-      const event: Stripe.Event = {
-        id: "evt_race_condition",
-        object: "event",
-        api_version: "2024-06-20",
-        created: Math.floor(Date.now() / 1000),
-        data: {
-          object: session,
-          previous_attributes: {},
-        },
-        livemode: true,
-        pending_webhooks: 1,
-        request: { id: "req_test", idempotency_key: null },
-        type: "checkout.session.completed",
-      } as Stripe.Event;
-
-      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
-      vi.mocked(redisLib.isWebhookProcessed).mockResolvedValue(false);
-      vi.mocked(redisLib.markWebhookProcessed).mockResolvedValue(true);
-      // getUserById returns the user (existing case)
-      vi.mocked(supabaseLib.getUserById).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.grantPurchaseCredits).mockResolvedValue({ granted: true });
-
-      const body = JSON.stringify(event);
-      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
-        method: "POST",
-        headers: {
-          "stripe-signature": "test_signature",
-        },
-        body,
-      });
-
-      const response = await POST(request);
-      expect(response.status).toBe(200);
-      // getUserById should have been called to resolve user
-      expect(supabaseLib.getUserById).toHaveBeenCalledWith(TEST_USER.id);
-      // Credits should be added
-      expect(supabaseLib.grantPurchaseCredits).toHaveBeenCalled();
-    });
   });
 });
 

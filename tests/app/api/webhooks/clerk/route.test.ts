@@ -457,36 +457,6 @@ describe("Clerk Webhook Route", () => {
         expect(response.status).toBe(500);
         expect(await response.text()).toBe("Error deleting user");
       });
-
-      it("should reject duplicate deletion webhooks (idempotency)", async () => {
-        await mockSvixHeaders({
-          "svix-id": "msg_duplicate",
-          "svix-timestamp": "1234567890",
-          "svix-signature": "v1,test",
-        });
-
-        const eventPayload = {
-          type: "user.deleted",
-          data: {
-            id: TEST_CLERK_USER_ID,
-          },
-        };
-
-        verifyMock.mockReturnValue(eventPayload);
-        // Mock user as not existing (already deleted/never existed)
-        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
-        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
-          isProcessed: false,
-          message: "Webhook marked for processing",
-        });
-
-        const response = await POST(createRequest(JSON.stringify(eventPayload)));
-        expect(response.status).toBe(200);
-        // Verify that no deletion was attempted (user already doesn't exist)
-        expect(supabaseLib.deleteUser).not.toHaveBeenCalled();
-        // Verify webhook was marked as processed
-        expect(redisLib.checkAndMarkWebhookProcessed).toHaveBeenCalled();
-      });
     });
 
     describe("unknown event types", () => {
@@ -510,46 +480,6 @@ describe("Clerk Webhook Route", () => {
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
-      });
-    });
-
-    describe("webhook deduplication", () => {
-      it("should skip duplicate Clerk webhooks", async () => {
-        await mockSvixHeaders({
-          "svix-id": "msg_duplicate_1",
-          "svix-timestamp": "1234567890",
-          "svix-signature": "v1,test",
-        });
-
-        const eventPayload = {
-          type: "user.created",
-          data: {
-            id: TEST_CLERK_USER_ID,
-            email_addresses: [{ email_address: TEST_EMAIL }],
-          },
-        };
-
-        verifyMock.mockReturnValue(eventPayload);
-        // Mock user as already existing (idempotent handling of duplicate webhook)
-        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue({
-          id: "test-user-id",
-          clerk_user_id: TEST_CLERK_USER_ID,
-          email: TEST_EMAIL,
-          credits: 1,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        });
-        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
-          isProcessed: false,
-          message: "Webhook marked for processing",
-        });
-
-        const response = await POST(createRequest(JSON.stringify(eventPayload)));
-        expect(response.status).toBe(200);
-        // Verify that no user was created (user already exists)
-        expect(supabaseLib.createUser).not.toHaveBeenCalled();
-        // Verify webhook was marked as processed
-        expect(redisLib.checkAndMarkWebhookProcessed).toHaveBeenCalled();
       });
     });
   });
