@@ -11,7 +11,7 @@ export const metadata: Metadata = privacyMetadata();
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="Last Updated: December 2024">
+    <LegalPage title="Privacy Policy" updated="Last Updated: November 2026">
       <section>
         <p className={legalLeadClass}>
           Magic Room (&ldquo;we,&rdquo; &ldquo;us,&rdquo; &ldquo;our,&rdquo; or
@@ -34,7 +34,7 @@ export default function PrivacyPage() {
         <h3>1.2 Information Automatically Collected</h3>
         <ul>
           <li>IP address and browser type</li>
-          <li>Usage analytics (via Vercel Analytics)</li>
+          <li>Usage analytics (via Cloudflare Web Analytics)</li>
           <li>Device information and cookies</li>
           <li>Referrer and landing page information</li>
         </ul>

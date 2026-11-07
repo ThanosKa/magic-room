@@ -111,7 +111,7 @@ Magic Room redesigns interior rooms only — no exterior, landscape, or floor-pl
 
 ## How is Magic Room built?
 
-Magic Room is a Next.js App Router application on Vercel. Authentication is Clerk, payments are Stripe one-time checkout, the credit balance lives in Supabase PostgreSQL, and rate limiting uses Upstash Redis. Image generation calls Google Gemini and OpenAI image models through OpenRouter. No user images are persisted anywhere in the stack.
+Magic Room is a Next.js App Router application on Cloudflare Workers. Authentication is Clerk, payments are Stripe one-time checkout, the credit balance lives in Supabase PostgreSQL, and rate limiting uses Upstash Redis. Image generation calls Google Gemini and OpenAI image models through OpenRouter. No user images are persisted anywhere in the stack.
 
 ## Who built Magic Room?
 

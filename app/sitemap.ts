@@ -31,13 +31,13 @@ import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-page
 //   - PASS_2026_10: surfaces edited in the 2026-10 SEO pass (HowTo JSON-LD
 //     removed, /vs consolidated into /alternatives, internal links and hub
 //     listings changed, pruned combos removed from the design hub).
-//   - LEGAL: matches the "Last Updated: December 2024" line on /privacy.
+//   - LEGAL: matches the "Last Updated: November 2026" line on /privacy.
 //   - RIGHTS_2026_11: free-credit commercial rights made consistent on
 //     /pricing and /terms (matches "Last Updated: November 2026" on /terms).
 //   - HOME_2026_11: homepage Explore section gained a Guides list.
 const BASELINE_LAST_UPDATED = new Date("2026-07-29");
 const PASS_2026_10_LAST_UPDATED = new Date("2026-10-01");
-const LEGAL_LAST_UPDATED = new Date("2024-12-01");
+const LEGAL_LAST_UPDATED = new Date("2026-11-07");
 const RIGHTS_2026_11_LAST_UPDATED = new Date("2026-11-01");
 const HOME_2026_11_LAST_UPDATED = new Date("2026-11-02");
 
