@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { ToastProvider } from "@/components/toast-provider";
@@ -191,7 +190,6 @@ export default function RootLayout({
                 <Footer />
               </div>
               <ToastProvider />
-              <Analytics />
             </UserDataProvider>
         </body>
       </html>

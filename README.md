@@ -54,7 +54,7 @@
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
 - [Deployment](#deployment)
-  - [Deploy to Vercel](#deploy-to-vercel)
+  - [Deploy to Cloudflare Workers](#deploy-to-cloudflare-workers)
   - [Manual Deploy](#manual-deploy)
   - [Production Checklist](#production-checklist)
 - [CI](#ci)
@@ -103,7 +103,7 @@ Magic Room is an AI-powered interior design assistant that helps anyone transfor
 ## Demo
 
 - Run locally with `pnpm dev` at `http://localhost:3000`
-- Deploy to Vercel with one-click deployment and configure environment variables
+- Deploy to Cloudflare Workers with `pnpm build:vinext` and `pnpm exec cf deploy --prebuilt`
 
 Quick preview: Upload room photo → Select design theme → AI generates variations → Compare with slider → Download results
 
@@ -132,7 +132,7 @@ Quick preview: Upload room photo → Select design theme → AI generates variat
 | Payments         | Stripe                                   |
 | Validation       | Zod                                      |
 | Logging          | Pino                                     |
-| Hosting          | Vercel                                   |
+| Hosting          | Cloudflare Workers (vinext)              |
 
 ## Getting Started
 
@@ -233,17 +233,13 @@ magic-room/
 
 ## Deployment
 
-### Deploy to Vercel
+### Deploy to Cloudflare Workers
 
-The easiest way to deploy Magic Room is with Vercel:
+Magic Room runs on Cloudflare Workers through [vinext](https://github.com/cloudflare/vinext):
 
-1. Push your code to GitHub
-2. Import the project in Vercel
-3. Add all environment variables from `.env.local`
-4. Update `NEXT_PUBLIC_APP_URL` to your production domain
-5. Deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FThanosKa%2Fmagic-room)
+1. Put every value in `.env.production.local`, with `NEXT_PUBLIC_APP_URL` set to your `https://` production domain
+2. Build with `pnpm build:vinext`, which reads the `NEXT_PUBLIC_*` values
+3. Put the other values in a JSON file outside the repo, then deploy with `pnpm exec cf deploy --prebuilt --secrets-file <file>`. Later deploys keep them, so the flag is only needed when a value changes
 
 ### Manual Deploy
 
@@ -288,7 +284,7 @@ Report security vulnerabilities privately as described in [SECURITY.md](SECURITY
 - [Google Gemini](https://gemini.google.com/) and [OpenAI](https://openai.com/) for the AI image models
 - [OpenRouter](https://openrouter.ai/) for API access
 - [shadcn/ui](https://ui.shadcn.com) for beautiful UI components
-- [Vercel](https://vercel.com) for hosting and deployment
+- [Cloudflare](https://www.cloudflare.com) for hosting and deployment
 - [Next.js](https://nextjs.org/) for the framework
 
 ## Star History
