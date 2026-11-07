@@ -24,11 +24,11 @@ jobs:
         uses: actions/checkout@v7
 
       # No `version` input: pnpm is read from the `packageManager` field in
-      # package.json, so local, CI and Vercel use the same pnpm.
+      # package.json, so local and CI use the same pnpm.
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
 
-      # Node 24 = Vercel's default Node.js runtime.
+      # Node 24: the Worker build and `cf` need it locally too (24.22 or newer).
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:

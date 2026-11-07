@@ -1,6 +1,6 @@
 # Magic Room
 
-AI interior design web app: upload one room photo, pick a room type and a style, get one redesign of that room back. Sold on one-time credit packs. Next.js App Router on Vercel, live at magic-room.dev. This repo is public.
+AI interior design web app: upload one room photo, pick a room type and a style, get one redesign of that room back. Sold on one-time credit packs. Next.js App Router on Cloudflare Workers (through vinext), live at magic-room.dev. This repo is public.
 
 ## Navigation
 
@@ -20,7 +20,7 @@ AI interior design web app: upload one room photo, pick a room type and a style,
 - Run tests once with `pnpm test:run`; `pnpm test` is watch mode.
 - `pnpm test:coverage` fails today: `@vitest/coverage-v8` is not installed.
 - A `pnpm type-check` error that points only into `.next/types/` is a stale generated file: run `pnpm build`, then type-check again.
-- Leave to the developer: `scripts/generate-design-images.mjs` and `scripts/test-image-gen.mjs` (spend OpenRouter money, overwrite `public/images/designs`), `scripts/indexnow.mjs` (submits the live sitemap, after a deploy reaches `main`).
+- Leave to the developer: `scripts/generate-design-images.mjs` and `scripts/test-image-gen.mjs` (spend OpenRouter money, overwrite `public/images/designs`), `scripts/indexnow.mjs` (submits the live sitemap, after a deploy to the Worker).
 
 ## Before working on
 
@@ -31,7 +31,8 @@ AI interior design web app: upload one room photo, pick a room type and a style,
 
 ## Git
 
-- `main` is production; `dev` collects work and is released by a PR `dev` → `main` titled `release: ...`.
+- `main` is the released code; `dev` collects work and is released by a PR `dev` → `main` titled `release: ...`.
+- Merging to `main` does not update the live site. A change reaches production only when someone runs `pnpm build:vinext`, then `pnpm exec cf deploy --prebuilt`, on Node 24.22 or newer.
 - Branch from `dev` as `<type>/<slug>` (`fix/header-scope-selector`, `seo/model-facts`) and open the PR against `dev`.
 - The scheduled SEO autopilot is the exception: its runbook lives in the private `ThanosKa/seo-hub` repo and it opens `autopilot/seo-YYYY-MM-DD` PRs against `main`.
 - Commits are Conventional Commits with a scope, lowercase and imperative: `fix(copy): ...`, `feat(generate): ...`. Types in use: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `chore`, `seo`.

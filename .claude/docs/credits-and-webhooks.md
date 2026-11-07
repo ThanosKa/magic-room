@@ -14,7 +14,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 - `refundCredits` adds the credits through `addCredits`, then writes a `refund` transaction. It throws when the credits could not be added, so the route never claims a refund that did not happen.
 - A 500 body with `success: false` is the client's signal that the credits came back (`components/generate/tool-messages.tsx`). Send it only after the refund succeeded.
 - Retrying a generation is the user's choice: an automatic retry spends credits or OpenRouter money a second time.
-- `maxDuration = 300` is there because Ultra takes about 2 minutes.
+- `maxDuration = 300` is left from Vercel and Workers ignore it. A request can wait as long as the client stays connected. A wait over 100 s with OpenRouter has not been proven on the Worker.
 
 ## Balance writes
 

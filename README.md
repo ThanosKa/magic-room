@@ -241,6 +241,8 @@ Magic Room runs on Cloudflare Workers through [vinext](https://github.com/cloudf
 2. Build with `pnpm build:vinext`, which reads the `NEXT_PUBLIC_*` values
 3. Put the other values in a JSON file outside the repo, then deploy with `pnpm exec cf deploy --prebuilt --secrets-file <file>`. Later deploys keep them, so the flag is only needed when a value changes
 
+Merging to `main` does not update the Worker. A change reaches production only when someone runs `pnpm build:vinext`, then `pnpm exec cf deploy --prebuilt`, on Node 24.22 or newer. So run them after each merge.
+
 ### Manual Deploy
 
 Build locally and run on Node 20+:
