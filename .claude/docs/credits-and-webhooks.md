@@ -11,14 +11,14 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 - Order: auth → Zod → `ensureUserExists` → balance check (402) → `checkRateLimit` (429) → `deductCredits` → `createTransaction("usage")` → OpenRouter.
 - Set `charge` immediately after the deduction. Every failure after that point, a thrown error included, goes through `refundCredits`.
-- `refundCredits` re-reads the balance before writing, because a generation can take minutes and the balance may have changed. It also writes a `refund` transaction.
+- `refundCredits` adds the credits through `addCredits`, then writes a `refund` transaction. It throws when the credits could not be added, so the route never claims a refund that did not happen.
 - A 500 body with `success: false` is the client's signal that the credits came back (`components/generate/tool-messages.tsx`). Send it only after the refund succeeded.
 - Retrying a generation is the user's choice: an automatic retry spends credits or OpenRouter money a second time.
 - `maxDuration = 300` is there because Ultra takes about 2 minutes.
 
 ## Balance writes
 
-- Keep the read and the write in `deductCredits` and `updateUserCredits` as close together as possible. Moving them into a SQL function is a migration to propose to the owner.
+- Change a balance only through a SQL function: `deductCredits`, `addCredits` (`supabase/migrations/005_atomic_credit_writes.sql`) or `grantPurchaseCredits`. Each changes it in one statement, so requests landing together cannot overwrite each other. Never write a balance computed in app code.
 - Every usage, refund and purchase also writes a `transactions` row.
 
 ## Stripe webhook (`app/api/webhooks/stripe/route.ts`)
