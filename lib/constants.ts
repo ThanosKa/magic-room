@@ -111,13 +111,6 @@ export const RATE_LIMIT_WINDOW = 3600;
 export const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 export const ACCEPTED_IMAGE_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
-export const COLORS = {
-  primary: "#8B5CF6",
-  light: "#A855F7",
-  dark: "#7C3AED",
-  white: "#FFFFFF",
-} as const;
-
 export const API_ENDPOINTS = {
   GENERATE: "/api/generate",
   STATUS: "/api/generate/[id]",
