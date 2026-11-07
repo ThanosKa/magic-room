@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import { PRUNED_NOINDEX_PATHS, PRUNED_REDIRECTS } from "./lib/seo/pruned";
 
 const nextConfig: NextConfig = {
+  // Keeps generateMetadata output in the initial <head>; vinext otherwise
+  // streams it into the body.
+  htmlLimitedBots: /.*/,
   serverExternalPackages: [
     "pino",
     "pino-pretty",
