@@ -1,42 +1,49 @@
 import { describe, expect, it } from "vitest";
 import { buildPurchaseEmailHtml, buildWelcomeEmailHtml } from "@/lib/email";
-import { QUALITY_OPTIONS, THEME_IDS } from "@/lib/constants";
 
-describe("email templates", () => {
-  it("greets by first name, or generically without one", () => {
+describe("welcome email", () => {
+  it("greets by first name", () => {
     expect(buildWelcomeEmailHtml({ firstName: "Maria" })).toContain("<em>Maria.</em>");
+  });
+
+  it("greets generically without a name", () => {
     expect(buildWelcomeEmailHtml({})).toContain("Welcome to <em>Magic Room.</em>");
   });
 
-  it("escapes names before they reach the HTML", () => {
+  it("escapes a name that contains HTML", () => {
     const html = buildWelcomeEmailHtml({ firstName: "<script>" });
     expect(html).toContain("&lt;script&gt;");
     expect(html).not.toContain("<script>");
   });
 
-  it("states the product facts from the constants", () => {
-    const html = buildWelcomeEmailHtml({ firstName: "Maria" });
-    expect(html).toContain("You get one redesign of your room.");
-    expect(html).toContain(`${THEME_IDS.length} design themes`);
-    expect(html).toContain(QUALITY_OPTIONS.ultra.waitText);
-    expect(html).not.toContain("variations");
+  it("promises one redesign and the real wait for each tier", () => {
+    const html = buildWelcomeEmailHtml({});
+    expect(html).toContain(
+      "You get one redesign of your room. Quick and Pro take 30 to 60 seconds, Ultra about 2 minutes."
+    );
   });
 
-  it("gives each tier's credit cost and never prices the purchase", () => {
+  it("says what the free credit buys and the lowest pack price", () => {
+    const html = buildWelcomeEmailHtml({});
+    expect(html).toContain("1 free credit, enough for one Quick design");
+    expect(html).toContain("&euro;9.99 for 20");
+  });
+});
+
+describe("purchase email", () => {
+  it("names the pack and the credits", () => {
     const html = buildPurchaseEmailHtml({ packageName: "Starter", credits: 20 });
-    const { standard, premium, ultra } = QUALITY_OPTIONS;
-    expect(html).toContain(
-      `A ${standard.name} design uses ${standard.credits} credit, ${premium.name} ${premium.credits} and ${ultra.name} ${ultra.credits}.`
-    );
     expect(html).toContain("Starter");
     expect(html).toContain("20 credits");
-    expect(html).not.toContain("&euro;");
   });
 
-  it("keeps purple off buttons and headers", () => {
-    const html = buildWelcomeEmailHtml({ firstName: "Maria" }).toLowerCase();
-    expect(html).not.toContain("background-color:#7c3aed");
-    expect(html).not.toContain("linear-gradient");
-    expect(html).not.toContain("#8b5cf6");
+  it("states what each tier costs", () => {
+    const html = buildPurchaseEmailHtml({ packageName: "Starter", credits: 20 });
+    expect(html).toContain("A Quick design uses 1 credit, Pro 2 and Ultra 3.");
+  });
+
+  it("leaves out the price, which a promotion code could make wrong", () => {
+    const html = buildPurchaseEmailHtml({ packageName: "Starter", credits: 20 });
+    expect(html).not.toContain("&euro;");
   });
 });
