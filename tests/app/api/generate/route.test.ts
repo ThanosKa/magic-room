@@ -19,7 +19,7 @@ vi.mock("@/lib/supabase", async () => {
     ensureUserExists: vi.fn(),
     deductCredits: vi.fn(),
     createTransaction: vi.fn(),
-    updateUserCredits: vi.fn(),
+    addCredits: vi.fn(),
   };
 });
 
@@ -250,7 +250,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue(TEST_USER);
+      vi.mocked(supabaseLib.addCredits).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: false,
@@ -272,10 +272,7 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(request);
 
       expect(response.status).toBe(500);
-      expect(supabaseLib.updateUserCredits).toHaveBeenCalledWith(
-        TEST_USER.id,
-        TEST_USER.credits + 1
-      );
+      expect(supabaseLib.addCredits).toHaveBeenCalledWith(TEST_USER.id, 1);
       expect(supabaseLib.createTransaction).toHaveBeenCalledWith(
         TEST_USER.id,
         "refund",
@@ -289,7 +286,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue(TEST_USER);
+      vi.mocked(supabaseLib.addCredits).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: false,
@@ -311,10 +308,7 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(request);
 
       expect(response.status).toBe(500);
-      expect(supabaseLib.updateUserCredits).toHaveBeenCalledWith(
-        TEST_USER.id,
-        TEST_USER.credits + 2
-      );
+      expect(supabaseLib.addCredits).toHaveBeenCalledWith(TEST_USER.id, 2);
       expect(supabaseLib.createTransaction).toHaveBeenCalledWith(
         TEST_USER.id,
         "refund",
@@ -330,7 +324,7 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
       vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.updateUserCredits).mockResolvedValue(TEST_USER);
+      vi.mocked(supabaseLib.addCredits).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockRejectedValue(new Error("OpenRouter API error: 502"));
 
@@ -349,13 +343,47 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(500);
       expect(await response.json()).toMatchObject({ success: false });
-      expect(supabaseLib.updateUserCredits).toHaveBeenCalledWith(TEST_USER.id, TEST_USER.credits + 2);
+      expect(supabaseLib.addCredits).toHaveBeenCalledWith(TEST_USER.id, 2);
       expect(supabaseLib.createTransaction).toHaveBeenCalledWith(
         TEST_USER.id,
         "refund",
         2,
         undefined,
         expect.any(Object)
+      );
+    });
+
+    it.each([
+      ["the AI reports a failure", () => vi.mocked(openrouterLib.generateDesign).mockResolvedValue({ success: false, images: [], error: "Generation failed" })],
+      ["the AI call throws", () => vi.mocked(openrouterLib.generateDesign).mockRejectedValue(new Error("OpenRouter API error: 502"))],
+    ])("does not claim a refund that failed when %s", async (_name, failGeneration) => {
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
+      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.addCredits).mockResolvedValue(false);
+      vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
+      failGeneration();
+
+      const request = new Request("http://localhost:3000/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          base64Image: TEST_BASE64_IMAGE,
+          roomType: "living-room",
+          theme: "modern",
+        }),
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toBe(500);
+      expect(await response.json()).toEqual({ error: "Internal server error" });
+      expect(supabaseLib.createTransaction).not.toHaveBeenCalledWith(
+        TEST_USER.id,
+        "refund",
+        expect.anything(),
+        undefined,
+        expect.anything()
       );
     });
 
@@ -378,7 +406,7 @@ describe("Generate Route - Quality Feature", () => {
       expect(response.status).toBe(500);
       expect(await response.json()).not.toHaveProperty("success");
       expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
-      expect(supabaseLib.updateUserCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.addCredits).not.toHaveBeenCalled();
     });
   });
 

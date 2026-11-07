@@ -38,7 +38,7 @@ vi.mock("@/lib/supabase", async () => {
     ensureUserExists: vi.fn(),
     deductCredits: vi.fn(),
     createTransaction: vi.fn(),
-    updateUserCredits: vi.fn(),
+    addCredits: vi.fn(),
   };
 });
 
