@@ -102,7 +102,7 @@ describe("Stripe Webhook Route", () => {
         type: "checkout.session.completed",
       } as Stripe.Event;
 
-      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(stripeLib.parseWebhookEvent).mockResolvedValue(event);
       vi.mocked(redisLib.isWebhookProcessed).mockResolvedValue(false);
       vi.mocked(redisLib.markWebhookProcessed).mockResolvedValue(true);
       vi.mocked(supabaseLib.getUserById).mockResolvedValue(TEST_USER );
@@ -154,7 +154,7 @@ describe("Stripe Webhook Route", () => {
         type: "checkout.session.completed",
       } as Stripe.Event;
 
-      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(stripeLib.parseWebhookEvent).mockResolvedValue(event);
       vi.mocked(redisLib.isWebhookProcessed).mockResolvedValue(false);
       vi.mocked(redisLib.markWebhookProcessed).mockResolvedValue(true);
       vi.mocked(supabaseLib.getUserById).mockResolvedValue(TEST_USER );
@@ -198,7 +198,7 @@ describe("Stripe Webhook Route", () => {
         type: "checkout.session.completed",
       } as Stripe.Event;
 
-      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(stripeLib.parseWebhookEvent).mockResolvedValue(event);
       vi.mocked(redisLib.isWebhookProcessed).mockResolvedValue(false);
 
       const body = JSON.stringify(event);
@@ -239,7 +239,7 @@ describe("Stripe Webhook Route", () => {
         type: "checkout.session.completed",
       } as Stripe.Event;
 
-      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(stripeLib.parseWebhookEvent).mockResolvedValue(event);
       vi.mocked(redisLib.isWebhookProcessed).mockResolvedValue(false);
 
       const body = JSON.stringify(event);
@@ -280,7 +280,7 @@ describe("Stripe Webhook Route", () => {
         type: "checkout.session.completed",
       } as Stripe.Event;
 
-      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(stripeLib.parseWebhookEvent).mockResolvedValue(event);
       vi.mocked(redisLib.isWebhookProcessed).mockResolvedValue(false);
       vi.mocked(supabaseLib.getUserById).mockResolvedValue(null);
 
@@ -313,7 +313,7 @@ describe("Stripe Webhook Route", () => {
         type: "customer.created",
       } as Stripe.Event;
 
-      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(stripeLib.parseWebhookEvent).mockResolvedValue(event);
       vi.mocked(redisLib.isWebhookProcessed).mockResolvedValue(false);
       vi.mocked(redisLib.markWebhookProcessed).mockResolvedValue(true);
 
@@ -356,7 +356,7 @@ describe("Stripe Webhook Route", () => {
         type: "checkout.session.completed",
       } as Stripe.Event;
 
-      vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue(event);
+      vi.mocked(stripeLib.parseWebhookEvent).mockResolvedValue(event);
       vi.mocked(redisLib.isWebhookProcessed).mockResolvedValue(true);
 
       const body = JSON.stringify(event);
@@ -381,7 +381,7 @@ describe("Stripe Webhook Route", () => {
           metadata: { userId: TEST_USER.id, packageId: "starter" },
         });
 
-        vi.mocked(stripeLib.parseWebhookEvent).mockReturnValue({
+        vi.mocked(stripeLib.parseWebhookEvent).mockResolvedValue({
           id: "evt_grant",
           type: "checkout.session.completed",
           data: { object: session },

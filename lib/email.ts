@@ -219,7 +219,7 @@ export function buildPurchaseEmailHtml(params: {
 }
 
 // ---------------------------------------------------------------------------
-// Send helpers (fire-and-forget friendly)
+// Send helpers (they throw on failure: callers await them and catch)
 // ---------------------------------------------------------------------------
 
 export async function sendWelcomeEmail(params: {

@@ -47,7 +47,7 @@ export async function POST(request: Request): Promise<Response> {
 
     let event: Stripe.Event;
     try {
-      event = parseWebhookEvent(body, signature, webhookSecret);
+      event = await parseWebhookEvent(body, signature, webhookSecret);
     } catch (error) {
       logger.warn(
         { err: error },
@@ -134,11 +134,12 @@ export async function POST(request: Request): Promise<Response> {
       // Only mark as processed after the grant is recorded
       await markWebhookProcessed("stripe", event.id);
 
-      // Fire-and-forget purchase confirmation email
+      // Awaited because a Worker can drop work left running after the response.
+      // A failed email is only logged: it must not fail the webhook.
       const customerEmail =
         session.customer_details?.email ?? session.customer_email ?? user.email;
       if (customerEmail) {
-        sendPurchaseEmail({
+        await sendPurchaseEmail({
           to: customerEmail,
           packageName: pkg.name,
           credits: pkg.credits,

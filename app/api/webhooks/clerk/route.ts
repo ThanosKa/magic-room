@@ -154,8 +154,9 @@ export async function POST(request: Request) {
       // Mark as processed AFTER successful database operations
       await checkAndMarkWebhookProcessed("clerk", svixId);
 
-      // Fire-and-forget welcome email
-      sendWelcomeEmail({
+      // Awaited because a Worker can drop work left running after the response.
+      // A failed email is only logged: it must not fail the webhook.
+      await sendWelcomeEmail({
         to: primaryEmail,
         firstName: first_name,
         lastName: last_name,

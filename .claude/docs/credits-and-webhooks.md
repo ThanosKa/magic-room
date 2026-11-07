@@ -23,13 +23,13 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Stripe webhook (`app/api/webhooks/stripe/route.ts`)
 
-- Verify first: `parseWebhookEvent` on the raw `request.text()` body; a bad signature returns 401.
+- Verify first: `await parseWebhookEvent` on the raw `request.text()` body; a bad signature returns 401. It uses `constructEventAsync`, because the sync `constructEvent` throws on Workers and every real event would look like a bad signature.
 - Grant only through the `grant_purchase_credits` SQL function (`supabase/migrations/004_atomic_purchase_grant.sql`), via `grantPurchaseCredits` in `lib/supabase.ts`. It writes the transaction and adds the credits together, and a unique index allows one purchase row per payment. This is what stops double grants.
 - A failed grant returns 500 so Stripe redelivers. `isWebhookProcessed("stripe", event.id)` before any work and `markWebhookProcessed` after the grant only save work: the Redis key lasts 24 hours and a Redis error fails open.
 - Grant credits only when `payment_status` is `paid` or `no_payment_required`, and only from `metadata.packageId` looked up in `CREDIT_PACKAGES`.
 - Resolve the user from `metadata.userId` or `client_reference_id`: Supabase UUID first, then Clerk id.
 - Store `payment_intent` as `stripe_payment_id`, or `session.id` when there is none.
-- Purchase emails are fire-and-forget after the write and name the pack and credits only: a price would be wrong once a promotion code applies.
+- Purchase emails are awaited after the write, because a Worker can drop work left running after the response, and a failed email is only logged. They name the pack and credits only: a price would be wrong once a promotion code applies.
 
 ## Clerk webhook (`app/api/webhooks/clerk/route.ts`)
 
