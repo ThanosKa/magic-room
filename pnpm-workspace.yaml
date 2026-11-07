@@ -19,3 +19,8 @@ allowBuilds:
   '@clerk/shared': false
 
 strictDepBuilds: true
+
+# vinext 1.4.4 gives next/image `fill` images one 640px source and no srcset.
+# The patch makes them follow `sizes`, as next/image does on the live site.
+patchedDependencies:
+  vinext@1.4.4: patches/vinext@1.4.4.patch
