@@ -42,3 +42,9 @@ next-env.d.ts
 
 # impeccable design tool (local settings and cache)
 .impeccable/
+
+# vinext and Cloudflare output
+/dist/
+.vinext/
+.cloudflare/
+.dev.vars*

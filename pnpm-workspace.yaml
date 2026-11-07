@@ -13,6 +13,8 @@ allowBuilds:
   # Native resolver used by eslint-config-next (eslint-import-resolver-typescript);
   # napi-postinstall restores the binding if the optional dependency is missing.
   unrs-resolver: true
+  # Downloads and validates the local Workers runtime used by the vinext preview.
+  workerd: true
   # Only prints a telemetry notice; not needed.
   '@clerk/shared': false
 
