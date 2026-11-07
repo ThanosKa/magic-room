@@ -1,7 +1,16 @@
 diff --git a/dist/shims/image.js b/dist/shims/image.js
-index 338074c0e4f73224f56d5ffd3bac11bf203ace75..8a039d4131cbb76971f44db286a9c06d83cadfd9 100644
+index 338074c0e4f73224f56d5ffd3bac11bf203ace75..e912ceba8b21952b19339820dcbfc280d2e65a94 100644
 --- a/dist/shims/image.js
 +++ b/dist/shims/image.js
+@@ -162,7 +162,7 @@ const Image = forwardRef(function Image({ src: srcProp, alt, width, height, fill
+ 		lastErrorSrcRef.current = src;
+ 		markBlurComplete();
+ 	} : void 0;
+-	if (_unoptimized === true || __globallyUnoptimized) {
++	if (_unoptimized === true || __globallyUnoptimized || src.startsWith("data:") || src.startsWith("blob:")) {
+ 		const renderedSrc = overrideSrc || src;
+ 		const sanitizedBlur = imgBlurDataURL ? sanitizeBlurDataURL(imgBlurDataURL) : void 0;
+ 		const blurStyle = !blurComplete && placeholder === "blur" && sanitizedBlur ? {
 @@ -295,7 +295,7 @@ const Image = forwardRef(function Image({ src: srcProp, alt, width, height, fill
  	}
  	const imgQuality = parseImageQuality(quality) ?? 75;
