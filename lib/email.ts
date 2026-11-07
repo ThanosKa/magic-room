@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { logger } from "@/lib/logger";
 import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
-import { COLORS } from "@/lib/constants";
+import { CREDIT_PACKAGES, QUALITY_OPTIONS, THEME_IDS } from "@/lib/constants";
 
 // ---------------------------------------------------------------------------
 // Resend client (lazy-initialised so tests that import this module don't
@@ -20,14 +20,44 @@ function getResend(): Resend {
 const FROM_EMAIL = "Magic Room <hello@notifications.app-whisper.com>";
 
 // ---------------------------------------------------------------------------
-// Logo URL (absolute so it works in email clients)
+// Logo URL (absolute so it works in email clients). A small copy of the icon:
+// the 1024px original is too heavy to load quickly in an inbox.
 // ---------------------------------------------------------------------------
 
-const LOGO_URL = `${SITE_URL}/icon.png`;
+const LOGO_URL = `${SITE_URL}/email-logo.png`;
+
+// ---------------------------------------------------------------------------
+// Design tokens. Email clients cannot read the CSS variables in
+// app/globals.css, so these are its values as solid colours. Keep them in step
+// with that file. Purple stays on small dots only, as on the site.
+// ---------------------------------------------------------------------------
+
+const PAPER = "#f4f0e9";
+const PAPER_2 = "#ebe5da";
+const INK = "#17140f";
+const INK_2 = "#5e5a55";
+const LINE = "#dad6cf";
+const LINE_ON_PAPER_2 = "#d6d0c5";
+const CREAM = "#efe8dc";
+const ACCENT = "#7c3aed";
+
+// Many clients (Gmail included) drop web fonts, so the fallbacks must read well too.
+const SANS = "'Geist','Helvetica Neue',Helvetica,Arial,sans-serif";
+const SERIF = "'Instrument Serif',Georgia,'Times New Roman',serif";
 
 // ---------------------------------------------------------------------------
 // Shared email layout helpers (inline-style, table-based, email-safe HTML)
 // ---------------------------------------------------------------------------
+
+/** Names come from the sign-up form, so escape them before they reach the HTML. */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 function emailWrapper(bodyHtml: string): string {
   return `<!DOCTYPE html>
@@ -36,41 +66,31 @@ function emailWrapper(bodyHtml: string): string {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="color-scheme" content="light" />
+  <meta name="supported-color-schemes" content="light" />
   <title>${SITE_NAME}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 </head>
-<body style="margin:0;padding:0;background-color:#f4f4f7;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f7;">
+<body bgcolor="${PAPER}" style="margin:0;padding:0;background-color:${PAPER};font-family:${SANS};color:${INK};-webkit-font-smoothing:antialiased;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${PAPER}" style="background-color:${PAPER};">
     <tr>
-      <td align="center" style="padding:32px 16px;">
-        <!-- Header bar -->
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;border-radius:8px 8px 0 0;overflow:hidden;">
+      <td align="center" style="padding:32px 20px 40px;">
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;">
           <tr>
-            <td align="center" style="background:linear-gradient(135deg,${COLORS.dark},${COLORS.primary});padding:28px 24px;">
-              <img src="${LOGO_URL}" alt="${SITE_NAME}" width="56" height="56" style="display:block;border:0;border-radius:12px;" />
-              <p style="margin:12px 0 0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.3px;">${SITE_NAME}</p>
+            <td style="padding:0 0 22px;border-bottom:1px solid ${LINE};">
+              <img src="${LOGO_URL}" alt="" width="28" height="28" style="display:inline-block;vertical-align:middle;border:0;border-radius:7px;" />
+              <span style="margin-left:8px;font-size:16px;font-weight:500;line-height:28px;letter-spacing:-0.01em;color:${INK};vertical-align:middle;">${SITE_NAME}</span>
             </td>
           </tr>
-        </table>
-        <!-- Body card -->
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#ffffff;border-left:1px solid #e8e5e3;border-right:1px solid #e8e5e3;">
           <tr>
-            <td style="padding:32px 36px;">
-              ${bodyHtml}
-            </td>
+            <td style="padding:44px 0;">${bodyHtml}</td>
           </tr>
-        </table>
-        <!-- Footer -->
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#fafafa;border-radius:0 0 8px 8px;border:1px solid #e8e5e3;border-top:none;">
           <tr>
-            <td align="center" style="padding:20px 24px;">
-              <p style="margin:0;font-size:12px;color:#9ca3af;line-height:18px;">
-                &copy; ${new Date().getFullYear()} ${SITE_NAME} &middot;
-                <a href="${SITE_URL}/terms" style="color:#9ca3af;text-decoration:underline;">Terms</a> &middot;
-                <a href="${SITE_URL}/privacy" style="color:#9ca3af;text-decoration:underline;">Privacy</a>
-              </p>
-              <p style="margin:6px 0 0;font-size:11px;color:#c0c0c0;">
-                You received this email because you have an account at ${SITE_NAME}.
-              </p>
+            <td style="padding:22px 0 0;border-top:1px solid ${LINE};font-size:12px;line-height:19px;color:${INK_2};">
+              &copy; ${new Date().getFullYear()} ${SITE_NAME} &middot;
+              <a href="${SITE_URL}/terms" style="color:${INK_2};text-decoration:underline;">Terms</a> &middot;
+              <a href="${SITE_URL}/privacy" style="color:${INK_2};text-decoration:underline;">Privacy</a><br />
+              You received this email because you have an account at ${SITE_NAME}.
             </td>
           </tr>
         </table>
@@ -81,22 +101,44 @@ function emailWrapper(bodyHtml: string): string {
 </html>`;
 }
 
+function label(text: string): string {
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 18px;">
+  <tr>
+    <td bgcolor="${PAPER_2}" style="background-color:${PAPER_2};border-radius:999px;padding:5px 12px;font-size:12px;line-height:16px;color:${INK_2};"><span style="color:${ACCENT};">&#9679;</span>&nbsp;&nbsp;${text}</td>
+  </tr>
+</table>`;
+}
+
+function heading(html: string): string {
+  return `<h1 style="margin:0 0 20px;font-family:${SERIF};font-size:46px;font-weight:400;line-height:48px;letter-spacing:-0.02em;color:${INK};">${html}</h1>`;
+}
+
+function paragraph(html: string): string {
+  return `<p style="margin:0 0 28px;font-size:15px;line-height:24px;color:${INK_2};">${html}</p>`;
+}
+
+function button(text: string, href: string): string {
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0;">
+  <tr>
+    <td bgcolor="${INK}" style="background-color:${INK};border-radius:999px;">
+      <a href="${href}" target="_blank" style="display:inline-block;padding:14px 26px;font-family:${SANS};font-size:15px;font-weight:500;line-height:20px;color:${CREAM};text-decoration:none;">${text}&nbsp;&rarr;</a>
+    </td>
+  </tr>
+</table>`;
+}
+
 // ---------------------------------------------------------------------------
 // Step row helper (used in welcome email)
 // ---------------------------------------------------------------------------
 
 function stepRow(number: string, title: string, description: string): string {
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
-  <tr>
-    <td width="44" valign="top">
-      <div style="width:36px;height:36px;border-radius:50%;background-color:${COLORS.primary};color:#ffffff;font-size:16px;font-weight:700;text-align:center;line-height:36px;">${number}</div>
+  return `<tr>
+    <td width="44" valign="top" style="padding:16px 0;border-top:1px solid ${LINE};font-family:${SERIF};font-size:24px;line-height:24px;color:${INK_2};">${number}</td>
+    <td valign="top" style="padding:16px 0;border-top:1px solid ${LINE};">
+      <p style="margin:0 0 3px;font-size:15px;font-weight:500;line-height:22px;color:${INK};">${title}</p>
+      <p style="margin:0;font-size:14px;line-height:21px;color:${INK_2};">${description}</p>
     </td>
-    <td valign="top" style="padding-left:12px;">
-      <p style="margin:0 0 4px;font-size:15px;font-weight:600;color:#1f2937;">${title}</p>
-      <p style="margin:0;font-size:14px;color:#6b7280;line-height:20px;">${description}</p>
-    </td>
-  </tr>
-</table>`;
+  </tr>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -105,44 +147,33 @@ function stepRow(number: string, title: string, description: string): string {
 
 export function buildWelcomeEmailHtml(params: {
   firstName?: string | null;
-  lastName?: string | null;
 }): string {
-  const nameParts = [params.firstName, params.lastName].filter(Boolean);
-  const greeting =
-    nameParts.length > 0
-      ? `Welcome to ${SITE_NAME}, ${nameParts.join(" ")}!`
-      : `Welcome to ${SITE_NAME}!`;
+  const title = params.firstName
+    ? `Welcome to ${SITE_NAME}, <em>${escapeHtml(params.firstName)}.</em>`
+    : `Welcome to <em>${SITE_NAME}.</em>`;
+
+  const { standard: quick, premium: pro, ultra } = QUALITY_OPTIONS;
+  const starter = CREDIT_PACKAGES[0];
+  const starterPrice = (starter.priceCents / 100).toFixed(2);
 
   const body = `
-    <h1 style="margin:0 0 8px;font-size:24px;font-weight:700;color:#1f2937;">${greeting}</h1>
-    <p style="margin:0 0 24px;font-size:15px;color:#6b7280;line-height:22px;">
-      ${SITE_NAME} is an AI interior design tool that transforms any room from a single photo. Here's how it works:
-    </p>
-
-    ${stepRow("1", "Upload a photo", "Take a picture of any room you want to redesign and upload it.")}
-    ${stepRow("2", "Choose a style", "Pick from 14 design themes — Modern, Scandinavian, Bohemian, and more.")}
-    ${stepRow("3", "Get your redesign", "The AI generates professionally redesigned variations in 30-60 seconds.")}
-
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 24px;background-color:#f9f5ff;border-radius:8px;border:1px solid #ede9fe;">
+    ${label("AI interior design")}
+    ${heading(title)}
+    ${paragraph(`${SITE_NAME} is an AI interior design tool that transforms any room from a single photo. Here's how it works:`)}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border-bottom:1px solid ${LINE};">
+      ${stepRow("1", "Upload a photo", "Take a picture of any room you want to redesign and upload it.")}
+      ${stepRow("2", "Choose a style", `Pick from ${THEME_IDS.length} design themes: Modern, Scandinavian, Bohemian and more.`)}
+      ${stepRow("3", "Get your redesign", `You get one redesign of your room. ${quick.name} and ${pro.name} take ${quick.waitText}, ${ultra.name} ${ultra.waitText}.`)}
+    </table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${PAPER_2}" style="margin:0 0 28px;background-color:${PAPER_2};border-radius:14px;">
       <tr>
-        <td style="padding:16px 20px;">
-          <p style="margin:0;font-size:14px;color:#7c3aed;font-weight:600;">Your free credit is ready</p>
-          <p style="margin:4px 0 0;font-size:13px;color:#6b7280;line-height:19px;">
-            Every new account gets 1 free credit so you can try the AI before purchasing. Additional credits start at just &euro;9.99 for 20 credits.
-          </p>
+        <td style="padding:18px 22px;">
+          <p style="margin:0 0 4px;font-size:14px;font-weight:500;line-height:20px;color:${INK};"><span style="color:${ACCENT};">&#9679;</span>&nbsp;&nbsp;Your free credit is ready</p>
+          <p style="margin:0;font-size:14px;line-height:21px;color:${INK_2};">Every new account gets 1 free credit, enough for one ${quick.name} design. More credits start at &euro;${starterPrice} for ${starter.credits}.</p>
         </td>
       </tr>
     </table>
-
-    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-      <tr>
-        <td align="center" style="border-radius:6px;background-color:${COLORS.primary};">
-          <a href="${SITE_URL}/generate" style="display:inline-block;padding:12px 32px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:6px;">
-            Start designing
-          </a>
-        </td>
-      </tr>
-    </table>
+    ${button("Start designing", `${SITE_URL}/generate`)}
   `;
 
   return emailWrapper(body);
@@ -152,52 +183,36 @@ export function buildWelcomeEmailHtml(params: {
 // Purchase confirmation email HTML
 // ---------------------------------------------------------------------------
 
+function receiptRow(name: string, value: string, isLast: boolean): string {
+  const border = isLast ? "" : `border-bottom:1px solid ${LINE_ON_PAPER_2};`;
+  return `<tr>
+    <td style="padding:12px 0;${border}font-size:14px;line-height:20px;color:${INK_2};">${name}</td>
+    <td align="right" style="padding:12px 0;${border}font-size:14px;font-weight:500;line-height:20px;color:${INK};">${value}</td>
+  </tr>`;
+}
+
 export function buildPurchaseEmailHtml(params: {
   packageName: string;
   credits: number;
 }): string {
-  const body = `
-    <h1 style="margin:0 0 8px;font-size:24px;font-weight:700;color:#1f2937;">Payment confirmed</h1>
-    <p style="margin:0 0 24px;font-size:15px;color:#6b7280;line-height:22px;">
-      Thank you for your purchase! Your credits have been added to your account and are ready to use.
-    </p>
+  const { standard: quick, premium: pro, ultra } = QUALITY_OPTIONS;
 
-    <!-- Receipt card -->
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+  const body = `
+    ${label("Receipt")}
+    ${heading("Payment <em>confirmed.</em>")}
+    ${paragraph("Thank you for your purchase! Your credits have been added to your account and are ready to use.")}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${PAPER_2}" style="margin:0 0 28px;background-color:${PAPER_2};border-radius:14px;">
       <tr>
-        <td style="background-color:#fafafa;padding:12px 20px;border-bottom:1px solid #e5e7eb;">
-          <p style="margin:0;font-size:13px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;">Receipt</p>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:20px;">
+        <td style="padding:10px 22px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-              <td style="padding:6px 0;font-size:14px;color:#6b7280;">Plan</td>
-              <td align="right" style="padding:6px 0;font-size:14px;font-weight:600;color:#1f2937;">${params.packageName}</td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;font-size:14px;color:#6b7280;">Credits added</td>
-              <td align="right" style="padding:6px 0;font-size:14px;font-weight:600;color:#1f2937;">${params.credits} credits</td>
-            </tr>
+            ${receiptRow("Pack", escapeHtml(params.packageName), false)}
+            ${receiptRow("Credits added", `${params.credits} credits`, true)}
           </table>
         </td>
       </tr>
     </table>
-
-    <p style="margin:0 0 24px;font-size:14px;color:#6b7280;line-height:20px;">
-      Credits never expire, so you can use them at your own pace. Each credit generates one AI room redesign.
-    </p>
-
-    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-      <tr>
-        <td align="center" style="border-radius:6px;background-color:${COLORS.primary};">
-          <a href="${SITE_URL}/generate" style="display:inline-block;padding:12px 32px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:6px;">
-            Use your credits
-          </a>
-        </td>
-      </tr>
-    </table>
+    ${paragraph(`Credits never expire, so you can use them at your own pace. A ${quick.name} design uses ${quick.credits} credit, ${pro.name} ${pro.credits} and ${ultra.name} ${ultra.credits}.`)}
+    ${button("Use your credits", `${SITE_URL}/generate`)}
   `;
 
   return emailWrapper(body);
@@ -218,10 +233,7 @@ export async function sendWelcomeEmail(params: {
       ? `Welcome to ${SITE_NAME}, ${nameParts.join(" ")}!`
       : `Welcome to ${SITE_NAME}!`;
 
-  const html = buildWelcomeEmailHtml({
-    firstName: params.firstName,
-    lastName: params.lastName,
-  });
+  const html = buildWelcomeEmailHtml({ firstName: params.firstName });
 
   const { error } = await getResend().emails.send({
     from: FROM_EMAIL,
