@@ -5,7 +5,7 @@ import {
   ensureUserExists,
   deductCredits,
   createTransaction,
-  updateUserCredits,
+  addCredits,
 } from "@/lib/supabase";
 import { checkRateLimit } from "@/lib/redis";
 import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
@@ -23,25 +23,24 @@ const GenerateSchema = z.object({
   customPrompt: z.string().max(NOTE_MAX_LENGTH).optional(),
 });
 
-/** Gives back credits taken for a generation that produced nothing. */
+/** Gives back credits taken for a generation that produced nothing. Throws if it could not. */
 async function refundCredits(
   userId: string,
-  clerkUserId: string,
   amount: number,
   generationId: string | null
 ): Promise<void> {
-  await createTransaction(userId, "refund", amount, undefined, { generationId });
-  const latestUser = await ensureUserExists(clerkUserId);
-  if (latestUser) {
-    await updateUserCredits(latestUser.id, latestUser.credits + amount);
+  const refunded = await addCredits(userId, amount);
+  if (!refunded) {
+    throw new Error("Credit refund failed");
   }
+  await createTransaction(userId, "refund", amount, undefined, { generationId });
 }
 
 export async function POST(request: Request): Promise<Response> {
   const startTime = Date.now();
   let generationId: string | null = null;
   // Set once credits are taken, so any later failure gives them back.
-  let charge: { userId: string; clerkUserId: string; amount: number } | null = null;
+  let charge: { userId: string; amount: number } | null = null;
 
   try {
     logger.info({}, "[Generate] POST request received");
@@ -131,7 +130,7 @@ export async function POST(request: Request): Promise<Response> {
         }
       );
     }
-    charge = { userId: user.id, clerkUserId, amount: creditCost };
+    charge = { userId: user.id, amount: creditCost };
     logger.info({ creditCost }, "[Generate] Credits deducted");
 
     await createTransaction(user.id, "usage", creditCost);
@@ -158,7 +157,7 @@ export async function POST(request: Request): Promise<Response> {
 
     if (!result.success || result.images.length === 0) {
       charge = null;
-      await refundCredits(user.id, clerkUserId, creditCost, generationId);
+      await refundCredits(user.id, creditCost, generationId);
 
       logger.warn({ generationId, error: result.error, creditCost }, "[Generate] Generation failed - credits refunded");
 
@@ -197,7 +196,7 @@ export async function POST(request: Request): Promise<Response> {
     // `success: false` tells the screen the credits were given back.
     if (charge) {
       try {
-        await refundCredits(charge.userId, charge.clerkUserId, charge.amount, generationId);
+        await refundCredits(charge.userId, charge.amount, generationId);
         logger.warn({ generationId, creditCost: charge.amount }, "[Generate] Route error - credits refunded");
         return new Response(
           JSON.stringify({ error: "Failed to generate images", success: false }),

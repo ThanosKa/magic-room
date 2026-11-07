@@ -136,22 +136,6 @@ export async function ensureUserExists(clerkUserId: string) {
   }
 }
 
-export async function updateUserCredits(userId: string, credits: number) {
-  const { data, error } = await supabase
-    .from("users")
-    .update({ credits })
-    .eq("id", userId)
-    .select()
-    .single();
-
-  if (error) {
-    logger.error({ err: error, userId, credits }, "Error updating credits");
-    return null;
-  }
-
-  return data;
-}
-
 export async function updateUser(
   clerkUserId: string,
   updates: {
@@ -211,33 +195,36 @@ export async function deleteUser(clerkUserId: string) {
   return true;
 }
 
+// Takes the amount in one database statement. False means the balance was too low
+// or the call failed.
 export async function deductCredits(userId: string, amount: number) {
-  const { data: user, error: fetchError } = await supabase
-    .from("users")
-    .select("credits")
-    .eq("id", userId)
-    .single();
-
-  if (fetchError || !user) {
-    logger.error({ err: fetchError, userId }, "Error fetching user credits");
-    return false;
-  }
-
-  if (user.credits < amount) {
-    return false;
-  }
-
-  const { error } = await supabase
-    .from("users")
-    .update({ credits: user.credits - amount })
-    .eq("id", userId);
+  const { data, error } = await supabase.rpc("deduct_credits", {
+    p_user_id: userId,
+    p_amount: amount,
+  });
 
   if (error) {
     logger.error({ err: error, userId, amount }, "Error deducting credits");
     return false;
   }
 
-  return true;
+  return data === true;
+}
+
+// Adds the amount in one database statement. False means the user does not exist
+// or the call failed.
+export async function addCredits(userId: string, amount: number) {
+  const { data, error } = await supabase.rpc("add_credits", {
+    p_user_id: userId,
+    p_amount: amount,
+  });
+
+  if (error) {
+    logger.error({ err: error, userId, amount }, "Error adding credits");
+    return false;
+  }
+
+  return data === true;
 }
 
 export async function createTransaction(
