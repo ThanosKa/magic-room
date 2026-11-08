@@ -132,9 +132,6 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Payment already granted", { status: 200 });
       }
 
-      // Only mark as processed after the grant is recorded
-      await markWebhookProcessed("stripe", event.id);
-
       // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
       // delay Stripe's 200. A failed email is only logged: it must not fail the webhook.
       const customerEmail =
@@ -157,7 +154,7 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
-    // Mark non-checkout events as processed as well (to prevent retries)
+    // Reached only after a recorded grant or for events that need no work.
     await markWebhookProcessed("stripe", event.id);
 
     return new Response("Webhook processed", { status: 200 });

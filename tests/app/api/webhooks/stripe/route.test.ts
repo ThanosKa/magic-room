@@ -132,6 +132,7 @@ describe("Stripe Webhook Route", () => {
         { packageId: "starter", packageName: TEST_PACKAGES.starter.name }
       );
       expect(sendPurchaseEmail).toHaveBeenCalledTimes(1);
+      expect(redisLib.markWebhookProcessed).toHaveBeenCalledTimes(1);
       expect(redisLib.markWebhookProcessed).toHaveBeenCalledWith("stripe", "evt_test");
     });
 
