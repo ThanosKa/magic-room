@@ -54,6 +54,23 @@ describe("logger on the Workers runtime", () => {
     });
   });
 
+  // Logs are kept in Workers Logs. An SDK error can carry the request it
+  // made, with the API key in its headers, several levels down.
+  it("redacts secrets nested inside an error or a sub-object", async () => {
+    const { logger, consoleLog } = await loadLoggerOnWorkers();
+
+    logger.error(
+      {
+        err: { message: "boom", config: { headers: { Authorization: "Bearer fake-key" } } },
+        provider: { apiKey: "fake-api-key", token: "fake-token" },
+        request: { headers: { authorization: "Bearer fake", cookie: "session=fake" } },
+      },
+      "provider failed"
+    );
+
+    expect(consoleLog.mock.calls[0][0]).not.toContain("fake");
+  });
+
   it("includes the error message and stack when logging a failure", async () => {
     const { logger, consoleLog } = await loadLoggerOnWorkers();
 
@@ -68,5 +85,28 @@ describe("logger on the Workers runtime", () => {
         stack: expect.stringContaining("OpenRouter timed out"),
       },
     });
+  });
+});
+
+describe("logger in production outside Workers", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  // Runtime detection is a user-agent match. If it ever misses on Workers,
+  // pino's default destination throws on every log call, so production must
+  // not depend on it.
+  it("still writes through the console when the runtime is not recognised", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubGlobal("navigator", { userAgent: "Cloudflare-Workers/2027" });
+    vi.resetModules();
+    const consoleLog = vi.spyOn(console, "log").mockImplementation(() => {});
+    const { logger } = await import("@/lib/logger");
+
+    logger.info({ route: "/api/generate" }, "generation started");
+
+    expect(loggedLine(consoleLog)).toMatchObject({ msg: "generation started" });
   });
 });
