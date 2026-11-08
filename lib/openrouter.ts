@@ -3,6 +3,12 @@ import { QUALITY_OPTIONS } from "@/lib/constants";
 import type { Quality, RoomType, Theme } from "@/types";
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+/**
+ * How long to wait for an image before giving up, so a hung provider ends in
+ * the route's refund. Ultra usually takes about 2 minutes. Waiting on fetch
+ * uses no CPU time, so the Workers Paid CPU limit does not apply.
+ */
+export const OPENROUTER_TIMEOUT_MS = 280_000;
 export const POSITIVE_PROMPT = `beautiful interior design, professional photography, well-lit, 
 detailed textures, high quality, realistic, modern aesthetic, clean composition`;
 
@@ -14,6 +20,11 @@ interface GenerationResult {
     images: string[]; // Base64 data URLs
     textResponse?: string;
     error?: string;
+}
+
+interface GenerateOptions {
+    /** Aborts the request, e.g. when the browser disconnects. */
+    signal?: AbortSignal;
 }
 
 interface OpenRouterMessage {
@@ -35,7 +46,8 @@ interface OpenRouterResponse {
 export async function generateDesign(
     base64Image: string,
     prompt: string,
-    quality: Quality = "standard"
+    quality: Quality = "standard",
+    options: GenerateOptions = {}
 ): Promise<GenerationResult> {
     const apiKey = process.env.OPENROUTER_API_KEY;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -59,9 +71,23 @@ export async function generateDesign(
 
     const startTime = Date.now();
 
+    // Aborts on the caller's signal or after OPENROUTER_TIMEOUT_MS, whichever comes first.
+    const controller = new AbortController();
+    const timer = setTimeout(
+        () => controller.abort(new Error(`OpenRouter did not answer within ${OPENROUTER_TIMEOUT_MS / 1000} s`)),
+        OPENROUTER_TIMEOUT_MS
+    );
+    const stopForCaller = () => controller.abort(options.signal?.reason);
+    if (options.signal?.aborted) {
+        stopForCaller();
+    } else {
+        options.signal?.addEventListener("abort", stopForCaller, { once: true });
+    }
+
     try {
         const response = await fetch(OPENROUTER_API_URL, {
             method: "POST",
+            signal: controller.signal,
             headers: {
                 "Authorization": `Bearer ${apiKey}`,
                 "Content-Type": "application/json",
@@ -188,6 +214,9 @@ export async function generateDesign(
             "[OpenRouter] Generation failed"
         );
         throw error;
+    } finally {
+        clearTimeout(timer);
+        options.signal?.removeEventListener("abort", stopForCaller);
     }
 }
 

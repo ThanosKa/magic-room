@@ -10,7 +10,7 @@ AI interior design web app: upload one room photo, pick a room type and a style,
 - `lib/seo/`: data and helpers behind the marketing pages, which live in `app/` and `components/seo/`.
 - `tests/`: mirrors the source tree. Vitest collects only `tests/**/*.test.{ts,tsx}`.
 
-**Generate**: browser shrinks the photo to base64 (`lib/room-photo.ts`) → `POST /api/generate` (synchronous, up to 300 s: auth, validate, credit check, rate limit, deduct, OpenRouter) → one image comes back as a base64 data URL; any failure returns the credits. No polling, no job table.
+**Generate**: browser shrinks the photo to base64 (`lib/room-photo.ts`) → `POST /api/generate` (synchronous, OpenRouter timeout 280 s: auth, validate, credit check, rate limit, deduct, OpenRouter) → one image comes back as a base64 data URL; any failure, a timeout or a closed tab returns the credits. No polling, no job table.
 **Purchase**: `/api/checkout` → Stripe Checkout → `/api/webhooks/stripe` adds the credits.
 **Sign-up**: Clerk → `/api/webhooks/clerk` creates the Supabase row with 1 free credit; `ensureUserExists` creates it if the webhook never arrived.
 

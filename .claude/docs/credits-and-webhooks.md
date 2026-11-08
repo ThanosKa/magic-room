@@ -14,7 +14,8 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 - `refundCredits` adds the credits through `addCredits`, then writes a `refund` transaction. It throws when the credits could not be added, so the route never claims a refund that did not happen.
 - A 500 body with `success: false` is the client's signal that the credits came back (`components/generate/tool-messages.tsx`). Send it only after the refund succeeded.
 - Retrying a generation is the user's choice: an automatic retry spends credits or OpenRouter money a second time.
-- `maxDuration = 300` is left from Vercel and Workers ignore it. A request can wait as long as the client stays connected. A wait over 100 s with OpenRouter has not been proven on the Worker.
+- There is no `maxDuration`: Workers ignore it, and a request runs as long as the client stays connected. `generateDesign` gives up after `OPENROUTER_TIMEOUT_MS` (280 s), which ends in the refund. A wait over 100 s with OpenRouter has not been proven on the Worker.
+- A closed tab must not keep the credits. `POST` hands the whole request to `keepAliveUntilSettled` (`lib/keep-alive.ts`, `after` from `next/server`, which is `waitUntil` on Workers and gives about 30 s past a disconnect), and passes `request.signal` to `generateDesign`, so a disconnect aborts the OpenRouter call at once and the normal refund runs. `request.signal` fires on Workers only with the `enable_request_signal` flag in `cloudflare.config.ts`.
 
 ## Balance writes
 

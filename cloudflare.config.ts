@@ -5,7 +5,9 @@ export default defineConfig({
     name: "magic-room",
     entrypoint: "vinext/server/fetch-handler",
     compatibilityDate: "2026-11-07",
-    compatibilityFlags: ["nodejs_compat"],
+    // enable_request_signal: request.signal aborts when the client disconnects,
+    // which /api/generate uses to stop the AI call and refund the credits.
+    compatibilityFlags: ["nodejs_compat", "enable_request_signal"],
     observability: { enabled: true },
     domains: ["magic-room.dev"],
     // Declaring a domain would otherwise switch workers.dev off.

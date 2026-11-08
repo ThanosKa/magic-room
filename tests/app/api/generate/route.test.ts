@@ -1,15 +1,23 @@
+// @vitest-environment node
+// Server code: a jsdom AbortSignal is not accepted by Node's Request.
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "@/app/api/generate/route";
 import * as supabaseLib from "@/lib/supabase";
 import * as redisLib from "@/lib/redis";
 import * as openrouterLib from "@/lib/openrouter";
 import { auth } from "@clerk/nextjs/server";
+import { after } from "next/server";
 
 type AuthResult = Awaited<ReturnType<typeof auth>>;
 type Transaction = Awaited<ReturnType<typeof supabaseLib.createTransaction>>;
 
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
+}));
+
+// `after` hands a promise to the platform's waitUntil (vinext on Workers).
+vi.mock("next/server", () => ({
+  after: vi.fn(),
 }));
 
 vi.mock("@/lib/supabase", async () => {
@@ -127,7 +135,8 @@ describe("Generate Route - Quality Feature", () => {
       expect(openrouterLib.generateDesign).toHaveBeenCalledWith(
         TEST_BASE64_IMAGE,
         "test prompt",
-        "standard"
+        "standard",
+        { signal: expect.any(AbortSignal) }
       );
     });
 
@@ -215,7 +224,8 @@ describe("Generate Route - Quality Feature", () => {
       expect(openrouterLib.generateDesign).toHaveBeenCalledWith(
         TEST_BASE64_IMAGE,
         "test prompt",
-        "premium"
+        "premium",
+        { signal: expect.any(AbortSignal) }
       );
     });
 
@@ -532,7 +542,9 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(200);
       expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 3);
-      expect(openrouterLib.generateDesign).toHaveBeenCalledWith(TEST_BASE64_IMAGE, "test prompt", "ultra");
+      expect(openrouterLib.generateDesign).toHaveBeenCalledWith(TEST_BASE64_IMAGE, "test prompt", "ultra", {
+        signal: expect.any(AbortSignal),
+      });
     });
 
     it("refuses an ultra design with only 2 credits", async () => {
@@ -542,6 +554,58 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(402);
       expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+    });
+  });
+
+  // On Workers a client disconnect cancels the request's work unless it was
+  // handed to waitUntil, which then gets about 30 s more. The tab closing must
+  // stop the AI call and give the credits back inside that window.
+  describe("Browser disconnects mid-generation", () => {
+    it("stops the AI call, refunds the credits and keeps the request alive until the refund is written", async () => {
+      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
+      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
+      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.addCredits).mockResolvedValue(true);
+      vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
+      // Like fetch: never answers on its own, rejects once its signal aborts.
+      vi.mocked(openrouterLib.generateDesign).mockImplementation(
+        (_image, _prompt, _quality, options) =>
+          new Promise((_resolve, reject) => {
+            options?.signal?.addEventListener("abort", () => reject(options.signal?.reason));
+          })
+      );
+
+      const browser = new AbortController();
+      const request = new Request("http://localhost:3000/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          base64Image: TEST_BASE64_IMAGE,
+          roomType: "living-room",
+          theme: "modern",
+          quality: "premium",
+        }),
+        signal: browser.signal,
+      });
+
+      // Nobody reads the answer: the tab is gone.
+      void POST(request);
+      await vi.waitFor(() => expect(openrouterLib.generateDesign).toHaveBeenCalled());
+      expect(supabaseLib.addCredits).not.toHaveBeenCalled();
+
+      browser.abort();
+      const keptAlive = vi.mocked(after).mock.calls[0]?.[0];
+      expect(keptAlive).toBeInstanceOf(Promise);
+      await keptAlive;
+
+      expect(supabaseLib.addCredits).toHaveBeenCalledWith(TEST_USER.id, 2);
+      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(
+        TEST_USER.id,
+        "refund",
+        2,
+        undefined,
+        expect.any(Object)
+      );
     });
   });
 });
