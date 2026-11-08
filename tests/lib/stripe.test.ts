@@ -7,6 +7,8 @@ vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_fake");
 const SECRET = "whsec_fake_for_this_test";
 const BODY = JSON.stringify({ id: "evt_test", object: "event", type: "customer.updated", data: { object: {} } });
 
+// A real Stripe instance instead of vi.mock on purpose: it makes no network
+// call, and the real signature check is exactly what these tests prove.
 let parseWebhookEvent: typeof import("@/lib/stripe").parseWebhookEvent;
 
 beforeAll(async () => {

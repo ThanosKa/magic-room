@@ -1,3 +1,5 @@
+// Tests the vinext dependency patch (patches/vinext@1.4.4.patch), not a file
+// in this repo, so it has no source path to mirror. Keep it while the patch is.
 import { describe, expect, it } from "vitest";
 import { renderToString } from "react-dom/server";
 import Image from "vinext/shims/image";

@@ -62,20 +62,6 @@ export async function getCheckoutSession(sessionId: string) {
   }
 }
 
-export async function verifyWebhookSignature(
-  body: string,
-  signature: string,
-  secret: string
-): Promise<boolean> {
-  try {
-    await stripe.webhooks.constructEventAsync(body, signature, secret);
-    return true;
-  } catch (error) {
-    logger.warn({ err: error }, "Webhook signature verification failed");
-    return false;
-  }
-}
-
 /** Async on purpose: the sync constructEvent throws on Workers, whose crypto is async only. */
 export function parseWebhookEvent(
   body: string,
