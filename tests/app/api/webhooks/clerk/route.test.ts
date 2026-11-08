@@ -2,6 +2,9 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "@/app/api/webhooks/clerk/route";
 import * as supabaseLib from "@/lib/supabase";
 import * as redisLib from "@/lib/redis";
+import { sendWelcomeEmail } from "@/lib/email";
+import { logger } from "@/lib/logger";
+import { after } from "next/server";
 
 const verifyMock = vi.hoisted(() =>
   vi.fn<(payload: string, headers: Record<string, string>) => unknown>()
@@ -21,6 +24,15 @@ vi.mock("svix", () => {
 
 vi.mock("next/headers", () => ({
   headers: vi.fn(),
+}));
+
+// `after` hands a promise to the platform's waitUntil (vinext on Workers).
+vi.mock("next/server", () => ({
+  after: vi.fn(),
+}));
+
+vi.mock("@/lib/email", () => ({
+  sendWelcomeEmail: vi.fn(() => Promise.resolve()),
 }));
 
 vi.mock("@/lib/supabase", async () => {
@@ -149,6 +161,41 @@ describe("Clerk Webhook Route", () => {
             name: "Test User",
             profileImageUrl: "https://example.com/avatar.jpg",
           })
+        );
+      });
+
+      // A slow Resend must not hold Clerk's 200, and a failed welcome email
+      // must leave a trace in the logs.
+      it("answers Clerk without waiting for the welcome email, and logs one that fails", async () => {
+        const eventPayload = {
+          type: "user.created",
+          data: { id: TEST_CLERK_USER_ID, email_addresses: [{ email_address: TEST_EMAIL }] },
+        };
+        await mockSvixHeaders({
+          "svix-id": "msg_welcome",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
+        verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValue(null);
+        vi.mocked(supabaseLib.createUser).mockResolvedValue(TEST_USER);
+        let failWelcome: (error: Error) => void = () => {};
+        vi.mocked(sendWelcomeEmail).mockImplementationOnce(
+          () => new Promise((_resolve, reject) => { failWelcome = reject; })
+        );
+
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
+
+        expect(response.status).toBe(200);
+        failWelcome(new Error("Resend unreachable"));
+        await vi.mocked(after).mock.calls[0]?.[0];
+        expect(logger.error).toHaveBeenCalledWith(
+          expect.objectContaining({ err: expect.any(Error) }),
+          "Failed to send welcome email"
         );
       });
 

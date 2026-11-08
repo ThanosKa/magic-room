@@ -8,6 +8,7 @@ import {
 import { isWebhookProcessed, markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import { sendPurchaseEmail } from "@/lib/email";
+import { keepAliveUntilSettled } from "@/lib/keep-alive";
 import type Stripe from "stripe";
 
 // Helper to check if a string looks like a UUID
@@ -134,16 +135,20 @@ export async function POST(request: Request): Promise<Response> {
       // Only mark as processed after the grant is recorded
       await markWebhookProcessed("stripe", event.id);
 
-      // Awaited because a Worker can drop work left running after the response.
-      // A failed email is only logged: it must not fail the webhook.
+      // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
+      // delay Stripe's 200. A failed email is only logged: it must not fail the webhook.
       const customerEmail =
         session.customer_details?.email ?? session.customer_email ?? user.email;
       if (customerEmail) {
-        await sendPurchaseEmail({
-          to: customerEmail,
-          packageName: pkg.name,
-          credits: pkg.credits,
-        }).catch(() => {});
+        keepAliveUntilSettled(
+          sendPurchaseEmail({
+            to: customerEmail,
+            packageName: pkg.name,
+            credits: pkg.credits,
+          }).catch((err) => {
+            logger.error({ err, userId: user.id, packageId }, "Failed to send purchase email");
+          })
+        );
       }
 
       logger.info(

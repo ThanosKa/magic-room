@@ -19,6 +19,27 @@ function getResend(): Resend {
 
 const FROM_EMAIL = "Magic Room <hello@notifications.app-whisper.com>";
 
+/**
+ * Webhooks send emails after answering, inside the ~30 s waitUntil window on
+ * Workers, so a hung Resend must end as a logged failure well before that.
+ */
+const EMAIL_TIMEOUT_MS = 10_000;
+
+function sendWithTimeout(
+  payload: Parameters<Resend["emails"]["send"]>[0]
+): ReturnType<Resend["emails"]["send"]> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_resolve, reject) => {
+    timer = setTimeout(
+      () => reject(new Error(`Resend did not answer within ${EMAIL_TIMEOUT_MS / 1000} s`)),
+      EMAIL_TIMEOUT_MS
+    );
+  });
+  return Promise.race([getResend().emails.send(payload), timeout]).finally(() =>
+    clearTimeout(timer)
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Logo URL (absolute so it works in email clients). A small copy of the icon:
 // the 1024px original is too heavy to load quickly in an inbox.
@@ -235,7 +256,7 @@ export async function sendWelcomeEmail(params: {
 
   const html = buildWelcomeEmailHtml({ firstName: params.firstName });
 
-  const { error } = await getResend().emails.send({
+  const { error } = await sendWithTimeout({
     from: FROM_EMAIL,
     to: params.to,
     subject,
@@ -260,7 +281,7 @@ export async function sendPurchaseEmail(params: {
     credits: params.credits,
   });
 
-  const { error } = await getResend().emails.send({
+  const { error } = await sendWithTimeout({
     from: FROM_EMAIL,
     to: params.to,
     subject: `${SITE_NAME} — Payment confirmed (${params.packageName})`,

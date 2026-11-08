@@ -30,7 +30,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 - Grant credits only when `payment_status` is `paid` or `no_payment_required`, and only from `metadata.packageId` looked up in `CREDIT_PACKAGES`.
 - Resolve the user from `metadata.userId` or `client_reference_id`: Supabase UUID first, then Clerk id.
 - Store `payment_intent` as `stripe_payment_id`, or `session.id` when there is none.
-- Purchase emails are awaited after the write, because a Worker can drop work left running after the response, and a failed email is only logged. They name the pack and credits only: a price would be wrong once a promotion code applies.
+- Purchase and welcome emails are sent after the webhook answers, through `keepAliveUntilSettled` (`waitUntil` on Workers, about 30 s), so a slow Resend cannot delay the 200. A failed or timed-out email (10 s) is logged with `logger.error` and never fails the webhook. Purchase emails name the pack and credits only: a price would be wrong once a promotion code applies.
 
 ## Clerk webhook (`app/api/webhooks/clerk/route.ts`)
 

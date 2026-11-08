@@ -4,6 +4,8 @@ import * as supabaseLib from "@/lib/supabase";
 import * as stripeLib from "@/lib/stripe";
 import * as redisLib from "@/lib/redis";
 import { sendPurchaseEmail } from "@/lib/email";
+import { logger } from "@/lib/logger";
+import { after } from "next/server";
 import { createMockStripeWebhookEvent, createMockCheckoutSession, TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
 import type Stripe from "stripe";
 
@@ -31,6 +33,10 @@ vi.mock("@/lib/redis", async () => {
     markWebhookProcessed: vi.fn(),
   };
 });
+// `after` hands a promise to the platform's waitUntil (vinext on Workers).
+vi.mock("next/server", () => ({
+  after: vi.fn(),
+}));
 vi.mock("@/lib/email", () => ({
   sendPurchaseEmail: vi.fn(() => Promise.resolve()),
 }));
@@ -127,6 +133,47 @@ describe("Stripe Webhook Route", () => {
       );
       expect(sendPurchaseEmail).toHaveBeenCalledTimes(1);
       expect(redisLib.markWebhookProcessed).toHaveBeenCalledWith("stripe", "evt_test");
+    });
+
+    // A slow Resend must not hold Stripe's 200 (Stripe redelivers past its
+    // timeout), and a failed receipt must leave a trace in the logs.
+    it("answers Stripe without waiting for the receipt, and logs a receipt that fails", async () => {
+      const session = createMockCheckoutSession({
+        payment_status: "paid",
+        payment_intent: "pi_receipt_test",
+        metadata: { userId: TEST_USER.id, packageId: "starter" },
+      });
+      const event = {
+        id: "evt_receipt",
+        object: "event",
+        data: { object: session },
+        type: "checkout.session.completed",
+      } as Stripe.Event;
+      vi.mocked(stripeLib.parseWebhookEvent).mockResolvedValue(event);
+      vi.mocked(redisLib.isWebhookProcessed).mockResolvedValue(false);
+      vi.mocked(redisLib.markWebhookProcessed).mockResolvedValue(true);
+      vi.mocked(supabaseLib.getUserById).mockResolvedValue(TEST_USER);
+      vi.mocked(supabaseLib.grantPurchaseCredits).mockResolvedValue({ granted: true });
+      let failReceipt: (error: Error) => void = () => {};
+      vi.mocked(sendPurchaseEmail).mockImplementationOnce(
+        () => new Promise((_resolve, reject) => { failReceipt = reject; })
+      );
+
+      const response = await POST(
+        new Request("http://localhost:3000/api/webhooks/stripe", {
+          method: "POST",
+          headers: { "stripe-signature": "test_signature" },
+          body: JSON.stringify(event),
+        })
+      );
+
+      expect(response.status).toBe(200);
+      failReceipt(new Error("Resend unreachable"));
+      await vi.mocked(after).mock.calls[0]?.[0];
+      expect(logger.error).toHaveBeenCalledWith(
+        expect.objectContaining({ err: expect.any(Error) }),
+        "Failed to send purchase email"
+      );
     });
 
     it("should handle checkout.session.completed with no_payment_required", async () => {

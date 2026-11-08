@@ -9,6 +9,7 @@ import {
 import { checkAndMarkWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import { sendWelcomeEmail } from "@/lib/email";
+import { keepAliveUntilSettled } from "@/lib/keep-alive";
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET || "";
 
@@ -154,13 +155,17 @@ export async function POST(request: Request) {
       // Mark as processed AFTER successful database operations
       await checkAndMarkWebhookProcessed("clerk", svixId);
 
-      // Awaited because a Worker can drop work left running after the response.
-      // A failed email is only logged: it must not fail the webhook.
-      await sendWelcomeEmail({
-        to: primaryEmail,
-        firstName: first_name,
-        lastName: last_name,
-      }).catch(() => {});
+      // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
+      // delay Clerk's 200. A failed email is only logged: it must not fail the webhook.
+      keepAliveUntilSettled(
+        sendWelcomeEmail({
+          to: primaryEmail,
+          firstName: first_name,
+          lastName: last_name,
+        }).catch((err) => {
+          logger.error({ err, userId: newUser.id }, "Failed to send welcome email");
+        })
+      );
 
       logger.info(
         { clerkUserId: id, email: primaryEmail, userId: newUser.id },
