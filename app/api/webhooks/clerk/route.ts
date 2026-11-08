@@ -125,7 +125,7 @@ export async function POST(request: Request) {
 
       if (existingUser) {
         logger.info(
-          { clerkUserId: id, email: primaryEmail },
+          { clerkUserId: id },
           "User already exists, skipping creation"
         );
         // Mark as processed since this is duplicate
@@ -138,7 +138,7 @@ export async function POST(request: Request) {
 
       if (!newUser) {
         logger.error(
-          { clerkUserId: id, email: primaryEmail },
+          { clerkUserId: id },
           "Failed to create user in Supabase"
         );
         return new Response("Error creating user", { status: 500 });
@@ -168,7 +168,7 @@ export async function POST(request: Request) {
       );
 
       logger.info(
-        { clerkUserId: id, email: primaryEmail, userId: newUser.id },
+        { clerkUserId: id, userId: newUser.id },
         "User created successfully via webhook"
       );
       return new Response("User created successfully", { status: 200 });
@@ -210,7 +210,7 @@ export async function POST(request: Request) {
 
         if (!updatedUser) {
           logger.error(
-            { clerkUserId: id, updates, err: "updateUser returned null" },
+            { clerkUserId: id, fields: Object.keys(updates), err: "updateUser returned null" },
             "Failed to update user in Supabase"
           );
           return new Response("Error updating user", { status: 500 });

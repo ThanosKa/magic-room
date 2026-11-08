@@ -146,7 +146,8 @@ export async function generateDesign(
 
         const choice = data.choices?.[0];
         if (!choice) {
-            logger.error({ data, duration }, "[OpenRouter] No choices in response");
+            // Keys only: the body can be large and is not ours to keep in logs.
+            logger.error({ responseKeys: Object.keys(data ?? {}), duration }, "[OpenRouter] No choices in response");
             throw new Error("No response from OpenRouter");
         }
 

@@ -199,6 +199,37 @@ describe("Clerk Webhook Route", () => {
         );
       });
 
+      // Logs are kept in Workers Logs: identify users by id, not by email.
+      it("never writes the user's email address to the logs", async () => {
+        const eventPayload = {
+          type: "user.created",
+          data: { id: TEST_CLERK_USER_ID, email_addresses: [{ email_address: TEST_EMAIL }] },
+        };
+        await mockSvixHeaders({
+          "svix-id": "msg_privacy",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
+        verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed).mockResolvedValue({
+          isProcessed: false,
+          message: "New webhook",
+        });
+        vi.mocked(supabaseLib.getUserByClerkId).mockResolvedValueOnce(null).mockResolvedValueOnce(TEST_USER);
+        vi.mocked(supabaseLib.createUser).mockResolvedValue(TEST_USER);
+
+        await POST(createRequest(JSON.stringify(eventPayload)));
+        await POST(createRequest(JSON.stringify(eventPayload)));
+
+        const logged = JSON.stringify([
+          vi.mocked(logger.info).mock.calls,
+          vi.mocked(logger.warn).mock.calls,
+          vi.mocked(logger.error).mock.calls,
+        ]);
+        expect(logged).toContain(TEST_CLERK_USER_ID);
+        expect(logged).not.toContain(TEST_EMAIL);
+      });
+
       it("should skip creation if user already exists", async () => {
         await mockSvixHeaders({
           "svix-id": "msg_test",

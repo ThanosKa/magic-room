@@ -264,11 +264,11 @@ export async function sendWelcomeEmail(params: {
   });
 
   if (error) {
-    logger.error({ err: error, to: params.to }, "Failed to send welcome email");
+    logger.error({ err: error }, "Failed to send welcome email");
     throw error;
   }
 
-  logger.info({ to: params.to }, "Welcome email sent");
+  logger.info({}, "Welcome email sent");
 }
 
 export async function sendPurchaseEmail(params: {
@@ -290,14 +290,14 @@ export async function sendPurchaseEmail(params: {
 
   if (error) {
     logger.error(
-      { err: error, to: params.to, packageName: params.packageName },
+      { err: error, packageName: params.packageName },
       "Failed to send purchase email"
     );
     throw error;
   }
 
   logger.info(
-    { to: params.to, packageName: params.packageName },
+    { packageName: params.packageName },
     "Purchase confirmation email sent"
   );
 }
