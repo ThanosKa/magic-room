@@ -179,6 +179,8 @@ pnpm dev
 # Visit http://localhost:3000
 ```
 
+To run the app the way the Worker does: `pnpm dev:vinext` (Vite dev server on port 3001), or `pnpm build:vinext` then `pnpm start:vinext` (a local Workers preview of the production build; use this one for pages that need sign-in). Set `CLOUDFLARE_VITE_FORCE_LOCAL=true` so neither touches the Cloudflare account. Deploying is only the two commands under [Deploy to Cloudflare Workers](#deploy-to-cloudflare-workers).
+
 ### Testing
 
 - `pnpm lint` — ESLint quality checks
