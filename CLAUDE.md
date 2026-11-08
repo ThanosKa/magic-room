@@ -37,7 +37,7 @@ AI interior design web app: upload one room photo, pick a room type and a style,
 - The scheduled SEO autopilot is the exception: its runbook lives in the private `ThanosKa/seo-hub` repo and it opens `autopilot/seo-YYYY-MM-DD` PRs against `main`.
 - Commits are Conventional Commits with a scope, lowercase and imperative: `fix(copy): ...`, `feat(generate): ...`. Types in use: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `chore`, `seo`.
 - PR bodies say what changed and why, with the evidence for each change.
-- CI (lint, type-check, `test:run`, build) runs on PRs into `main` and `dev` and on pushes to `main`.
+- CI (lint, type-check, `test:run`, the Next build and the Worker build) runs on PRs into `main` and `dev` and on pushes to `main`.
 - If your change makes a line in these docs false, fix that line in the same PR.
 - The owner merges.
 

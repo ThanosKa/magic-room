@@ -47,7 +47,7 @@ jobs:
       - name: Test
         run: pnpm test:run
 
-      - name: Build
+      - name: Build (Next)
         run: pnpm build
         env:
           NEXT_TELEMETRY_DISABLED: 1
@@ -72,3 +72,14 @@ jobs:
           UPSTASH_REDIS_REST_URL: https://ci-placeholder.upstash.io
           UPSTASH_REDIS_REST_TOKEN: ci-placeholder-token
           RESEND_API_KEY: re_ci_placeholder
+
+      # The build that goes live. A change can pass the Next build and still
+      # break the vinext/Worker build. The build refuses missing NEXT_PUBLIC_*
+      # values and a non-https app URL (lib/public-env.ts); placeholders only.
+      - name: Build (Worker)
+        run: pnpm build:vinext
+        env:
+          CLOUDFLARE_VITE_FORCE_LOCAL: "true"
+          NEXT_PUBLIC_APP_URL: https://ci-placeholder.example
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ZXhhbXBsZS5jbGVyay5hY2NvdW50cy5kZXYk
+          NEXT_PUBLIC_SUPABASE_URL: https://ci-placeholder.supabase.co

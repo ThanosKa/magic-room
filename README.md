@@ -238,7 +238,7 @@ magic-room/
 Magic Room runs on Cloudflare Workers through [vinext](https://github.com/cloudflare/vinext):
 
 1. Put every value in `.env.production.local`, with `NEXT_PUBLIC_APP_URL` set to your `https://` production domain
-2. Build with `pnpm build:vinext`, which reads the `NEXT_PUBLIC_*` values
+2. Build with `pnpm build:vinext`, which reads the `NEXT_PUBLIC_*` values. It stops if `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` or `NEXT_PUBLIC_SUPABASE_URL` is missing, or if the app URL is not `https://`
 3. Put the other values in a JSON file outside the repo, then deploy with `pnpm exec cf deploy --prebuilt --secrets-file <file>`. Later deploys keep them, so the flag is only needed when a value changes
 
 Merging to `main` does not update the Worker. A change reaches production only when someone runs `pnpm build:vinext`, then `pnpm exec cf deploy --prebuilt`, on Node 24.22 or newer. So run them after each merge.
@@ -266,12 +266,13 @@ pnpm start
 
 ## CI
 
-`.github/workflows/ci.yml` runs automated checks on every push and pull request:
+`.github/workflows/ci.yml` runs on pull requests into `main` and `dev` and on pushes to `main`:
 
 - ESLint for code quality
 - TypeScript type checking
 - Vitest test suite execution
-- Uses Node.js 20 and pnpm for consistency
+- The Next build (`pnpm build`) and the Worker build (`pnpm build:vinext`), with placeholder values only
+- Uses Node.js 24 and pnpm for consistency
 
 ## Contributing
 
