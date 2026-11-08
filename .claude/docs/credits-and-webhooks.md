@@ -41,7 +41,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Rate limit (`lib/redis.ts`)
 
-`checkRateLimit` allows `RATE_LIMIT` generations per `RATE_LIMIT_WINDOW` per user. It always passes when `NODE_ENV` is `development` and fails open on a Redis error, so a limit change is testable only with mocks or outside dev.
+`checkRateLimit` allows `RATE_LIMIT` generations per `RATE_LIMIT_WINDOW` per user. It always passes when `NODE_ENV` is `development`, so a limit change is testable only with mocks or outside dev. It fails closed: on a Redis error it throws, and the generate route answers 500 before charging. The webhook dedup helpers still fail open, which is safe because the SQL functions stop double grants.
 
 ## Models and prompts (`lib/openrouter.ts`)
 
