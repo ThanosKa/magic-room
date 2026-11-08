@@ -146,10 +146,7 @@ export function AlternativePageContent({
                 <h2 className={`${H2_CLASS} mb-10 max-w-3xl`}>
                     Feature comparison: Magic Room vs {competitor.name}
                 </h2>
-                <FeatureComparisonTable
-                    competitorName={competitor.name}
-                    competitorPricing={competitor.pricing}
-                />
+                <FeatureComparisonTable competitor={competitor} />
             </Section>
 
             {/* Pricing mechanics.

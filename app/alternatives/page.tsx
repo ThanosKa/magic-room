@@ -168,7 +168,7 @@ export default function AlternativesHubPage() {
                             {[
                                 {
                                     title: "The room in the output is not their room",
-                                    body: "This is the most common complaint about diffusion-based tools generally. The style is applied convincingly, but a window moves, a wall angle changes, or the room's proportions shift. That is fine for a mood board and useless as a planning reference — you cannot buy a sofa based on a room that is not the shape of your room.",
+                                    body: "This is a common complaint about AI room tools. The style is applied convincingly, but a window moves, a wall angle changes, or the room's proportions shift. That is fine for a mood board and useless as a planning reference — you cannot buy a sofa based on a room that is not the shape of your room.",
                                 },
                                 {
                                     title: "They did not expect a subscription",
@@ -176,7 +176,7 @@ export default function AlternativesHubPage() {
                                 },
                                 {
                                     title: "They realised the photos are stored",
-                                    body: "A photo of your living room shows your possessions, your layout, and often your family. Most tools upload it to a bucket and keep it. Retention policies vary a lot, and almost nobody reads them before uploading.",
+                                    body: "A photo of your living room shows your possessions, your layout, and often your family. DecorAI and Reimagine Home say they keep uploads while your account is active; Interior AI says it stores photos and only you can access them, with no retention period; RoomGPT has no privacy policy page at all (checked November 2026). Almost nobody reads these before uploading.",
                                 },
                                 {
                                     title: "The free tier ran out mid-evaluation",
@@ -278,12 +278,12 @@ export default function AlternativesHubPage() {
                             ...[
                                 {
                                     slug: "roomgpt",
-                                    model: "Diffusion — fast, geometry varies between attempts",
+                                    model: "Not stated; the open-source original ran ControlNet, a diffusion model",
                                     best: "A quick free look at what a style could do, with no account setup",
                                 },
                                 {
                                     slug: "interior-ai",
-                                    model: "Diffusion — large preset library, variable structure preservation",
+                                    model: "Flux on the Pro plan, \"Hyper Realism\" on higher plans",
                                     best: "Browsing an established catalogue of generated examples for inspiration",
                                 },
                                 {
@@ -444,11 +444,11 @@ export default function AlternativesHubPage() {
                                 },
                                 {
                                     q: "Why do AI room redesigns not look like my actual room?",
-                                    a: "Because most tools use diffusion models, which generate an image matching a description rather than editing the image you supplied. Walls move, windows relocate, proportions shift. Multimodal models read your photo and your instruction together, so the room's structure is a constraint rather than a suggestion. If your outputs keep coming back as a different room, that is the reason.",
+                                    a: "Because many image models generate a new picture that matches a description rather than editing the image you supplied. Walls move, windows relocate, proportions shift. Multimodal models read your photo and your instruction together, so the room's structure is a constraint rather than a suggestion. If your outputs keep coming back as a different room, that is the reason.",
                                 },
                                 {
                                     q: "Do these tools store my room photos?",
-                                    a: "Most do. Uploaded images typically go to a storage bucket and remain there, and several tools reserve the right to use them for model improvement. Magic Room processes images in memory for the duration of the request only — nothing is written to storage and nothing is used for training. Check each tool's policy directly before uploading photos of a home you live in.",
+                                    a: "Most do. DecorAI and Reimagine Home keep uploads while your account is active, and Reimagine Home may use them to train its own models unless you opt out; Interior AI stores photos, says only you can access them, and gives no retention period; RoomGPT publishes no policy (checked November 2026). Magic Room processes images in memory for the duration of the request only — nothing is written to storage and nothing is used for training. Check each tool's policy directly before uploading photos of a home you live in.",
                                 },
                                 {
                                     q: "Which AI interior design tool is cheapest?",

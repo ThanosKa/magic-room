@@ -34,12 +34,16 @@ import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-page
 //   - LEGAL: matches the "Last Updated: November 2026" line on /privacy.
 //   - RIGHTS_2026_11: free-credit commercial rights made consistent on
 //     /pricing and /terms (matches "Last Updated: November 2026" on /terms).
-//   - HOME_2026_11: homepage Explore section gained a Guides list.
+//   - HOME_2026_11: homepage Explore section gained a Guides list (11-02);
+//     comparison line names the vendors it describes (11-06).
+//   - COMPETITOR_FACTS_2026_11: /alternatives, /alternatives/* and /vs/*
+//     competitor claims re-sourced from vendor pricing and privacy pages.
 const BASELINE_LAST_UPDATED = new Date("2026-07-29");
 const PASS_2026_10_LAST_UPDATED = new Date("2026-10-01");
 const LEGAL_LAST_UPDATED = new Date("2026-11-07");
 const RIGHTS_2026_11_LAST_UPDATED = new Date("2026-11-01");
-const HOME_2026_11_LAST_UPDATED = new Date("2026-11-02");
+const HOME_2026_11_LAST_UPDATED = new Date("2026-11-06");
+const COMPETITOR_FACTS_2026_11_LAST_UPDATED = new Date("2026-11-06");
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
@@ -115,7 +119,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const alternativesHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/alternatives`,
-            lastModified: PASS_2026_10_LAST_UPDATED,
+            lastModified: COMPETITOR_FACTS_2026_11_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
@@ -124,7 +128,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const alternativePages: MetadataRoute.Sitemap = getAllCompetitorSlugs().map(
         (slug) => ({
             url: `${baseUrl}/alternatives/${slug}`,
-            lastModified: PASS_2026_10_LAST_UPDATED,
+            lastModified: COMPETITOR_FACTS_2026_11_LAST_UPDATED,
             changeFrequency: "monthly" as const,
             priority: 0.7,
         })
@@ -132,7 +136,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const vsPages: MetadataRoute.Sitemap = VS_SLUGS.map((slug) => ({
         url: `${baseUrl}/vs/${slug}`,
-        lastModified: PASS_2026_10_LAST_UPDATED,
+        lastModified: COMPETITOR_FACTS_2026_11_LAST_UPDATED,
         changeFrequency: "monthly" as const,
         priority: 0.7,
     }));
