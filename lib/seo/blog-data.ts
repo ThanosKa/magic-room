@@ -35,7 +35,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "How to redesign your living room with AI: take a photo the AI can use, pick a style that fits your space, read the output and decide what to do next.",
         publishedDate: "2026-02-10",
-        updatedDate: "2026-03-25",
+        updatedDate: "2026-11-09",
         readingTime: 7,
         keywords: [
             "redesign living room AI",
@@ -85,7 +85,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "The most common mistake when using AI design tools is selecting a style based on how it looks in aspirational photography rather than on how it will work in the specific room you have. A modern minimalist style requires enough storage to keep surfaces clear; a bohemian style requires a room large enough to accommodate layered textiles and collections without feeling cramped. Before selecting a style, consider what you are prepared to change, what you need to keep, and what the room's physical constraints allow. The AI interior design market reached $3.28 billion in 2025 and is growing at 20.9% annually — meaning these tools are improving rapidly, but choosing the right style for your lifestyle still requires your own judgement.",
+                    "The most common mistake when using AI design tools is selecting a style based on how it looks in aspirational photography rather than on how it will work in the specific room you have. A modern minimalist style requires enough storage to keep surfaces clear; a bohemian style requires a room large enough to accommodate layered textiles and collections without feeling cramped. Before selecting a style, consider what you are prepared to change, what you need to keep, and what the room's physical constraints allow. AI tools make it cheap to try a style on a photo of your own room, but choosing the right style for your lifestyle still requires your own judgement.",
             },
             {
                 type: "paragraph",
@@ -147,7 +147,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "How virtual staging works, when it is worth the cost, and how AI tools have changed the economics of staging properties for sale.",
         publishedDate: "2026-02-08",
-        updatedDate: "2026-03-25",
+        updatedDate: "2026-11-09",
         readingTime: 8,
         keywords: [
             "virtual staging real estate",
@@ -170,12 +170,12 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "Traditional property staging involves hiring a staging company to furnish an empty property with rented furniture and accessories for the duration of the sales process. Costs typically range from £1,500 for a small flat to £5,000 or more for a larger property, with ongoing monthly fees if the property does not sell quickly. The logistics of delivery, installation, and collection add time and complexity to the process. Research consistently shows that staged homes sell 73% faster than non-staged homes, which is the core justification for the cost.",
+                    "Traditional property staging involves hiring a staging company to furnish an empty property with rented furniture and accessories for the duration of the sales process. Costs typically range from £1,500 for a small flat to £5,000 or more for a larger property, with ongoing monthly fees if the property does not sell quickly. The logistics of delivery, installation, and collection add time and complexity to the process. In the National Association of Realtors 2025 Profile of Home Staging, 49% of sellers' agents said staging reduced the time a home spent on the market, which is the core justification for the cost.",
             },
             {
                 type: "paragraph",
                 content:
-                    "AI virtual staging generates styled room images from photographs of the empty space. Traditional professional virtual staging (non-AI) typically costs $75–$150 per photo. AI tools have reduced this to under $1 per image in many cases — the same budget that covers one traditional staging can cover hundreds of AI-generated images across multiple properties. With 97% of home buyers using the internet during their search, the quality of online listing photography has become one of the most important factors in generating viewing appointments.",
+                    "AI virtual staging generates styled room images from photographs of the empty space. Traditional professional virtual staging (non-AI) typically costs $75–$150 per photo. AI tools have reduced this to under $1 per image in many cases — the same budget that covers one traditional staging can cover hundreds of AI-generated images across multiple properties. Buyers' agents in the same report named listing photos as highly important to their clients (73%), so the quality of online listing photography has become one of the most important factors in generating viewing appointments.",
             },
             {
                 type: "h2",
@@ -255,7 +255,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "Modern vs minimalist interior design: what each style really means, the practical differences between them, and how to pick the right one for your space.",
         publishedDate: "2026-02-06",
-        updatedDate: "2026-03-25",
+        updatedDate: "2026-11-09",
         readingTime: 6,
         keywords: [
             "modern vs minimalist design",
@@ -297,7 +297,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "A minimalist room is defined by what is absent as much as by what is present. The relationship between objects and empty space is as designed as the objects themselves. This approach requires more discipline to maintain than modern design, because any introduction of an object that has not been deliberately selected disrupts the visual logic of the room. Minimalism's sustained popularity is reflected in the growth of the AI interior design market, which is projected to reach $15 billion by 2033 as more homeowners seek tools to help them visualise and plan a more considered approach to their spaces.",
+                    "A minimalist room is defined by what is absent as much as by what is present. The relationship between objects and empty space is as designed as the objects themselves. This approach requires more discipline to maintain than modern design, because any introduction of an object that has not been deliberately selected disrupts the visual logic of the room.",
             },
             {
                 type: "h2",
@@ -358,7 +358,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "A clear explanation of the AI technology behind room redesign tools — what they can and cannot do, and how different approaches produce different results.",
         publishedDate: "2026-02-04",
-        updatedDate: "2026-03-25",
+        updatedDate: "2026-11-09",
         readingTime: 7,
         keywords: [
             "AI interior design tools",
@@ -372,7 +372,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "AI room design tools have become considerably more capable in the past two years, but the category now contains tools built on significantly different underlying technology. The difference matters because it directly affects what kinds of results each tool can produce and what its limitations are. The AI interior design market was valued at $3.28 billion in 2025 and is growing at 20.9% CAGR — meaning the tools available today will look substantially different from those available even twelve months from now.",
+                    "AI room design tools have become considerably more capable in the past two years, but the category now contains tools built on significantly different underlying technology. The difference matters because it directly affects what kinds of results each tool can produce and what its limitations are.",
             },
             {
                 type: "h2",
@@ -462,7 +462,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "Scandinavian design for small rooms and apartments: how to use light, furniture scale, storage and materials to make a tight space work.",
         publishedDate: "2026-02-02",
-        updatedDate: "2026-03-25",
+        updatedDate: "2026-11-09",
         readingTime: 6,
         keywords: [
             "scandinavian design small space",
@@ -537,7 +537,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "Textiles in natural fibres — linen, wool, cotton — add the warmth and tactile quality that prevents small Scandinavian spaces from feeling stark without adding visual bulk. A generous linen throw over a simple sofa, a wool rug in a pale tone, and linen cushions in a complementary colour do more for the comfort of a small room than a larger sofa or additional furniture. The AI interior design market is projected to reach $15 billion by 2033, with Scandinavian and minimalist styles remaining among the most requested outputs — a reflection of how consistently these approaches resonate in small urban apartments worldwide.",
+                    "Textiles in natural fibres — linen, wool, cotton — add the warmth and tactile quality that prevents small Scandinavian spaces from feeling stark without adding visual bulk. A generous linen throw over a simple sofa, a wool rug in a pale tone, and linen cushions in a complementary colour do more for the comfort of a small room than a larger sofa or additional furniture.",
             },
         ],
         relatedDesignSlugs: ["scandinavian-living-room", "scandinavian-bedroom", "scandinavian-office"],
@@ -669,7 +669,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "How to redesign a room on a limited budget by using AI visualisation to identify the changes with the highest impact before spending anything.",
         publishedDate: "2026-01-28",
-        updatedDate: "2026-03-25",
+        updatedDate: "2026-11-09",
         readingTime: 6,
         keywords: [
             "interior design budget AI",
@@ -706,7 +706,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "Paint is the highest-return investment in almost any room redesign. The material cost of painting a room is modest; the visual effect of changing a wall colour is often transformative. The reason paint is not used more boldly in budget redesigns is that people are uncertain about how a colour will look at room scale before committing. AI visualisation removes that uncertainty: generate your room in a proposed new paint colour before buying a single tester pot. The AI interior design market is growing at 20.9% annually, and one of the most popular use cases driving that growth is exactly this — using AI to test paint and material choices before any physical purchase.",
+                    "Paint is the highest-return investment in almost any room redesign. The material cost of painting a room is modest; the visual effect of changing a wall colour is often transformative. The reason paint is not used more boldly in budget redesigns is that people are uncertain about how a colour will look at room scale before committing. AI visualisation removes that uncertainty: generate your room in a proposed new paint colour before buying a single tester pot. That is one of the most useful things an AI redesign can do: test paint and material choices before any physical purchase.",
             },
             {
                 type: "h2",
@@ -984,7 +984,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "How AI home staging works for property sales, what it costs compared to traditional staging, and where it delivers the most value in the selling process.",
         publishedDate: "2026-01-22",
-        updatedDate: "2026-03-25",
+        updatedDate: "2026-11-09",
         readingTime: 7,
         keywords: [
             "AI home staging sell house",
@@ -998,7 +998,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "Home staging for property sales is based on a straightforward principle: buyers make purchasing decisions based on emotional responses to spaces, and those responses are easier to trigger in rooms that are presented at their best than in rooms that look lived-in, empty, or dated. Professional staging companies know how to present a property to appeal to the target buyer demographic, and the investment in staging typically returns a multiple of its cost in sale price. Staged homes sell 73% faster than non-staged homes — and with 97% of home buyers using the internet during their search, the quality of listing photography is now one of the most important factors in generating viewing appointments.",
+                    "Home staging for property sales is based on a straightforward principle: buyers make purchasing decisions based on emotional responses to spaces, and those responses are easier to trigger in rooms that are presented at their best than in rooms that look lived-in, empty, or dated. Professional staging companies know how to present a property to appeal to the target buyer demographic, and the investment in staging typically returns a multiple of its cost in sale price. In the National Association of Realtors 2025 Profile of Home Staging, 49% of sellers' agents said staging cut time on the market, and buyers' agents named listing photos as highly important to their clients (73%), so the quality of listing photography is now one of the most important factors in generating viewing appointments.",
             },
             {
                 type: "h2",
@@ -1095,7 +1095,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             "RoomGPT, Interior AI and Reimagine Home compared on AI model, photo retention and real cost — by someone who built one of them. No affiliate links.",
         authorName: "Thanos Kazakis",
         publishedDate: "2026-02-15",
-        updatedDate: "2026-11-06",
+        updatedDate: "2026-11-09",
         readingTime: 8,
         keywords: [
             "best AI interior design tools 2026",
@@ -1115,7 +1115,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "The market for AI interior design tools has grown substantially since 2023. What started with a handful of tools using basic diffusion models has become a crowded field of products, each making slightly different trade-offs between output quality, privacy, pricing, and speed. The AI interior design market reached $3.28 billion in 2025 and is projected to hit $15 billion by 2033, growing at 20.9% CAGR — which means choosing the right tool today requires understanding both what is available now and how rapidly the category is evolving. Choosing between tools requires understanding what each actually does technically — not just reading the marketing claims.",
+                    "The market for AI interior design tools has grown substantially since 2023. What started with a handful of tools using basic diffusion models has become a crowded field of products, each making slightly different trade-offs between output quality, privacy, pricing, and speed. Choosing between tools requires understanding what each actually does technically — not just reading the marketing claims.",
             },
             {
                 type: "h2",
@@ -1147,7 +1147,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "Magic Room uses Google Gemini and OpenAI multimodal AI to process uploaded room photos. The key advantage of a multimodal model is that it understands the spatial and structural context of the room rather than applying a style overlay to a flat image. Results preserve room geometry with significantly higher accuracy than diffusion-based tools. Photos are processed in-memory and not stored. Pricing is credit-based from EUR 9.99, with one free credit on signup.",
+                    "Magic Room uses Google Gemini and OpenAI multimodal AI to process uploaded room photos. The key advantage of a multimodal model is that it understands the spatial and structural context of the room rather than applying a style overlay to a flat image. Photos are processed in-memory and not stored. Pricing is credit-based from EUR 9.99, with one free credit on signup.",
             },
             {
                 type: "h3",
@@ -1256,7 +1256,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "How to redesign your bedroom with AI: photograph the room the right way, pick styles that translate well, and turn the AI result into what to buy.",
         publishedDate: "2026-02-18",
-        updatedDate: "2026-03-25",
+        updatedDate: "2026-11-09",
         readingTime: 6,
         keywords: [
             "bedroom redesign AI",
@@ -1316,7 +1316,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "The most useful thing an AI bedroom redesign does is identify the two or three changes with the largest effect. In bedrooms, these are almost always: the headboard or bed frame, the flooring or rug, and the window treatment. Secondary changes — bedside tables, lighting, and textiles — reinforce the style but rarely transform the room on their own. The AI interior design market is projected to reach $15 billion by 2033 — meaning the tools available today will be even more capable by the time you next redesign. Using them now to establish a clear direction for your bedroom, and then implementing changes incrementally, is the most cost-effective approach.",
+                    "The most useful thing an AI bedroom redesign does is identify the two or three changes with the largest effect. In bedrooms, these are almost always: the headboard or bed frame, the flooring or rug, and the window treatment. Secondary changes — bedside tables, lighting, and textiles — reinforce the style but rarely transform the room on their own. Using them now to establish a clear direction for your bedroom, and then implementing changes incrementally, is the most cost-effective approach.",
             },
             {
                 type: "paragraph",

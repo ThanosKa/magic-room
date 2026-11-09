@@ -65,7 +65,7 @@ const BENEFITS = [
         icon: TrendingUp,
         title: "Listings sell faster and for more",
         description:
-            "Staged homes sell 73% faster on average and command 1–5% higher sale prices according to the National Association of Realtors. AI staging delivers those same buyer psychology benefits.",
+            "In the National Association of Realtors 2025 Profile of Home Staging, 49% of sellers’ agents said staging cut time on the market, and 29% of agents said staging their sellers’ homes raised offers by 1–10%. AI staging gives buyers the same furnished picture for the price of a credit.",
     },
     {
         icon: Home,
