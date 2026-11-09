@@ -59,13 +59,10 @@ export const COMPETITORS: ICompetitorData[] = [
         description:
             "RoomGPT is an AI room redesign tool that became popular for its simple drag-and-drop interface and fast generation. It started as an open-source project that ran ControlNet, a diffusion model, on Replicate (github.com/Nutlope/roomGPT); the paid version at roomgpt.io does not say which model it uses today (as of November 2026).",
         pros: [
-            "Simple interface with no account required for basic use",
             "One-step flow: upload a photo, pick a style",
             "Widely known and has an established user base",
         ],
         cons: [
-            "Limited style options compared to newer tools",
-            "Image quality is inconsistent — results vary significantly between generations",
             "roomgpt.io has no privacy policy page saying how long uploaded room photos are kept (checked November 2026)",
             "Less control over specific design direction",
         ],
@@ -157,7 +154,6 @@ export const COMPETITORS: ICompetitorData[] = [
             "More complex interface aimed at professional users rather than homeowners",
             "Subscription required after a short trial, and the trial asks for a payment card",
             "Paying monthly is poor value if you only redesign a room or two",
-            "Longer generation times for higher-quality outputs",
         ],
         pricing:
             "DecorAI is a subscription billed monthly, half-yearly or yearly. Paid plans include unlimited images; AI videos are capped per plan. New users get a short trial with 3 designs, and the trial asks for a card (decorai.io/pricing, as of November 2026).",
@@ -181,7 +177,6 @@ export const COMPETITORS: ICompetitorData[] = [
             "The interface is built for professional staging workflows, which is significant overhead if all you want is to see your living room in a different style",
             "The subscription is priced for continuous professional use and is poor value for two or three redesigns",
             "The free trial asks for a payment card and turns into a subscription unless you cancel in time",
-            "Generation times are longer on the higher-quality settings",
         ],
         migration:
             "No data to move — Magic Room works from the same room photo. The practical difference is workflow: DecorAI expects you to configure a staging job, Magic Room expects you to pick a room type and a style. If you use DecorAI specifically for real-estate staging output formats, run one listing photo through both before cancelling, since that is the use case where DecorAI's extra configuration earns its keep.",
@@ -227,9 +222,7 @@ export const COMPETITORS: ICompetitorData[] = [
             "Multiple AI rendering modes for different types of output",
         ],
         cons: [
-            "Broader scope means individual features are less polished than specialist tools",
             "Subscription required for meaningful generation volume",
-            "Generating high-quality outputs often requires several attempts",
             "Limited control over the direction of specific design choices",
         ],
         pricing:
@@ -252,14 +245,12 @@ export const COMPETITORS: ICompetitorData[] = [
         aiModel: "Not named on reimaginehome.ai (as of November 2026)",
         whySwitch: [
             "It is a monthly fee whether or not you redesign anything that month, which suits agencies and penalises homeowners",
-            "The platform covers interiors, exteriors and landscaping, so the interior redesign specifically is less refined than a tool that only does interiors",
-            "Getting a usable output often takes several attempts, which consumes the monthly allocation faster than the plan implies",
             "Limited control over specific design direction within a chosen style",
         ],
         migration:
             "Nothing to export or import — both tools start from a room photo. The one thing worth timing: use whatever credits you have left before you cancel the subscription. Magic Room's 1 free credit lets you run the same photo through both in parallel first, and Magic Room credits are bought once and never expire, so there is no equivalent deadline afterwards.",
         magicRoomAdvantages: [
-            "Magic Room focuses specifically on interior room redesign and delivers better results in that specific use case than a multi-purpose platform",
+            "Magic Room does one job, interior room redesign, with 14 room types and 14 styles to pick from",
             "Magic Room credits never expire and there is no monthly fee",
             "Magic Room uses Google Gemini and OpenAI multimodal models, which read your photo and your instruction together so the room's structure stays in place",
             "Magic Room never stores your room photos; Reimagine Home keeps uploads while your account is active and may use them to train its own models unless you opt out (reimaginehome.ai/privacy-policy, as of November 2026)",
@@ -268,7 +259,7 @@ export const COMPETITORS: ICompetitorData[] = [
             {
                 question: "Is Magic Room a good Reimagine Home alternative?",
                 answer:
-                    "For users who specifically want to redesign interior rooms rather than landscapes or exteriors, Magic Room is more focused and produces more consistent results. If you need landscape or exterior design, Reimagine Home covers those use cases where Magic Room does not.",
+                    "For users who specifically want to redesign interior rooms rather than landscapes or exteriors, Magic Room is the more focused tool: it only redesigns interior rooms, from one photo, with 14 room types and 14 styles. If you need landscape or exterior design, Reimagine Home covers those use cases where Magic Room does not.",
             },
             {
                 question: "What happens to Reimagine Home credits that are unused?",
@@ -310,9 +301,8 @@ export const COMPETITORS: ICompetitorData[] = [
             "Wide variety of style presets",
         ],
         cons: [
-            "Output resolution and quality have been surpassed by newer model approaches",
+            "No free tier is listed on the pricing page, so you pay before you see a result on your own room (interiorai.com/pricing, as of November 2026)",
             "Uploads and renders are stored on the service; it says only you can access them (interiorai.com/pricing, as of November 2026)",
-            "Generation results are inconsistent — significant variation between attempts with the same prompt",
         ],
         pricing:
             "Interior AI is a subscription: Pro $49, Premium $99, Ultra $199 a month, or $29, $49, $99 a month billed yearly, for 1,000 to 25,000 designs a month (interiorai.com/pricing, as of November 2026).",
@@ -335,8 +325,7 @@ export const COMPETITORS: ICompetitorData[] = [
             "Flux on the Pro plan; \"Hyper Realism\" on Premium and Ultra (interiorai.com/pricing, as of November 2026)",
         whySwitch: [
             "The cheapest plan is $29 a month billed yearly, a lot for someone redesigning two or three rooms",
-            "Output resolution and quality have been overtaken by newer multimodal models",
-            "Results vary significantly between attempts with the same prompt, which burns through a monthly allowance",
+            "There is no free tier on the pricing page, while Magic Room gives every new account 1 free credit with no card",
             "Uploads and renders are kept on the service, where Magic Room keeps nothing",
         ],
         migration:
@@ -344,8 +333,7 @@ export const COMPETITORS: ICompetitorData[] = [
         magicRoomAdvantages: [
             "Magic Room uses Google Gemini and OpenAI multimodal models, which read your photo and your instruction together so walls, windows and layout stay in place",
             "Magic Room never stores uploaded room photos; Interior AI stores them and says only you can access them",
-            "Magic Room's design themes include specific guidance that shapes the AI output more precisely than generic style presets",
-            "Magic Room provides more consistent results between generation attempts",
+            "Each Magic Room style sends a short written brief to the model with your photo, for example \"Scandinavian design, light wood, cozy, warm\"",
         ],
         faqs: [
             {

@@ -282,7 +282,7 @@ export function AlternativePageContent({
                             <li className="border-t border-cream/15 py-3">Want privacy guarantees around your room photos</li>
                             <li className="border-t border-cream/15 py-3">Prefer a one-time credit purchase over a subscription</li>
                             <li className="border-t border-cream/15 py-3">Want outputs that preserve your room&apos;s physical structure accurately</li>
-                            <li className="border-t border-cream/15 pt-3">Need consistent results without multiple regeneration attempts</li>
+                            <li className="border-t border-cream/15 pt-3">Want to try one free design on your own room before you pay</li>
                         </ul>
                     </div>
                     <div className="rounded-2xl bg-paper-2 p-7 md:p-8">

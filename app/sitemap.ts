@@ -38,12 +38,16 @@ import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-page
 //     comparison line names the vendors it describes (11-06).
 //   - COMPETITOR_FACTS_2026_11: /alternatives, /alternatives/* and /vs/*
 //     competitor claims re-sourced from vendor pricing and privacy pages.
+//   - CLAIMS_2026_11: unsourced quality claims about competitors removed from
+//     /alternatives/* and /vs/*; /virtual-staging staging figures now cite
+//     NAR's 2025 Profile of Home Staging.
 const BASELINE_LAST_UPDATED = new Date("2026-07-29");
 const PASS_2026_10_LAST_UPDATED = new Date("2026-10-01");
 const LEGAL_LAST_UPDATED = new Date("2026-11-07");
 const RIGHTS_2026_11_LAST_UPDATED = new Date("2026-11-01");
 const HOME_2026_11_LAST_UPDATED = new Date("2026-11-06");
 const COMPETITOR_FACTS_2026_11_LAST_UPDATED = new Date("2026-11-06");
+const CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-09");
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
@@ -67,7 +71,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/virtual-staging`,
-            lastModified: PASS_2026_10_LAST_UPDATED,
+            lastModified: CLAIMS_2026_11_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
@@ -128,7 +132,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const alternativePages: MetadataRoute.Sitemap = getAllCompetitorSlugs().map(
         (slug) => ({
             url: `${baseUrl}/alternatives/${slug}`,
-            lastModified: COMPETITOR_FACTS_2026_11_LAST_UPDATED,
+            lastModified: CLAIMS_2026_11_LAST_UPDATED,
             changeFrequency: "monthly" as const,
             priority: 0.7,
         })
@@ -136,7 +140,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const vsPages: MetadataRoute.Sitemap = VS_SLUGS.map((slug) => ({
         url: `${baseUrl}/vs/${slug}`,
-        lastModified: COMPETITOR_FACTS_2026_11_LAST_UPDATED,
+        lastModified: CLAIMS_2026_11_LAST_UPDATED,
         changeFrequency: "monthly" as const,
         priority: 0.7,
     }));
