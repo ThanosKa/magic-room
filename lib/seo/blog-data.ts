@@ -358,7 +358,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "A clear explanation of the AI technology behind room redesign tools — what they can and cannot do, and how different approaches produce different results.",
         publishedDate: "2026-02-04",
-        updatedDate: "2026-11-11",
+        updatedDate: "2026-11-13",
         readingTime: 7,
         keywords: [
             "AI interior design tools",
@@ -367,7 +367,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             "interior design AI explained",
         ],
         excerpt:
-            "Not all AI room design tools work the same way. Understanding the difference between diffusion models and multimodal models explains why some tools produce more architecturally accurate results than others.",
+            "Not all AI room design tools work the same way. Here is how diffusion and multimodal models handle your room photo, and how to check whether a result still shows your room.",
         sections: [
             {
                 type: "paragraph",
@@ -386,7 +386,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 type: "paragraph",
                 content:
-                    "Diffusion models are fast and can produce visually striking results, but they have a structural weakness for room redesign: they do not reliably understand the three-dimensional geometry of the space. A diffusion model can make a room look like a different style, but it may also subtly alter room proportions, window positions, or ceiling heights in ways that make the output less useful as a planning reference.",
+                    "Diffusion models are fast and can produce visually striking results. Whether an output keeps the room's proportions, window positions and ceiling height depends on the model and the controls the tool adds on top, so check those in every result before you use it as a planning reference. The same check applies to multimodal models.",
             },
             {
                 type: "h2",
