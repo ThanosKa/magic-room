@@ -201,8 +201,8 @@ export default function AlternativesHubPage() {
                         <ol className="border-b border-line">
                             {[
                                 {
-                                    title: "Model architecture: multimodal or diffusion",
-                                    body: "A diffusion model generates an image that matches a description. A multimodal model reads your image and your instruction together, so it can apply a style while holding the room's structure fixed. This single difference explains most of the variation in whether outputs look like your room.",
+                                    title: "Model: what it does with your photo",
+                                    body: "Some tools name their model, many do not. No published benchmark ranks multimodal and diffusion models for room redesign, so run the same photo through each tool and check that the output still shows your walls, windows and proportions. Magic Room sends your photo and the room type and style instruction together in one request to a Google Gemini or OpenAI multimodal image model.",
                                 },
                                 {
                                     title: "Photo retention",

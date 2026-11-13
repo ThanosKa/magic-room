@@ -335,8 +335,8 @@ export function AlternativePageContent({
                         </li>
                         <li className="pl-2">
                             Compare the two outputs on one question: does the redesign still show{" "}
-                            <em>your</em> walls, windows and proportions? That is where the multimodal and
-                            diffusion approaches diverge.
+                            <em>your</em> walls, windows and proportions? No published benchmark answers that
+                            for you, so your own photo is the test.
                         </li>
                         <li className="pl-2">
                             Only cancel your {competitor.name} plan once you have compared — and use any
