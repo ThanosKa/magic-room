@@ -191,7 +191,7 @@ async function handleGenerate(request: Request): Promise<Response> {
       "[Generate] Request complete"
     );
 
-    const response: IGenerateResponse & { outputUrls?: string[] } = {
+    const response: IGenerateResponse = {
       success: true,
       predictionId: generationId,
       outputUrls: result.images,
