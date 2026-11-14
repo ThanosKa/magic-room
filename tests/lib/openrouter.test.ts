@@ -43,3 +43,54 @@ describe("generateDesign: which model makes the image", () => {
         ]);
     });
 });
+
+describe("generateDesign: how long it waits for OpenRouter", () => {
+    /** Like fetch to a provider that hangs: rejects only when its signal aborts. */
+    const hangingFetch = vi.fn((_url: string, init?: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+            init?.signal?.addEventListener("abort", () => reject(init.signal?.reason));
+        })
+    );
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.stubEnv("OPENROUTER_API_KEY", "test-key");
+        hangingFetch.mockClear();
+        vi.stubGlobal("fetch", hangingFetch);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+        vi.unstubAllEnvs();
+        vi.unstubAllGlobals();
+    });
+
+    // 280 s: under the 300 s the route had on Vercel, longer than Ultra's
+    // usual 2 minutes. The route's catch refunds when this throws.
+    it("gives up after 280 seconds so the route can refund", async () => {
+        const outcome = generateDesign("data:image/png;base64,room", "prompt", "ultra").then(
+            () => "answered",
+            (error: Error) => error.message
+        );
+
+        await vi.advanceTimersByTimeAsync(279_999);
+        expect(await Promise.race([outcome, Promise.resolve("still waiting")])).toBe("still waiting");
+
+        await vi.advanceTimersByTimeAsync(1);
+        expect(await outcome).toMatch(/did not answer within 280 s/);
+    });
+
+    it("stops waiting as soon as the caller's signal aborts", async () => {
+        const browser = new AbortController();
+        const outcome = generateDesign("data:image/png;base64,room", "prompt", "ultra", {
+            signal: browser.signal,
+        }).then(
+            () => "answered",
+            () => "stopped"
+        );
+
+        browser.abort();
+
+        expect(await outcome).toBe("stopped");
+    });
+});

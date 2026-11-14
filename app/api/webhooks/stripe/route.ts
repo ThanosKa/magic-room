@@ -8,6 +8,7 @@ import {
 import { isWebhookProcessed, markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import { sendPurchaseEmail } from "@/lib/email";
+import { keepAliveUntilSettled } from "@/lib/keep-alive";
 import type Stripe from "stripe";
 
 // Helper to check if a string looks like a UUID
@@ -47,7 +48,7 @@ export async function POST(request: Request): Promise<Response> {
 
     let event: Stripe.Event;
     try {
-      event = parseWebhookEvent(body, signature, webhookSecret);
+      event = await parseWebhookEvent(body, signature, webhookSecret);
     } catch (error) {
       logger.warn(
         { err: error },
@@ -131,18 +132,20 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Payment already granted", { status: 200 });
       }
 
-      // Only mark as processed after the grant is recorded
-      await markWebhookProcessed("stripe", event.id);
-
-      // Fire-and-forget purchase confirmation email
+      // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
+      // delay Stripe's 200. A failed email is only logged: it must not fail the webhook.
       const customerEmail =
         session.customer_details?.email ?? session.customer_email ?? user.email;
       if (customerEmail) {
-        sendPurchaseEmail({
-          to: customerEmail,
-          packageName: pkg.name,
-          credits: pkg.credits,
-        }).catch(() => {});
+        keepAliveUntilSettled(
+          sendPurchaseEmail({
+            to: customerEmail,
+            packageName: pkg.name,
+            credits: pkg.credits,
+          }).catch((err) => {
+            logger.error({ err, userId: user.id, packageId }, "Failed to send purchase email");
+          })
+        );
       }
 
       logger.info(
@@ -151,7 +154,7 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
-    // Mark non-checkout events as processed as well (to prevent retries)
+    // Reached only after a recorded grant or for events that need no work.
     await markWebhookProcessed("stripe", event.id);
 
     return new Response("Webhook processed", { status: 200 });

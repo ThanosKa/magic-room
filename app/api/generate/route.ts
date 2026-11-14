@@ -9,11 +9,12 @@ import {
 } from "@/lib/supabase";
 import { checkRateLimit } from "@/lib/redis";
 import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
+import { keepAliveUntilSettled } from "@/lib/keep-alive";
 import { logger } from "@/lib/logger";
 import { NOTE_MAX_LENGTH, QUALITY_IDS, QUALITY_OPTIONS, ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
 
-// Ultra (GPT-5.4 Image 2) takes about 2 minutes; give a design up to 5 before the platform cuts it off.
-export const maxDuration = 300;
+// No `maxDuration`: Workers ignore it. A request runs as long as the client
+// stays connected; `generateDesign` gives up after OPENROUTER_TIMEOUT_MS.
 
 const GenerateSchema = z.object({
   base64Image: z.string().min(1, "Image is required"),
@@ -37,6 +38,15 @@ async function refundCredits(
 }
 
 export async function POST(request: Request): Promise<Response> {
+  const handled = handleGenerate(request);
+  // If the tab closes mid-generation, `request.signal` aborts the AI call
+  // (Workers flag `enable_request_signal`) and the refund below must still be
+  // written, so the whole request is kept alive until it settles.
+  keepAliveUntilSettled(handled);
+  return handled;
+}
+
+async function handleGenerate(request: Request): Promise<Response> {
   const startTime = Date.now();
   let generationId: string | null = null;
   // Set once credits are taken, so any later failure gives them back.
@@ -142,7 +152,9 @@ export async function POST(request: Request): Promise<Response> {
     logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
 
     const generationStartTime = Date.now();
-    const result = await generateDesign(base64Image, prompt, quality);
+    const result = await generateDesign(base64Image, prompt, quality, {
+      signal: request.signal,
+    });
     const generationDuration = Date.now() - generationStartTime;
 
     logger.info(

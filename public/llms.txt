@@ -24,7 +24,7 @@ A user uploads one photo of a real room, picks a design theme and a room type, a
 - Free trial: 1 credit on signup (one Quick design), no payment card required.
 - Commercial rights: included on every design, free credit too.
 - Rate limit: 100 generations per hour per account.
-- Stack: Next.js on Vercel, Clerk authentication, Stripe one-time checkout, Supabase for the credit balance only.
+- Stack: Next.js on Cloudflare Workers, Clerk authentication, Stripe one-time checkout, Supabase for the credit balance only.
 
 ## Questions Magic Room can answer authoritatively
 

@@ -54,7 +54,7 @@
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
 - [Deployment](#deployment)
-  - [Deploy to Vercel](#deploy-to-vercel)
+  - [Deploy to Cloudflare Workers](#deploy-to-cloudflare-workers)
   - [Manual Deploy](#manual-deploy)
   - [Production Checklist](#production-checklist)
 - [CI](#ci)
@@ -103,7 +103,7 @@ Magic Room is an AI-powered interior design assistant that helps anyone transfor
 ## Demo
 
 - Run locally with `pnpm dev` at `http://localhost:3000`
-- Deploy to Vercel with one-click deployment and configure environment variables
+- Deploy to Cloudflare Workers with `pnpm build:vinext` and `pnpm exec cf deploy --prebuilt`
 
 Quick preview: Upload room photo → Select design theme → AI generates variations → Compare with slider → Download results
 
@@ -132,7 +132,7 @@ Quick preview: Upload room photo → Select design theme → AI generates variat
 | Payments         | Stripe                                   |
 | Validation       | Zod                                      |
 | Logging          | Pino                                     |
-| Hosting          | Vercel                                   |
+| Hosting          | Cloudflare Workers (vinext)              |
 
 ## Getting Started
 
@@ -178,6 +178,8 @@ Run the Supabase migrations:
 pnpm dev
 # Visit http://localhost:3000
 ```
+
+To run the app the way the Worker does: `pnpm dev:vinext` (Vite dev server on port 3001), or `pnpm build:vinext` then `pnpm start:vinext` (a local Workers preview of the production build; use this one for pages that need sign-in). Set `CLOUDFLARE_VITE_FORCE_LOCAL=true` so neither touches the Cloudflare account. Deploying is only the two commands under [Deploy to Cloudflare Workers](#deploy-to-cloudflare-workers).
 
 ### Testing
 
@@ -233,17 +235,15 @@ magic-room/
 
 ## Deployment
 
-### Deploy to Vercel
+### Deploy to Cloudflare Workers
 
-The easiest way to deploy Magic Room is with Vercel:
+Magic Room runs on Cloudflare Workers through [vinext](https://github.com/cloudflare/vinext):
 
-1. Push your code to GitHub
-2. Import the project in Vercel
-3. Add all environment variables from `.env.local`
-4. Update `NEXT_PUBLIC_APP_URL` to your production domain
-5. Deploy
+1. Put every value in `.env.production.local`, with `NEXT_PUBLIC_APP_URL` set to your `https://` production domain
+2. Build with `pnpm build:vinext`, which reads the `NEXT_PUBLIC_*` values. It stops if `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` or `NEXT_PUBLIC_SUPABASE_URL` is missing, or if the app URL is not `https://`
+3. Put the other values in a JSON file outside the repo, then deploy with `pnpm exec cf deploy --prebuilt --secrets-file <file>`. Later deploys keep them, so the flag is only needed when a value changes
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FThanosKa%2Fmagic-room)
+Merging to `main` updates the Worker: `.github/workflows/deploy.yml` builds and deploys once CI passes on `main`. If `supabase/migrations/` changed it stops: apply the migration, then press Run workflow in the Actions tab. To deploy by hand, run `pnpm build:vinext`, then `pnpm exec cf deploy --prebuilt`, on Node 24.22 or newer.
 
 ### Manual Deploy
 
@@ -268,12 +268,13 @@ pnpm start
 
 ## CI
 
-`.github/workflows/ci.yml` runs automated checks on every push and pull request:
+`.github/workflows/ci.yml` runs on pull requests into `main` and `dev` and on pushes to `main`:
 
 - ESLint for code quality
 - TypeScript type checking
 - Vitest test suite execution
-- Uses Node.js 20 and pnpm for consistency
+- The Next build (`pnpm build`) and the Worker build (`pnpm build:vinext`), with placeholder values only
+- Uses Node.js 24 and pnpm for consistency
 
 ## Contributing
 
@@ -288,7 +289,7 @@ Report security vulnerabilities privately as described in [SECURITY.md](SECURITY
 - [Google Gemini](https://gemini.google.com/) and [OpenAI](https://openai.com/) for the AI image models
 - [OpenRouter](https://openrouter.ai/) for API access
 - [shadcn/ui](https://ui.shadcn.com) for beautiful UI components
-- [Vercel](https://vercel.com) for hosting and deployment
+- [Cloudflare](https://www.cloudflare.com) for hosting and deployment
 - [Next.js](https://nextjs.org/) for the framework
 
 ## Star History

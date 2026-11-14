@@ -14,7 +14,8 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 - `refundCredits` adds the credits through `addCredits`, then writes a `refund` transaction. It throws when the credits could not be added, so the route never claims a refund that did not happen.
 - A 500 body with `success: false` is the client's signal that the credits came back (`components/generate/tool-messages.tsx`). Send it only after the refund succeeded.
 - Retrying a generation is the user's choice: an automatic retry spends credits or OpenRouter money a second time.
-- `maxDuration = 300` is there because Ultra takes about 2 minutes.
+- There is no `maxDuration`: Workers ignore it, and a request runs as long as the client stays connected. `generateDesign` gives up after `OPENROUTER_TIMEOUT_MS` (280 s), which ends in the refund. A wait over 100 s with OpenRouter has not been proven on the Worker.
+- A closed tab must not keep the credits. `POST` hands the whole request to `keepAliveUntilSettled` (`lib/keep-alive.ts`, `after` from `next/server`, which is `waitUntil` on Workers and gives about 30 s past a disconnect), and passes `request.signal` to `generateDesign`, so a disconnect aborts the OpenRouter call at once and the normal refund runs. `request.signal` fires on Workers only with the `enable_request_signal` flag in `cloudflare.config.ts`.
 
 ## Balance writes
 
@@ -23,13 +24,13 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Stripe webhook (`app/api/webhooks/stripe/route.ts`)
 
-- Verify first: `parseWebhookEvent` on the raw `request.text()` body; a bad signature returns 401.
+- Verify first: `await parseWebhookEvent` on the raw `request.text()` body; a bad signature returns 401. It uses `constructEventAsync`, because the sync `constructEvent` throws on Workers and every real event would look like a bad signature.
 - Grant only through the `grant_purchase_credits` SQL function (`supabase/migrations/004_atomic_purchase_grant.sql`), via `grantPurchaseCredits` in `lib/supabase.ts`. It writes the transaction and adds the credits together, and a unique index allows one purchase row per payment. This is what stops double grants.
 - A failed grant returns 500 so Stripe redelivers. `isWebhookProcessed("stripe", event.id)` before any work and `markWebhookProcessed` after the grant only save work: the Redis key lasts 24 hours and a Redis error fails open.
 - Grant credits only when `payment_status` is `paid` or `no_payment_required`, and only from `metadata.packageId` looked up in `CREDIT_PACKAGES`.
 - Resolve the user from `metadata.userId` or `client_reference_id`: Supabase UUID first, then Clerk id.
 - Store `payment_intent` as `stripe_payment_id`, or `session.id` when there is none.
-- Purchase emails are fire-and-forget after the write and name the pack and credits only: a price would be wrong once a promotion code applies.
+- Purchase and welcome emails are sent after the webhook answers, through `keepAliveUntilSettled` (`waitUntil` on Workers, about 30 s), so a slow Resend cannot delay the 200. A failed or timed-out email (10 s) is logged with `logger.error` and never fails the webhook. Purchase emails name the pack and credits only: a price would be wrong once a promotion code applies.
 
 ## Clerk webhook (`app/api/webhooks/clerk/route.ts`)
 
@@ -40,7 +41,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Rate limit (`lib/redis.ts`)
 
-`checkRateLimit` allows `RATE_LIMIT` generations per `RATE_LIMIT_WINDOW` per user. It always passes when `NODE_ENV` is `development` and fails open on a Redis error, so a limit change is testable only with mocks or outside dev.
+`checkRateLimit` allows `RATE_LIMIT` generations per `RATE_LIMIT_WINDOW` per user. It always passes when `NODE_ENV` is `development`, so a limit change is testable only with mocks or outside dev. It fails closed: on a Redis error it throws, and the generate route answers 500 before charging. The webhook dedup helpers still fail open, which is safe because the SQL functions stop double grants.
 
 ## Models and prompts (`lib/openrouter.ts`)
 

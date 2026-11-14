@@ -20,6 +20,7 @@ interface RateLimitResult {
   resetAt?: number;
 }
 
+/** Throws when Redis cannot be reached. Always allows when NODE_ENV is development. */
 export async function checkRateLimit(
   userId: string
 ): Promise<RateLimitResult> {
@@ -53,11 +54,10 @@ export async function checkRateLimit(
       resetAt,
     };
   } catch (error) {
-    logger.error({ err: error }, "Redis error");
-    return {
-      success: true,
-      remaining: RATE_LIMIT,
-    };
+    // Fails closed: the generate route answers 500 before charging anything,
+    // rather than running without its limit during a Redis outage.
+    logger.error({ err: error }, "Redis error, rate limit unavailable");
+    throw error;
   }
 }
 

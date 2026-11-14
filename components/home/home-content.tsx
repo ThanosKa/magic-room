@@ -334,8 +334,8 @@ export function HomeContent() {
                 </Link>
               </div>
               <p className="mb-5 mt-1 max-w-[40ch] text-[15px] leading-[1.55] text-ink-2">
-                Pick Magic Room when photo privacy, one-time pricing and keeping your real layout matter. The
-                others run on subscriptions and keep your uploads.
+                Pick Magic Room when photo privacy, one-time pricing and keeping your real layout matter. Reimagine
+                Home, Interior AI and DecorAI run on subscriptions and keep your uploads.
               </p>
               <ul className="border-t border-line">
                 {COMPARE.map((c) => (
