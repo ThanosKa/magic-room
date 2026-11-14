@@ -9,7 +9,7 @@ The rules every diff in this repo is checked against. Writing code: every rule t
 - Scope every query on a user's rows by that resolved user: the service-role client bypasses row-level security, so app code is the only access check.
 - Parse every request body with a Zod schema via `safeParse` and return 400 with `{ error: "Invalid input", issues }`.
 - Answer with the matching status: 400, 401, 402 (not enough credits), 404, 429, 500, and a body of `{ error: string }`. A 500 says `"Internal server error"`; the real error goes to the log.
-- Webhook routes read the raw body with `request.text()` before verifying the signature.
+- Both webhook routes verify the raw body through `lib/webhook-intake.ts` (`receiveStripeEvent`, `receiveClerkEvent`) before parsing it.
 
 ## Logging and errors
 
