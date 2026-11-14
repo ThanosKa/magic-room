@@ -9,6 +9,7 @@ import {
 import { checkAndMarkWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import { sendWelcomeEmail } from "@/lib/email";
+import { keepAliveUntilSettled } from "@/lib/keep-alive";
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET || "";
 
@@ -124,7 +125,7 @@ export async function POST(request: Request) {
 
       if (existingUser) {
         logger.info(
-          { clerkUserId: id, email: primaryEmail },
+          { clerkUserId: id },
           "User already exists, skipping creation"
         );
         // Mark as processed since this is duplicate
@@ -137,7 +138,7 @@ export async function POST(request: Request) {
 
       if (!newUser) {
         logger.error(
-          { clerkUserId: id, email: primaryEmail },
+          { clerkUserId: id },
           "Failed to create user in Supabase"
         );
         return new Response("Error creating user", { status: 500 });
@@ -154,15 +155,20 @@ export async function POST(request: Request) {
       // Mark as processed AFTER successful database operations
       await checkAndMarkWebhookProcessed("clerk", svixId);
 
-      // Fire-and-forget welcome email
-      sendWelcomeEmail({
-        to: primaryEmail,
-        firstName: first_name,
-        lastName: last_name,
-      }).catch(() => {});
+      // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
+      // delay Clerk's 200. A failed email is only logged: it must not fail the webhook.
+      keepAliveUntilSettled(
+        sendWelcomeEmail({
+          to: primaryEmail,
+          firstName: first_name,
+          lastName: last_name,
+        }).catch((err) => {
+          logger.error({ err, userId: newUser.id }, "Failed to send welcome email");
+        })
+      );
 
       logger.info(
-        { clerkUserId: id, email: primaryEmail, userId: newUser.id },
+        { clerkUserId: id, userId: newUser.id },
         "User created successfully via webhook"
       );
       return new Response("User created successfully", { status: 200 });
@@ -204,7 +210,7 @@ export async function POST(request: Request) {
 
         if (!updatedUser) {
           logger.error(
-            { clerkUserId: id, updates, err: "updateUser returned null" },
+            { clerkUserId: id, fields: Object.keys(updates), err: "updateUser returned null" },
             "Failed to update user in Supabase"
           );
           return new Response("Error updating user", { status: 500 });

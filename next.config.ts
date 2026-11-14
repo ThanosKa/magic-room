@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 import { PRUNED_NOINDEX_PATHS, PRUNED_REDIRECTS } from "./lib/seo/pruned";
 
 const nextConfig: NextConfig = {
+  // Keeps generateMetadata output in the initial <head>; vinext otherwise
+  // streams it into the body.
+  htmlLimitedBots: /.*/,
+  // One quality only. vinext otherwise accepts any q from 1 to 100 on
+  // /_next/image, and each new value is a paid Cloudflare Images transformation.
+  images: { qualities: [75] },
   serverExternalPackages: [
     "pino",
     "pino-pretty",

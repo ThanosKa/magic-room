@@ -32,4 +32,4 @@ Copy has to keep saying what these earlier fixes settled:
 ## Checks
 
 - `scripts/seo-parity/README.md`: prove a change did not alter what Google sees, by comparing a production build with a baseline.
-- `node scripts/indexnow.mjs` runs after a deploy reaches `main`; list it for the owner.
+- `node scripts/indexnow.mjs` runs after a deploy to the Worker; list it for the owner.

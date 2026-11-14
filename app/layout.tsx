@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+import { CloudflareWebAnalytics } from "@/components/cloudflare-web-analytics";
 import { ToastProvider } from "@/components/toast-provider";
 import { UserDataProvider } from "@/components/user-data-provider";
 import { Header } from "@/components/header";
@@ -191,8 +191,8 @@ export default function RootLayout({
                 <Footer />
               </div>
               <ToastProvider />
-              <Analytics />
             </UserDataProvider>
+            <CloudflareWebAnalytics />
         </body>
       </html>
     </ClerkProvider>

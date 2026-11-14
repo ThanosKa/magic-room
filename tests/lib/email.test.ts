@@ -1,5 +1,22 @@
-import { describe, expect, it } from "vitest";
-import { buildPurchaseEmailHtml, buildWelcomeEmailHtml } from "@/lib/email";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  buildPurchaseEmailHtml,
+  buildWelcomeEmailHtml,
+  sendPurchaseEmail,
+  sendWelcomeEmail,
+} from "@/lib/email";
+
+const resendSend = vi.hoisted(() => vi.fn());
+
+vi.mock("resend", () => ({
+  Resend: class {
+    emails = { send: resendSend };
+  },
+}));
+
+vi.mock("@/lib/logger", () => ({
+  logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn() },
+}));
 
 describe("welcome email", () => {
   it("greets by first name", () => {
@@ -45,5 +62,29 @@ describe("purchase email", () => {
   it("leaves out the price, which a promotion code could make wrong", () => {
     const html = buildPurchaseEmailHtml({ packageName: "Starter", credits: 20 });
     expect(html).not.toContain("&euro;");
+  });
+});
+
+// The webhook route sends these after answering, inside the ~30 s waitUntil
+// window on Workers: a hung Resend must end as a logged failure, not vanish.
+describe("sending", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it.each([
+    ["purchase", () => sendPurchaseEmail({ to: "a@example.com", packageName: "Starter", credits: 20 })],
+    ["welcome", () => sendWelcomeEmail({ to: "a@example.com" })],
+  ])("gives up on a %s email Resend has not answered after 10 seconds", async (_kind, send) => {
+    vi.useFakeTimers();
+    resendSend.mockImplementationOnce(() => new Promise(() => {}));
+
+    const outcome = send().then(
+      () => "sent",
+      (error: Error) => error.message
+    );
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(await outcome).toMatch(/did not answer within 10 s/);
   });
 });

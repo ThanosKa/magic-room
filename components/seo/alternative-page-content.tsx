@@ -146,10 +146,7 @@ export function AlternativePageContent({
                 <h2 className={`${H2_CLASS} mb-10 max-w-3xl`}>
                     Feature comparison: Magic Room vs {competitor.name}
                 </h2>
-                <FeatureComparisonTable
-                    competitorName={competitor.name}
-                    competitorPricing={competitor.pricing}
-                />
+                <FeatureComparisonTable competitor={competitor} />
             </Section>
 
             {/* Pricing mechanics.
@@ -285,7 +282,7 @@ export function AlternativePageContent({
                             <li className="border-t border-cream/15 py-3">Want privacy guarantees around your room photos</li>
                             <li className="border-t border-cream/15 py-3">Prefer a one-time credit purchase over a subscription</li>
                             <li className="border-t border-cream/15 py-3">Want outputs that preserve your room&apos;s physical structure accurately</li>
-                            <li className="border-t border-cream/15 pt-3">Need consistent results without multiple regeneration attempts</li>
+                            <li className="border-t border-cream/15 pt-3">Want to try one free design on your own room before you pay</li>
                         </ul>
                     </div>
                     <div className="rounded-2xl bg-paper-2 p-7 md:p-8">
@@ -338,8 +335,8 @@ export function AlternativePageContent({
                         </li>
                         <li className="pl-2">
                             Compare the two outputs on one question: does the redesign still show{" "}
-                            <em>your</em> walls, windows and proportions? That is where the multimodal and
-                            diffusion approaches diverge.
+                            <em>your</em> walls, windows and proportions? No published benchmark answers that
+                            for you, so your own photo is the test.
                         </li>
                         <li className="pl-2">
                             Only cancel your {competitor.name} plan once you have compared — and use any

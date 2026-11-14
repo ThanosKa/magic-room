@@ -13,7 +13,7 @@ The rules every diff in this repo is checked against. Writing code: every rule t
 
 ## Logging and errors
 
-- Log through `logger` (`lib/logger.ts`, Pino) as `logger.error({ err, ...context }, "message")`; `console.*` stays out of `app/`, `components/`, `lib/`, `hooks/` and `stores/`.
+- Log through `logger` (`lib/logger.ts`, Pino) as `logger.error({ err, ...context }, "message")`; `console.*` stays out of `app/`, `components/`, `lib/`, `hooks/` and `stores/`. The one exception is `lib/logger.ts`, which writes through the console on the Workers runtime.
 - Leave secrets and image data out of log context.
 - Show every failure to the user as a plain-language message. Generate tool messages live in `components/generate/tool-messages.tsx`; elsewhere use a `sonner` toast.
 

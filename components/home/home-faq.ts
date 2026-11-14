@@ -46,7 +46,7 @@ export const HOME_FAQ: HomeFaqItem[] = [
   {
     question: "How is Magic Room different from RoomGPT?",
     answer:
-      "Magic Room is pay-per-use (from €9.99 for 20 credits) with no monthly subscription, while RoomGPT charges a recurring fee. Crucially, Magic Room never stores your photos — images are processed in-memory and deleted immediately, making it the privacy-first alternative. All 14 design themes are available on every plan with no upsells.",
+      "Magic Room is pay-per-use (from €9.99 for 20 credits) with no monthly subscription and prices listed up front; RoomGPT's buy-credits page lists no prices (checked November 2026). Crucially, Magic Room never stores your photos — images are processed in-memory and deleted immediately, making it the privacy-first alternative. All 14 design themes are available on every plan with no upsells.",
   },
   {
     question: "Can I use Magic Room for real estate virtual staging?",
