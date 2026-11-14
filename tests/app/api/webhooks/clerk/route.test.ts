@@ -10,6 +10,18 @@ const verifyMock = vi.hoisted(() =>
   vi.fn<(payload: string, headers: Record<string, string>) => unknown>()
 );
 
+const { mockSingle } = vi.hoisted(() => {
+  process.env.NEXT_PUBLIC_SUPABASE_URL ??= "https://test.supabase.co";
+  process.env.SUPABASE_SERVICE_ROLE_KEY ??= "test-key";
+  return { mockSingle: vi.fn() };
+});
+
+vi.mock("@supabase/supabase-js", () => ({
+  createClient: () => ({
+    from: () => ({ select: () => ({ eq: () => ({ single: mockSingle }) }) }),
+  }),
+}));
+
 vi.mock("svix", () => {
   class WebhookMock {
     constructor() {}
@@ -511,7 +523,7 @@ describe("Clerk Webhook Route", () => {
       };
 
       // Runs the real lookup against a Supabase client that answers `result`.
-      async function useRealLookup(result: {
+      async function stubSupabaseLookup(result: {
         data: unknown;
         error: { code: string; message: string } | null;
       }) {
@@ -522,12 +534,7 @@ describe("Clerk Webhook Route", () => {
         vi.mocked(supabaseLib.getUserByClerkId).mockImplementation(
           actual.getUserByClerkId
         );
-        const single = vi.fn().mockResolvedValue(result);
-        const eq = vi.fn(() => ({ single }));
-        const select = vi.fn(() => ({ eq }));
-        vi.spyOn(actual.supabase, "from").mockReturnValue({
-          select,
-        } as never);
+        mockSingle.mockResolvedValue(result);
       }
 
       beforeEach(async () => {
@@ -541,11 +548,12 @@ describe("Clerk Webhook Route", () => {
       });
 
       afterEach(() => {
-        vi.restoreAllMocks();
+        vi.mocked(supabaseLib.getUserByClerkId).mockReset();
+        mockSingle.mockReset();
       });
 
       it("answers 500 and deletes nothing when the lookup hits a database error", async () => {
-        await useRealLookup({
+        await stubSupabaseLookup({
           data: null,
           error: { code: "08006", message: "connection failure" },
         });
@@ -563,7 +571,7 @@ describe("Clerk Webhook Route", () => {
       });
 
       it("deletes the row when Clerk redelivers after the database is back", async () => {
-        await useRealLookup({ data: TEST_USER, error: null });
+        await stubSupabaseLookup({ data: TEST_USER, error: null });
         vi.mocked(supabaseLib.deleteUser).mockResolvedValue(true);
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
@@ -575,7 +583,7 @@ describe("Clerk Webhook Route", () => {
       });
 
       it("still answers 200 when there is no such user (PGRST116)", async () => {
-        await useRealLookup({
+        await stubSupabaseLookup({
           data: null,
           error: { code: "PGRST116", message: "no rows" },
         });
