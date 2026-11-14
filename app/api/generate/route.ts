@@ -5,8 +5,8 @@ import {
   ensureUserExists,
   deductCredits,
   createTransaction,
-  addCredits,
 } from "@/lib/supabase";
+import { refundCredits } from "@/lib/credit-ledger";
 import { checkRateLimit } from "@/lib/redis";
 import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
 import { keepAliveUntilSettled } from "@/lib/keep-alive";
@@ -23,19 +23,6 @@ const GenerateSchema = z.object({
   quality: z.enum(QUALITY_IDS).default("standard"),
   customPrompt: z.string().max(NOTE_MAX_LENGTH).optional(),
 });
-
-/** Gives back credits taken for a generation that produced nothing. Throws if it could not. */
-async function refundCredits(
-  userId: string,
-  amount: number,
-  generationId: string | null
-): Promise<void> {
-  const refunded = await addCredits(userId, amount);
-  if (!refunded) {
-    throw new Error("Credit refund failed");
-  }
-  await createTransaction(userId, "refund", amount, undefined, { generationId });
-}
 
 export async function POST(request: Request): Promise<Response> {
   const handled = handleGenerate(request);
