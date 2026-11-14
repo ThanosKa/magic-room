@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { POST } from "@/app/api/webhooks/clerk/route";
 import * as supabaseLib from "@/lib/supabase";
 import * as redisLib from "@/lib/redis";
@@ -501,6 +501,90 @@ describe("Clerk Webhook Route", () => {
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(500);
         expect(await response.text()).toBe("Error deleting user");
+      });
+    });
+
+    describe("user.deleted event during a database outage", () => {
+      const eventPayload = {
+        type: "user.deleted",
+        data: { id: TEST_CLERK_USER_ID },
+      };
+
+      // Runs the real lookup against a Supabase client that answers `result`.
+      async function useRealLookup(result: {
+        data: unknown;
+        error: { code: string; message: string } | null;
+      }) {
+        const actual =
+          await vi.importActual<typeof import("@/lib/supabase")>(
+            "@/lib/supabase"
+          );
+        vi.mocked(supabaseLib.getUserByClerkId).mockImplementation(
+          actual.getUserByClerkId
+        );
+        const single = vi.fn().mockResolvedValue(result);
+        const eq = vi.fn(() => ({ single }));
+        const select = vi.fn(() => ({ eq }));
+        vi.spyOn(actual.supabase, "from").mockReturnValue({
+          select,
+        } as never);
+      }
+
+      beforeEach(async () => {
+        await mockSvixHeaders({
+          "svix-id": "msg_test",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
+        verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.markWebhookProcessed).mockResolvedValue(true);
+      });
+
+      afterEach(() => {
+        vi.restoreAllMocks();
+      });
+
+      it("answers 500 and deletes nothing when the lookup hits a database error", async () => {
+        await useRealLookup({
+          data: null,
+          error: { code: "08006", message: "connection failure" },
+        });
+
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
+
+        expect(response.status).toBe(500);
+        expect(await response.text()).toBe("Error deleting user");
+        expect(supabaseLib.deleteUser).not.toHaveBeenCalled();
+        expect(redisLib.markWebhookProcessed).not.toHaveBeenCalled();
+        expect(logger.error).toHaveBeenCalledWith(
+          expect.objectContaining({ clerkUserId: TEST_CLERK_USER_ID }),
+          "Error deleting user in Supabase"
+        );
+      });
+
+      it("deletes the row when Clerk redelivers after the database is back", async () => {
+        await useRealLookup({ data: TEST_USER, error: null });
+        vi.mocked(supabaseLib.deleteUser).mockResolvedValue(true);
+
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
+
+        expect(response.status).toBe(200);
+        expect(await response.text()).toBe("User deleted successfully");
+        expect(supabaseLib.deleteUser).toHaveBeenCalledTimes(1);
+        expect(supabaseLib.deleteUser).toHaveBeenCalledWith(TEST_CLERK_USER_ID);
+      });
+
+      it("still answers 200 when there is no such user (PGRST116)", async () => {
+        await useRealLookup({
+          data: null,
+          error: { code: "PGRST116", message: "no rows" },
+        });
+
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
+
+        expect(response.status).toBe(200);
+        expect(await response.text()).toBe("User already deleted");
+        expect(supabaseLib.deleteUser).not.toHaveBeenCalled();
       });
     });
 
