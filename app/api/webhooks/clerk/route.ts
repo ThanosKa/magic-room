@@ -6,6 +6,7 @@ import {
 } from "@/lib/supabase";
 import { markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
+import { FREE_SIGNUP_CREDITS } from "@/lib/constants";
 import { sendWelcomeEmail } from "@/lib/email";
 import { keepAliveUntilSettled } from "@/lib/keep-alive";
 import { receiveClerkEvent } from "@/lib/webhook-intake";
@@ -47,7 +48,7 @@ export async function POST(request: Request) {
       }
 
       const fullName = buildFullName(first_name, last_name);
-      const newUser = await createUser(id, primaryEmail, 1);
+      const newUser = await createUser(id, primaryEmail, FREE_SIGNUP_CREDITS);
 
       if (!newUser) {
         logger.error(

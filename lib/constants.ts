@@ -105,6 +105,9 @@ export const CREDIT_PACKAGES: ICreditPackage[] = [
   },
 ];
 
+/** Credits a new User gets at sign-up (the Free credit), whichever path creates the row. */
+export const FREE_SIGNUP_CREDITS = 1;
+
 export const RATE_LIMIT = 100;
 export const RATE_LIMIT_WINDOW = 3600;
 
