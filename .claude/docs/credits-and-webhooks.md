@@ -21,6 +21,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 - Change a balance only through a SQL function: `deductCredits`, `addCredits` (`supabase/migrations/005_atomic_credit_writes.sql`) or `grantPurchaseCredits`. Each changes it in one statement, so requests landing together cannot overwrite each other. Never write a balance computed in app code.
 - Every usage, refund and purchase also writes a `transactions` row.
+- Migration `006_charge_with_usage_row.sql` adds `deduct_credits_with_usage`, which subtracts the amount and writes the `usage` row in one transaction (both or nothing). Nothing calls it yet; ticket 28 will. The owner applies it by hand.
 
 ## Stripe webhook (`app/api/webhooks/stripe/route.ts`)
 
@@ -53,4 +54,4 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 - Tables in use: `users`, `transactions`. `generations` was dropped in `003`. `credit_packages` and `supabase/seed.sql` are unused and out of date; `CREDIT_PACKAGES` is what the app reads.
 - The row-level security policies in `001` compare `auth.uid()` with the Clerk id and do not apply to the service-role client.
-- Add a migration as the next `supabase/migrations/NNN_description.sql`, leaving earlier files as they are. There is no Supabase CLI config: the owner applies migrations by hand.
+- Add a migration as the next `supabase/migrations/NNN_description.sql`, leaving earlier files as they are. There is no Supabase CLI config: the owner applies migrations by hand, `006` included.
