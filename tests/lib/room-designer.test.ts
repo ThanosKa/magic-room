@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { QUALITY_OPTIONS } from "@/lib/constants";
 import { designRoom } from "@/lib/room-designer";
 
 vi.mock("@/lib/logger", () => ({
@@ -11,6 +12,8 @@ const request = {
     theme: "japandi" as const,
     quality: "premium" as const,
 };
+
+const IMAGE_MESSAGE = { images: [{ type: "image_url", image_url: { url: "data:image/png;base64,out" } }] };
 
 function answer(message: object, status = 200) {
     return vi.fn().mockResolvedValue(new Response(JSON.stringify({ choices: [{ message }] }), { status }));
@@ -33,7 +36,7 @@ describe("designRoom", () => {
         expect(await designRoom(request, {})).toEqual({ ok: true, images: ["data:image/png;base64,out"] });
 
         const body = JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string);
-        expect(body.model).toBe("google/gemini-3-pro-image");
+        expect(body.model).toBe(QUALITY_OPTIONS.premium.model);
         expect(body.messages[0].content[0].text).toContain("Japandi");
     });
 
@@ -71,7 +74,9 @@ describe("designRoom", () => {
         vi.stubGlobal(
             "fetch",
             vi.fn((_url: string, init?: RequestInit) =>
-                init?.signal?.aborted ? Promise.reject(init.signal.reason) : Promise.resolve(new Response("{}"))
+                init?.signal?.aborted
+                    ? Promise.reject(init.signal.reason)
+                    : Promise.resolve(new Response(JSON.stringify({ choices: [{ message: IMAGE_MESSAGE }] })))
             )
         );
         const controller = new AbortController();
@@ -80,6 +85,9 @@ describe("designRoom", () => {
         const result = await designRoom(request, { signal: controller.signal });
 
         expect(result).toMatchObject({ ok: false, failure: { kind: "provider-error" } });
+        if (!result.ok && result.failure.kind === "provider-error") {
+            expect((result.failure.cause as Error).message).toBe("browser left");
+        }
     });
 
     it("returns provider-error when the API key is missing", async () => {
