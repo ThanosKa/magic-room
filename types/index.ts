@@ -90,6 +90,7 @@ export interface IGenerateRequest {
 export interface IGenerateResponse {
   success: boolean;
   predictionId?: string;
+  outputUrls?: string[];
   error?: string;
 }
 
