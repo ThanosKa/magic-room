@@ -131,11 +131,6 @@ export async function getRateLimitStatus(userId: string) {
 // Webhook deduplication (24-hour TTL for webhook event IDs)
 const WEBHOOK_DEDUP_TTL = 24 * 60 * 60;
 
-interface WebhookDeduplicationResult {
-  isProcessed: boolean;
-  message: string;
-}
-
 export async function isWebhookProcessed(
   webhookType: "stripe" | "clerk",
   eventId: string
@@ -168,41 +163,5 @@ export async function markWebhookProcessed(
       "Redis error marking webhook as processed"
     );
     return false;
-  }
-}
-
-export async function checkAndMarkWebhookProcessed(
-  webhookType: "stripe" | "clerk",
-  eventId: string
-): Promise<WebhookDeduplicationResult> {
-  try {
-    const key = `webhook:${webhookType}:${eventId}`;
-
-    // Check if already processed
-    const exists = await redis.exists(key);
-    if (exists) {
-      return {
-        isProcessed: true,
-        message: `Webhook ${webhookType}:${eventId} already processed`,
-      };
-    }
-
-    // Mark as processed with TTL
-    await redis.setex(key, WEBHOOK_DEDUP_TTL, "1");
-
-    return {
-      isProcessed: false,
-      message: `Webhook ${webhookType}:${eventId} marked for processing`,
-    };
-  } catch (error) {
-    logger.warn(
-      { err: error, webhookType, eventId },
-      "Redis error checking webhook deduplication; allowing processing"
-    );
-    // On Redis error, allow processing (fail open for webhook safety)
-    return {
-      isProcessed: false,
-      message: "Redis error, allowing webhook processing",
-    };
   }
 }

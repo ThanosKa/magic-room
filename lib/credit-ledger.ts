@@ -97,7 +97,7 @@ export async function grantPurchase(
 }
 
 /** Gives back credits taken for a generation that produced nothing. Throws if it could not. */
-export async function refundCredits(
+async function refundCredits(
   userId: string,
   amount: number,
   generationId: string | null

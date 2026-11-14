@@ -9,10 +9,10 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## The generate route (`app/api/generate/route.ts`)
 
-- Order: auth → Zod → `ensureUserExists` → balance check (402) → `checkRateLimit` (429) → `deductCredits` → `createTransaction("usage")` → OpenRouter.
-- Set `charge` immediately after the deduction. Every failure after that point, a thrown error included, goes through `refundCredits`.
-- `refundCredits` adds the credits through `addCredits`, then writes a `refund` transaction. It throws when the credits could not be added, so the route never claims a refund that did not happen.
-- A 500 body with `success: false` is the client's signal that the credits came back (`components/generate/tool-messages.tsx`). Send it only after the refund succeeded.
+- Order: auth → Zod → `ensureUserExists` → balance check (402) → `checkRateLimit` (429) → `spendCredits` (`deductCredits` → `createTransaction("usage")` → OpenRouter).
+- The route charges and refunds only through `spendCredits` in the credit ledger (`lib/credit-ledger.ts`), handing it the prompt and the OpenRouter call as the work, and has no Refund code of its own. From the deduction on, the ledger gives every failure, a thrown error included, exactly one Refund. It answers `not-charged`, `delivered`, `refunded` or `refund-failed`, and the route maps each kind to its response.
+- The ledger's Refund adds the credits through `addCredits`, then writes a `refund` transaction. It answers `refunded` only when the credits were added, so the route never claims a refund that did not happen. `refund-failed` does not carry the Refund's error, so the route logs that line without it.
+- A 500 body with `success: false` is the client's signal that the credits came back (`components/generate/tool-messages.tsx`). Send it only on `refunded`.
 - Retrying a generation is the user's choice: an automatic retry spends credits or OpenRouter money a second time.
 - There is no `maxDuration`: Workers ignore it, and a request runs as long as the client stays connected. `generateDesign` gives up after `OPENROUTER_TIMEOUT_MS` (280 s), which ends in the refund. A wait over 100 s with OpenRouter has not been proven on the Worker.
 - A closed tab must not keep the credits. `POST` hands the whole request to `keepAliveUntilSettled` (`lib/keep-alive.ts`, `after` from `next/server`, which is `waitUntil` on Workers and gives about 30 s past a disconnect), and passes `request.signal` to `generateDesign`, so a disconnect aborts the OpenRouter call at once and the normal refund runs. `request.signal` fires on Workers only with the `enable_request_signal` flag in `cloudflare.config.ts`.
@@ -34,7 +34,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Clerk webhook (`app/api/webhooks/clerk/route.ts`)
 
-- Verify with `svix` on the raw body before reading the event.
+- `receiveClerkEvent` (`lib/webhook-intake.ts`) reads the raw body and verifies it with `svix`; the route switches on the typed event it returns. After each handled outcome the route calls `markWebhookProcessed("clerk", svixId)`; nothing reads that key, so deliveries are not de-duplicated and the handlers' idempotency is what protects against redelivery.
 - Handlers are idempotent: an existing row on `user.created` or a missing row on `user.deleted` returns 200 with no change.
 - Return 500 on a database failure so Clerk redelivers, and 200 for event types the route ignores.
 - Clerk once auto-disabled this endpoint and sign-ups stopped reaching Supabase. `ensureUserExists` is the fallback and the `clerk_user_id` unique constraint settles a race with the webhook, so a user gets the free credit once.
