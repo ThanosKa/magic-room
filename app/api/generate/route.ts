@@ -4,7 +4,7 @@ import { IGenerateResponse } from "@/types";
 import { ensureUserExists } from "@/lib/supabase";
 import { spendCredits } from "@/lib/credit-ledger";
 import { checkRateLimit } from "@/lib/redis";
-import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
+import { designRoom } from "@/lib/room-designer";
 import { keepAliveUntilSettled } from "@/lib/keep-alive";
 import { logger } from "@/lib/logger";
 import { NOTE_MAX_LENGTH, QUALITY_IDS, QUALITY_OPTIONS, ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
@@ -123,29 +123,14 @@ async function handleGenerate(request: Request): Promise<Response> {
     const spend = await spendCredits<string[], NoImage>(
       { userId: user.id, amount: creditCost, generationId: designId },
       async () => {
-        const prompt = buildDesignPrompt(roomType, theme, quality, customPrompt);
-        logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
-
-        const generationStartTime = Date.now();
-        const result = await generateDesign(base64Image, prompt, quality, {
-          signal: request.signal,
-        });
-        const generationDuration = Date.now() - generationStartTime;
-
-        logger.info(
-          {
-            generationId: designId,
-            duration: generationDuration,
-            imagesCount: result.images.length,
-            success: result.success
-          },
-          "[Generate] OpenRouter generation complete"
+        const design = await designRoom(
+          { photo: base64Image, roomType, theme, quality, note: customPrompt },
+          { signal: request.signal }
         );
-
-        if (!result.success || result.images.length === 0) {
-          return { ok: false, failure: { kind: "no-image", message: result.error } };
-        }
-        return { ok: true, value: result.images };
+        if (design.ok) return { ok: true, value: design.images };
+        // A provider error takes the ledger's "threw" path, as a thrown error did.
+        if (design.failure.kind === "provider-error") throw design.failure.cause;
+        return { ok: false, failure: design.failure };
       }
     );
 

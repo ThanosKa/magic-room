@@ -4,6 +4,7 @@
 // the route tests and blinding the prompt-baseline test. So it imports both
 // through the OpenRouter module's exports.
 import { buildDesignPrompt, generateDesign } from "@/lib/openrouter";
+import { logger } from "@/lib/logger";
 import type { Quality, RoomType, Theme } from "@/types";
 
 export interface RoomDesignRequest {
@@ -31,7 +32,18 @@ export async function designRoom(
 ): Promise<RoomDesign> {
     try {
         const prompt = buildDesignPrompt(req.roomType, req.theme, req.quality, req.note);
+        logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
+
+        const generationStartTime = Date.now();
         const result = await generateDesign(req.photo, prompt, req.quality, { signal: opts.signal });
+        logger.info(
+            {
+                duration: Date.now() - generationStartTime,
+                imagesCount: result.images.length,
+                success: result.success,
+            },
+            "[Generate] OpenRouter generation complete"
+        );
 
         if (!result.success || result.images.length === 0) {
             return { ok: false, failure: { kind: "no-image", message: result.error } };

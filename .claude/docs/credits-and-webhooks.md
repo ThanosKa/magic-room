@@ -43,8 +43,9 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 `checkRateLimit` allows `RATE_LIMIT` generations per `RATE_LIMIT_WINDOW` per user. It always passes when `NODE_ENV` is `development`, so a limit change is testable only with mocks or outside dev. It fails closed: on a Redis error it throws, and the generate route answers 500 before charging. The webhook dedup helpers still fail open, which is safe because the SQL functions stop double grants.
 
-## Models and prompts (`lib/openrouter.ts`)
+## Models and prompts (`lib/room-designer.ts`, `lib/openrouter.ts`)
 
+- The generate route reaches the model only through the room designer (`designRoom` in `lib/room-designer.ts`), which builds the prompt, calls `generateDesign` and returns the images or a tagged failure. A provider, model or fallback change happens behind it; the route never imports the prompt builder or `generateDesign`.
 - OpenRouter retires model slugs. A swap touches `QUALITY_OPTIONS`, `tests/lib/openrouter.test.ts`, `tests/app/api/generate/route.test.ts`, `public/pricing.md`, `public/llms.txt` and `public/llms-full.txt`.
 - `tests/app/api/generate/prompt-baseline.test.ts` locks every prompt to the character. A failure means generation output changed for an existing option: change the prompt back. Its fixture stays as recorded. Options added since then are covered by `tests/app/api/generate/all-options.test.ts`.
 
