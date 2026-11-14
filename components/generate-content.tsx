@@ -10,13 +10,14 @@ import { ControlPanel } from "@/components/generate/control-panel";
 import { PhotoPanel, type ToolState } from "@/components/generate/photo-panel";
 import { QUALITY_NAMES } from "@/components/generate/option-pickers";
 import { QUALITY_OPTIONS, ROOM_TYPES, THEMES } from "@/lib/constants";
+import { requestDesign } from "@/lib/design-request";
 import { generateHref, readDesignSelection } from "@/lib/design-selection";
 import { MAX_PHOTO_FILE_SIZE, prepareRoomPhoto, type RoomPhoto } from "@/lib/room-photo";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { cn } from "@/lib/utils";
 import {
     DOWNLOAD_FAILED_MESSAGE,
-    generateFailureMessage,
+    messageFor,
     NETWORK_MESSAGE,
     notEnoughCreditsMessage,
     PHOTO_MESSAGES,
@@ -105,38 +106,26 @@ function GenerateTool() {
         setGenerationStartedAt(Date.now());
         requestAnimationFrame(showPhoto);
 
-        const customPrompt = note.trim();
         const failure = { cost, signInAgain };
         let balanceRead = false;
         try {
-            const response = await fetch("/api/generate", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    base64Image: photo.dataUrl,
-                    roomType,
-                    theme,
-                    quality,
-                    ...(customPrompt ? { customPrompt } : {}),
-                }),
-            });
-            // A host timeout page is not JSON: the status alone decides then.
-            const data = await response.json().catch(() => null);
+            const answer = await requestDesign({ photo: photo.dataUrl, roomType, theme, quality, note });
 
-            if (response.ok && data?.success && data.outputUrls?.length > 0) {
-                setActiveGeneration({ id: data.predictionId, status: "succeeded", outputUrls: data.outputUrls });
-            } else if (response.status === 402 && clerkUser?.id) {
+            if (answer.kind === "design") {
+                setActiveGeneration({ id: answer.id, status: "succeeded", outputUrls: answer.outputUrls });
+            } else if (answer.kind === "not-enough-credits" && clerkUser?.id) {
                 // Re-read the balance first: once it is below the cost, the
                 // "Not enough credits" message shows it with the real number.
                 await refreshUser(clerkUser.id);
                 balanceRead = true;
                 if (useUserStore.getState().credits >= cost) {
-                    setMessage(generateFailureMessage(response.status, data, failure));
+                    setMessage(messageFor(answer, failure));
                 }
             } else {
-                setMessage(generateFailureMessage(response.status, data, failure));
+                setMessage(messageFor(answer, failure));
             }
         } catch {
+            // requestDesign never throws; this keeps a failed Balance re-read on the same message as before.
             setMessage(NETWORK_MESSAGE);
         } finally {
             setGenerationStartedAt(null);
