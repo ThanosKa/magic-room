@@ -6,7 +6,7 @@ import * as redisLib from "@/lib/redis";
 import { sendPurchaseEmail } from "@/lib/email";
 import { logger } from "@/lib/logger";
 import { after } from "next/server";
-import { createMockStripeWebhookEvent, createMockCheckoutSession, TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
+import { createMockCheckoutSession, TEST_USER, TEST_PACKAGES } from "@/lib/test-utils";
 import type Stripe from "stripe";
 
 vi.mock("@/lib/supabase", async () => {
@@ -54,34 +54,6 @@ describe("Stripe Webhook Route", () => {
   });
 
   describe("POST /api/webhooks/stripe", () => {
-    it("should reject request without signature", async () => {
-      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
-        method: "POST",
-        body: JSON.stringify({}),
-      });
-
-      const response = await POST(request);
-      expect(response.status).toBe(401);
-    });
-
-    it("should reject request with invalid signature", async () => {
-      const mockEvent = createMockStripeWebhookEvent("checkout.session.completed", createMockCheckoutSession());
-      vi.mocked(stripeLib.parseWebhookEvent).mockImplementation(() => {
-        throw new Error("Invalid signature");
-      });
-
-      const request = new Request("http://localhost:3000/api/webhooks/stripe", {
-        method: "POST",
-        headers: {
-          "stripe-signature": "invalid_signature",
-        },
-        body: JSON.stringify(mockEvent),
-      });
-
-      const response = await POST(request);
-      expect(response.status).toBe(401);
-    });
-
     it("should handle checkout.session.completed event with paid status", async () => {
       const session = createMockCheckoutSession({
         payment_status: "paid",

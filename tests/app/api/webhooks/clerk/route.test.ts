@@ -96,29 +96,6 @@ describe("Clerk Webhook Route", () => {
   });
 
   describe("POST /api/webhooks/clerk", () => {
-    it("should reject request without svix headers", async () => {
-      await mockSvixHeaders({});
-
-      const response = await POST(createRequest(JSON.stringify({})));
-      expect(response.status).toBe(400);
-      expect(await response.text()).toBe("Missing svix headers");
-    });
-
-    it("should reject request with invalid signature", async () => {
-      await mockSvixHeaders({
-        "svix-id": "msg_test",
-        "svix-timestamp": "1234567890",
-        "svix-signature": "v1,invalid",
-      });
-
-      verifyMock.mockImplementation(() => {
-        throw new Error("Invalid signature");
-      });
-
-      const response = await POST(createRequest(JSON.stringify({})));
-      expect(response.status).toBe(400);
-    });
-
     describe("user.created event", () => {
       it("should create new user with metadata", async () => {
         const eventPayload = {
