@@ -1,4 +1,4 @@
-import { parseWebhookEvent } from "@/lib/stripe";
+import { receiveStripeEvent } from "@/lib/webhook-intake";
 import { CREDIT_PACKAGES } from "@/lib/constants";
 import {
   ensureUserExists,
@@ -36,26 +36,11 @@ async function resolveUser(identifier: string | undefined) {
 
 export async function POST(request: Request): Promise<Response> {
   try {
-    const body = await request.text();
-    const signature = request.headers.get("stripe-signature");
-
-    if (!signature) {
-      logger.warn("Missing Stripe signature");
-      return new Response("Missing signature", { status: 401 });
+    const intake = await receiveStripeEvent(request);
+    if (!intake.ok) {
+      return intake.response;
     }
-
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
-
-    let event: Stripe.Event;
-    try {
-      event = await parseWebhookEvent(body, signature, webhookSecret);
-    } catch (error) {
-      logger.warn(
-        { err: error },
-        "Stripe webhook signature verification failed"
-      );
-      return new Response("Invalid signature", { status: 401 });
-    }
+    const event = intake.event;
 
     // Check for duplicate webhook processing (but don't mark yet)
     const isProcessed = await isWebhookProcessed("stripe", event.id);
