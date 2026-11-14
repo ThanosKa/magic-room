@@ -1,10 +1,7 @@
 import { receiveStripeEvent } from "@/lib/webhook-intake";
 import { CREDIT_PACKAGES } from "@/lib/constants";
-import {
-  ensureUserExists,
-  getUserById,
-  grantPurchaseCredits,
-} from "@/lib/supabase";
+import { ensureUserExists, getUserById } from "@/lib/supabase";
+import { grantPurchase } from "@/lib/credit-ledger";
 import { isWebhookProcessed, markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import { sendPurchaseEmail } from "@/lib/email";
@@ -95,12 +92,14 @@ export async function POST(request: Request): Promise<Response> {
         ? session.payment_intent
         : session.id;
 
-      const grant = await grantPurchaseCredits(user.id, stripePaymentId, pkg.credits, {
-        packageId,
-        packageName: pkg.name,
+      const grant = await grantPurchase({
+        userId: user.id,
+        paymentId: stripePaymentId,
+        credits: pkg.credits,
+        metadata: { packageId, packageName: pkg.name },
       });
 
-      if (!grant) {
+      if (grant === "failed") {
         logger.error(
           { userId: user.id, packageId, sessionId: session.id },
           "Failed to grant purchased credits"
@@ -108,7 +107,7 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Failed to grant credits", { status: 500 });
       }
 
-      if (!grant.granted) {
+      if (grant === "already-granted") {
         logger.info(
           { userId: user.id, stripePaymentId, sessionId: session.id },
           "Payment already granted, skipping"
