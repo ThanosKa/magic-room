@@ -35,7 +35,7 @@ export function CheckoutReturnNotice() {
     const leave = new AbortController();
     void waitForPurchasedCredits(
       async () => {
-        await refreshUser(clerkUserId);
+        await refreshUser();
         return useUserStore.getState().credits;
       },
       { signal: leave.signal },

@@ -10,7 +10,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isLoaded && clerkUser?.id) {
-      refreshUser(clerkUser.id);
+      refreshUser();
     }
   }, [isLoaded, clerkUser?.id, refreshUser]);
 
