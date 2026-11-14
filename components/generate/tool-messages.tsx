@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AlertCircle, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import type { DesignAnswer } from "@/lib/design-request";
 import { cn, formatCredits } from "@/lib/utils";
 
 /**
@@ -65,85 +66,86 @@ export const NETWORK_MESSAGE: ToolMessage = {
     text: "We couldn't reach Magic Room. Check your connection and try again.",
 };
 
-/** What to tell the user when /api/generate did not return a design. */
-export function generateFailureMessage(
-    status: number,
-    body: unknown,
+/**
+ * What to tell the user about a design answer. A delivered design needs no
+ * message (null); the 402 case is for the screen to show after it re-reads the Balance.
+ */
+export function messageFor(
+    answer: DesignAnswer,
     { cost, signInAgain }: { cost: number; signInAgain: () => void }
-): ToolMessage {
-    const answer = (body ?? {}) as { success?: unknown; resetAt?: unknown };
-    const refunded = answer.success === false;
+): ToolMessage | null {
+    switch (answer.kind) {
+        case "design":
+            return null;
 
-    if (status === 401) {
-        return {
-            tone: "error",
-            title: "Signed out",
-            text: "Your session has ended, so no design was made. Sign in again and you'll come back here.",
-            action: { label: "Sign in again", onClick: signInAgain },
-        };
+        case "signed-out":
+            return {
+                tone: "error",
+                title: "Signed out",
+                text: "Your session has ended, so no design was made. Sign in again and you'll come back here.",
+                action: { label: "Sign in again", onClick: signInAgain },
+            };
+
+        case "account-missing":
+            return {
+                tone: "error",
+                title: "Account not found",
+                text: "We couldn't find your account, so no design was made. Sign in again to reload it.",
+                action: { label: "Sign in again", onClick: signInAgain },
+            };
+
+        case "photo-rejected":
+            return {
+                tone: "error",
+                title: "Photo not accepted",
+                text: "We couldn't use this photo, and you were not charged. Try another photo.",
+            };
+
+        case "timed-out":
+            return {
+                tone: "error",
+                title: "Timed out",
+                text: "The design took too long to come back. Check your connection and try again; your balance below is up to date.",
+            };
+
+        case "not-enough-credits":
+            return {
+                tone: "info",
+                title: "Not enough credits",
+                text: `This design uses ${formatCredits(cost)}, more than your balance.`,
+                action: { label: "Buy credits", href: "/pricing" },
+            };
+
+        case "too-many": {
+            const minutes =
+                answer.resetAt !== undefined ? Math.ceil((answer.resetAt - Date.now()) / 60_000) : 0;
+            return {
+                tone: "error",
+                title: "Too many designs",
+                text:
+                    minutes > 1
+                        ? `You've made a lot of designs in a short time. Try again in about ${minutes} minutes.`
+                        : "You've made a lot of designs in a short time. Wait a minute and try again.",
+            };
+        }
+
+        case "failed-refunded":
+            return {
+                tone: "error",
+                title: "Generation failed",
+                text: `The design could not be made. Your ${formatCredits(cost)} were refunded, so you can try again.`,
+            };
+
+        case "failed":
+            return {
+                tone: "error",
+                title: "Generation failed",
+                text: "Something went wrong on our side and no design was made. Please try again in a moment.",
+            };
+
+        case "offline":
+            return NETWORK_MESSAGE;
     }
-
-    if (status === 404) {
-        return {
-            tone: "error",
-            title: "Account not found",
-            text: "We couldn't find your account, so no design was made. Sign in again to reload it.",
-            action: { label: "Sign in again", onClick: signInAgain },
-        };
-    }
-
-    if (status === 400) {
-        return {
-            tone: "error",
-            title: "Photo not accepted",
-            text: "We couldn't use this photo, and you were not charged. Try another photo.",
-        };
-    }
-
-    // The host gave up before the server answered (no JSON body).
-    if (status === 408 || status === 502 || status === 503 || status === 504) {
-        return {
-            tone: "error",
-            title: "Timed out",
-            text: "The design took too long to come back. Check your connection and try again; your balance below is up to date.",
-        };
-    }
-
-    if (status === 402) {
-        return {
-            tone: "info",
-            title: "Not enough credits",
-            text: `This design uses ${formatCredits(cost)}, more than your balance.`,
-            action: { label: "Buy credits", href: "/pricing" },
-        };
-    }
-
-    if (status === 429) {
-        const minutes =
-            typeof answer.resetAt === "number" ? Math.ceil((answer.resetAt - Date.now()) / 60_000) : 0;
-        return {
-            tone: "error",
-            title: "Too many designs",
-            text:
-                minutes > 1
-                    ? `You've made a lot of designs in a short time. Try again in about ${minutes} minutes.`
-                    : "You've made a lot of designs in a short time. Wait a minute and try again.",
-        };
-    }
-
-    if (status >= 500 && refunded) {
-        return {
-            tone: "error",
-            title: "Generation failed",
-            text: `The design could not be made. Your ${formatCredits(cost)} were refunded, so you can try again.`,
-        };
-    }
-
-    return {
-        tone: "error",
-        title: "Generation failed",
-        text: "Something went wrong on our side and no design was made. Please try again in a moment.",
-    };
 }
 
 export function ToolMessageView({ message }: { message: ToolMessage }) {
