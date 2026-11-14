@@ -116,7 +116,7 @@ function GenerateTool() {
             } else if (answer.kind === "not-enough-credits" && clerkUser?.id) {
                 // Re-read the balance first: once it is below the cost, the
                 // "Not enough credits" message shows it with the real number.
-                await refreshUser(clerkUser.id);
+                await refreshUser();
                 balanceRead = true;
                 if (useUserStore.getState().credits >= cost) {
                     setMessage(messageFor(answer, failure));
@@ -130,7 +130,7 @@ function GenerateTool() {
         } finally {
             setGenerationStartedAt(null);
             // The balance may have changed either way (charged, or refunded).
-            if (!balanceRead && clerkUser?.id) refreshUser(clerkUser.id);
+            if (!balanceRead && clerkUser?.id) refreshUser();
         }
     }, [photo, isGenerating, credits, cost, note, roomType, theme, quality, setActiveGeneration, clerkUser?.id, refreshUser, showPhoto, signInAgain]);
 
