@@ -34,7 +34,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Clerk webhook (`app/api/webhooks/clerk/route.ts`)
 
-- `receiveClerkEvent` (`lib/webhook-intake.ts`) reads the raw body and verifies it with `svix`; the route switches on the typed event it returns. After each handled outcome the route calls `markWebhookProcessed("clerk", svixId)`; nothing reads that key, so deliveries are not de-duplicated and the handlers' idempotency is what protects against redelivery.
+- `receiveClerkEvent` (`lib/webhook-intake.ts`) reads the raw body and verifies it with `svix`; the route switches on the typed event it returns. After each successful outcome the route calls `markWebhookProcessed("clerk", svixId)`; nothing reads that key, so deliveries are not de-duplicated and the handlers' idempotency is what protects against redelivery.
 - Handlers are idempotent: an existing row on `user.created` or a missing row on `user.deleted` returns 200 with no change.
 - Return 500 on a database failure so Clerk redelivers, and 200 for event types the route ignores.
 - Clerk once auto-disabled this endpoint and sign-ups stopped reaching Supabase. `ensureUserExists` is the fallback and the `clerk_user_id` unique constraint settles a race with the webhook, so a user gets the free credit once.
