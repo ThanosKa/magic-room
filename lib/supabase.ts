@@ -16,7 +16,16 @@ export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   },
 });
 
-export async function getUserByClerkId(clerkUserId: string) {
+/**
+ * Returns null when there is no such User. On any other database error it
+ * logs and returns null too, unless `throwOnError` is set: then it throws, so
+ * the caller can tell "missing" from "the database failed". Ticket 25 makes
+ * throwing the rule for everyone and removes the option.
+ */
+export async function getUserByClerkId(
+  clerkUserId: string,
+  options: { throwOnError?: boolean } = {}
+) {
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -29,6 +38,9 @@ export async function getUserByClerkId(clerkUserId: string) {
       return null;
     }
     logger.error({ err: error, clerkUserId }, "Error fetching user");
+    if (options.throwOnError) {
+      throw error;
+    }
     return null;
   }
 
