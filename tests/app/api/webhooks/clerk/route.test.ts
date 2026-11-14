@@ -258,6 +258,37 @@ describe("Clerk Webhook Route", () => {
         expect(supabaseLib.createUser).not.toHaveBeenCalled();
       });
 
+      // Clerk redelivers with the same svix id. The outcome rests on the User
+      // lookup, never on the Redis helper's answer.
+      it("answers a second delivery of the same svix id with 200 and creates the User once", async () => {
+        const eventPayload = {
+          type: "user.created",
+          data: { id: TEST_CLERK_USER_ID, email_addresses: [{ email_address: TEST_EMAIL }] },
+        };
+        await mockSvixHeaders({
+          "svix-id": "msg_twice",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
+        verifyMock.mockReturnValue(eventPayload);
+        vi.mocked(redisLib.checkAndMarkWebhookProcessed)
+          .mockResolvedValueOnce({ isProcessed: false, message: "New webhook" })
+          .mockResolvedValueOnce({ isProcessed: true, message: "Already processed" });
+        vi.mocked(supabaseLib.getUserByClerkId)
+          .mockResolvedValueOnce(null)
+          .mockResolvedValueOnce(TEST_USER);
+        vi.mocked(supabaseLib.createUser).mockResolvedValue(TEST_USER);
+
+        const first = await POST(createRequest(JSON.stringify(eventPayload)));
+        const second = await POST(createRequest(JSON.stringify(eventPayload)));
+
+        expect(first.status).toBe(200);
+        expect(await first.text()).toBe("User created successfully");
+        expect(second.status).toBe(200);
+        expect(await second.text()).toBe("User already exists");
+        expect(supabaseLib.createUser).toHaveBeenCalledTimes(1);
+      });
+
       it("should return 400 if no email found", async () => {
         await mockSvixHeaders({
           "svix-id": "msg_test",
