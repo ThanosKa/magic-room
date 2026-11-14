@@ -4,7 +4,7 @@ import {
   updateUser,
   deleteUser,
 } from "@/lib/supabase";
-import { checkAndMarkWebhookProcessed } from "@/lib/redis";
+import { markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import { sendWelcomeEmail } from "@/lib/email";
 import { keepAliveUntilSettled } from "@/lib/keep-alive";
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
           "User already exists, skipping creation"
         );
         // Mark as processed since this is duplicate
-        await checkAndMarkWebhookProcessed("clerk", svixId);
+        await markWebhookProcessed("clerk", svixId);
         return new Response("User already exists", { status: 200 });
       }
 
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       }
 
       // Mark as processed AFTER successful database operations
-      await checkAndMarkWebhookProcessed("clerk", svixId);
+      await markWebhookProcessed("clerk", svixId);
 
       // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
       // delay Clerk's 200. A failed email is only logged: it must not fail the webhook.
@@ -141,7 +141,7 @@ export async function POST(request: Request) {
       }
 
       // Mark as processed AFTER successful database operations
-      await checkAndMarkWebhookProcessed("clerk", svixId);
+      await markWebhookProcessed("clerk", svixId);
 
       return new Response("User updated successfully", { status: 200 });
     } catch (error) {
@@ -166,7 +166,7 @@ export async function POST(request: Request) {
           "User already deleted or never created in Supabase"
         );
         // Mark as processed since this is idempotent
-        await checkAndMarkWebhookProcessed("clerk", svixId);
+        await markWebhookProcessed("clerk", svixId);
         return new Response("User already deleted", { status: 200 });
       }
 
@@ -178,7 +178,7 @@ export async function POST(request: Request) {
       }
 
       // Mark as processed AFTER successful database operations
-      await checkAndMarkWebhookProcessed("clerk", svixId);
+      await markWebhookProcessed("clerk", svixId);
 
       logger.info({ clerkUserId: id }, "User deleted successfully via webhook");
       return new Response("User deleted successfully", { status: 200 });
