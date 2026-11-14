@@ -51,13 +51,13 @@ export interface IGenerationResult {
 
 export interface IUser {
   id: string;
-  clerkUserId: string;
+  clerk_user_id: string;
   email: string;
   credits: number;
-  name?: string;
-  profileImageUrl?: string;
-  createdAt: string;
-  updatedAt: string;
+  name: string | null;
+  profile_image_url: string | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 export interface ITransaction {
