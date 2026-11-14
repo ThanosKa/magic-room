@@ -69,11 +69,13 @@ vi.mock("@/lib/logger", () => ({
 
 const TEST_USER = {
   id: "user_test_123",
-  clerkUserId: "clerk_user_123",
+  clerk_user_id: "clerk_user_123",
   email: "test@example.com",
   credits: 10,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  name: null,
+  profile_image_url: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
 };
 
 const TEST_BASE64_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
@@ -111,7 +113,7 @@ function label(entry: BaselineEntry): string {
 describe("Generate Route - Prompt Baseline", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as AuthResult);
+    vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerk_user_id } as AuthResult);
     vi.mocked(redisLib.checkRateLimit).mockResolvedValue({
       success: true,
       remaining: 99,

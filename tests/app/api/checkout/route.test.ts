@@ -61,7 +61,7 @@ describe("Checkout Route", () => {
     });
 
     it("should return 404 when user is not found in database", async () => {
-      mockAuth(TEST_USER.clerkUserId);
+      mockAuth(TEST_USER.clerk_user_id);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(null);
 
       const request = new Request("http://localhost:3000/api/checkout", {
@@ -75,7 +75,7 @@ describe("Checkout Route", () => {
     });
 
     it("should return 400 for invalid packageId", async () => {
-      mockAuth(TEST_USER.clerkUserId);
+      mockAuth(TEST_USER.clerk_user_id);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
 
       const request = new Request("http://localhost:3000/api/checkout", {
@@ -89,7 +89,7 @@ describe("Checkout Route", () => {
     });
 
     it("should create checkout session for valid starter package", async () => {
-      mockAuth(TEST_USER.clerkUserId);
+      mockAuth(TEST_USER.clerk_user_id);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue(
         mockCheckoutSession("cs_test_123", "https://checkout.stripe.com/...")
@@ -118,7 +118,7 @@ describe("Checkout Route", () => {
     });
 
     it("should create checkout session for valid growth package", async () => {
-      mockAuth(TEST_USER.clerkUserId);
+      mockAuth(TEST_USER.clerk_user_id);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue(
         mockCheckoutSession("cs_test_456", "https://checkout.stripe.com/...")
@@ -144,7 +144,7 @@ describe("Checkout Route", () => {
     });
 
     it("should create checkout session for valid premium package", async () => {
-      mockAuth(TEST_USER.clerkUserId);
+      mockAuth(TEST_USER.clerk_user_id);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(stripeLib.createCheckoutSession).mockResolvedValue(
         mockCheckoutSession("cs_test_789", "https://checkout.stripe.com/...")
@@ -170,7 +170,7 @@ describe("Checkout Route", () => {
     });
 
     it("should handle Stripe session creation errors", async () => {
-      mockAuth(TEST_USER.clerkUserId);
+      mockAuth(TEST_USER.clerk_user_id);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       vi.mocked(stripeLib.createCheckoutSession).mockRejectedValue(new Error("Stripe API error"));
 
@@ -188,7 +188,7 @@ describe("Checkout Route", () => {
     });
 
     it("should reject old package IDs (pro, ultimate)", async () => {
-      mockAuth(TEST_USER.clerkUserId);
+      mockAuth(TEST_USER.clerk_user_id);
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
 
       const request = new Request("http://localhost:3000/api/checkout", {

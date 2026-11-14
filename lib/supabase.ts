@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import { FREE_SIGNUP_CREDITS } from "@/lib/constants";
+import type { IUser } from "@/types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -25,7 +26,7 @@ export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 export async function getUserByClerkId(
   clerkUserId: string,
   options: { throwOnError?: boolean } = {}
-) {
+): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -47,7 +48,7 @@ export async function getUserByClerkId(
   return data;
 }
 
-export async function getUserById(userId: string) {
+export async function getUserById(userId: string): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -70,7 +71,7 @@ export async function createUser(
   clerkUserId: string,
   email: string,
   initialCredits: number = FREE_SIGNUP_CREDITS
-) {
+): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
     .insert([
@@ -100,7 +101,9 @@ export async function createUser(
   return data;
 }
 
-export async function ensureUserExists(clerkUserId: string) {
+export async function ensureUserExists(
+  clerkUserId: string
+): Promise<IUser | null> {
   const user = await getUserByClerkId(clerkUserId);
 
   if (user) {
@@ -156,7 +159,7 @@ export async function updateUser(
     name?: string;
     profileImageUrl?: string;
   }
-) {
+): Promise<IUser | null> {
   const updateData: Record<string, unknown> = {};
 
   if (updates.email !== undefined) {
