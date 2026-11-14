@@ -1,80 +1,14 @@
-import { Webhook } from "svix";
-import { headers } from "next/headers";
 import {
   createUser,
   getUserByClerkId,
   updateUser,
   deleteUser,
 } from "@/lib/supabase";
-import { checkAndMarkWebhookProcessed } from "@/lib/redis";
+import { markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import { sendWelcomeEmail } from "@/lib/email";
 import { keepAliveUntilSettled } from "@/lib/keep-alive";
-
-const webhookSecret = process.env.CLERK_WEBHOOK_SECRET || "";
-
-interface ClerkUserCreatedEvent {
-  type: "user.created";
-  data: {
-    id: string;
-    email_addresses?: Array<{ email_address?: string }>;
-    first_name?: string | null;
-    last_name?: string | null;
-    image_url?: string | null;
-  };
-}
-
-interface ClerkUserUpdatedEvent {
-  type: "user.updated";
-  data: {
-    id: string;
-    email_addresses?: Array<{ email_address?: string }>;
-    first_name?: string | null;
-    last_name?: string | null;
-    image_url?: string | null;
-  };
-}
-
-interface ClerkUserDeletedEvent {
-  type: "user.deleted";
-  data: {
-    id: string;
-  };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function isClerkUserCreatedEvent(
-  value: unknown
-): value is ClerkUserCreatedEvent {
-  if (!isRecord(value)) return false;
-  if (value["type"] !== "user.created") return false;
-  const data = value["data"];
-  if (!isRecord(data)) return false;
-  return typeof data["id"] === "string";
-}
-
-function isClerkUserUpdatedEvent(
-  value: unknown
-): value is ClerkUserUpdatedEvent {
-  if (!isRecord(value)) return false;
-  if (value["type"] !== "user.updated") return false;
-  const data = value["data"];
-  if (!isRecord(data)) return false;
-  return typeof data["id"] === "string";
-}
-
-function isClerkUserDeletedEvent(
-  value: unknown
-): value is ClerkUserDeletedEvent {
-  if (!isRecord(value)) return false;
-  if (value["type"] !== "user.deleted") return false;
-  const data = value["data"];
-  if (!isRecord(data)) return false;
-  return typeof data["id"] === "string";
-}
+import { receiveClerkEvent } from "@/lib/webhook-intake";
 
 function buildFullName(
   firstName?: string | null,
@@ -85,33 +19,12 @@ function buildFullName(
 }
 
 export async function POST(request: Request) {
-  const headerPayload = await headers();
-  const svixId = headerPayload.get("svix-id");
-  const svixTimestamp = headerPayload.get("svix-timestamp");
-  const svixSignature = headerPayload.get("svix-signature");
-
-  if (!svixId || !svixTimestamp || !svixSignature) {
-    logger.warn("Missing svix headers in Clerk webhook");
-    return new Response("Missing svix headers", { status: 400 });
-  }
-
-  const body = await request.text();
-  const wh = new Webhook(webhookSecret);
-
-  let evt: unknown;
-  try {
-    evt = wh.verify(body, {
-      "svix-id": svixId,
-      "svix-timestamp": svixTimestamp,
-      "svix-signature": svixSignature,
-    });
-  } catch (err) {
-    logger.warn({ err }, "Clerk webhook verification failed");
-    return new Response("Webhook verification failed", { status: 400 });
-  }
+  const intake = await receiveClerkEvent(request);
+  if (!intake.ok) return intake.response;
+  const { event: evt, deliveryId: svixId } = intake;
 
   // Handle user.created event
-  if (isClerkUserCreatedEvent(evt)) {
+  if (evt.type === "user.created") {
     const { id, email_addresses, first_name, last_name, image_url } = evt.data;
     const primaryEmail = email_addresses?.[0]?.email_address || "";
 
@@ -129,7 +42,7 @@ export async function POST(request: Request) {
           "User already exists, skipping creation"
         );
         // Mark as processed since this is duplicate
-        await checkAndMarkWebhookProcessed("clerk", svixId);
+        await markWebhookProcessed("clerk", svixId);
         return new Response("User already exists", { status: 200 });
       }
 
@@ -153,7 +66,7 @@ export async function POST(request: Request) {
       }
 
       // Mark as processed AFTER successful database operations
-      await checkAndMarkWebhookProcessed("clerk", svixId);
+      await markWebhookProcessed("clerk", svixId);
 
       // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
       // delay Clerk's 200. A failed email is only logged: it must not fail the webhook.
@@ -182,7 +95,7 @@ export async function POST(request: Request) {
   }
 
   // Handle user.updated event
-  if (isClerkUserUpdatedEvent(evt)) {
+  if (evt.type === "user.updated") {
     const { id, email_addresses, first_name, last_name, image_url } = evt.data;
 
     try {
@@ -228,7 +141,7 @@ export async function POST(request: Request) {
       }
 
       // Mark as processed AFTER successful database operations
-      await checkAndMarkWebhookProcessed("clerk", svixId);
+      await markWebhookProcessed("clerk", svixId);
 
       return new Response("User updated successfully", { status: 200 });
     } catch (error) {
@@ -241,7 +154,7 @@ export async function POST(request: Request) {
   }
 
   // Handle user.deleted event
-  if (isClerkUserDeletedEvent(evt)) {
+  if (evt.type === "user.deleted") {
     const { id } = evt.data;
 
     try {
@@ -253,7 +166,7 @@ export async function POST(request: Request) {
           "User already deleted or never created in Supabase"
         );
         // Mark as processed since this is idempotent
-        await checkAndMarkWebhookProcessed("clerk", svixId);
+        await markWebhookProcessed("clerk", svixId);
         return new Response("User already deleted", { status: 200 });
       }
 
@@ -265,7 +178,7 @@ export async function POST(request: Request) {
       }
 
       // Mark as processed AFTER successful database operations
-      await checkAndMarkWebhookProcessed("clerk", svixId);
+      await markWebhookProcessed("clerk", svixId);
 
       logger.info({ clerkUserId: id }, "User deleted successfully via webhook");
       return new Response("User deleted successfully", { status: 200 });
@@ -280,7 +193,7 @@ export async function POST(request: Request) {
 
   // Unknown event type - return 200 to prevent retry
   logger.info(
-    { eventType: isRecord(evt) ? evt["type"] : "unknown" },
+    { eventType: evt.rawType },
     "Unknown Clerk webhook event type, ignoring"
   );
   return new Response("Event processed", { status: 200 });
