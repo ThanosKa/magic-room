@@ -24,7 +24,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Stripe webhook (`app/api/webhooks/stripe/route.ts`)
 
-- Verify first: `await parseWebhookEvent` on the raw `request.text()` body; a bad signature returns 401. It uses `constructEventAsync`, because the sync `constructEvent` throws on Workers and every real event would look like a bad signature.
+- Verify first: `receiveStripeEvent` (`lib/webhook-intake.ts`) reads the raw body and awaits `parseWebhookEvent`; a missing or bad signature returns its 401 response unchanged. It uses `constructEventAsync`, because the sync `constructEvent` throws on Workers and every real event would look like a bad signature.
 - Grant only through the `grant_purchase_credits` SQL function (`supabase/migrations/004_atomic_purchase_grant.sql`), via `grantPurchaseCredits` in `lib/supabase.ts`. It writes the transaction and adds the credits together, and a unique index allows one purchase row per payment. This is what stops double grants.
 - A failed grant returns 500 so Stripe redelivers. `isWebhookProcessed("stripe", event.id)` before any work and `markWebhookProcessed` after the grant only save work: the Redis key lasts 24 hours and a Redis error fails open.
 - Grant credits only when `payment_status` is `paid` or `no_payment_required`, and only from `metadata.packageId` looked up in `CREDIT_PACKAGES`.
@@ -34,7 +34,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Clerk webhook (`app/api/webhooks/clerk/route.ts`)
 
-- `receiveClerkEvent` (`lib/webhook-intake.ts`) reads the raw body and verifies it with `svix`; the route switches on the typed event it returns. After each handled outcome the route calls `markWebhookProcessed("clerk", svixId)`; nothing reads that key, so deliveries are not de-duplicated and the handlers' idempotency is what protects against redelivery.
+- `receiveClerkEvent` (`lib/webhook-intake.ts`) reads the raw body and verifies it with `svix`; the route switches on the typed event it returns. After each successful outcome the route calls `markWebhookProcessed("clerk", svixId)`; nothing reads that key, so deliveries are not de-duplicated and the handlers' idempotency is what protects against redelivery.
 - Handlers are idempotent: an existing row on `user.created` or a missing row on `user.deleted` returns 200 with no change.
 - Return 500 on a database failure so Clerk redelivers, and 200 for event types the route ignores.
 - Clerk once auto-disabled this endpoint and sign-ups stopped reaching Supabase. `ensureUserExists` is the fallback and the `clerk_user_id` unique constraint settles a race with the webhook, so a user gets the free credit once.
