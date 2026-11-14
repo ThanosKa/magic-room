@@ -1,8 +1,8 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
+import type Stripe from "stripe";
 import { parseWebhookEvent } from "@/lib/stripe";
 import { logger } from "@/lib/logger";
-import type Stripe from "stripe";
 
 /*
  * Webhook intake: the one place that reads a webhook's raw body, verifies its
@@ -35,7 +35,7 @@ export type ClerkEvent =
   | { type: "user.deleted"; data: { id: string } }
   | { type: "other"; rawType: unknown };
 
-const webhookSecret = process.env.CLERK_WEBHOOK_SECRET || "";
+const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET || "";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -104,7 +104,7 @@ export async function receiveClerkEvent(
   }
 
   const body = await request.text();
-  const wh = new Webhook(webhookSecret);
+  const wh = new Webhook(CLERK_WEBHOOK_SECRET);
 
   let verified: unknown;
   try {
