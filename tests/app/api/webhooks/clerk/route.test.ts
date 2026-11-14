@@ -596,6 +596,73 @@ describe("Clerk Webhook Route", () => {
       });
     });
 
+    describe("user.created and user.updated events during a database outage", () => {
+      afterEach(() => {
+        vi.mocked(supabaseLib.getUserByClerkId).mockReset();
+        mockSingle.mockReset();
+      });
+
+      // Runs the real lookup against a Supabase client that fails.
+      async function failTheLookup() {
+        const actual =
+          await vi.importActual<typeof import("@/lib/supabase")>(
+            "@/lib/supabase"
+          );
+        vi.mocked(supabaseLib.getUserByClerkId).mockImplementation(
+          actual.getUserByClerkId
+        );
+        mockSingle.mockResolvedValue({
+          data: null,
+          error: { code: "08006", message: "connection failure" },
+        });
+        await mockSvixHeaders({
+          "svix-id": "msg_outage",
+          "svix-timestamp": "1234567890",
+          "svix-signature": "v1,test",
+        });
+        vi.mocked(redisLib.markWebhookProcessed).mockResolvedValue(true);
+      }
+
+      it("user.created answers 500, tries no creation and sends no welcome email", async () => {
+        const eventPayload = {
+          type: "user.created",
+          data: {
+            id: TEST_CLERK_USER_ID,
+            email_addresses: [{ email_address: TEST_EMAIL }],
+          },
+        };
+        verifyMock.mockReturnValue(eventPayload);
+        await failTheLookup();
+
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
+
+        expect(response.status).toBe(500);
+        expect(await response.text()).toBe("Error creating user");
+        expect(supabaseLib.createUser).not.toHaveBeenCalled();
+        expect(sendWelcomeEmail).not.toHaveBeenCalled();
+        expect(redisLib.markWebhookProcessed).not.toHaveBeenCalled();
+      });
+
+      it("user.updated answers 500 and updates nothing", async () => {
+        const eventPayload = {
+          type: "user.updated",
+          data: {
+            id: TEST_CLERK_USER_ID,
+            email_addresses: [{ email_address: TEST_EMAIL }],
+          },
+        };
+        verifyMock.mockReturnValue(eventPayload);
+        await failTheLookup();
+
+        const response = await POST(createRequest(JSON.stringify(eventPayload)));
+
+        expect(response.status).toBe(500);
+        expect(await response.text()).toBe("Error updating user");
+        expect(supabaseLib.updateUser).not.toHaveBeenCalled();
+        expect(redisLib.markWebhookProcessed).not.toHaveBeenCalled();
+      });
+    });
+
     describe("unknown event types", () => {
       it("should return 200 for unknown event type", async () => {
         await mockSvixHeaders({
