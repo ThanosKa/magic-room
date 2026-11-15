@@ -18,14 +18,12 @@ export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 });
 
 /**
- * Returns null when there is no such User. On any other database error it
- * logs and returns null too, unless `throwOnError` is set: then it throws, so
- * the caller can tell "missing" from "the database failed". Ticket 25 makes
- * throwing the rule for everyone and removes the option.
+ * Returns null only when there is no such User (PGRST116). Any other database
+ * error is logged and thrown, so a failing database is never read as a missing
+ * User.
  */
 export async function getUserByClerkId(
-  clerkUserId: string,
-  options: { throwOnError?: boolean } = {}
+  clerkUserId: string
 ): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
@@ -39,15 +37,13 @@ export async function getUserByClerkId(
       return null;
     }
     logger.error({ err: error, clerkUserId }, "Error fetching user");
-    if (options.throwOnError) {
-      throw error;
-    }
-    return null;
+    throw error;
   }
 
   return data;
 }
 
+/** Same contract as `getUserByClerkId`: null only for a missing User, a database error throws. */
 export async function getUserById(userId: string): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
@@ -61,7 +57,7 @@ export async function getUserById(userId: string): Promise<IUser | null> {
       return null;
     }
     logger.error({ err: error, userId }, "Error fetching user by id");
-    return null;
+    throw error;
   }
 
   return data;
@@ -144,12 +140,14 @@ export async function ensureUserExists(
       return newUser;
     }
 
-    // Insert can fail if the webhook created the row at the same moment.
-    return await getUserByClerkId(clerkUserId);
   } catch (error) {
     logger.error({ err: error, clerkUserId }, "Fallback user creation failed");
     return null;
   }
+
+  // Insert can fail if the webhook created the row at the same moment. A
+  // database failure here reaches the caller, like the first lookup.
+  return getUserByClerkId(clerkUserId);
 }
 
 export async function updateUser(

@@ -159,7 +159,7 @@ export async function POST(request: Request) {
     const { id } = evt.data;
 
     try {
-      const existingUser = await getUserByClerkId(id, { throwOnError: true });
+      const existingUser = await getUserByClerkId(id);
 
       if (!existingUser) {
         logger.info(
