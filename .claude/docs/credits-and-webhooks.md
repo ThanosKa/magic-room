@@ -21,6 +21,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 - Change a balance only through a SQL function: `deductCredits`, `addCredits` (`supabase/migrations/005_atomic_credit_writes.sql`) or `grantPurchaseCredits`. Each changes it in one statement, so requests landing together cannot overwrite each other. Never write a balance computed in app code.
 - Every usage, refund and purchase also writes a `transactions` row.
+- `tests/supabase/credit-functions.test.ts` runs these SQL functions for real on in-memory Postgres (PGlite, a dev dependency): it applies every file in `supabase/migrations/` in order after creating the Supabase roles and `auth.uid()` stand-ins. Add a new migration's function there. It cannot test two connections at once; the row lock guards that.
 - Migration `006_charge_with_usage_row.sql` adds `deduct_credits_with_usage`, which subtracts the amount and writes the `usage` row in one transaction (both or nothing). Nothing calls it yet; ticket 28 will. The owner applies it by hand.
 
 ## Stripe webhook (`app/api/webhooks/stripe/route.ts`)
