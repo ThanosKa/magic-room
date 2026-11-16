@@ -12,7 +12,6 @@ import { auth } from "@clerk/nextjs/server";
  */
 
 type AuthResult = Awaited<ReturnType<typeof auth>>;
-type Transaction = Awaited<ReturnType<typeof supabaseLib.createTransaction>>;
 
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
@@ -23,7 +22,7 @@ vi.mock("@/lib/supabase", async () => {
   return {
     ...actual,
     ensureUserExists: vi.fn(),
-    deductCredits: vi.fn(),
+    deductCreditsWithUsage: vi.fn(),
     createTransaction: vi.fn(),
     addCredits: vi.fn(),
   };
@@ -90,8 +89,7 @@ describe("Generate Route - note length limit", () => {
       resetAt: Date.now() + 3600000,
     });
     vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-    vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-    vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+    vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
     vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
       success: true,
       images: ["data:image/png;base64,result"],
@@ -113,7 +111,7 @@ describe("Generate Route - note length limit", () => {
 
     expect(response.status).toBe(400);
     expect(data.error).toBe("Invalid input");
-    expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+    expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
     expect(openrouterLib.generateDesign).not.toHaveBeenCalled();
   });
 });

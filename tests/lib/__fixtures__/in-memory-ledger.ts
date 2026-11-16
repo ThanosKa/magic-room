@@ -20,7 +20,7 @@ export interface LedgerRow {
 }
 
 type FailingFunction =
-  | "deductCredits"
+  | "deductCreditsWithUsage"
   | "addCredits"
   | "createTransaction"
   | "grantPurchaseCredits";
@@ -58,15 +58,20 @@ function createInMemoryLedger() {
   }
 
   const supabaseFunctions = {
-    // deduct_credits (005): `UPDATE users SET credits = credits - p_amount
-    // WHERE id = p_user_id AND credits >= p_amount; RETURN FOUND`. One
-    // statement: the check and the write happen together, with no await between
-    // them. FALSE when the Balance is too low or the User does not exist.
-    async deductCredits(userId: string, amount: number): Promise<boolean> {
-      if (await roundTrip("deductCredits")) return false;
+    // deduct_credits_with_usage (006): `UPDATE users SET credits = credits -
+    // p_amount WHERE id = p_user_id AND credits >= p_amount`, RETURN FALSE if
+    // NOT FOUND, then INSERT the `usage` row (no payment id, no metadata), in one
+    // transaction. The check and both writes happen together, with no await
+    // between them. FALSE when the Balance is too low or the User does not
+    // exist. A refused `usage` row raises, which rolls the subtraction back; the
+    // data module turns the error into false.
+    async deductCreditsWithUsage(userId: string, amount: number): Promise<boolean> {
+      if (await roundTrip("deductCreditsWithUsage")) return false;
       const balance = balances.get(userId);
       if (balance === undefined || balance < amount) return false;
+      if (refusesUsageRow()) return false;
       balances.set(userId, balance - amount);
+      rows.push({ userId, type: "usage", amount });
       return true;
     },
 

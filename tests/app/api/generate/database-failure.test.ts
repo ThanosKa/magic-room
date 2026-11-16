@@ -27,7 +27,7 @@ vi.mock("@/lib/supabase", async () => {
   const actual = await vi.importActual("@/lib/supabase");
   return {
     ...actual,
-    deductCredits: vi.fn(),
+    deductCreditsWithUsage: vi.fn(),
     createTransaction: vi.fn(),
     addCredits: vi.fn(),
   };
@@ -76,7 +76,7 @@ describe("Generate route during a database failure", () => {
 
     expect(response.status).toBe(500);
     expect(await response.json()).toEqual({ error: "Internal server error" });
-    expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+    expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
     expect(supabaseLib.createTransaction).not.toHaveBeenCalled();
   });
 });

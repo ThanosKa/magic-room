@@ -93,20 +93,6 @@ describe("credit ledger", () => {
       expect(inMemoryLedger.rowsOf(USER_ID, "refund")).toEqual([]);
     });
 
-    it("gives the credits back when the usage write throws, without running the work", async () => {
-      inMemoryLedger.failNext("createTransaction", "throws");
-      const work = vi.fn(async () => ({ ok: true as const, value: "design" }));
-
-      const result = await spendCredits(CHARGE, work);
-
-      expect(result).toMatchObject({ kind: "refunded", failure: { kind: "threw" } });
-      expect(work).not.toHaveBeenCalled();
-      expect(inMemoryLedger.balanceOf(USER_ID)).toBe(5);
-      expect(inMemoryLedger.rowsOf(USER_ID)).toEqual([
-        expect.objectContaining({ type: "refund", amount: 2 }),
-      ]);
-    });
-
     it("does not charge, write a row or run the work when the usage row cannot be written", async () => {
       inMemoryLedger.refuseNextUsageRow();
       const work = vi.fn(async () => ({ ok: true as const, value: "design" }));

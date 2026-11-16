@@ -17,7 +17,6 @@ import baseline from "./__fixtures__/prompt-baseline.json";
  */
 
 type AuthResult = Awaited<ReturnType<typeof auth>>;
-type Transaction = Awaited<ReturnType<typeof supabaseLib.createTransaction>>;
 
 interface BaselineEntry {
   theme: string;
@@ -36,7 +35,7 @@ vi.mock("@/lib/supabase", async () => {
   return {
     ...actual,
     ensureUserExists: vi.fn(),
-    deductCredits: vi.fn(),
+    deductCreditsWithUsage: vi.fn(),
     createTransaction: vi.fn(),
     addCredits: vi.fn(),
   };
@@ -120,8 +119,7 @@ describe("Generate Route - Prompt Baseline", () => {
       resetAt: Date.now() + 3600000,
     });
     vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-    vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-    vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+    vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
     vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
       success: true,
       images: ["data:image/png;base64,result"],

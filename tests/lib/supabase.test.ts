@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   addCredits,
-  deductCredits,
   deductCreditsWithUsage,
   ensureUserExists,
   getUserByClerkId,
@@ -42,30 +41,6 @@ describe("balance writes", () => {
   beforeEach(() => {
     mockRpc.mockReset();
     vi.mocked(logger.error).mockClear();
-  });
-
-  describe("deductCredits", () => {
-    it("asks the database to take the amount", async () => {
-      mockRpc.mockResolvedValue({ data: true, error: null });
-
-      expect(await deductCredits(USER_ID, 2)).toBe(true);
-      expect(mockRpc).toHaveBeenCalledWith("deduct_credits", {
-        p_user_id: USER_ID,
-        p_amount: 2,
-      });
-    });
-
-    it("reports false when the balance is too low", async () => {
-      mockRpc.mockResolvedValue({ data: false, error: null });
-
-      expect(await deductCredits(USER_ID, 2)).toBe(false);
-    });
-
-    it("reports false when the database call fails", async () => {
-      mockRpc.mockResolvedValue({ data: null, error: { message: "down" } });
-
-      expect(await deductCredits(USER_ID, 2)).toBe(false);
-    });
   });
 
   describe("deductCreditsWithUsage", () => {
