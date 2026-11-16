@@ -46,9 +46,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         // Was 69 chars and spent the prime post-query pixels on "Magic Room" —
         // a brand a non-brand searcher has never heard of. Now the query phrase
         // is front-loaded and the visible tail carries two concrete
-        // differentiators instead of an unknown name.
+        // differentiators instead of an unknown name. 2026-11: the tail now
+        // leads with the entry price, because /alternatives/reimaginehome sat
+        // at position 8.6 with 47 impressions and 0 clicks (GSC 2026-10-17 to
+        // 2026-11-13) against listicles that also say "pay once"; the query is
+        // typed "reimaginehome", so `searchName` carries that spelling.
         title: {
-            absolute: `${competitor.name} Alternative — Pay Once, Photos Never Stored`,
+            absolute: `${competitor.searchName ?? competitor.name} Alternative — ${ENTRY_PRICE} Once, No Subscription`,
         },
         // Leads with the two facts a switcher compares first (what it costs and
         // whether it is a subscription), then privacy and the free try. The old

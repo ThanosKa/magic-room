@@ -2226,6 +2226,22 @@ const META_TEMPLATES = [
         `${themeName} ${roomName} ideas rendered on your own photo, not a showroom. AI returns a redesign in 60 seconds. Photos never stored, 1 free credit.`,
 ] as const;
 
+/**
+ * Per-page title and description, replacing the rotated templates above, for
+ * pages where Search Console shows a page-one position and no clicks.
+ *   - modern-bathroom: position 9.3 for "bathroom design magic", 37 impressions,
+ *     0 clicks (GSC 2026-10-17 to 2026-11-13). The searcher typed "magic";
+ *     the template title never said it, so nothing in the result was bolded
+ *     past "bathroom design". The brand name carries the match.
+ */
+const META_OVERRIDES: Record<string, { title: string; metaDescription: string }> = {
+    "modern-bathroom": {
+        title: "Modern Bathroom Design Ideas on Your Photo | Magic Room",
+        metaDescription:
+            "Modern bathroom design ideas, tried on a photo of your own bathroom. Magic Room's AI returns a redesign in about a minute. 1 free credit, no subscription.",
+    },
+};
+
 const META_DESCRIPTION_MAX_LENGTH = 158;
 const META_DESCRIPTION_TRUNCATE_AT = 155;
 
@@ -2372,7 +2388,9 @@ function generateDesignPages(): IDesignPageData[] {
             const slug = `${themeData.slug}-${roomData.slug}`;
 
             const variantIndex = hashToIndex(slug, TITLE_TEMPLATES.length);
-            const title = TITLE_TEMPLATES[variantIndex](themeData.name, roomData.name);
+            const override = META_OVERRIDES[slug];
+            const title =
+                override?.title ?? TITLE_TEMPLATES[variantIndex](themeData.name, roomData.name);
 
             const combinationIntro = COMBINATION_INTROS[slug];
             // The intro's first sentence is deliberately NOT used as the meta
@@ -2381,7 +2399,8 @@ function generateDesignPages(): IDesignPageData[] {
             // is indistinguishable from the Houzz/Pinterest results above us
             // and gave searchers no reason to choose this result.
             const metaDescription = clampDescription(
-                META_TEMPLATES[variantIndex](themeData.name, roomData.name)
+                override?.metaDescription ??
+                    META_TEMPLATES[variantIndex](themeData.name, roomData.name)
             );
 
             pages.push({
