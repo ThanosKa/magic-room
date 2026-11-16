@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   addCredits,
-  deductCredits,
+  deductCreditsWithUsage,
   ensureUserExists,
   getUserByClerkId,
   getUserById,
 } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 const { mockRpc, mockSingle, mockEq, mockSelect, mockFrom, mockInsert } = vi.hoisted(() => {
   process.env.NEXT_PUBLIC_SUPABASE_URL ??= "https://test.supabase.co";
@@ -39,14 +40,15 @@ const USER_ID = "33333333-3333-3333-3333-333333333333";
 describe("balance writes", () => {
   beforeEach(() => {
     mockRpc.mockReset();
+    vi.mocked(logger.error).mockClear();
   });
 
-  describe("deductCredits", () => {
-    it("asks the database to take the amount", async () => {
+  describe("deductCreditsWithUsage", () => {
+    it("asks the database to take the amount and write the usage row", async () => {
       mockRpc.mockResolvedValue({ data: true, error: null });
 
-      expect(await deductCredits(USER_ID, 2)).toBe(true);
-      expect(mockRpc).toHaveBeenCalledWith("deduct_credits", {
+      expect(await deductCreditsWithUsage(USER_ID, 2)).toBe(true);
+      expect(mockRpc).toHaveBeenCalledWith("deduct_credits_with_usage", {
         p_user_id: USER_ID,
         p_amount: 2,
       });
@@ -55,13 +57,18 @@ describe("balance writes", () => {
     it("reports false when the balance is too low", async () => {
       mockRpc.mockResolvedValue({ data: false, error: null });
 
-      expect(await deductCredits(USER_ID, 2)).toBe(false);
+      expect(await deductCreditsWithUsage(USER_ID, 2)).toBe(false);
     });
 
-    it("reports false when the database call fails", async () => {
-      mockRpc.mockResolvedValue({ data: null, error: { message: "down" } });
+    it("reports false and logs the error when the database call fails", async () => {
+      const error = { message: "insert or update on table \"transactions\" violates a constraint" };
+      mockRpc.mockResolvedValue({ data: null, error });
 
-      expect(await deductCredits(USER_ID, 2)).toBe(false);
+      expect(await deductCreditsWithUsage(USER_ID, 2)).toBe(false);
+      expect(logger.error).toHaveBeenCalledWith(
+        expect.objectContaining({ err: error, userId: USER_ID, amount: 2 }),
+        expect.any(String)
+      );
     });
   });
 

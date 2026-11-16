@@ -10,7 +10,6 @@ import { after } from "next/server";
 import { inMemoryLedger } from "../../../lib/__fixtures__/in-memory-ledger";
 
 type AuthResult = Awaited<ReturnType<typeof auth>>;
-type Transaction = Awaited<ReturnType<typeof supabaseLib.createTransaction>>;
 
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
@@ -26,7 +25,7 @@ vi.mock("@/lib/supabase", async () => {
   return {
     ...actual,
     ensureUserExists: vi.fn(),
-    deductCredits: vi.fn(),
+    deductCreditsWithUsage: vi.fn(),
     createTransaction: vi.fn(),
     addCredits: vi.fn(),
   };
@@ -75,7 +74,7 @@ const TEST_BASE64_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA
 function useInMemoryLedger(balance: number): void {
   inMemoryLedger.reset();
   inMemoryLedger.setBalance(TEST_USER.id, balance);
-  vi.mocked(supabaseLib.deductCredits).mockImplementation(inMemoryLedger.supabaseFunctions.deductCredits);
+  vi.mocked(supabaseLib.deductCreditsWithUsage).mockImplementation(inMemoryLedger.supabaseFunctions.deductCreditsWithUsage);
   vi.mocked(supabaseLib.addCredits).mockImplementation(inMemoryLedger.supabaseFunctions.addCredits);
   vi.mocked(supabaseLib.createTransaction).mockImplementation(
     inMemoryLedger.supabaseFunctions.createTransaction as typeof supabaseLib.createTransaction
@@ -96,8 +95,7 @@ describe("Generate Route - Quality Feature", () => {
   describe("Standard Quality (1 credit)", () => {
     it("should deduct 1 credit for standard quality generation", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -120,14 +118,12 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 1);
-      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(TEST_USER.id, "usage", 1);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 1);
     });
 
     it("should use gemini-3.1-flash-image model for standard quality", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -157,8 +153,7 @@ describe("Generate Route - Quality Feature", () => {
 
     it("should default to standard quality if not specified", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -178,15 +173,14 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(request);
 
       expect(response.status).toBe(200);
-      expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 1);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 1);
     });
   });
 
   describe("Premium Quality (2 credits)", () => {
     it("should deduct 2 credits for premium quality generation", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -209,14 +203,12 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 2);
-      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(TEST_USER.id, "usage", 2);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 2);
     });
 
     it("should use gemini-3-pro-image model for premium quality", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -266,7 +258,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(402);
       expect(data.error).toBe("Insufficient credits");
-      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
     });
   });
 
@@ -381,7 +373,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(500);
       expect(await response.json()).not.toHaveProperty("success");
-      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
       expect(supabaseLib.addCredits).not.toHaveBeenCalled();
     });
   });
@@ -477,7 +469,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(429);
       expect(data.error).toBe("Rate limit exceeded");
-      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
     });
   });
 
@@ -496,8 +488,7 @@ describe("Generate Route - Quality Feature", () => {
 
     it("charges 3 credits and asks for an ultra design", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -507,7 +498,7 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(ultraRequest());
 
       expect(response.status).toBe(200);
-      expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 3);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 3);
       expect(openrouterLib.generateDesign).toHaveBeenCalledWith(TEST_BASE64_IMAGE, "test prompt", "ultra", {
         signal: expect.any(AbortSignal),
       });
@@ -519,7 +510,7 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(ultraRequest());
 
       expect(response.status).toBe(402);
-      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
     });
   });
 

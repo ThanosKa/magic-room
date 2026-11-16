@@ -9,8 +9,8 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## The generate route (`app/api/generate/route.ts`)
 
-- Order: auth → Zod → `ensureUserExists` → balance check (402) → `checkRateLimit` (429) → `spendCredits` (`deductCredits` → `createTransaction("usage")` → OpenRouter).
-- The route charges and refunds only through `spendCredits` in the credit ledger (`lib/credit-ledger.ts`), handing it the prompt and the OpenRouter call as the work, and has no Refund code of its own. From the deduction on, the ledger gives every failure, a thrown error included, exactly one Refund. It answers `not-charged`, `delivered`, `refunded` or `refund-failed`, and the route maps each kind to its response.
+- Order: auth → Zod → `ensureUserExists` → balance check (402) → `checkRateLimit` (429) → `spendCredits` (`deductCreditsWithUsage` → OpenRouter).
+- The route charges and refunds only through `spendCredits` in the credit ledger (`lib/credit-ledger.ts`), handing it the prompt and the OpenRouter call as the work, and has no Refund code of its own. The Charge and its `usage` row are written together or not at all: if either fails, the ledger answers `not-charged` (500 "Failed to deduct credits") and the Design never starts. After the Charge, the ledger gives every failure, a thrown error included, exactly one Refund. It answers `not-charged`, `delivered`, `refunded` or `refund-failed`, and the route maps each kind to its response.
 - The ledger's Refund adds the credits through `addCredits`, then writes a `refund` transaction. It answers `refunded` only when the credits were added, so the route never claims a refund that did not happen. `refund-failed` does not carry the Refund's error, so the route logs that line without it.
 - A 500 body with `success: false` is the client's signal that the credits came back (`components/generate/tool-messages.tsx`). Send it only on `refunded`.
 - Retrying a generation is the user's choice: an automatic retry spends credits or OpenRouter money a second time.
@@ -19,10 +19,10 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Balance writes
 
-- Change a balance only through a SQL function: `deductCredits`, `addCredits` (`supabase/migrations/005_atomic_credit_writes.sql`) or `grantPurchaseCredits`. Each changes it in one statement, so requests landing together cannot overwrite each other. Never write a balance computed in app code.
+- Change a balance only through a SQL function: `deductCreditsWithUsage` (`006`), `addCredits` (`005`) or `grantPurchaseCredits` (`004`). Each changes it in one database call, so requests landing together cannot overwrite each other. Never write a balance computed in app code.
 - Every usage, refund and purchase also writes a `transactions` row.
 - `tests/supabase/credit-functions.test.ts` runs these SQL functions for real on in-memory Postgres (PGlite, a dev dependency): it applies every file in `supabase/migrations/` in order after creating the Supabase roles and `auth.uid()` stand-ins. Add a new migration's function there. It cannot test two connections at once; the row lock guards that.
-- Migration `006_charge_with_usage_row.sql` adds `deduct_credits_with_usage`, which subtracts the amount and writes the `usage` row in one transaction (both or nothing). Nothing calls it yet; ticket 28 will. The owner applies it by hand.
+- Migration `006_charge_with_usage_row.sql` adds `deduct_credits_with_usage`, which subtracts the amount and writes the `usage` row in one transaction (both or nothing). The ledger charges only through it. `deduct_credits` (`005`) stays in the database with no caller in the code, so rolling the code back needs no migration.
 
 ## Stripe webhook (`app/api/webhooks/stripe/route.ts`)
 

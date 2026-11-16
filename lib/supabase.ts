@@ -209,16 +209,18 @@ export async function deleteUser(clerkUserId: string) {
   return true;
 }
 
-// Takes the amount in one database statement. False means the balance was too low
-// or the call failed.
-export async function deductCredits(userId: string, amount: number) {
-  const { data, error } = await supabase.rpc("deduct_credits", {
+// Takes the amount and writes its `usage` row in one transaction
+// (`deduct_credits_with_usage`, migration 006): both happen or neither does.
+// False means the balance was too low, the user does not exist, or the call
+// failed (a failed row write included).
+export async function deductCreditsWithUsage(userId: string, amount: number) {
+  const { data, error } = await supabase.rpc("deduct_credits_with_usage", {
     p_user_id: userId,
     p_amount: amount,
   });
 
   if (error) {
-    logger.error({ err: error, userId, amount }, "Error deducting credits");
+    logger.error({ err: error, userId, amount }, "Error deducting credits with usage row");
     return false;
   }
 
