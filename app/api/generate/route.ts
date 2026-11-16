@@ -1,20 +1,22 @@
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { IGenerateResponse } from "@/types";
-import {
-  ensureUserExists,
-  deductCredits,
-  createTransaction,
-  addCredits,
-} from "@/lib/supabase";
+import { ensureUserExists } from "@/lib/supabase";
+import { spendCredits } from "@/lib/credit-ledger";
 import { checkRateLimit } from "@/lib/redis";
-import { generateDesign, buildDesignPrompt } from "@/lib/openrouter";
+import { designRoom } from "@/lib/room-designer";
 import { keepAliveUntilSettled } from "@/lib/keep-alive";
 import { logger } from "@/lib/logger";
 import { NOTE_MAX_LENGTH, QUALITY_IDS, QUALITY_OPTIONS, ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
 
 // No `maxDuration`: Workers ignore it. A request runs as long as the client
 // stays connected; `generateDesign` gives up after OPENROUTER_TIMEOUT_MS.
+
+/** The AI answered without an image; `message` is the provider's, if any. */
+interface NoImage {
+  kind: "no-image";
+  message?: string;
+}
 
 const GenerateSchema = z.object({
   base64Image: z.string().min(1, "Image is required"),
@@ -24,23 +26,10 @@ const GenerateSchema = z.object({
   customPrompt: z.string().max(NOTE_MAX_LENGTH).optional(),
 });
 
-/** Gives back credits taken for a generation that produced nothing. Throws if it could not. */
-async function refundCredits(
-  userId: string,
-  amount: number,
-  generationId: string | null
-): Promise<void> {
-  const refunded = await addCredits(userId, amount);
-  if (!refunded) {
-    throw new Error("Credit refund failed");
-  }
-  await createTransaction(userId, "refund", amount, undefined, { generationId });
-}
-
 export async function POST(request: Request): Promise<Response> {
   const handled = handleGenerate(request);
   // If the tab closes mid-generation, `request.signal` aborts the AI call
-  // (Workers flag `enable_request_signal`) and the refund below must still be
+  // (Workers flag `enable_request_signal`) and the ledger's Refund must still be
   // written, so the whole request is kept alive until it settles.
   keepAliveUntilSettled(handled);
   return handled;
@@ -49,8 +38,6 @@ export async function POST(request: Request): Promise<Response> {
 async function handleGenerate(request: Request): Promise<Response> {
   const startTime = Date.now();
   let generationId: string | null = null;
-  // Set once credits are taken, so any later failure gives them back.
-  let charge: { userId: string; amount: number } | null = null;
 
   try {
     logger.info({}, "[Generate] POST request received");
@@ -129,99 +116,110 @@ async function handleGenerate(request: Request): Promise<Response> {
     }
     logger.info({}, "[Generate] Rate limit check passed");
 
-    const creditDeducted = await deductCredits(user.id, creditCost);
-    if (!creditDeducted) {
-      logger.error({ userId: user.id }, "[Generate] Failed to deduct credits");
-      return new Response(
-        JSON.stringify({ error: "Failed to deduct credits" }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-    charge = { userId: user.id, amount: creditCost };
-    logger.info({ creditCost }, "[Generate] Credits deducted");
+    // `generationId` is set before the Charge so the outer catch can log it.
+    const designId = `gen_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    generationId = designId;
 
-    await createTransaction(user.id, "usage", creditCost);
-    logger.info({}, "[Generate] Transaction recorded");
-
-    generationId = `gen_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-
-    const prompt = buildDesignPrompt(roomType, theme, quality, customPrompt);
-    logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
-
-    const generationStartTime = Date.now();
-    const result = await generateDesign(base64Image, prompt, quality, {
-      signal: request.signal,
-    });
-    const generationDuration = Date.now() - generationStartTime;
-
-    logger.info(
-      {
-        generationId,
-        duration: generationDuration,
-        imagesCount: result.images.length,
-        success: result.success
-      },
-      "[Generate] OpenRouter generation complete"
-    );
-
-    if (!result.success || result.images.length === 0) {
-      charge = null;
-      await refundCredits(user.id, creditCost, generationId);
-
-      logger.warn({ generationId, error: result.error, creditCost }, "[Generate] Generation failed - credits refunded");
-
-      return new Response(
-        JSON.stringify({
-          error: result.error || "Failed to generate images",
-          success: false
-        }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    const totalDuration = Date.now() - startTime;
-    logger.info(
-      { generationId, totalDuration, imagesCount: result.images.length },
-      "[Generate] Request complete"
-    );
-
-    const response: IGenerateResponse & { outputUrls?: string[] } = {
-      success: true,
-      predictionId: generationId,
-      outputUrls: result.images,
-    };
-
-    return new Response(JSON.stringify(response), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    const totalDuration = Date.now() - startTime;
-    logger.error({ err: error, totalDuration, generationId }, "[Generate] Route error");
-
-    // `success: false` tells the screen the credits were given back.
-    if (charge) {
-      try {
-        await refundCredits(charge.userId, charge.amount, generationId);
-        logger.warn({ generationId, creditCost: charge.amount }, "[Generate] Route error - credits refunded");
-        return new Response(
-          JSON.stringify({ error: "Failed to generate images", success: false }),
-          { status: 500, headers: { "Content-Type": "application/json" } }
+    const spend = await spendCredits<string[], NoImage>(
+      { userId: user.id, amount: creditCost, generationId: designId },
+      async () => {
+        const design = await designRoom(
+          { photo: base64Image, roomType, theme, quality, note: customPrompt },
+          { signal: request.signal }
         );
-      } catch (refundError) {
-        logger.error({ err: refundError, generationId }, "[Generate] Refund failed");
+        if (design.ok) return { ok: true, value: design.images };
+        // A provider error takes the ledger's "threw" path, as a thrown error did.
+        if (design.failure.kind === "provider-error") throw design.failure.cause;
+        return { ok: false, failure: design.failure };
+      }
+    );
+
+    switch (spend.kind) {
+      case "not-charged":
+        return new Response(
+          JSON.stringify({ error: "Failed to deduct credits" }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+      case "delivered": {
+        const totalDuration = Date.now() - startTime;
+        logger.info(
+          { generationId: designId, totalDuration, imagesCount: spend.value.length },
+          "[Generate] Request complete"
+        );
+
+        const response: IGenerateResponse = {
+          success: true,
+          predictionId: designId,
+          outputUrls: spend.value,
+        };
+
+        return new Response(JSON.stringify(response), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      // `success: false` tells the screen the credits were given back.
+      case "refunded": {
+        const { failure } = spend;
+        if (failure.kind === "threw") {
+          logRouteError(startTime, designId, failure.error);
+          logger.warn({ generationId: designId, creditCost }, "[Generate] Route error - credits refunded");
+          return new Response(
+            JSON.stringify({ error: "Failed to generate images", success: false }),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+          );
+        }
+
+        logger.warn(
+          { generationId: designId, error: failure.message, creditCost },
+          "[Generate] Generation failed - credits refunded"
+        );
+        return new Response(
+          JSON.stringify({
+            error: failure.message || "Failed to generate images",
+            success: false
+          }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      // Never `success: false` here. The ledger does not hand back the Refund's
+      // error, so these lines are logged without it.
+      case "refund-failed": {
+        const { failure } = spend;
+        if (failure.kind === "threw") {
+          logRouteError(startTime, designId, failure.error);
+          logger.error({ generationId: designId }, "[Generate] Refund failed");
+        } else {
+          logRouteError(startTime, designId);
+        }
+        return internalServerError();
       }
     }
-
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+  } catch (error) {
+    // Only failures before the Charge, or from the deduction itself, land here:
+    // from the Charge on, the ledger catches them and refunds.
+    logRouteError(startTime, generationId, error);
+    return internalServerError();
   }
+}
+
+function logRouteError(startTime: number, generationId: string | null, err?: unknown): void {
+  const totalDuration = Date.now() - startTime;
+  logger.error({ err, totalDuration, generationId }, "[Generate] Route error");
+}
+
+function internalServerError(): Response {
+  return new Response(JSON.stringify({ error: "Internal server error" }), {
+    status: 500,
+    headers: { "Content-Type": "application/json" },
+  });
 }

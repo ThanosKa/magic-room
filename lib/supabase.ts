@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
+import { FREE_SIGNUP_CREDITS } from "@/lib/constants";
+import type { IUser } from "@/types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -15,7 +17,14 @@ export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   },
 });
 
-export async function getUserByClerkId(clerkUserId: string) {
+/**
+ * Returns null only when there is no such User (PGRST116). Any other database
+ * error is logged and thrown, so a failing database is never read as a missing
+ * User.
+ */
+export async function getUserByClerkId(
+  clerkUserId: string
+): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -28,13 +37,14 @@ export async function getUserByClerkId(clerkUserId: string) {
       return null;
     }
     logger.error({ err: error, clerkUserId }, "Error fetching user");
-    return null;
+    throw error;
   }
 
   return data;
 }
 
-export async function getUserById(userId: string) {
+/** Same contract as `getUserByClerkId`: null only for a missing User, a database error throws. */
+export async function getUserById(userId: string): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -47,7 +57,7 @@ export async function getUserById(userId: string) {
       return null;
     }
     logger.error({ err: error, userId }, "Error fetching user by id");
-    return null;
+    throw error;
   }
 
   return data;
@@ -56,8 +66,8 @@ export async function getUserById(userId: string) {
 export async function createUser(
   clerkUserId: string,
   email: string,
-  initialCredits: number = 1
-) {
+  initialCredits: number = FREE_SIGNUP_CREDITS
+): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
     .insert([
@@ -87,7 +97,9 @@ export async function createUser(
   return data;
 }
 
-export async function ensureUserExists(clerkUserId: string) {
+export async function ensureUserExists(
+  clerkUserId: string
+): Promise<IUser | null> {
   const user = await getUserByClerkId(clerkUserId);
 
   if (user) {
@@ -118,7 +130,7 @@ export async function ensureUserExists(clerkUserId: string) {
       return null;
     }
 
-    const newUser = await createUser(clerkUserId, email, 1);
+    const newUser = await createUser(clerkUserId, email, FREE_SIGNUP_CREDITS);
 
     if (newUser) {
       logger.info(
@@ -128,12 +140,14 @@ export async function ensureUserExists(clerkUserId: string) {
       return newUser;
     }
 
-    // Insert can fail if the webhook created the row at the same moment.
-    return await getUserByClerkId(clerkUserId);
   } catch (error) {
     logger.error({ err: error, clerkUserId }, "Fallback user creation failed");
     return null;
   }
+
+  // Insert can fail if the webhook created the row at the same moment. A
+  // database failure here reaches the caller, like the first lookup.
+  return getUserByClerkId(clerkUserId);
 }
 
 export async function updateUser(
@@ -143,7 +157,7 @@ export async function updateUser(
     name?: string;
     profileImageUrl?: string;
   }
-) {
+): Promise<IUser | null> {
   const updateData: Record<string, unknown> = {};
 
   if (updates.email !== undefined) {
@@ -195,16 +209,18 @@ export async function deleteUser(clerkUserId: string) {
   return true;
 }
 
-// Takes the amount in one database statement. False means the balance was too low
-// or the call failed.
-export async function deductCredits(userId: string, amount: number) {
-  const { data, error } = await supabase.rpc("deduct_credits", {
+// Takes the amount and writes its `usage` row in one transaction
+// (`deduct_credits_with_usage`, migration 006): both happen or neither does.
+// False means the balance was too low, the user does not exist, or the call
+// failed (a failed row write included).
+export async function deductCreditsWithUsage(userId: string, amount: number) {
+  const { data, error } = await supabase.rpc("deduct_credits_with_usage", {
     p_user_id: userId,
     p_amount: amount,
   });
 
   if (error) {
-    logger.error({ err: error, userId, amount }, "Error deducting credits");
+    logger.error({ err: error, userId, amount }, "Error deducting credits with usage row");
     return false;
   }
 

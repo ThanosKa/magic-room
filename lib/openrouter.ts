@@ -43,6 +43,16 @@ interface OpenRouterResponse {
     };
 }
 
+/** Names of the top-level keys of a JSON text, or [] when it is not a JSON object. */
+function topLevelKeys(text: string): string[] {
+    try {
+        const parsed: unknown = JSON.parse(text);
+        return parsed && typeof parsed === "object" ? Object.keys(parsed) : [];
+    } catch {
+        return [];
+    }
+}
+
 export async function generateDesign(
     base64Image: string,
     prompt: string,
@@ -120,28 +130,28 @@ export async function generateDesign(
         const duration = Date.now() - startTime;
 
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
+            // Status, keys and size only: the body is the provider's, not ours to keep in logs.
+            const errorText = await response.text().catch(() => "");
             logger.error(
                 {
                     status: response.status,
-                    error: errorData,
+                    responseKeys: topLevelKeys(errorText),
+                    responseSize: errorText.length,
                     duration
                 },
                 "[OpenRouter] API request failed"
             );
-            throw new Error(
-                errorData?.error?.message || `OpenRouter API error: ${response.status}`
-            );
+            throw new Error(`OpenRouter API error: ${response.status}`);
         }
 
         const data: OpenRouterResponse = await response.json();
 
         if (data.error) {
             logger.error(
-                { error: data.error, duration },
+                { responseKeys: Object.keys(data), errorKeys: Object.keys(data.error), duration },
                 "[OpenRouter] API returned error"
             );
-            throw new Error(data.error.message || "OpenRouter API error");
+            throw new Error("OpenRouter API error");
         }
 
         const choice = data.choices?.[0];
@@ -189,7 +199,7 @@ export async function generateDesign(
 
         if (images.length === 0) {
             logger.warn(
-                { response: JSON.stringify(data).substring(0, 500), duration },
+                { responseKeys: Object.keys(data), responseSize: JSON.stringify(data).length, duration },
                 "[OpenRouter] No images in response"
             );
             return {

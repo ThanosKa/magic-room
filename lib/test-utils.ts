@@ -74,11 +74,13 @@ export function createMockCheckoutSession(
 
 export const TEST_USER = {
   id: "550e8400-e29b-41d4-a716-446655440000",
-  clerkUserId: "clerk_user_123",
+  clerk_user_id: "clerk_user_123",
   email: "test@example.com",
   credits: 10,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  name: null,
+  profile_image_url: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
 };
 
 export const TEST_PACKAGES = {

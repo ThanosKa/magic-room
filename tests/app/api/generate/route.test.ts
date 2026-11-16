@@ -7,9 +7,9 @@ import * as redisLib from "@/lib/redis";
 import * as openrouterLib from "@/lib/openrouter";
 import { auth } from "@clerk/nextjs/server";
 import { after } from "next/server";
+import { inMemoryLedger } from "../../../lib/__fixtures__/in-memory-ledger";
 
 type AuthResult = Awaited<ReturnType<typeof auth>>;
-type Transaction = Awaited<ReturnType<typeof supabaseLib.createTransaction>>;
 
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
@@ -25,7 +25,7 @@ vi.mock("@/lib/supabase", async () => {
   return {
     ...actual,
     ensureUserExists: vi.fn(),
-    deductCredits: vi.fn(),
+    deductCreditsWithUsage: vi.fn(),
     createTransaction: vi.fn(),
     addCredits: vi.fn(),
   };
@@ -58,19 +58,33 @@ vi.mock("@/lib/logger", () => ({
 
 const TEST_USER = {
   id: "user_test_123",
-  clerkUserId: "clerk_user_123",
+  clerk_user_id: "clerk_user_123",
   email: "test@example.com",
   credits: 10,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  name: null,
+  profile_image_url: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
 };
 
 const TEST_BASE64_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 
+// Routes the Balance functions to the in-memory ledger, so a test can check what
+// the User ended up with instead of which helper was called.
+function useInMemoryLedger(balance: number): void {
+  inMemoryLedger.reset();
+  inMemoryLedger.setBalance(TEST_USER.id, balance);
+  vi.mocked(supabaseLib.deductCreditsWithUsage).mockImplementation(inMemoryLedger.supabaseFunctions.deductCreditsWithUsage);
+  vi.mocked(supabaseLib.addCredits).mockImplementation(inMemoryLedger.supabaseFunctions.addCredits);
+  vi.mocked(supabaseLib.createTransaction).mockImplementation(
+    inMemoryLedger.supabaseFunctions.createTransaction as typeof supabaseLib.createTransaction
+  );
+}
+
 describe("Generate Route - Quality Feature", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as AuthResult);
+    vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerk_user_id } as AuthResult);
     vi.mocked(redisLib.checkRateLimit).mockResolvedValue({
       success: true,
       remaining: 99,
@@ -81,8 +95,7 @@ describe("Generate Route - Quality Feature", () => {
   describe("Standard Quality (1 credit)", () => {
     it("should deduct 1 credit for standard quality generation", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -105,14 +118,12 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 1);
-      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(TEST_USER.id, "usage", 1);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 1);
     });
 
     it("should use gemini-3.1-flash-image model for standard quality", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -142,8 +153,7 @@ describe("Generate Route - Quality Feature", () => {
 
     it("should default to standard quality if not specified", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -163,15 +173,14 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(request);
 
       expect(response.status).toBe(200);
-      expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 1);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 1);
     });
   });
 
   describe("Premium Quality (2 credits)", () => {
     it("should deduct 2 credits for premium quality generation", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -194,14 +203,12 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 2);
-      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(TEST_USER.id, "usage", 2);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 2);
     });
 
     it("should use gemini-3-pro-image model for premium quality", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -251,16 +258,17 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(402);
       expect(data.error).toBe("Insufficient credits");
-      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
     });
   });
 
   describe("Credit Refunds", () => {
-    it("should refund 1 credit when standard quality generation fails", async () => {
+    it.each([
+      ["standard", 1],
+      ["premium", 2],
+    ])("gives back the credits and records the refund when %s generation fails", async (quality, cost) => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.addCredits).mockResolvedValue(true);
+      useInMemoryLedger(10);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: false,
@@ -275,66 +283,27 @@ describe("Generate Route - Quality Feature", () => {
           base64Image: TEST_BASE64_IMAGE,
           roomType: "living-room",
           theme: "modern",
-          quality: "standard",
+          quality,
         }),
       });
 
       const response = await POST(request);
 
       expect(response.status).toBe(500);
-      expect(supabaseLib.addCredits).toHaveBeenCalledWith(TEST_USER.id, 1);
-      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(
-        TEST_USER.id,
-        "refund",
-        1,
-        undefined,
-        expect.any(Object)
-      );
-    });
-
-    it("should refund 2 credits when premium quality generation fails", async () => {
-      vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.addCredits).mockResolvedValue(true);
-      vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
-      vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
-        success: false,
-        images: [],
-        error: "Generation failed",
-      });
-
-      const request = new Request("http://localhost:3000/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          base64Image: TEST_BASE64_IMAGE,
-          roomType: "living-room",
-          theme: "modern",
-          quality: "premium",
-        }),
-      });
-
-      const response = await POST(request);
-
-      expect(response.status).toBe(500);
-      expect(supabaseLib.addCredits).toHaveBeenCalledWith(TEST_USER.id, 2);
-      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(
-        TEST_USER.id,
-        "refund",
-        2,
-        undefined,
-        expect.any(Object)
-      );
+      expect(inMemoryLedger.balanceOf(TEST_USER.id)).toBe(10);
+      expect(inMemoryLedger.rowsOf(TEST_USER.id, "usage")).toEqual([
+        expect.objectContaining({ amount: cost }),
+      ]);
+      expect(inMemoryLedger.rowsOf(TEST_USER.id, "refund")).toEqual([
+        expect.objectContaining({ amount: cost }),
+      ]);
     });
 
     // The screen tells the user "your credits were refunded" on this answer,
     // so it must also hold when the AI call throws (network, API error).
     it("refunds the credits and says so when the AI call throws", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.addCredits).mockResolvedValue(true);
+      useInMemoryLedger(10);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockRejectedValue(new Error("OpenRouter API error: 502"));
 
@@ -353,14 +322,10 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(500);
       expect(await response.json()).toMatchObject({ success: false });
-      expect(supabaseLib.addCredits).toHaveBeenCalledWith(TEST_USER.id, 2);
-      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(
-        TEST_USER.id,
-        "refund",
-        2,
-        undefined,
-        expect.any(Object)
-      );
+      expect(inMemoryLedger.balanceOf(TEST_USER.id)).toBe(10);
+      expect(inMemoryLedger.rowsOf(TEST_USER.id, "refund")).toEqual([
+        expect.objectContaining({ amount: 2 }),
+      ]);
     });
 
     it.each([
@@ -368,9 +333,8 @@ describe("Generate Route - Quality Feature", () => {
       ["the AI call throws", () => vi.mocked(openrouterLib.generateDesign).mockRejectedValue(new Error("OpenRouter API error: 502"))],
     ])("does not claim a refund that failed when %s", async (_name, failGeneration) => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.addCredits).mockResolvedValue(false);
+      useInMemoryLedger(10);
+      inMemoryLedger.failNext("addCredits");
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       failGeneration();
 
@@ -388,13 +352,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(500);
       expect(await response.json()).toEqual({ error: "Internal server error" });
-      expect(supabaseLib.createTransaction).not.toHaveBeenCalledWith(
-        TEST_USER.id,
-        "refund",
-        expect.anything(),
-        undefined,
-        expect.anything()
-      );
+      expect(inMemoryLedger.rowsOf(TEST_USER.id, "refund")).toEqual([]);
     });
 
     it("does not refund or claim a refund when it fails before charging", async () => {
@@ -415,7 +373,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(500);
       expect(await response.json()).not.toHaveProperty("success");
-      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
       expect(supabaseLib.addCredits).not.toHaveBeenCalled();
     });
   });
@@ -511,7 +469,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(429);
       expect(data.error).toBe("Rate limit exceeded");
-      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
     });
   });
 
@@ -530,8 +488,7 @@ describe("Generate Route - Quality Feature", () => {
 
     it("charges 3 credits and asks for an ultra design", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+      vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
         success: true,
@@ -541,7 +498,7 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(ultraRequest());
 
       expect(response.status).toBe(200);
-      expect(supabaseLib.deductCredits).toHaveBeenCalledWith(TEST_USER.id, 3);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 3);
       expect(openrouterLib.generateDesign).toHaveBeenCalledWith(TEST_BASE64_IMAGE, "test prompt", "ultra", {
         signal: expect.any(AbortSignal),
       });
@@ -553,7 +510,7 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(ultraRequest());
 
       expect(response.status).toBe(402);
-      expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+      expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
     });
   });
 
@@ -563,9 +520,7 @@ describe("Generate Route - Quality Feature", () => {
   describe("Browser disconnects mid-generation", () => {
     it("stops the AI call, refunds the credits and keeps the request alive until the refund is written", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-      vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-      vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
-      vi.mocked(supabaseLib.addCredits).mockResolvedValue(true);
+      useInMemoryLedger(10);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       // Like fetch: never answers on its own, rejects once its signal aborts.
       vi.mocked(openrouterLib.generateDesign).mockImplementation(
@@ -591,21 +546,18 @@ describe("Generate Route - Quality Feature", () => {
       // Nobody reads the answer: the tab is gone.
       void POST(request);
       await vi.waitFor(() => expect(openrouterLib.generateDesign).toHaveBeenCalled());
-      expect(supabaseLib.addCredits).not.toHaveBeenCalled();
+      expect(inMemoryLedger.balanceOf(TEST_USER.id)).toBe(8);
+      expect(inMemoryLedger.rowsOf(TEST_USER.id, "refund")).toEqual([]);
 
       browser.abort();
       const keptAlive = vi.mocked(after).mock.calls[0]?.[0];
       expect(keptAlive).toBeInstanceOf(Promise);
       await keptAlive;
 
-      expect(supabaseLib.addCredits).toHaveBeenCalledWith(TEST_USER.id, 2);
-      expect(supabaseLib.createTransaction).toHaveBeenCalledWith(
-        TEST_USER.id,
-        "refund",
-        2,
-        undefined,
-        expect.any(Object)
-      );
+      expect(inMemoryLedger.balanceOf(TEST_USER.id)).toBe(10);
+      expect(inMemoryLedger.rowsOf(TEST_USER.id, "refund")).toEqual([
+        expect.objectContaining({ amount: 2 }),
+      ]);
     });
   });
 });

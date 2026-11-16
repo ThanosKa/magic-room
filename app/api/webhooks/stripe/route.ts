@@ -1,10 +1,7 @@
-import { parseWebhookEvent } from "@/lib/stripe";
+import { receiveStripeEvent } from "@/lib/webhook-intake";
 import { CREDIT_PACKAGES } from "@/lib/constants";
-import {
-  ensureUserExists,
-  getUserById,
-  grantPurchaseCredits,
-} from "@/lib/supabase";
+import { ensureUserExists, getUserById } from "@/lib/supabase";
+import { grantPurchase } from "@/lib/credit-ledger";
 import { isWebhookProcessed, markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import { sendPurchaseEmail } from "@/lib/email";
@@ -36,26 +33,11 @@ async function resolveUser(identifier: string | undefined) {
 
 export async function POST(request: Request): Promise<Response> {
   try {
-    const body = await request.text();
-    const signature = request.headers.get("stripe-signature");
-
-    if (!signature) {
-      logger.warn("Missing Stripe signature");
-      return new Response("Missing signature", { status: 401 });
+    const intake = await receiveStripeEvent(request);
+    if (!intake.ok) {
+      return intake.response;
     }
-
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
-
-    let event: Stripe.Event;
-    try {
-      event = await parseWebhookEvent(body, signature, webhookSecret);
-    } catch (error) {
-      logger.warn(
-        { err: error },
-        "Stripe webhook signature verification failed"
-      );
-      return new Response("Invalid signature", { status: 401 });
-    }
+    const event = intake.event;
 
     // Check for duplicate webhook processing (but don't mark yet)
     const isProcessed = await isWebhookProcessed("stripe", event.id);
@@ -110,12 +92,14 @@ export async function POST(request: Request): Promise<Response> {
         ? session.payment_intent
         : session.id;
 
-      const grant = await grantPurchaseCredits(user.id, stripePaymentId, pkg.credits, {
-        packageId,
-        packageName: pkg.name,
+      const grant = await grantPurchase({
+        userId: user.id,
+        paymentId: stripePaymentId,
+        credits: pkg.credits,
+        metadata: { packageId, packageName: pkg.name },
       });
 
-      if (!grant) {
+      if (grant === "failed") {
         logger.error(
           { userId: user.id, packageId, sessionId: session.id },
           "Failed to grant purchased credits"
@@ -123,7 +107,7 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Failed to grant credits", { status: 500 });
       }
 
-      if (!grant.granted) {
+      if (grant === "already-granted") {
         logger.info(
           { userId: user.id, stripePaymentId, sessionId: session.id },
           "Payment already granted, skipping"

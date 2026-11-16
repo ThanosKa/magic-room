@@ -12,7 +12,7 @@ interface UserStore {
   setIsLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 
-  refreshUser: (clerkUserId: string) => Promise<void>;
+  refreshUser: () => Promise<void>;
   deductCredit: () => void;
   addCredits: (amount: number) => void;
   reset: () => void;
@@ -29,10 +29,10 @@ export const useUserStore = create<UserStore>((set) => ({
   setIsLoading: (loading) => set({ isLoading: loading }),
   setError: (error) => set({ error }),
 
-  refreshUser: async (clerkUserId: string) => {
+  refreshUser: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await fetch(`/api/user?clerkUserId=${clerkUserId}`);
+      const response = await fetch("/api/user");
       if (!response.ok) {
         throw new Error("Failed to refresh user");
       }

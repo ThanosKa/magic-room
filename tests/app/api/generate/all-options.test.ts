@@ -13,7 +13,6 @@ import { auth } from "@clerk/nextjs/server";
  */
 
 type AuthResult = Awaited<ReturnType<typeof auth>>;
-type Transaction = Awaited<ReturnType<typeof supabaseLib.createTransaction>>;
 
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
@@ -24,7 +23,7 @@ vi.mock("@/lib/supabase", async () => {
   return {
     ...actual,
     ensureUserExists: vi.fn(),
-    deductCredits: vi.fn(),
+    deductCreditsWithUsage: vi.fn(),
     createTransaction: vi.fn(),
     addCredits: vi.fn(),
   };
@@ -57,11 +56,13 @@ vi.mock("@/lib/logger", () => ({
 
 const TEST_USER = {
   id: "user_test_123",
-  clerkUserId: "clerk_user_123",
+  clerk_user_id: "clerk_user_123",
   email: "test@example.com",
   credits: 10,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  name: null,
+  profile_image_url: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
 };
 
 const TEST_BASE64_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
@@ -101,15 +102,14 @@ function sentPrompt(): string {
 describe("Generate Route - all 14 styles and 14 room types", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerkUserId } as AuthResult);
+    vi.mocked(auth).mockResolvedValue({ userId: TEST_USER.clerk_user_id } as AuthResult);
     vi.mocked(redisLib.checkRateLimit).mockResolvedValue({
       success: true,
       remaining: 99,
       resetAt: Date.now() + 3600000,
     });
     vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
-    vi.mocked(supabaseLib.deductCredits).mockResolvedValue(true);
-    vi.mocked(supabaseLib.createTransaction).mockResolvedValue({} as Transaction);
+    vi.mocked(supabaseLib.deductCreditsWithUsage).mockResolvedValue(true);
     vi.mocked(openrouterLib.generateDesign).mockResolvedValue({
       success: true,
       images: ["data:image/png;base64,result"],
@@ -146,7 +146,7 @@ describe("Generate Route - all 14 styles and 14 room types", () => {
 
     expect(response.status).toBe(400);
     expect(openrouterLib.generateDesign).not.toHaveBeenCalled();
-    expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+    expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
   });
 
   it.each(["garage", "Bedroom", "", "walk_in_closet"])("rejects the unknown room type %j", async (roomType) => {
@@ -154,6 +154,6 @@ describe("Generate Route - all 14 styles and 14 room types", () => {
 
     expect(response.status).toBe(400);
     expect(openrouterLib.generateDesign).not.toHaveBeenCalled();
-    expect(supabaseLib.deductCredits).not.toHaveBeenCalled();
+    expect(supabaseLib.deductCreditsWithUsage).not.toHaveBeenCalled();
   });
 });

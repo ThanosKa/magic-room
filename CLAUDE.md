@@ -18,6 +18,7 @@ AI interior design web app: upload one room photo, pick a room type and a style,
 
 - pnpm only (version pinned by `packageManager`). Scripts are in `package.json`.
 - Run tests once with `pnpm test:run`; `pnpm test` is watch mode.
+- `tests/supabase/` runs the credit SQL functions on in-memory Postgres (PGlite): no database needed, never point it at a real one.
 - `pnpm test:coverage` fails today: `@vitest/coverage-v8` is not installed.
 - A `pnpm type-check` error that points only into `.next/types/` is a stale generated file: run `pnpm build`, then type-check again.
 - Leave to the developer: `scripts/generate-design-images.mjs` and `scripts/test-image-gen.mjs` (spend OpenRouter money, overwrite `public/images/designs`), `scripts/indexnow.mjs` (submits the live sitemap, after a deploy to the Worker).
