@@ -34,6 +34,14 @@ function createInMemoryLedger() {
   const balances = new Map<string, number>();
   const rows: LedgerRow[] = [];
   const pendingFailures: { fn: FailingFunction; mode: FailureMode }[] = [];
+  let usageRowsToRefuse = 0;
+
+  // Consumes one pending `usage` row refusal, if there is one.
+  function refusesUsageRow(): boolean {
+    if (usageRowsToRefuse === 0) return false;
+    usageRowsToRefuse -= 1;
+    return true;
+  }
 
   // The real functions await a network round trip before the database runs the
   // statement. Yielding here lets two calls be in flight at once, so the
@@ -83,6 +91,7 @@ function createInMemoryLedger() {
     ): Promise<LedgerRow | null> {
       if (await roundTrip("createTransaction")) return null;
       if (!balances.has(userId)) return null;
+      if (type === "usage" && refusesUsageRow()) return null;
       const row: LedgerRow = { userId, type, amount, stripePaymentId, metadata };
       rows.push(row);
       return row;
@@ -120,6 +129,7 @@ function createInMemoryLedger() {
       balances.clear();
       rows.length = 0;
       pendingFailures.length = 0;
+      usageRowsToRefuse = 0;
     },
 
     /** Creates the User if needed and sets the Balance. */
@@ -138,6 +148,14 @@ function createInMemoryLedger() {
     /** Makes the next call to `fn` fail as the database would, or throw. */
     failNext(fn: FailingFunction, mode: FailureMode = "returns-failure"): void {
       pendingFailures.push({ fn, mode });
+    },
+
+    /**
+     * Makes the database refuse the next `usage` row insert, as a failing
+     * constraint or trigger would, whichever function writes it.
+     */
+    refuseNextUsageRow(): void {
+      usageRowsToRefuse += 1;
     },
   };
 }

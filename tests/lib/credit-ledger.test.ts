@@ -107,6 +107,18 @@ describe("credit ledger", () => {
       ]);
     });
 
+    it("does not charge, write a row or run the work when the usage row cannot be written", async () => {
+      inMemoryLedger.refuseNextUsageRow();
+      const work = vi.fn(async () => ({ ok: true as const, value: "design" }));
+
+      const result = await spendCredits(CHARGE, work);
+
+      expect(result).toEqual({ kind: "not-charged" });
+      expect(work).not.toHaveBeenCalled();
+      expect(inMemoryLedger.balanceOf(USER_ID)).toBe(5);
+      expect(inMemoryLedger.rowsOf(USER_ID)).toEqual([]);
+    });
+
     it("does not charge, write a row or run the work when the Balance is too low", async () => {
       inMemoryLedger.setBalance(USER_ID, 1);
       const work = vi.fn(async () => ({ ok: true as const, value: "design" }));
