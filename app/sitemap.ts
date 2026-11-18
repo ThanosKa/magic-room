@@ -41,6 +41,8 @@ import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-page
 //     NAR's 2025 Profile of Home Staging.
 //   - MODEL_CLAIMS_2026_11: unbenchmarked "multimodal beats diffusion" claims
 //     reworded on /alternatives and /alternatives/*.
+//   - DESIGN_PAGE_DATES: per-slug dates for design pages whose body changed
+//     after the 2026-10 pass (scandinavian-bedroom gained its deep dive).
 const BASELINE_LAST_UPDATED = new Date("2026-07-29");
 const PASS_2026_10_LAST_UPDATED = new Date("2026-10-01");
 const LEGAL_LAST_UPDATED = new Date("2026-11-07");
@@ -48,6 +50,9 @@ const RIGHTS_2026_11_LAST_UPDATED = new Date("2026-11-01");
 const HOME_2026_11_LAST_UPDATED = new Date("2026-11-06");
 const CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-09");
 const MODEL_CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-13");
+const DESIGN_PAGE_DATES: Record<string, Date> = {
+    "scandinavian-bedroom": new Date("2026-11-18"),
+};
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
@@ -115,7 +120,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // exist for users browsing, but Google won't waste crawl budget on them.
     const designPages: MetadataRoute.Sitemap = PRIORITY_DESIGN_SLUGS.map((slug) => ({
         url: `${baseUrl}/design/${slug}`,
-        lastModified: PASS_2026_10_LAST_UPDATED,
+        lastModified: DESIGN_PAGE_DATES[slug] ?? PASS_2026_10_LAST_UPDATED,
         changeFrequency: "monthly" as const,
         priority: TOP_DESIGN_SLUGS.has(slug) ? 0.8 : 0.6,
     }));

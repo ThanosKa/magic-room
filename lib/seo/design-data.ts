@@ -995,7 +995,7 @@ export const COMBINATION_INTROS: Record<string, string> = {
     "scandinavian-living-room":
         "A Scandinavian living room earns its warmth through the combination of light wood, layered textiles, and multiple controlled light sources rather than any single dominant piece. The style is genuinely liveable because it was developed for long winters spent predominantly indoors, and its emphasis on cosy comfort over showcase presentation suits the functional demands of a daily living space.",
     "scandinavian-bedroom":
-        "The Scandinavian bedroom creates its quality of rest through natural materials and warm layered light rather than complexity of decoration. Linen bedding, a wooden bedframe in a light species, and a nightstand lamp with a warm filament bulb establish the essential character, and any additions from that point can follow the same material logic. AI visualisation makes it simple to compare different timber tones and textile colours before purchasing.",
+        "A Scandinavian bedroom is a pale, warm, uncluttered room built from three things: light wood, natural-fibre textiles and several low, warm light sources. Linen bedding, a bed frame in oak, ash or birch, and a bedside lamp with a warm bulb establish the character, and every addition after that follows the same material logic. Seeing the timber tone and textile colours on a photo of your own bedroom makes them easier to choose before you buy anything.",
     "scandinavian-kitchen":
         "A Scandinavian kitchen applies the style's characteristic editing discipline to a functional space, resulting in cabinetry that is plain and well-made, surfaces that reward daily use, and an emphasis on honest materials over applied decoration. Light timber details, matte painted cabinets in warm whites or sage greens, and simple hardware in brushed finishes are the vocabulary. Rendering these choices in context helps assess whether the overall warmth level is sufficient before committing.",
     "scandinavian-bathroom":
@@ -2275,6 +2275,10 @@ function clampDescription(description: string): string {
  * Selection is driven by Search Console, not by taste:
  *   - art-deco-bedroom:        415 impressions, 0 clicks, position 18.9
  *   - scandinavian-living-room: 215 impressions, 0 clicks, position 14.7
+ *   - scandinavian-bedroom:     position 19.7 for "scandinavian design bedroom"
+ *     (25 impressions, 0 clicks, GSC 2026-08-18 to 2026-11-15), plus a tail of
+ *     "scandinavian bedroom ideas/design" at 22-35. The pages ranking above it
+ *     list styling ideas but say nothing about small rooms or rented rooms.
  *
  * Both sit on a query cluster the template content does not answer. The
  * "what the AI gets wrong" sections are deliberately the opposite of listicle
@@ -2370,6 +2374,50 @@ export const COMBINATION_DEEP_DIVES: Record<string, IDeepDiveSection[]> = {
                 "The dominant failure mode is that the model reads \"Scandinavian\" as \"white and grey minimal\" and strips out exactly the warmth that distinguishes the style. Outputs come back with a cool-white envelope, a grey sofa, no visible timber grain and no textiles — technically clean, and indistinguishable from a stock minimal render.",
                 "The second failure is wood tone. Left unspecified, models default to a mid-brown that reads as generic contemporary rather than the pale oak or ash the style depends on.",
                 "Naming the warmth explicitly fixes both. A prompt like \"Scandinavian living room, warm white walls, pale oak flooring and furniture, wool throw and linen cushions, layered lighting with floor lamp, two plants\" reliably produces the correct register on the first attempt, where \"Scandinavian living room\" alone does not. Specifying the wood species and the wall temperature is worth more than any other instruction you can add.",
+            ],
+        },
+    ],
+    "scandinavian-bedroom": [
+        {
+            heading: "Scandinavian bedroom design: what actually makes it Scandinavian",
+            paragraphs: [
+                "Three things make a bedroom read as Scandinavian: pale timber with visible grain, natural-fibre textiles in layers, and warm light from more than one low source. Remove any one of them and the room drifts into something else. Without the wood it is just minimal, without the textiles it is cold, and with a single ceiling light it loses the evening warmth the style was built for in long northern winters.",
+                "Everything else is optional. The checklist below is the order in which the elements change how the room reads, so it is also the order in which to spend.",
+            ],
+            bullets: [
+                "Walls in a warm white or soft off-white, ceiling and trim the same colour. A cool, blue-leaning white is the most common reason a Scandinavian bedroom looks clinical rather than calm.",
+                "A bed frame or headboard in light oak, ash, birch or pine. If the bed is upholstered, bring the wood in through the bedside tables or a wall shelf instead.",
+                "Linen or washed-cotton bedding in white, oatmeal, sage or dusty blue, with a wool or knitted throw folded at the foot of the bed. Two textures on the bed matter more than any pattern.",
+                "Lighting at bed height: a wall light or lamp on each side, plus one dimmable pendant. Warm bulbs (around 2700 K) throughout.",
+                "A rug that reaches under the bed and past both sides, in wool or jute. Where a large rug does not fit, a runner on each side does the same job underfoot.",
+                "One or two plants and a few objects you use: books, a carafe, a ceramic. Decoration that has a function is the Scandinavian rule, which keeps the room from tipping into bohemian.",
+            ],
+        },
+        {
+            heading: "Scandinavian ideas for a small bedroom",
+            paragraphs: [
+                "The style suits small bedrooms better than most, because its tools (pale surfaces, few objects, light kept low and warm) all make a room feel larger. The changes that matter most in a bedroom under about 10 m² are about floor and wall space rather than colour.",
+            ],
+            bullets: [
+                "Choose a bed and bedside tables on visible legs, so the floor runs underneath them. Furniture that sits flat on the floor makes a small room look full.",
+                "Swap floor-standing bedside tables for wall shelves or wall-mounted lights, which frees both the floor and the bedside surface.",
+                "Keep the wardrobe the same colour as the wall. A white or pale-wood wardrobe against a warm-white wall nearly disappears; a dark one becomes the main thing you see.",
+                "Hang curtains from close to the ceiling and wider than the window, in a light linen. The room reads taller and the window reads larger.",
+                "Use one textile colour family across bedding, curtains and rug. In a small room, several unrelated colours look like clutter even when there is little in it.",
+            ],
+        },
+        {
+            heading: "A Scandinavian bedroom in a rented room",
+            paragraphs: [
+                "Most Scandinavian bedroom guides start with painting the walls and laying a pale wood floor, which a tenant usually cannot do. The style still works without either, because most of its effect comes from things you can take with you.",
+                "Cover the floor with a large pale rug rather than changing it. Bring in the wood through the bed, a bedside stool, a wall shelf hung on the existing fixings, or a leaning ladder rail. Replace the main ceiling bulb with a warm one and add plug-in wall lights or two bedside lamps, so the overhead light is rarely needed. Change the bedding and curtains to linen in one colour family. If the walls are a cold white or a strong colour you cannot paint over, lean one large light-framed print or mirror against the wall behind the bed so the eye lands there instead.",
+            ],
+        },
+        {
+            heading: "Trying the style on your own bedroom",
+            paragraphs: [
+                "When you pick Scandinavian in Magic Room, the instruction sent with your photo asks for Scandinavian design with light wood and a cosy, warm feel. That is the general direction; the details above are what you add yourself. The optional note on the generate screen (up to 500 characters) is added to the same instruction, so a note such as \"warm white walls, light oak bed frame, linen bedding in oatmeal, wool rug, two bedside wall lights, no ceiling light\" steers the result towards the specific room you have in mind.",
+                "For a rented room, say what has to stay, such as \"keep the existing floor and wardrobe\", so the redesign only shows changes you can actually make. Each run returns one image of your bedroom, so changing one detail in the note between runs is the quickest way to compare two wood tones or two bedding colours.",
             ],
         },
     ],
