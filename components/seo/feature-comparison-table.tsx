@@ -12,12 +12,6 @@ interface FeatureComparisonTableProps {
     competitor: ICompetitorData;
 }
 
-/**
- * Every competitor cell comes from that competitor's entry in
- * `lib/seo/competitor-data.ts`, where each claim names its source and date.
- * Do not add rows with a generic competitor column: a claim that is true of
- * one vendor is false of another.
- */
 function buildRows(competitor: ICompetitorData): ComparisonRow[] {
     return [
         {
@@ -58,7 +52,6 @@ export function FeatureComparisonTable({ competitor }: FeatureComparisonTablePro
     const competitorName = competitor.name;
     return (
         <>
-            {/* Stacked rows for phones: hairline list, nothing to scroll */}
             <div className="border-t border-line md:hidden">
                 {rows.map((row, index) => (
                     <div key={index} className="border-b border-line py-5">
@@ -81,8 +74,6 @@ export function FeatureComparisonTable({ competitor }: FeatureComparisonTablePro
                 ))}
             </div>
 
-            {/* Table for tablet and desktop. If it ever gets too narrow it
-                scrolls inside its own box, never the page. */}
             <div className="hidden overflow-x-auto overscroll-x-contain rounded-xl border border-line bg-background md:block">
                 <table className="w-full min-w-[640px] border-collapse text-[15px] leading-relaxed">
                     <thead>

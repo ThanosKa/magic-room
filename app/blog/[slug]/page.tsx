@@ -31,9 +31,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
-        // Absolute: blog titles are already written to fill the ~60 visible
-        // SERP characters. Appending "| Magic Room" only pushes the
-        // differentiator past the truncation point.
         title: { absolute: post.title },
         description: post.metaDescription,
         path: `/blog/${slug}`,
@@ -65,7 +62,7 @@ export default async function BlogSlugPage({ params }: Props) {
             modifiedDate: post.updatedDate,
             url: postUrl,
         }),
-        ...(post.faqs && post.faqs.length > 0 ? [faqSchema(post.faqs, postUrl)] : []),
+        ...(post.faqs && post.faqs.length > 0 ? [faqSchema({ items: post.faqs, pageUrl: postUrl })] : []),
     ];
 
     return (
@@ -73,7 +70,7 @@ export default async function BlogSlugPage({ params }: Props) {
             <JsonLd schemas={schemas} />
             <BlogPostContent
                 post={post}
-                relatedPostLinks={getRelatedBlogLinksForPost(slug)}
+                relatedPostLinks={getRelatedBlogLinksForPost({ slug })}
                 comparisonLinks={getComparisonLinksForPost(slug)}
             />
         </>

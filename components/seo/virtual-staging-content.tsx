@@ -118,7 +118,6 @@ export function VirtualStagingContent() {
         <PageTransition>
             <PageBreadcrumb items={breadcrumbItems} />
 
-            {/* Hero */}
             <ComparisonHero>
                 <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-ink/5 px-3 py-1 text-sm text-ink-2">
                     <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
@@ -142,7 +141,6 @@ export function VirtualStagingContent() {
                 </p>
             </ComparisonHero>
 
-            {/* Pain point banner */}
             <Section>
                 <div className="grid gap-4 sm:grid-cols-3">
                     <div className="rounded-xl border border-line p-6">
@@ -163,7 +161,6 @@ export function VirtualStagingContent() {
                 </div>
             </Section>
 
-            {/* Before / After */}
             <section className="pb-16 md:pb-24">
                 <div className="container-page">
                     <div className="mx-auto max-w-5xl">
@@ -185,7 +182,6 @@ export function VirtualStagingContent() {
                 </div>
             </section>
 
-            {/* How it works */}
             <Section tone="band">
                 <h2 className={cn(H2_CLASS, "mb-10")}>How AI home staging works</h2>
                 <div className="grid gap-4 md:grid-cols-3">
@@ -203,7 +199,6 @@ export function VirtualStagingContent() {
                 </div>
             </Section>
 
-            {/* Benefits for agents */}
             <Section rule={false}>
                 <Split
                     heading="Why real estate agents choose AI staging"
@@ -221,7 +216,6 @@ export function VirtualStagingContent() {
                 </Split>
             </Section>
 
-            {/* Who it is for */}
             <Section>
                 <Split heading="Built for real estate professionals">
                     <div className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
@@ -242,7 +236,6 @@ export function VirtualStagingContent() {
                 </Split>
             </Section>
 
-            {/* FAQ */}
             <Section>
                 <Split heading="Frequently asked questions">
                     <Accordion type="single" collapsible className="border-t border-line">
@@ -256,7 +249,6 @@ export function VirtualStagingContent() {
                 </Split>
             </Section>
 
-            {/* Related links */}
             <Section>
                 <h2 className={cn(H3_CLASS, "mb-5")}>Explore design styles for staging</h2>
                 <ul className="flex flex-wrap gap-3">
@@ -327,7 +319,6 @@ export function VirtualStagingContent() {
                 </ul>
             </Section>
 
-            {/* CTA */}
             <CtaSection
                 heading="Try free AI virtual staging today"
                 subtext="Upload a listing photo and get a professionally staged version in 60 seconds. One free credit included with every account — no credit card required."

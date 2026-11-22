@@ -1,4 +1,3 @@
-
 export interface IDesignTip {
     title: string;
     description: string;
@@ -31,14 +30,6 @@ export interface IFaqItem {
     answer: string;
 }
 
-/**
- * Page-specific editorial depth, for combinations that already earn impressions
- * but rank too low to earn clicks. `/design/art-deco-bedroom` took 415
- * impressions at position 18.9 with zero clicks — the template content is
- * identical to 195 other pages, so there is nothing on it that a top-10
- * "art deco bedroom ideas" result has. This is where the page-specific
- * substance lives.
- */
 export interface IDeepDiveSection {
     heading: string;
     paragraphs?: string[];
@@ -962,7 +953,6 @@ export const ROOM_DATA: Record<string, IRoomData> = {
     },
 };
 
-// Unique intro paragraphs for key combinations: keyed by `${theme}-${roomSlug}`
 export const COMBINATION_INTROS: Record<string, string> = {
     "modern-living-room":
         "A modern living room sits at the intersection of visual restraint and daily functionality. By reducing the number of objects, materials, and colours in play, each element that remains carries more weight, and the room feels more considered as a result. AI-assisted visualisation lets you test different proportions and layouts before committing to furniture that is difficult or expensive to return.",
@@ -1118,7 +1108,6 @@ export const COMBINATION_INTROS: Record<string, string> = {
         "A Mediterranean living room draws on southern European domestic architecture, where thick walls, deep-set windows, and hard floors were practical responses to heat before they were aesthetic choices. Lime-washed or micro-cement walls in warm cream and terracotta, exposed timber beams, a deep linen-upholstered sofa with generous seat depth, terracotta or handmade tile flooring partly covered by a kilim, wrought-iron or plaster wall sconces, and olive or fig trees in unglazed pots set the character. The palette is warm throughout — no cool greys — and the room improves as its plaster and timber age, which makes it an unusually forgiving style to execute in stages rather than all at once.",
 };
 
-// FAQ sets for key combinations: keyed by `${theme}-${roomSlug}`
 export const COMBINATION_FAQS: Record<string, IFaqItem[]> = {
     "modern-living-room": [
         {
@@ -1904,11 +1893,6 @@ export const COMBINATION_FAQS: Record<string, IFaqItem[]> = {
             answer: "Acoustic insulation between the gaming room and adjacent rooms, a door that seals effectively, and finishes that match the quality standard of the rest of the home all integrate a dedicated gaming room into a luxury property without it reading as an afterthought. The technology inside the room need not be visible from outside it.",
         },
     ],
-    // Art Deco had no FAQ entries at all, which is why /design/art-deco-bedroom
-    // shipped with no FAQ section and no FAQ schema despite taking 415
-    // impressions. Questions below are taken from the actual query cluster in
-    // Search Console: "art deco bedroom ideas", "modern art deco bedroom",
-    // "simple art deco bedroom", "art deco bedroom decorating ideas".
     "art-deco-bedroom": [
         {
             question: "What colours work in an Art Deco bedroom?",
@@ -2193,12 +2177,6 @@ export const COMBINATION_FAQS: Record<string, IFaqItem[]> = {
     ],
 };
 
-// Generate all 196 page configs (14 themes × 14 rooms)
-// Title variants rotated deterministically per slug to diversify SERP listings.
-// Every variant front-loads the exact "{Theme} {Room}" query phrase, because the
-// SERP only ever shows the first ~55 characters and that phrase is what the
-// searcher typed. The tail carries the one thing the nine results above us
-// cannot offer: these ideas rendered on the searcher's own room, not a showroom.
 const TITLE_TEMPLATES = [
     (themeName: string, roomName: string) =>
         `${themeName} ${roomName} Ideas — See Them In Your Own Room`,
@@ -2210,11 +2188,6 @@ const TITLE_TEMPLATES = [
         `${themeName} ${roomName} Ideas — Test On Your Room in 60s`,
 ] as const;
 
-// Meta description variants. These are promises, not summaries: each one leads
-// with the query phrase (so Google bolds it), states the single action required,
-// and closes on a risk reducer. Applied to every design page — the previous
-// behaviour of deriving the description from the article's first sentence
-// produced encyclopedic openers that gave nobody a reason to click.
 const META_TEMPLATES = [
     (themeName: string, roomName: string) =>
         `${themeName} ${roomName} ideas, applied to your own room. Upload one photo and AI returns a redesign in 60 seconds. From €9.99, no subscription.`,
@@ -2229,9 +2202,7 @@ const META_TEMPLATES = [
 const META_DESCRIPTION_MAX_LENGTH = 158;
 const META_DESCRIPTION_TRUNCATE_AT = 155;
 
-// Deterministic (no Math.random / Date) char-code sum hash so variant
-// assignment is stable across builds — important for SEO consistency.
-function hashToIndex(str: string, modulo: number): number {
+function hashToIndex({ str, modulo }: { str: string; modulo: number }): number {
     let sum = 0;
     for (let i = 0; i < str.length; i++) {
         sum += str.charCodeAt(i);
@@ -2239,9 +2210,6 @@ function hashToIndex(str: string, modulo: number): number {
     return sum % modulo;
 }
 
-// Safety net for the longest theme+room combinations (e.g. "Mediterranean
-// Walk-In Closet"). Templates are written to sit comfortably under the limit;
-// this only ever fires on outlier combos.
 function clampDescription(description: string): string {
     if (description.length <= META_DESCRIPTION_MAX_LENGTH) {
         return description;
@@ -2253,18 +2221,6 @@ function clampDescription(description: string): string {
     return `${cut}...`;
 }
 
-/**
- * Bespoke depth for the pages with measured demand and no ranking.
- *
- * Selection is driven by Search Console, not by taste:
- *   - art-deco-bedroom:        415 impressions, 0 clicks, position 18.9
- *   - scandinavian-living-room: 215 impressions, 0 clicks, position 14.7
- *
- * Both sit on a query cluster the template content does not answer. The
- * "what the AI gets wrong" sections are deliberately the opposite of listicle
- * filler — they are the one thing a tool operator can write that a decorating
- * blog cannot.
- */
 export const COMBINATION_DEEP_DIVES: Record<string, IDeepDiveSection[]> = {
     "art-deco-bedroom": [
         {
@@ -2371,15 +2327,10 @@ function generateDesignPages(): IDesignPageData[] {
             const roomData = ROOM_DATA[roomType];
             const slug = `${themeData.slug}-${roomData.slug}`;
 
-            const variantIndex = hashToIndex(slug, TITLE_TEMPLATES.length);
+            const variantIndex = hashToIndex({ str: slug, modulo: TITLE_TEMPLATES.length });
             const title = TITLE_TEMPLATES[variantIndex](themeData.name, roomData.name);
 
             const combinationIntro = COMBINATION_INTROS[slug];
-            // The intro's first sentence is deliberately NOT used as the meta
-            // description any more. It reads as an encyclopedia entry
-            // ("A Scandinavian living room earns its warmth through...") which
-            // is indistinguishable from the Houzz/Pinterest results above us
-            // and gave searchers no reason to choose this result.
             const metaDescription = clampDescription(
                 META_TEMPLATES[variantIndex](themeData.name, roomData.name)
             );

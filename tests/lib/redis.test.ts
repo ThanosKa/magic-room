@@ -26,8 +26,6 @@ describe("checkRateLimit", () => {
     await expect(checkRateLimit("user_1")).resolves.toMatchObject({ success: true });
   });
 
-  // Fails closed: during a Redis outage the generate route must not run
-  // without its limit. The route answers 500 before charging anything.
   it("throws when Redis cannot be reached instead of letting the request through", async () => {
     incr.mockRejectedValue(new Error("Upstash unreachable"));
 

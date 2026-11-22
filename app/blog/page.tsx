@@ -10,8 +10,6 @@ import { IContextualLink } from "@/lib/seo/internal-links";
 import { PageTransition } from "@/components/page-transition";
 import { JsonLd } from "@/components/seo/json-ld";
 
-// Cross-links to the other content sections, rendered as the shared
-// hairline-row link list (same h2/h3 structure and anchors as before).
 const EXPLORE_LINKS: IContextualLink[] = [
     {
         href: "/design",
@@ -36,8 +34,6 @@ const EXPLORE_LINKS: IContextualLink[] = [
 ];
 
 export const metadata: Metadata = createMetadata({
-    // "Interior Design Blog | Magic Room" is a filing label — it names the
-    // container, not the payoff, and gives a searcher at position 12 nothing.
     title: { absolute: "AI Interior Design Guides: Redesign, Styles, Staging" },
     description:
         "Hands-on guides to redesigning rooms with AI — tool comparisons, style breakdowns, virtual staging for listings, and budget makeovers. No affiliate links.",
@@ -62,8 +58,6 @@ export default function BlogHubPage() {
         <>
             <JsonLd schemas={[schema]} />
             <PageTransition>
-                {/* Index content shares the 5xl column the RelatedLinks block uses,
-                    so breadcrumb, hero, grid and cross-links line up. */}
                 <div className="container-page">
                     <div className="mx-auto max-w-5xl">
                         <BreadcrumbNav
@@ -75,7 +69,6 @@ export default function BlogHubPage() {
                     </div>
                 </div>
 
-                {/* Hero */}
                 <section className="container-page pb-12 pt-8 md:pb-16 md:pt-14">
                     <div className="mx-auto max-w-5xl">
                         <h1 className="max-w-[14ch] animate-rise font-serif text-[clamp(48px,6.4vw,96px)] font-normal leading-[0.95] tracking-[-0.025em] text-ink text-balance">
@@ -91,7 +84,6 @@ export default function BlogHubPage() {
                     </div>
                 </section>
 
-                {/* Posts grid */}
                 <section className="container-page pb-20 md:pb-28">
                     <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-3">
                         {posts.map((post) => (
@@ -100,7 +92,6 @@ export default function BlogHubPage() {
                     </div>
                 </section>
 
-                {/* Cross-links to other content sections */}
                 <RelatedLinks heading="Explore more" links={EXPLORE_LINKS} className="pb-20 md:pb-28" />
             </PageTransition>
         </>

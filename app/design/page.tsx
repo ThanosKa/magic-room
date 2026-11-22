@@ -16,8 +16,6 @@ import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
 import { generateHref } from "@/lib/design-selection";
 
-// Cross-links to the other content sections, as the shared hairline-row list
-// (same h2 / h3 / description and anchors as the old hand-built cards).
 const MORE_RESOURCES: IContextualLink[] = [
     {
         href: "/blog",
@@ -71,13 +69,9 @@ const HOW_IT_WORKS = [
     },
 ];
 
-// Tiles: 2 columns on phones, 3 from 640px (the right column of each style row on desktop).
 const TILE_SIZES = "(min-width: 1024px) 210px, (min-width: 640px) 31vw, 47vw";
 
 export const metadata: Metadata = createMetadata({
-    // "by Style and Room" described the page's filing system, not what the
-    // searcher gets. The queries landing here ("ai room styles", "ai room
-    // ideas") want to see styles applied to their own photo.
     title: { absolute: "AI Room Design Ideas — 14 Styles On Your Own Photo" },
     description:
         "Browse 14 interior design styles across 14 room types, then upload one photo and see any of them on your actual room in 60 seconds. 1 free credit, no card.",
@@ -96,15 +90,6 @@ const schema = breadcrumbSchema([
     { name: "Design Ideas", url: `${SITE_URL}/design` },
 ]);
 
-/**
- * ItemList for the design index — previously missing entirely, so Google had no
- * machine-readable statement of what this hub collects.
- *
- * Scoped to the indexable priority set only. Listing all 196 combinations here
- * would enumerate ~158 noindex URLs in structured data, contradicting the
- * robots directive on those pages and re-signalling the scaled-content pattern
- * the priority list exists to suppress.
- */
 const designItemList = itemListSchema({
     name: "AI Interior Design Ideas by Style and Room",
     description:
@@ -138,7 +123,6 @@ export default function DesignHubPage() {
                     </div>
                 </div>
 
-                {/* Hero */}
                 <section className="container-page pb-14 pt-8 md:pb-20 md:pt-14">
                     <div className="mx-auto grid max-w-5xl items-end gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-14">
                         <h1 className="max-w-[12ch] animate-rise font-serif text-[clamp(48px,6.4vw,96px)] font-normal leading-[0.95] tracking-[-0.025em] text-ink text-balance">
@@ -157,12 +141,8 @@ export default function DesignHubPage() {
                     </div>
                 </section>
 
-                {/* Themes: one gallery row per style */}
                 {themeKeys.map((theme) => {
                     const themeData = THEME_DATA[theme];
-                    // Link only to indexable pages. The other (theme, room) combos are
-                    // noindex (see lib/seo/pruned.ts); listing them here spent crawl on
-                    // pages we ask Google to drop. They stay reachable by direct URL.
                     const themePages = DESIGN_PAGES.filter(
                         (p) => p.theme === theme && isPriorityDesignSlug(p.slug)
                     );
@@ -185,7 +165,6 @@ export default function DesignHubPage() {
                                 </div>
                                 <div>
                                     {themePages.length === 0 && (
-                                        // No indexable page for this style: one landscape tile straight into the tool.
                                         <Link
                                             href={generateHref({ theme })}
                                             className="group relative flex aspect-[4/3] items-end overflow-hidden rounded-xl bg-night p-5 text-cream transition-transform duration-160 ease-out active:scale-[0.99] motion-reduce:transition-none sm:aspect-[16/9] md:p-8"
@@ -234,7 +213,6 @@ export default function DesignHubPage() {
                     );
                 })}
 
-                {/* How It Works */}
                 <section className="mx-3 rounded-3xl bg-paper-2 py-20 sm:mx-4 sm:rounded-4xl md:py-28">
                     <div className="container-page">
                         <div className="mx-auto max-w-5xl">
@@ -281,7 +259,6 @@ export default function DesignHubPage() {
                     </div>
                 </section>
 
-                {/* Cross-links to other content sections */}
                 <RelatedLinks heading="More resources" links={MORE_RESOURCES} className="py-20 md:py-28" />
             </PageTransition>
         </>

@@ -47,7 +47,7 @@ describe("balance writes", () => {
     it("asks the database to take the amount and write the usage row", async () => {
       mockRpc.mockResolvedValue({ data: true, error: null });
 
-      expect(await deductCreditsWithUsage(USER_ID, 2)).toBe(true);
+      expect(await deductCreditsWithUsage({ userId: USER_ID, amount: 2 })).toBe(true);
       expect(mockRpc).toHaveBeenCalledWith("deduct_credits_with_usage", {
         p_user_id: USER_ID,
         p_amount: 2,
@@ -57,14 +57,14 @@ describe("balance writes", () => {
     it("reports false when the balance is too low", async () => {
       mockRpc.mockResolvedValue({ data: false, error: null });
 
-      expect(await deductCreditsWithUsage(USER_ID, 2)).toBe(false);
+      expect(await deductCreditsWithUsage({ userId: USER_ID, amount: 2 })).toBe(false);
     });
 
     it("reports false and logs the error when the database call fails", async () => {
       const error = { message: "insert or update on table \"transactions\" violates a constraint" };
       mockRpc.mockResolvedValue({ data: null, error });
 
-      expect(await deductCreditsWithUsage(USER_ID, 2)).toBe(false);
+      expect(await deductCreditsWithUsage({ userId: USER_ID, amount: 2 })).toBe(false);
       expect(logger.error).toHaveBeenCalledWith(
         expect.objectContaining({ err: error, userId: USER_ID, amount: 2 }),
         expect.any(String)
@@ -76,7 +76,7 @@ describe("balance writes", () => {
     it("asks the database to add the amount", async () => {
       mockRpc.mockResolvedValue({ data: true, error: null });
 
-      expect(await addCredits(USER_ID, 3)).toBe(true);
+      expect(await addCredits({ userId: USER_ID, amount: 3 })).toBe(true);
       expect(mockRpc).toHaveBeenCalledWith("add_credits", {
         p_user_id: USER_ID,
         p_amount: 3,
@@ -86,13 +86,13 @@ describe("balance writes", () => {
     it("reports false when the user does not exist", async () => {
       mockRpc.mockResolvedValue({ data: false, error: null });
 
-      expect(await addCredits(USER_ID, 3)).toBe(false);
+      expect(await addCredits({ userId: USER_ID, amount: 3 })).toBe(false);
     });
 
     it("reports false when the database call fails", async () => {
       mockRpc.mockResolvedValue({ data: null, error: { message: "down" } });
 
-      expect(await addCredits(USER_ID, 3)).toBe(false);
+      expect(await addCredits({ userId: USER_ID, amount: 3 })).toBe(false);
     });
   });
 });

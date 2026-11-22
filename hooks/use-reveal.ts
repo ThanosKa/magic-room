@@ -2,12 +2,6 @@
 
 import { useEffect, type RefObject } from "react";
 
-/**
- * Reveal-on-scroll (styles in app/motion.css).
- * Adds `.reveal-ready` to `root`, then `.is-in` to every `[data-reveal]`
- * inside it once it scrolls into view. Without JS, nothing is hidden.
- * Reduced motion is handled in CSS (elements simply show).
- */
 export function useReveal(root: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const el = root.current;

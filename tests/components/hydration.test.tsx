@@ -5,14 +5,6 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { SiteMain } from "@/components/site-main";
 import { Header } from "@/components/header";
 
-/**
- * Ticket 22: signed-in (and sometimes signed-out) page loads logged React's
- * "Hydration failed" (#418). Each test renders the real component to HTML the
- * way the server does, then hydrates it the way the browser does, under the
- * timing that broke it, and expects React to report nothing.
- */
-
-// --- Clerk: what the server knows (nothing) vs what the browser may already know.
 const clerk = { isLoaded: false, isSignedIn: undefined as boolean | undefined };
 vi.mock("@clerk/nextjs", () => ({
     useUser: () => ({
@@ -49,11 +41,6 @@ afterEach(() => {
     vi.restoreAllMocks();
 });
 
-/**
- * Server-renders `server`, hydrates `client` over it in a transition (as
- * Next.js does), waits for React to settle, and returns every hydration
- * problem React reported: recoverable errors and dev-mode mismatch warnings.
- */
 async function hydrate(server: ReactNode, client: ReactNode, beforeHydrate?: () => void) {
     const container = document.createElement("div");
     container.innerHTML = renderToString(server);
@@ -82,12 +69,6 @@ const page = (
     </>
 );
 
-/**
- * The page as the browser first receives it from Next: an element still
- * waiting on a client chunk (in the app: app/error.tsx, which the layout
- * router needs). It settles one microtask after React first asks for it, so it
- * is pending when hydration reaches <main> and ready by React's next task.
- */
 function pageArrivingLate(): PromiseLike<ReactNode> {
     const waiting: Array<(value: ReactNode) => void> = [];
     let ready = false;
@@ -129,14 +110,12 @@ describe("hydration (ticket 22)", () => {
         clerk.isLoaded = false;
         clerk.isSignedIn = undefined;
 
-        // clerk-js can finish loading (it is cached) before React hydrates.
         const { problems, container } = await hydrate(<Header />, <Header />, () => {
             clerk.isLoaded = true;
             clerk.isSignedIn = true;
         });
 
         expect(problems).toEqual([]);
-        // After hydration the header catches up with Clerk.
         expect(container.textContent).not.toContain("Sign In");
     });
 

@@ -20,9 +20,6 @@ import {
 import { VsPageContent } from "@/components/seo/vs-page-content";
 import { JsonLd } from "@/components/seo/json-ld";
 
-// VS comparison pages are declared once in lib/seo/competitor-data.ts so this
-// route and app/sitemap.ts can never disagree about which /vs/ URLs exist.
-
 interface Props {
     params: Promise<{ competitor: string }>;
 }
@@ -45,9 +42,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
-        // Leads with the competitor, not us: on a comparison query the
-        // recognised brand is the anchor that earns the eye, and "Side-by-Side"
-        // told the searcher nothing that the three named axes don't tell better.
         title: {
             absolute: `${competitor.name} vs Magic Room — Price, Privacy, Output (2026)`,
         },
@@ -84,14 +78,11 @@ export default async function VsPage({ params }: Props) {
                 url: `${SITE_URL}/vs/${slug}`,
             },
         ]),
-        // SoftwareApplication rather than Product — see the note in
-        // lib/seo/schema.ts on why a rating-less Product entity was costing
-        // clicks rather than earning them.
         softwareApplicationSchema({
             description: `AI interior design tool compared side-by-side with ${competitor.name}. One-time credit packages from €9.99, no subscription, photos never stored.`,
             includeOffers: true,
         }),
-        ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs, `${SITE_URL}/vs/${slug}`)] : []),
+        ...(competitor.faqs.length > 0 ? [faqSchema({ items: competitor.faqs, pageUrl: `${SITE_URL}/vs/${slug}` })] : []),
     ];
 
     return (
@@ -103,8 +94,8 @@ export default async function VsPage({ params }: Props) {
                 vsSiblings={COMPETITORS.filter(
                     (c) => c.slug !== slug && hasVsPage(c.slug)
                 )}
-                designLinks={getDesignLinksForCompetitor(`vs-${slug}`)}
-                blogLinks={getBlogLinksForCompetitor(`vs-${slug}`)}
+                designLinks={getDesignLinksForCompetitor({ competitorSlug: `vs-${slug}` })}
+                blogLinks={getBlogLinksForCompetitor({ competitorSlug: `vs-${slug}` })}
             />
         </>
     );

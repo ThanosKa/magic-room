@@ -65,8 +65,6 @@ describe("purchase email", () => {
   });
 });
 
-// The webhook route sends these after answering, inside the ~30 s waitUntil
-// window on Workers: a hung Resend must end as a logged failure, not vanish.
 describe("sending", () => {
   afterEach(() => {
     vi.useRealTimers();

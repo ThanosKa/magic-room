@@ -1,37 +1,41 @@
 import type Stripe from "stripe";
 
-export function createMockStripeWebhookEvent(
-  eventType: string,
-  data: Stripe.Checkout.Session
-): Stripe.Event {
-  return {
-    id: "evt_test_" + Math.random().toString(36).substring(7),
-    object: "event",
-    api_version: "2024-06-20",
-    created: Math.floor(Date.now() / 1000),
-    data: {
-      object: data,
-      previous_attributes: {},
-    },
-    livemode: true,
-    pending_webhooks: 1,
-    request: {
-      id: "req_test",
-      idempotency_key: null,
-    },
-    type: eventType as Stripe.Event.Type,
-  } as Stripe.Event;
-}
-
 export function createMockCheckoutSession(
   overrides?: Partial<Stripe.Checkout.Session>
 ): Stripe.Checkout.Session {
-  return {
+  const session: Stripe.Checkout.Session = {
     id: "cs_test_" + Math.random().toString(36).substring(7),
     object: "checkout.session",
+    created: Math.floor(Date.now() / 1000),
+    adaptive_pricing: null,
+    amount_subtotal: null,
+    amount_total: null,
+    client_secret: null,
+    collected_information: null,
+    currency_conversion: null,
+    custom_fields: [],
+    custom_text: {
+      after_submit: null,
+      shipping_address: null,
+      submit: null,
+      terms_of_service_acceptance: null,
+    },
+    customer_details: null,
+    discounts: null,
+    invoice: null,
+    invoice_creation: null,
+    origin_context: null,
+    payment_method_configuration_details: null,
+    permissions: null,
+    saved_payment_method_options: null,
+    shipping_address_collection: null,
+    shipping_cost: null,
+    shipping_options: [],
+    ui_mode: null,
+    wallet_options: null,
     after_expiration: null,
     allow_promotion_codes: true,
-    automatic_tax: { enabled: false, status: null },
+    automatic_tax: { enabled: false, liability: null, provider: null, status: null },
     billing_address_collection: null,
     cancel_url: "http://localhost:3000/pricing?success=false",
     client_reference_id: "user_test_123",
@@ -68,8 +72,8 @@ export function createMockCheckoutSession(
       amount_tax: 0,
     },
     url: "https://checkout.stripe.com/pay/...",
-    ...overrides,
-  } as Stripe.Checkout.Session;
+  };
+  return Object.assign(session, overrides);
 }
 
 export const TEST_USER = {

@@ -1084,12 +1084,6 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "best-ai-interior-design-tools-2026",
-        // Previous title promised "7 ... Tools" while the article compares 4,
-        // and "Tested by a Builder" reads as a construction builder in an
-        // interior-design SERP. A count/content mismatch is the classic trigger
-        // for Google rewriting the title, which is the likeliest cause of the
-        // 0.05% CTR at position 9.4. Now honest, front-loaded on the exact
-        // query, and differentiated on the two axes the table actually covers.
         title: "Best AI Interior Design Tools 2026: Privacy & Price Compared",
         metaDescription:
             "RoomGPT, Interior AI and Reimagine Home compared on AI model, photo retention and real cost — by someone who built one of them. No affiliate links.",
@@ -1345,9 +1339,6 @@ export const BLOG_POSTS: IBlogPost[] = [
     },
     {
         slug: "home-office-ai-design",
-        // Front-loads "ai home office design" (the actual query); description
-        // switched from a summary of the article to a promise about the reader's
-        // own room.
         title: "AI Home Office Design: 10 Ideas for 2026 Workspaces",
         metaDescription:
             "Home office ideas you can test on your own room before buying a desk. Upload one photo, get an AI redesign in 60 seconds. 1 free credit, no card.",

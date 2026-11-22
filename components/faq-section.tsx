@@ -7,19 +7,11 @@ export interface FaqSectionItem {
 
 interface FAQSectionProps {
   items: FaqSectionItem[];
-  /** Small label above the heading. */
   label?: string;
-  /** The H2. Wrap a part in <em> for the italic serif emphasis. */
   heading?: ReactNode;
   id?: string;
 }
 
-/**
- * Two-column FAQ: sticky serif heading on the left (from 1024px), questions on
- * the right. Native <details>, so every answer is in the HTML (the FAQPage
- * JSON-LD on the same page must match visible text) and it works without JS.
- * The + turns into an × when a question is open.
- */
 export function FAQSection({
   items,
   label = "Questions",

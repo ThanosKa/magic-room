@@ -1,8 +1,3 @@
-// Submit every URL in the live sitemap to IndexNow (Bing, Yandex, etc.).
-// Run AFTER deploying (the key file must be live at KEY_LOCATION):
-//   node scripts/indexnow.mjs
-// Add --dry-run to print the payload without sending it.
-
 const HOST = "magic-room.dev";
 const KEY = "95416de7529decbbd49cb024f7eab69a";
 const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;

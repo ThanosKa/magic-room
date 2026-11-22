@@ -3,8 +3,6 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { CompareSlider } from "@/components/compare-slider";
 
-// jsdom has no PointerEvent: a MouseEvent carrying pointerId/pointerType is
-// what React's pointer handlers read.
 function pointer(
     target: Element,
     type: string,
@@ -45,7 +43,6 @@ beforeEach(() => {
             />
         );
     });
-    // The slider box is 200px wide, starting at x = 100.
     box().getBoundingClientRect = () =>
         ({ left: 100, width: 200, top: 0, height: 150, right: 300, bottom: 150, x: 100, y: 0 }) as DOMRect;
 });
@@ -76,19 +73,16 @@ describe("CompareSlider", () => {
         pointer(box(), "pointermove", { x: 160, id: 1, kind: "touch" });
         expect(position()).toBe(30);
 
-        // A second finger lands, moves and lifts: nothing happens.
         pointer(box(), "pointerdown", { x: 280, id: 2, kind: "touch" });
         pointer(box(), "pointermove", { x: 290, id: 2, kind: "touch" });
         pointer(box(), "pointerup", { x: 290, id: 2, kind: "touch" });
         expect(position()).toBe(30);
 
-        // The first finger is still dragging.
         pointer(box(), "pointermove", { x: 200, id: 1, kind: "touch" });
         expect(position()).toBe(50);
     });
 
     it("leaves the divider alone when a touch turns into a page scroll", () => {
-        // The browser takes over for vertical scrolling and cancels the pointer.
         pointer(box(), "pointerdown", { x: 280, kind: "touch" });
         pointer(box(), "pointercancel", { x: 280, kind: "touch" });
         expect(position()).toBe(50);
@@ -97,7 +91,6 @@ describe("CompareSlider", () => {
     });
 
     it("ignores the first, mostly vertical moves of a finger that is starting a scroll", () => {
-        // Chrome sends a few pointermoves before it takes over and cancels.
         pointer(box(), "pointerdown", { x: 150, y: 100, kind: "touch" });
         pointer(box(), "pointermove", { x: 154, y: 90, kind: "touch" });
         pointer(box(), "pointermove", { x: 158, y: 70, kind: "touch" });
@@ -109,7 +102,6 @@ describe("CompareSlider", () => {
         pointer(box(), "pointerdown", { x: 200, y: 100, kind: "touch" });
         pointer(box(), "pointermove", { x: 208, y: 101, kind: "touch" });
         expect(position()).toBe(54);
-        // From then on it follows, even if the finger drifts up or down.
         pointer(box(), "pointermove", { x: 250, y: 140, kind: "touch" });
         expect(position()).toBe(75);
     });

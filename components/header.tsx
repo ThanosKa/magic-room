@@ -19,37 +19,24 @@ const NAV = [
   { href: "/pricing", label: "Pricing" },
 ];
 
-/** The menu is for phones and tablets; from this width the full bar shows. */
 const DESKTOP_QUERY = "(min-width: 1024px)";
 
-/** Scroll positions where the bar narrows (going down) and widens again (going up). */
 const COMPACT_AFTER = 40;
 const FULL_BEFORE = 20;
-/** How far each end of the bar moves in, as a share of its width (capped by free space). */
 const SHRINK = 0.09;
 
 interface BarFit {
-  /** px each end of the bar moves in. */
   inset: number;
-  /** scaleX for the background layer: (width - 2 * inset) / width. */
   scale: number;
-  /** Half the bar's height: its corner radius. */
   radius: number;
 }
 
-/**
- * Measures how much the floating bar can narrow without its items touching:
- * the free space between them, at most SHRINK of the width. Re-measured when
- * the bar or any item changes size (viewport, Clerk loading, credits pill).
- */
 function useBarFit(bar: RefObject<HTMLDivElement | null>) {
   const [fit, setFit] = useState<BarFit | null>(null);
 
   useEffect(() => {
     const el = bar.current;
     if (!el) return;
-    // Direct children only. Not `:scope > ...`: jsdom's selector engine rejects
-    // it, which throws in the hydration tests (browsers are fine either way).
     const items = Array.from(el.children).filter(
       (child): child is HTMLElement => child instanceof HTMLElement && child.hasAttribute("data-bar-item")
     );
@@ -82,11 +69,10 @@ function useBarFit(bar: RefObject<HTMLDivElement | null>) {
   return fit;
 }
 
-function isCurrent(pathname: string, href: string) {
+function isCurrent({ pathname, href }: { pathname: string; href: string }) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-/** Credit balance pill (purple accent), links to pricing. */
 function Credits({ onClick, className }: { onClick?: () => void; className?: string }) {
   const { credits, isLoading, user, error } = useUserStore();
   const pending = isLoading || (!user && !error);
@@ -117,7 +103,6 @@ export function Header() {
   const { isSignedIn, isLoaded } = useHydratedUser();
   const pathname = usePathname();
 
-  // The menu belongs to the page it was opened on: navigating anywhere closes it.
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn !== null && openOn === pathname;
   const close = () => setOpenOn(null);
@@ -133,7 +118,6 @@ export function Header() {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 8);
-      // Two thresholds, so a page resting near one of them can't flicker.
       setPast((was) => (was ? y > FULL_BEFORE : y > COMPACT_AFTER));
     };
     onScroll();
@@ -141,8 +125,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Transitions switch on one frame after the first measure, so a page that
-  // loads already scrolled shows the narrow bar instead of animating to it.
   const [live, setLive] = useState(false);
   useEffect(() => {
     if (!fit || live) return;
@@ -150,13 +132,6 @@ export function Header() {
     return () => cancelAnimationFrame(id);
   }, [fit, live]);
 
-  /*
-   * Shrinking bar (owner request): past COMPACT_AFTER the floating bar gets
-   * narrower and widens again near the top. Nothing is resized: the
-   * background layer scales on X (its corner radius is widened by 1/scale so
-   * the round ends stay round) and the items at each end slide in. Reduced
-   * motion: the bar keeps its width.
-   */
   const compact = past && !reduced && fit !== null && fit.inset > 0;
   const shift = (dir: 1 | -1): CSSProperties | undefined =>
     compact ? { transform: `translateX(${dir * (fit?.inset ?? 0)}px)` } : undefined;
@@ -168,10 +143,6 @@ export function Header() {
     : undefined;
   const slide = live && "transition-transform duration-400 ease-out motion-reduce:transition-none";
 
-  // While the menu is open: lock page scroll, close on Esc (focus back on the
-  // menu button) and when the viewport grows to the desktop bar. The lock goes
-  // on <html>: on <body> it would make body a scroll container (html has
-  // overflow-x: clip), and the sticky header would leave the screen.
   useEffect(() => {
     if (!open) return;
     const prevOverflow = document.documentElement.style.overflow;
@@ -202,7 +173,6 @@ export function Header() {
         data-compact={compact}
         className="group/bar relative isolate mx-auto flex h-[52px] max-w-[1344px] items-center gap-6 pl-3 pr-1.5 sm:h-14 sm:pl-4 sm:pr-2"
       >
-        {/* The bar's surface, on its own layer so it can scale without touching layout. */}
         <span
           aria-hidden="true"
           style={bgStyle}
@@ -222,7 +192,7 @@ export function Header() {
             <Link
               key={n.href}
               href={n.href}
-              aria-current={isCurrent(pathname, n.href) ? "page" : undefined}
+              aria-current={isCurrent({ pathname, href: n.href }) ? "page" : undefined}
               className="inline-flex h-10 items-center rounded-full px-3.5 text-sm font-medium text-ink-2 transition-colors duration-200 hover:bg-ink/5 hover:text-ink aria-[current=page]:text-ink motion-reduce:transition-none"
             >
               {n.label}
@@ -236,8 +206,6 @@ export function Header() {
           className={cn(
             "hidden items-center gap-1.5 lg:flex",
             live && "transition-[opacity,transform] duration-[200ms,400ms] ease-out motion-reduce:transition-none",
-            // Clerk decides the signed-in state on the client; fade in once it
-            // has, so a signed-in visitor never sees a flash of "Sign In".
             !isLoaded && "opacity-0"
           )}
         >
@@ -307,7 +275,7 @@ export function Header() {
                 key={n.href}
                 href={n.href}
                 onClick={close}
-                aria-current={isCurrent(pathname, n.href) ? "page" : undefined}
+                aria-current={isCurrent({ pathname, href: n.href }) ? "page" : undefined}
                 style={{ animationDelay: `${60 + i * 30}ms` }}
                 className="block animate-lift-in border-b border-line py-2.5 font-serif text-[40px] leading-[1.1] tracking-[-0.02em] text-ink"
               >

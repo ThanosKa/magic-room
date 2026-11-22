@@ -28,7 +28,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 - Verify first: `receiveStripeEvent` (`lib/webhook-intake.ts`) reads the raw body and awaits `parseWebhookEvent`; a missing or bad signature returns its 401 response unchanged. It uses `constructEventAsync`, because the sync `constructEvent` throws on Workers and every real event would look like a bad signature.
 - Grant only through `grantPurchase` in `lib/credit-ledger.ts`, which calls the `grant_purchase_credits` SQL function (`supabase/migrations/004_atomic_purchase_grant.sql`) via `grantPurchaseCredits` in `lib/supabase.ts`. It writes the transaction and adds the credits together, and a unique index allows one purchase row per payment. This is what stops double grants.
-- A failed grant returns 500 so Stripe redelivers. `isWebhookProcessed("stripe", event.id)` before any work and `markWebhookProcessed` after the grant only save work: the Redis key lasts 24 hours and a Redis error fails open.
+- A failed grant returns 500 so Stripe redelivers. `isWebhookProcessed({ webhookType: "stripe", eventId })` before any work and `markWebhookProcessed` after the grant only save work: the Redis key lasts 24 hours and a Redis error fails open.
 - Grant credits only when `payment_status` is `paid` or `no_payment_required`, and only from `metadata.packageId` looked up in `CREDIT_PACKAGES`.
 - Resolve the user from `metadata.userId` or `client_reference_id`: Supabase UUID first, then Clerk id.
 - Store `payment_intent` as `stripe_payment_id`, or `session.id` when there is none.
@@ -36,7 +36,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Clerk webhook (`app/api/webhooks/clerk/route.ts`)
 
-- `receiveClerkEvent` (`lib/webhook-intake.ts`) reads the raw body and verifies it with `svix`; the route switches on the typed event it returns. After each successful outcome the route calls `markWebhookProcessed("clerk", svixId)`; nothing reads that key, so deliveries are not de-duplicated and the handlers' idempotency is what protects against redelivery.
+- `receiveClerkEvent` (`lib/webhook-intake.ts`) reads the raw body and verifies it with `svix`; the route switches on the typed event it returns. After each successful outcome the route calls `markWebhookProcessed({ webhookType: "clerk", eventId: svixId })`; nothing reads that key, so deliveries are not de-duplicated and the handlers' idempotency is what protects against redelivery.
 - Handlers are idempotent: an existing row on `user.created` or a missing row on `user.deleted` returns 200 with no change.
 - `getUserByClerkId` and `getUserById` return `null` only when the User does not exist (PGRST116); any other database error is logged and thrown, so a database failure is never read as "no such User". `ensureUserExists` lets that throw reach its caller (no Clerk call, no creation) and still creates a missing User. Every caller's existing catch answers 500: generate, checkout and the user endpoint "Internal server error", Clerk `user.created` "Error creating user", `user.updated` "Error updating user", `user.deleted` "Error deleting user", the Stripe webhook "Webhook error" (the event stays unprocessed, so the retry is handled in full).
 - Return 500 on a database failure so Clerk redelivers, and 200 for event types the route ignores.
@@ -48,7 +48,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Models and prompts (`lib/room-designer.ts`, `lib/openrouter.ts`)
 
-- The generate route reaches the model only through the room designer (`designRoom` in `lib/room-designer.ts`), which builds the prompt, calls `generateDesign` and returns the images or a tagged failure. A provider, model or fallback change happens behind it; the route never imports the prompt builder or `generateDesign`.
+- The generate route reaches the model only through the room designer (`designRoom` in `lib/room-designer.ts`), which builds the prompt, calls `generateDesign` and returns the images or a tagged failure. A provider, model or fallback change happens behind it; the route never imports the prompt builder or `generateDesign`. `designRoom` stays out of `lib/openrouter.ts` on purpose: calls inside one module do not pass through `vi.mock`, so it would call the real `generateDesign` and `buildDesignPrompt` and hide the mocked ones from the route tests and the prompt-baseline test.
 - OpenRouter retires model slugs. A swap touches `QUALITY_OPTIONS`, `tests/lib/openrouter.test.ts`, `tests/app/api/generate/route.test.ts`, `public/pricing.md`, `public/llms.txt` and `public/llms-full.txt`.
 - `tests/app/api/generate/prompt-baseline.test.ts` locks every prompt to the character. A failure means generation output changed for an existing option: change the prompt back. Its fixture stays as recorded. Options added since then are covered by `tests/app/api/generate/all-options.test.ts`.
 

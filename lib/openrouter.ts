@@ -3,11 +3,6 @@ import { QUALITY_OPTIONS } from "@/lib/constants";
 import type { Quality, RoomType, Theme } from "@/types";
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
-/**
- * How long to wait for an image before giving up, so a hung provider ends in
- * the route's refund. Ultra usually takes about 2 minutes. Waiting on fetch
- * uses no CPU time, so the Workers Paid CPU limit does not apply.
- */
 export const OPENROUTER_TIMEOUT_MS = 280_000;
 export const POSITIVE_PROMPT = `beautiful interior design, professional photography, well-lit, 
 detailed textures, high quality, realistic, modern aesthetic, clean composition`;
@@ -17,13 +12,15 @@ cluttered, amateur, watermark, text`;
 
 interface GenerationResult {
     success: boolean;
-    images: string[]; // Base64 data URLs
+    images: string[];
     textResponse?: string;
     error?: string;
 }
 
-interface GenerateOptions {
-    /** Aborts the request, e.g. when the browser disconnects. */
+interface GenerateParams {
+    base64Image: string;
+    prompt: string;
+    quality?: Quality;
     signal?: AbortSignal;
 }
 
@@ -43,7 +40,6 @@ interface OpenRouterResponse {
     };
 }
 
-/** Names of the top-level keys of a JSON text, or [] when it is not a JSON object. */
 function topLevelKeys(text: string): string[] {
     try {
         const parsed: unknown = JSON.parse(text);
@@ -53,12 +49,12 @@ function topLevelKeys(text: string): string[] {
     }
 }
 
-export async function generateDesign(
-    base64Image: string,
-    prompt: string,
-    quality: Quality = "standard",
-    options: GenerateOptions = {}
-): Promise<GenerationResult> {
+export async function generateDesign({
+    base64Image,
+    prompt,
+    quality = "standard",
+    signal,
+}: GenerateParams): Promise<GenerationResult> {
     const apiKey = process.env.OPENROUTER_API_KEY;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -81,17 +77,16 @@ export async function generateDesign(
 
     const startTime = Date.now();
 
-    // Aborts on the caller's signal or after OPENROUTER_TIMEOUT_MS, whichever comes first.
     const controller = new AbortController();
     const timer = setTimeout(
         () => controller.abort(new Error(`OpenRouter did not answer within ${OPENROUTER_TIMEOUT_MS / 1000} s`)),
         OPENROUTER_TIMEOUT_MS
     );
-    const stopForCaller = () => controller.abort(options.signal?.reason);
-    if (options.signal?.aborted) {
+    const stopForCaller = () => controller.abort(signal?.reason);
+    if (signal?.aborted) {
         stopForCaller();
     } else {
-        options.signal?.addEventListener("abort", stopForCaller, { once: true });
+        signal?.addEventListener("abort", stopForCaller, { once: true });
     }
 
     try {
@@ -102,7 +97,7 @@ export async function generateDesign(
                 "Authorization": `Bearer ${apiKey}`,
                 "Content-Type": "application/json",
                 "HTTP-Referer": appUrl,
-                "X-Title": "Magic Room", // Shows in OpenRouter dashboard
+                "X-Title": "Magic Room",
             },
             body: JSON.stringify({
                 model: selectedModel,
@@ -130,7 +125,6 @@ export async function generateDesign(
         const duration = Date.now() - startTime;
 
         if (!response.ok) {
-            // Status, keys and size only: the body is the provider's, not ours to keep in logs.
             const errorText = await response.text().catch(() => "");
             logger.error(
                 {
@@ -156,7 +150,6 @@ export async function generateDesign(
 
         const choice = data.choices?.[0];
         if (!choice) {
-            // Keys only: the body can be large and is not ours to keep in logs.
             logger.error({ responseKeys: Object.keys(data ?? {}), duration }, "[OpenRouter] No choices in response");
             throw new Error("No response from OpenRouter");
         }
@@ -227,17 +220,19 @@ export async function generateDesign(
         throw error;
     } finally {
         clearTimeout(timer);
-        options.signal?.removeEventListener("abort", stopForCaller);
+        signal?.removeEventListener("abort", stopForCaller);
     }
 }
 
-export function buildDesignPrompt(
-    roomType: RoomType,
-    theme: Theme,
-    quality: Quality = "standard",
-    customPrompt?: string
-): string {
-    void quality; // Parameter used for type safety but not needed in prompt construction
+export function buildDesignPrompt({
+    roomType,
+    theme,
+    customPrompt,
+}: {
+    roomType: RoomType;
+    theme: Theme;
+    customPrompt?: string;
+}): string {
     const roomDescriptions: Record<RoomType, string> = {
         "living-room": "a modern living room with comfortable seating",
         bedroom: "a relaxing bedroom with a stylish bed",

@@ -1,7 +1,3 @@
-/**
- * The homepage FAQ: one list for both the visible FAQ and the FAQPage JSON-LD
- * on `/`, so the two can never drift apart.
- */
 export interface HomeFaqItem {
   question: string;
   answer: string;

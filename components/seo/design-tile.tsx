@@ -6,23 +6,13 @@ import { cn } from "@/lib/utils";
 
 interface DesignTileProps {
     href: string;
-    /** Photo shown in the frame. Decorative: the title next to it names the link. */
     image: string;
     title: string;
     description: string;
-    /** next/image `sizes` for the grid the tile sits in. */
     sizes: string;
-    /** Frame aspect ratio class, e.g. `aspect-[4/5]`. */
     aspect?: string;
 }
 
-/**
- * Gallery card for a design page: the redesigned room in a rounded frame, a
- * serif title (h3) and one line of description below. The whole card is the
- * link. Used by the /design hub and the sibling blocks on each design page.
- * Hover (fine pointers only) zooms the photo slightly and turns the arrow
- * accent; press scales the card.
- */
 export function DesignTile({
     href,
     image,

@@ -36,7 +36,6 @@ interface VsRow {
     competitor: string;
 }
 
-/** Competitor cells come from `lib/seo/competitor-data.ts`, where each claim names its source. */
 function buildVsRows(competitor: ICompetitorData): VsRow[] {
     return [
         {
@@ -69,9 +68,7 @@ function buildVsRows(competitor: ICompetitorData): VsRow[] {
 
 interface VsPageContentProps {
     competitor: ICompetitorData;
-    /** The other three competitors, for sibling /vs and /alternatives links. */
     otherCompetitors?: ICompetitorData[];
-    /** Subset of otherCompetitors that still have a live (non-redirecting) /vs page. */
     vsSiblings?: ICompetitorData[];
     designLinks?: IContextualLink[];
     blogLinks?: IContextualLink[];
@@ -97,7 +94,6 @@ export function VsPageContent({
         <PageTransition>
             <PageBreadcrumb items={breadcrumbItems} />
 
-            {/* Hero */}
             <ComparisonHero>
                 <h1 className={H1_CLASS}>Magic Room vs {competitor.name}</h1>
                 <p
@@ -109,7 +105,6 @@ export function VsPageContent({
                     photo is stored, and whether you pay once or every month.
                 </p>
 
-                {/* Direct answer block */}
                 <div
                     className="mt-10 animate-rise rounded-2xl bg-paper-2 p-6 motion-reduce:animate-none md:p-8"
                     style={{ animationDelay: "220ms" }}
@@ -127,7 +122,6 @@ export function VsPageContent({
                 </div>
             </ComparisonHero>
 
-            {/* Comparison table */}
             <Section tone="band">
                 <h2 className={`${H2_CLASS} max-w-3xl`}>
                     Magic Room vs {competitor.name}: side-by-side comparison
@@ -155,7 +149,6 @@ export function VsPageContent({
                 />
             </Section>
 
-            {/* Who each is best for */}
             <Section rule={false}>
                 <h2 className={`${H2_CLASS} max-w-[24ch]`}>
                     Who should use Magic Room and who should use {competitor.name}?
@@ -192,7 +185,6 @@ export function VsPageContent({
                 </div>
             </Section>
 
-            {/* FAQ */}
             {competitor.faqs.length > 0 && (
                 <Section>
                     <Split heading={<>Common questions about Magic Room vs {competitor.name}</>}>
@@ -208,9 +200,6 @@ export function VsPageContent({
                 </Section>
             )}
 
-            {/* Pricing mechanics — the pricing query cluster ("reimagine home
-                pricing 2026", "interior ai pricing 2026", "roomgpt pricing
-                2026") lands on these pages and previously found nothing. */}
             <Section>
                 <Split
                     heading={<>{competitor.name} pricing vs Magic Room pricing</>}
@@ -289,10 +278,6 @@ export function VsPageContent({
                 </Split>
             </Section>
 
-            {/* Sibling comparison pages.
-                /vs/decorai, /vs/interior-ai and /vs/reimaginehome each had
-                exactly one inbound internal link — the /alternatives hub. The
-                four head-to-head pages now form a closed cluster. */}
             <Section>
                 {vsSiblings.length > 0 && (
                     <>

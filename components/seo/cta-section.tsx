@@ -12,11 +12,6 @@ interface CtaSectionProps {
     secondaryHref?: string;
 }
 
-/**
- * Closing call to action: a rounded night band inset from the page edges,
- * cream serif heading, cream pill (with an ink arrow chip) and a cream text
- * link. Ported from the test page's closing section, without the photo.
- */
 export function CtaSection({
     heading,
     subtext,

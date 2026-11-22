@@ -17,11 +17,6 @@ export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   },
 });
 
-/**
- * Returns null only when there is no such User (PGRST116). Any other database
- * error is logged and thrown, so a failing database is never read as a missing
- * User.
- */
 export async function getUserByClerkId(
   clerkUserId: string
 ): Promise<IUser | null> {
@@ -32,7 +27,6 @@ export async function getUserByClerkId(
     .single();
 
   if (error) {
-    // PGRST116 = no rows returned, expected when user doesn't exist yet
     if (error.code === "PGRST116") {
       return null;
     }
@@ -43,7 +37,6 @@ export async function getUserByClerkId(
   return data;
 }
 
-/** Same contract as `getUserByClerkId`: null only for a missing User, a database error throws. */
 export async function getUserById(userId: string): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
@@ -52,7 +45,6 @@ export async function getUserById(userId: string): Promise<IUser | null> {
     .single();
 
   if (error) {
-    // PGRST116 = no rows returned, expected when user doesn't exist yet
     if (error.code === "PGRST116") {
       return null;
     }
@@ -63,11 +55,15 @@ export async function getUserById(userId: string): Promise<IUser | null> {
   return data;
 }
 
-export async function createUser(
-  clerkUserId: string,
-  email: string,
-  initialCredits: number = FREE_SIGNUP_CREDITS
-): Promise<IUser | null> {
+export async function createUser({
+  clerkUserId,
+  email,
+  initialCredits = FREE_SIGNUP_CREDITS,
+}: {
+  clerkUserId: string;
+  email: string;
+  initialCredits?: number;
+}): Promise<IUser | null> {
   const { data, error } = await supabase
     .from("users")
     .insert([
@@ -106,9 +102,6 @@ export async function ensureUserExists(
     return user;
   }
 
-  // The Clerk webhook normally creates the row. If it was missed (endpoint
-  // disabled, delivery failed), create it here from the Clerk API so the user
-  // is never stuck with "User not found".
   logger.warn(
     { clerkUserId },
     "User missing in Supabase - webhook may have failed, creating from Clerk API"
@@ -130,7 +123,7 @@ export async function ensureUserExists(
       return null;
     }
 
-    const newUser = await createUser(clerkUserId, email, FREE_SIGNUP_CREDITS);
+    const newUser = await createUser({ clerkUserId, email, initialCredits: FREE_SIGNUP_CREDITS });
 
     if (newUser) {
       logger.info(
@@ -145,19 +138,20 @@ export async function ensureUserExists(
     return null;
   }
 
-  // Insert can fail if the webhook created the row at the same moment. A
-  // database failure here reaches the caller, like the first lookup.
   return getUserByClerkId(clerkUserId);
 }
 
-export async function updateUser(
-  clerkUserId: string,
+export async function updateUser({
+  clerkUserId,
+  updates,
+}: {
+  clerkUserId: string;
   updates: {
     email?: string;
     name?: string;
     profileImageUrl?: string;
-  }
-): Promise<IUser | null> {
+  };
+}): Promise<IUser | null> {
   const updateData: Record<string, unknown> = {};
 
   if (updates.email !== undefined) {
@@ -209,11 +203,7 @@ export async function deleteUser(clerkUserId: string) {
   return true;
 }
 
-// Takes the amount and writes its `usage` row in one transaction
-// (`deduct_credits_with_usage`, migration 006): both happen or neither does.
-// False means the balance was too low, the user does not exist, or the call
-// failed (a failed row write included).
-export async function deductCreditsWithUsage(userId: string, amount: number) {
+export async function deductCreditsWithUsage({ userId, amount }: { userId: string; amount: number }) {
   const { data, error } = await supabase.rpc("deduct_credits_with_usage", {
     p_user_id: userId,
     p_amount: amount,
@@ -227,9 +217,7 @@ export async function deductCreditsWithUsage(userId: string, amount: number) {
   return data === true;
 }
 
-// Adds the amount in one database statement. False means the user does not exist
-// or the call failed.
-export async function addCredits(userId: string, amount: number) {
+export async function addCredits({ userId, amount }: { userId: string; amount: number }) {
   const { data, error } = await supabase.rpc("add_credits", {
     p_user_id: userId,
     p_amount: amount,
@@ -243,13 +231,19 @@ export async function addCredits(userId: string, amount: number) {
   return data === true;
 }
 
-export async function createTransaction(
-  userId: string,
-  type: "purchase" | "usage" | "bonus" | "refund",
-  amount: number,
-  stripePaymentId?: string,
-  metadata?: Record<string, unknown>
-) {
+export async function createTransaction({
+  userId,
+  type,
+  amount,
+  stripePaymentId,
+  metadata,
+}: {
+  userId: string;
+  type: "purchase" | "usage" | "bonus" | "refund";
+  amount: number;
+  stripePaymentId?: string;
+  metadata?: Record<string, unknown>;
+}) {
   const { data, error } = await supabase
     .from("transactions")
     .insert([
@@ -275,14 +269,17 @@ export async function createTransaction(
   return data;
 }
 
-// Records a purchase and adds its credits in one transaction. `granted` is false
-// when this payment was already granted; null means the grant failed.
-export async function grantPurchaseCredits(
-  userId: string,
-  stripePaymentId: string,
-  credits: number,
-  metadata: Record<string, unknown>
-) {
+export async function grantPurchaseCredits({
+  userId,
+  stripePaymentId,
+  credits,
+  metadata,
+}: {
+  userId: string;
+  stripePaymentId: string;
+  credits: number;
+  metadata: Record<string, unknown>;
+}) {
   const { data, error } = await supabase.rpc("grant_purchase_credits", {
     p_user_id: userId,
     p_stripe_payment_id: stripePaymentId,
@@ -301,10 +298,13 @@ export async function grantPurchaseCredits(
   return { granted: data === true };
 }
 
-export async function hasRefundForPrediction(
-  userId: string,
-  predictionId: string
-) {
+export async function hasRefundForPrediction({
+  userId,
+  predictionId,
+}: {
+  userId: string;
+  predictionId: string;
+}) {
   const { data, error } = await supabase
     .from("transactions")
     .select("id")
@@ -325,7 +325,7 @@ export async function hasRefundForPrediction(
 }
 
 
-export async function deleteImageFromStorage(bucketName: string, path: string) {
+export async function deleteImageFromStorage({ bucketName, path }: { bucketName: string; path: string }) {
   const { error } = await supabase.storage.from(bucketName).remove([path]);
 
   if (error) {

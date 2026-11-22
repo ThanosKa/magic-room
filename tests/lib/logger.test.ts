@@ -54,8 +54,6 @@ describe("logger on the Workers runtime", () => {
     });
   });
 
-  // Logs are kept in Workers Logs. An SDK error can carry the request it
-  // made, with the API key in its headers, several levels down.
   it("redacts secrets nested inside an error or a sub-object", async () => {
     const { logger, consoleLog } = await loadLoggerOnWorkers();
 
@@ -95,9 +93,6 @@ describe("logger in production outside Workers", () => {
     vi.restoreAllMocks();
   });
 
-  // Runtime detection is a user-agent match. If it ever misses on Workers,
-  // pino's default destination throws on every log call, so production must
-  // not depend on it.
   it("still writes through the console when the runtime is not recognised", async () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubGlobal("navigator", { userAgent: "Cloudflare-Workers/2027" });

@@ -9,8 +9,6 @@ import {
 } from "./config";
 import { CREDIT_PACKAGES } from "@/lib/constants";
 
-// Entry pack, read from the source of truth so the pricing title and
-// description can never drift from what Stripe actually sells.
 const ENTRY_PACK = CREDIT_PACKAGES[0];
 const ENTRY_PRICE = `€${(ENTRY_PACK.priceCents / 100).toFixed(2)}`;
 const ENTRY_PER_DESIGN = `€${(ENTRY_PACK.priceCents / 100 / ENTRY_PACK.credits).toFixed(2)}`;
@@ -34,16 +32,6 @@ export function createMetadata(input?: CreateMetadataInput): Metadata {
     const titleString =
         typeof title === "string" ? title : title?.absolute;
     const description = input?.description ?? SITE_DESCRIPTION;
-    // `path` must be explicitly provided (use "" for the homepage). If a caller
-    // forgets it we deliberately emit NO canonical rather than silently
-    // canonicalising the page to the homepage — a wrong canonical removes the
-    // page from the index ("Alternate page with proper canonical tag"),
-    // whereas a missing canonical only falls back to the request URL.
-    // path "" is the homepage. `${SITE_URL}` with no trailing slash yields the
-    // bare origin "https://magic-room.dev", but the URL Google actually has in
-    // its index (and reports in Search Console) is "https://magic-room.dev/".
-    // Emit the form Google uses so the canonical is a byte-for-byte
-    // self-reference rather than relying on origin normalisation.
     const canonicalUrl =
         typeof input?.path === "string" ? `${SITE_URL}${input.path || "/"}` : undefined;
     const ogImage = input?.ogImage ?? OG_IMAGE;
@@ -61,11 +49,6 @@ export function createMetadata(input?: CreateMetadataInput): Metadata {
         authors: [{ name: SITE_NAME }],
         creator: SITE_NAME,
         publisher: SITE_NAME,
-        // Page-level `robots` REPLACES the root layout's robots object in Next.js
-        // metadata resolution — it is not merged. The googleBot directives below
-        // must therefore be repeated here, otherwise every page that calls
-        // createMetadata() silently loses max-image-preview:large (no image
-        // thumbnails in SERPs / Discover) and max-snippet:-1.
         robots: input?.noIndex
             ? {
                   index: false,
@@ -113,9 +96,6 @@ export function createMetadata(input?: CreateMetadataInput): Metadata {
 
 export function homeMetadata(): Metadata {
     return createMetadata({
-        // Was 64 chars (cut mid-phrase) with a 205-char description that Google
-        // truncated at ~155 — everything after "Photos never stored" was never
-        // seen. Both now fit inside what actually renders.
         title: {
             absolute: "AI Interior Design: Redesign Any Room From One Photo (2026)",
         },
@@ -173,8 +153,6 @@ export function termsMetadata(): Metadata {
 
 export function aboutMetadata(): Metadata {
     return createMetadata({
-        // "Built for Privacy" is a category claim; "Never Keeps Your Photos" is
-        // the same claim made checkable, which is what earns the click.
         title: {
             absolute: "What Is Magic Room? The AI Room Designer That Keeps Nothing",
         },
@@ -193,11 +171,6 @@ export function aboutMetadata(): Metadata {
 
 export function virtualStagingMetadata(): Metadata {
     return createMetadata({
-        // Old title led with the category ("AI Virtual Staging for Real Estate")
-        // and said nothing an agent scanning nine results couldn't already
-        // assume. The price is the differentiator, so the price goes in the
-        // title. Old description also quoted dollars while the whole product
-        // prices in euros.
         title: { absolute: "AI Virtual Staging: Stage Any Listing for Under €1" },
         description:
             "Stage a listing photo with AI for under €1 instead of thousands for traditional staging. Upload, pick a style, download in 60 seconds. Commercial rights.",

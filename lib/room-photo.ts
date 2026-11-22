@@ -1,16 +1,9 @@
-/**
- * Turns the user's room photo into the base64 data URL the generate API takes.
- * Runs in the browser only: the photo is never uploaded anywhere else.
- */
-
 const MAX_UPLOAD_SIZE = 2.5 * 1024 * 1024;
 const RESIZE_MAX_DIMENSION = 1536;
 
-/** Largest file the tool accepts before compression. */
 export const MAX_PHOTO_FILE_SIZE = 20 * 1024 * 1024;
 
 export interface RoomPhoto {
-    /** `data:image/...;base64,...` */
     dataUrl: string;
     width: number;
     height: number;
@@ -37,10 +30,6 @@ function readAsDataUrl(file: Blob): Promise<string> {
     });
 }
 
-/**
- * Photos over 1536 px on a side or 2.5 MB are scaled down and re-encoded as
- * JPEG (quality 0.9, on white). Smaller photos are sent as they are.
- */
 export async function prepareRoomPhoto(file: File): Promise<RoomPhoto> {
     const img = await loadImage(file);
 
@@ -69,7 +58,8 @@ export async function prepareRoomPhoto(file: File): Promise<RoomPhoto> {
     const canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Image compression failed");
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0, 0, w, h);
     ctx.drawImage(img, 0, 0, w, h);

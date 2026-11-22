@@ -54,14 +54,12 @@ export default function VirtualStagingPage() {
             { name: "Home", url: SITE_URL },
             { name: "Virtual Staging", url: PAGE_URL },
         ]),
-        // Commercial-intent page, so the priced SoftwareApplication belongs
-        // here. It is no longer emitted sitewide from the root layout.
         softwareApplicationSchema({
             description:
                 "AI virtual staging for real estate listings. Upload an empty or unfurnished room photo and get a photo-realistic staged image in 60 seconds, for under €1 per photo.",
             includeOffers: true,
         }),
-        faqSchema(FAQS, PAGE_URL),
+        faqSchema({ items: FAQS, pageUrl: PAGE_URL }),
     ];
 
     return (

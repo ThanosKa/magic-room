@@ -8,10 +8,6 @@ import { BrandMark } from "@/components/brand-mark";
 
 type FooterLink = { href: string; label: string };
 
-/*
- * Column order, headings and link text are part of every page's visible text
- * and internal links (the SEO parity check compares them), so keep them as is.
- */
 const PRODUCT: FooterLink[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
@@ -33,13 +29,6 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
       { href: "/design/modern-living-room", label: "Modern living room" },
       { href: "/design/scandinavian-bedroom", label: "Scandinavian bedroom" },
       { href: "/design/art-deco-bedroom", label: "Art Deco bedroom" },
-      /*
-       * Both of these are in the XML sitemap but had, respectively, zero and
-       * one inbound internal link anywhere on the site (/gallery's only
-       * occurrence was inside its own breadcrumb). A sitewide footer link is
-       * the cheapest crawl path from every page; without it they stay in
-       * "Discovered - not indexed".
-       */
       { href: "/gallery", label: "AI room design gallery" },
       { href: "/virtual-staging", label: "AI virtual staging" },
       { href: "/blog", label: "Blog" },
@@ -109,7 +98,6 @@ export function Footer() {
             <ColumnTitle>Product</ColumnTitle>
             <LinkList links={PRODUCT}>
               <li>
-                {/* Signed out: opens the sign-in window instead of the auth redirect. */}
                 <button
                   type="button"
                   onClick={() => (isSignedIn ? router.push("/generate") : openSignIn())}
@@ -130,10 +118,6 @@ export function Footer() {
         </div>
       </div>
 
-      {/*
-       * Decorative wordmark. Drawn with CSS generated content (not text nodes)
-       * so it adds nothing to the page's text for search engines or screen readers.
-       */}
       <p
         aria-hidden="true"
         className="mx-auto mt-16 max-w-[1240px] select-none whitespace-nowrap pb-[0.14em] font-serif text-[clamp(72px,21.5vw,320px)] leading-[0.8] tracking-[-0.045em] text-ink sm:mt-24"
