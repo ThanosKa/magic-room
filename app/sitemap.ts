@@ -14,6 +14,9 @@ const RIGHTS_2026_11_LAST_UPDATED = new Date("2026-11-01");
 const HOME_2026_11_LAST_UPDATED = new Date("2026-11-06");
 const CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-09");
 const MODEL_CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-13");
+const DESIGN_PAGE_DATES: Record<string, Date> = {
+    "scandinavian-bedroom": new Date("2026-11-18"),
+};
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = SITE_URL;
@@ -74,7 +77,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const designPages: MetadataRoute.Sitemap = PRIORITY_DESIGN_SLUGS.map((slug) => ({
         url: `${baseUrl}/design/${slug}`,
-        lastModified: PASS_2026_10_LAST_UPDATED,
+        lastModified: DESIGN_PAGE_DATES[slug] ?? PASS_2026_10_LAST_UPDATED,
         changeFrequency: "monthly" as const,
         priority: TOP_DESIGN_SLUGS.has(slug) ? 0.8 : 0.6,
     }));

@@ -34,6 +34,7 @@ AI interior design web app: upload one room photo, pick a room type and a style,
 
 - `main` is the released code; `dev` collects work and is released by a PR `dev` → `main` titled `release: ...`.
 - Merging to `main` updates the live site: `.github/workflows/deploy.yml` deploys once CI passes, and stops if `supabase/migrations/` changed, so apply the migration first and then press Run workflow.
+- Logs: `npx wrangler tail magic-room --format pretty` streams live requests through the owner's `wrangler login`, so start it before the request you want to see.
 - Branch from `dev` as `<type>/<slug>` (`fix/header-scope-selector`, `seo/model-facts`) and open the PR against `dev`.
 - The scheduled SEO autopilot is the exception: its runbook lives in the private `ThanosKa/seo-hub` repo and it opens `autopilot/seo-YYYY-MM-DD` PRs against `main`.
 - Commits are Conventional Commits with a scope, lowercase and imperative: `fix(copy): ...`, `feat(generate): ...`. Types in use: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `chore`, `seo`.
@@ -48,3 +49,17 @@ AI interior design web app: upload one room photo, pick a room type and a style,
 - Secrets stay server-side: `lib/supabase.ts`, `lib/stripe.ts`, `lib/redis.ts` and `lib/openrouter.ts` are imported only by server code, and client code reads only `NEXT_PUBLIC_*`. Never commit `.env*`; `.env.example` holds placeholders.
 - The repo is public: never write user, revenue or sign-up numbers into any file, commit or PR. Search Console aggregates are fine.
 - Add a dependency only with the owner's approval. A package with a build script must also be listed in `allowBuilds` in `pnpm-workspace.yaml`, or `pnpm install` fails.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs are local markdown files under `.scratch/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default labels, recorded as a `Status:` line in each issue. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context. See `docs/agents/domain.md`.
