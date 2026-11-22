@@ -16,7 +16,7 @@ const ENTRY_PER_DESIGN = `€${(ENTRY_PACK.priceCents / 100 / ENTRY_PACK.credits
 interface CreateMetadataInput {
     title?: string | { absolute: string };
     description?: string;
-    path: string;
+    path?: string;
     noIndex?: boolean;
     keywords?: string[];
     ogImage?: {
@@ -27,14 +27,14 @@ interface CreateMetadataInput {
     };
 }
 
-export function createMetadata(input: CreateMetadataInput): Metadata {
-    const title = input.title;
+export function createMetadata(input?: CreateMetadataInput): Metadata {
+    const title = input?.title;
     const titleString =
         typeof title === "string" ? title : title?.absolute;
-    const description = input.description ?? SITE_DESCRIPTION;
+    const description = input?.description ?? SITE_DESCRIPTION;
     const canonicalUrl =
-        `${SITE_URL}${input.path || "/"}`;
-    const ogImage = input.ogImage ?? OG_IMAGE;
+        typeof input?.path === "string" ? `${SITE_URL}${input.path || "/"}` : undefined;
+    const ogImage = input?.ogImage ?? OG_IMAGE;
     const isAbsolute = typeof title === "object" && title !== null;
     const fullTitle = titleString
         ? isAbsolute
@@ -45,11 +45,11 @@ export function createMetadata(input: CreateMetadataInput): Metadata {
     return {
         title,
         description,
-        keywords: input.keywords ?? SITE_KEYWORDS,
+        keywords: input?.keywords ?? SITE_KEYWORDS,
         authors: [{ name: SITE_NAME }],
         creator: SITE_NAME,
         publisher: SITE_NAME,
-        robots: input.noIndex
+        robots: input?.noIndex
             ? {
                   index: false,
                   follow: false,

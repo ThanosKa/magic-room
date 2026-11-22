@@ -80,6 +80,7 @@ export default async function VsPage({ params }: Props) {
         ]),
         softwareApplicationSchema({
             description: `AI interior design tool compared side-by-side with ${competitor.name}. One-time credit packages from €9.99, no subscription, photos never stored.`,
+            includeOffers: true,
         }),
         ...(competitor.faqs.length > 0 ? [faqSchema({ items: competitor.faqs, pageUrl: `${SITE_URL}/vs/${slug}` })] : []),
     ];

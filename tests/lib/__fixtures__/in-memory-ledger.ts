@@ -1,3 +1,10 @@
+import type {
+  addCredits,
+  createTransaction,
+  deductCreditsWithUsage,
+  grantPurchaseCredits,
+} from "@/lib/supabase";
+
 type TransactionType = "purchase" | "usage" | "bonus" | "refund";
 
 export interface LedgerRow {
@@ -40,7 +47,7 @@ function createInMemoryLedger() {
   }
 
   const supabaseFunctions = {
-    async deductCreditsWithUsage({ userId, amount }: { userId: string; amount: number }): Promise<boolean> {
+    async deductCreditsWithUsage({ userId, amount }: Parameters<typeof deductCreditsWithUsage>[0]): Promise<boolean> {
       if (await roundTrip("deductCreditsWithUsage")) return false;
       const balance = balances.get(userId);
       if (balance === undefined || balance < amount) return false;
@@ -50,7 +57,7 @@ function createInMemoryLedger() {
       return true;
     },
 
-    async addCredits({ userId, amount }: { userId: string; amount: number }): Promise<boolean> {
+    async addCredits({ userId, amount }: Parameters<typeof addCredits>[0]): Promise<boolean> {
       if (await roundTrip("addCredits")) return false;
       const balance = balances.get(userId);
       if (balance === undefined) return false;
@@ -64,13 +71,7 @@ function createInMemoryLedger() {
       amount,
       stripePaymentId,
       metadata,
-    }: {
-      userId: string;
-      type: TransactionType;
-      amount: number;
-      stripePaymentId?: string;
-      metadata?: Record<string, unknown>;
-    }): Promise<LedgerRow | null> {
+    }: Parameters<typeof createTransaction>[0]): Promise<LedgerRow | null> {
       if (await roundTrip("createTransaction")) return null;
       if (!balances.has(userId)) return null;
       if (type === "usage" && refusesUsageRow()) return null;
@@ -84,12 +85,7 @@ function createInMemoryLedger() {
       stripePaymentId,
       credits,
       metadata,
-    }: {
-      userId: string;
-      stripePaymentId: string;
-      credits: number;
-      metadata: Record<string, unknown>;
-    }): Promise<{ granted: boolean } | null> {
+    }: Parameters<typeof grantPurchaseCredits>[0]): Promise<{ granted: boolean } | null> {
       if (await roundTrip("grantPurchaseCredits")) return null;
       const balance = balances.get(userId);
       if (balance === undefined) return null;

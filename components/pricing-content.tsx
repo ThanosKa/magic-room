@@ -11,9 +11,10 @@ import { useHydratedUser } from "@/hooks/use-hydrated-user";
 import { CREDIT_PACKAGES as PACKS, QUALITY_OPTIONS } from "@/lib/constants";
 import { cn, formatCredits } from "@/lib/utils";
 
-function pack(id: "starter" | "growth" | "premium") {
-  const pkg = PACKS.find((p) => p.id === id);
-  if (!pkg) throw new Error(`Missing credit package: ${id}`);
+type Pack = (typeof PACKS)[number];
+type PackOf<Id extends Pack["id"]> = Extract<Pack, { id: Id }>;
+
+function summary(pkg: Pack) {
   return { credits: pkg.credits, perCredit: euros(pkg.priceCents / pkg.credits) };
 }
 
@@ -21,9 +22,14 @@ function euros(cents: number): string {
   return `€${(Math.round(cents) / 100).toFixed(2)}`;
 }
 
-const STARTER = pack("starter");
-const GROWTH = pack("growth");
-const PREMIUM = pack("premium");
+const [starterPack, growthPack, premiumPack] = PACKS satisfies readonly [
+  PackOf<"starter">,
+  PackOf<"growth">,
+  PackOf<"premium">,
+];
+const STARTER = summary(starterPack);
+const GROWTH = summary(growthPack);
+const PREMIUM = summary(premiumPack);
 const TIERS = Object.values(QUALITY_OPTIONS);
 
 const CREDIT_PACKAGES = [

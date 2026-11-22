@@ -2,9 +2,8 @@ import type { NextConfig } from "next";
 import { PRUNED_NOINDEX_PATHS, PRUNED_REDIRECTS } from "./lib/seo/pruned";
 
 const nextConfig: NextConfig = {
-  // https://nextjs.org/docs/app/api-reference/config/next-config-js/htmlLimitedBots (generateMetadata output stays in the initial <head>)
+  // https://github.com/cloudflare/vinext/blob/main/docs/caching.mdx (generateMetadata output stays in the initial <head>)
   htmlLimitedBots: /.*/,
-  // https://nextjs.org/docs/app/api-reference/components/image#qualities (one quality only: each new q on /_next/image is a paid Cloudflare Images transformation)
   images: { qualities: [75] },
   serverExternalPackages: [
     "pino",

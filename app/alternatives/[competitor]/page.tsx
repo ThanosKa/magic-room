@@ -69,6 +69,7 @@ export default async function AlternativePage({ params }: Props) {
         ]),
         softwareApplicationSchema({
             description: `AI interior design tool offered as a ${competitor.name} alternative. One-time credit packages from €9.99, no subscription, photos never stored.`,
+            includeOffers: true,
         }),
         ...(competitor.faqs.length > 0 ? [faqSchema({ items: competitor.faqs, pageUrl: `${SITE_URL}/alternatives/${slug}` })] : []),
     ];

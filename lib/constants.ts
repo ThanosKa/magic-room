@@ -1,39 +1,5 @@
 import { RoomType, Theme, ICreditPackage } from "@/types";
 
-export const ROOM_TYPES: Record<RoomType, string> = {
-  "living-room": "Living Room",
-  bedroom: "Bedroom",
-  kitchen: "Kitchen",
-  bathroom: "Bathroom",
-  "dining-room": "Dining Room",
-  office: "Office",
-  "gaming-room": "Gaming Room",
-  nursery: "Nursery",
-  "laundry-room": "Laundry Room",
-  basement: "Basement",
-  sunroom: "Sunroom",
-  "home-theater": "Home Theater",
-  mudroom: "Mudroom",
-  "walk-in-closet": "Walk-in Closet",
-};
-
-export const THEMES: Record<Theme, string> = {
-  modern: "Modern",
-  minimalist: "Minimalist",
-  scandinavian: "Scandinavian",
-  industrial: "Industrial",
-  tropical: "Tropical",
-  bohemian: "Bohemian",
-  vintage: "Vintage",
-  luxury: "Luxury",
-  japandi: "Japandi",
-  "art-deco": "Art Deco",
-  coastal: "Coastal",
-  farmhouse: "Farmhouse",
-  mediterranean: "Mediterranean",
-  transitional: "Transitional",
-};
-
 export const ROOM_TYPE_IDS = [
   "living-room",
   "bedroom",
@@ -50,6 +16,7 @@ export const ROOM_TYPE_IDS = [
   "mudroom",
   "walk-in-closet",
 ] as const satisfies readonly [RoomType, ...RoomType[]];
+
 export const THEME_IDS = [
   "modern",
   "minimalist",
@@ -66,6 +33,40 @@ export const THEME_IDS = [
   "mediterranean",
   "transitional",
 ] as const satisfies readonly [Theme, ...Theme[]];
+
+export const ROOM_TYPES = {
+  "living-room": "Living Room",
+  bedroom: "Bedroom",
+  kitchen: "Kitchen",
+  bathroom: "Bathroom",
+  "dining-room": "Dining Room",
+  office: "Office",
+  "gaming-room": "Gaming Room",
+  nursery: "Nursery",
+  "laundry-room": "Laundry Room",
+  basement: "Basement",
+  sunroom: "Sunroom",
+  "home-theater": "Home Theater",
+  mudroom: "Mudroom",
+  "walk-in-closet": "Walk-in Closet",
+} satisfies Record<(typeof ROOM_TYPE_IDS)[number], string>;
+
+export const THEMES = {
+  modern: "Modern",
+  minimalist: "Minimalist",
+  scandinavian: "Scandinavian",
+  industrial: "Industrial",
+  tropical: "Tropical",
+  bohemian: "Bohemian",
+  vintage: "Vintage",
+  luxury: "Luxury",
+  japandi: "Japandi",
+  "art-deco": "Art Deco",
+  coastal: "Coastal",
+  farmhouse: "Farmhouse",
+  mediterranean: "Mediterranean",
+  transitional: "Transitional",
+} satisfies Record<(typeof THEME_IDS)[number], string>;
 
 export function isRoomType(value: string): value is RoomType {
   return Object.hasOwn(ROOM_TYPES, value);
@@ -109,7 +110,7 @@ export const QUALITY_OPTIONS = {
 
 export const QUALITY_IDS = ["standard", "premium", "ultra"] as const;
 
-export const CREDIT_PACKAGES: ICreditPackage[] = [
+export const CREDIT_PACKAGES = [
   {
     id: "starter",
     name: "Starter",
@@ -134,7 +135,7 @@ export const CREDIT_PACKAGES: ICreditPackage[] = [
     stripePriceId: process.env.STRIPE_PRICE_PREMIUM || "",
     active: true,
   },
-];
+] as const satisfies readonly ICreditPackage[];
 
 export const FREE_SIGNUP_CREDITS = 1;
 

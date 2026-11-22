@@ -34,6 +34,7 @@ Copy has to keep saying what these earlier fixes settled:
 - Design page meta descriptions come from the rotated templates in `lib/seo/design-data.ts`, never from the intro's first sentence: that reads like an encyclopedia entry and gives searchers no reason to click.
 - A page-level `robots` replaces the root layout's `robots` object, it is not merged, so `createMetadata` repeats the `googleBot` directives (`max-image-preview:large`, `max-snippet:-1`).
 - The footer's column order, headings and link text are part of every page's visible text and internal links, and the SEO parity check compares them: change them only on purpose.
+- `softwareApplicationSchema` attaches the €9.99 to €29.99 `AggregateOffer` only with `includeOffers: true`, and the default is `false` on purpose. The entity used to render sitewide from the root layout, which put a price range on all ~230 pages (design pages and every blog post) and produced the Search Console row "Product snippets: 82 impressions, 0 clicks, position 13.09": a price badge on informational results reads as an ad and suppresses the click. Pass `true` only where buying is the intent (home, `/alternatives`, `/alternatives/<slug>`, `/vs/<slug>`, `/virtual-staging`). Never add this entity to the root layout.
 - The `SoftwareApplication` JSON-LD has no `aggregateRating`, because there are no collected reviews; an invented rating breaks Google's structured-data policy.
 
 ## Pruning and redirects

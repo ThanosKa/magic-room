@@ -281,6 +281,7 @@ interface SoftwareApplicationSchemaInput {
     description?: string;
     applicationCategory?: string;
     operatingSystem?: string;
+    includeOffers?: boolean;
 }
 
 export function softwareApplicationSchema(input?: SoftwareApplicationSchemaInput) {
@@ -294,14 +295,18 @@ export function softwareApplicationSchema(input?: SoftwareApplicationSchemaInput
         operatingSystem: input?.operatingSystem ?? "Web",
         url: SITE_URL,
         publisher: { "@id": `${SITE_URL}#organization` },
-        offers: {
-            "@type": "AggregateOffer",
-            lowPrice: 9.99,
-            highPrice: 29.99,
-            priceCurrency: "EUR",
-            offerCount: 3,
-            availability: "https://schema.org/InStock",
-            url: `${SITE_URL}/pricing`,
-        },
+        ...(input?.includeOffers
+            ? {
+                offers: {
+                    "@type": "AggregateOffer",
+                    lowPrice: 9.99,
+                    highPrice: 29.99,
+                    priceCurrency: "EUR",
+                    offerCount: 3,
+                    availability: "https://schema.org/InStock",
+                    url: `${SITE_URL}/pricing`,
+                },
+            }
+            : {}),
     };
 }

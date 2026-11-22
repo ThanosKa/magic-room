@@ -53,6 +53,7 @@ const breadcrumb = breadcrumbSchema([
 const product = softwareApplicationSchema({
     description:
         "Privacy-first AI interior design tool and a pay-per-use alternative to RoomGPT, Interior AI, DecorAI, and Reimagine Home. One-time credit packages from €9.99, no subscription, photos never stored.",
+    includeOffers: true,
 });
 
 const itemList = itemListSchema({
