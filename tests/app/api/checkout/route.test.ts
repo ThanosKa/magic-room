@@ -107,14 +107,14 @@ describe("Checkout Route", () => {
       const data = await response.json();
       expect(data).toHaveProperty("url");
       expect(data).toHaveProperty("sessionId");
-      expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith(
-        TEST_USER.id,
-        "starter",
-        "", // stripePriceId is empty from env in tests
-        "http://localhost:3000/pricing?success=true",
-        "http://localhost:3000/pricing?success=false",
-        TEST_USER.email
-      );
+      expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith({
+        userId: TEST_USER.id,
+        packageId: "starter",
+        stripePriceId: "", // stripePriceId is empty from env in tests
+        successUrl: "http://localhost:3000/pricing?success=true",
+        cancelUrl: "http://localhost:3000/pricing?success=false",
+        customerEmail: TEST_USER.email,
+      });
     });
 
     it("should create checkout session for valid growth package", async () => {
@@ -133,14 +133,14 @@ describe("Checkout Route", () => {
       const response = await POST(request);
       expect(response.status).toBe(200);
 
-      expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith(
-        TEST_USER.id,
-        "growth",
-        "", // stripePriceId is empty from env in tests
-        "http://localhost:3000/pricing?success=true",
-        "http://localhost:3000/pricing?success=false",
-        TEST_USER.email
-      );
+      expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith({
+        userId: TEST_USER.id,
+        packageId: "growth",
+        stripePriceId: "", // stripePriceId is empty from env in tests
+        successUrl: "http://localhost:3000/pricing?success=true",
+        cancelUrl: "http://localhost:3000/pricing?success=false",
+        customerEmail: TEST_USER.email,
+      });
     });
 
     it("should create checkout session for valid premium package", async () => {
@@ -159,14 +159,14 @@ describe("Checkout Route", () => {
       const response = await POST(request);
       expect(response.status).toBe(200);
 
-      expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith(
-        TEST_USER.id,
-        "premium",
-        "", // stripePriceId is empty from env in tests
-        "http://localhost:3000/pricing?success=true",
-        "http://localhost:3000/pricing?success=false",
-        TEST_USER.email
-      );
+      expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith({
+        userId: TEST_USER.id,
+        packageId: "premium",
+        stripePriceId: "", // stripePriceId is empty from env in tests
+        successUrl: "http://localhost:3000/pricing?success=true",
+        cancelUrl: "http://localhost:3000/pricing?success=false",
+        customerEmail: TEST_USER.email,
+      });
     });
 
     it("should handle Stripe session creation errors", async () => {

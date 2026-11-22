@@ -36,7 +36,7 @@ const MEASURE = "max-w-[68ch]";
 // with a little more contrast than the short secondary text elsewhere.
 const BODY_TEXT = "text-[17px] leading-[1.72] text-ink/[0.82] md:text-[18px]";
 
-function renderSection(section: IBlogSection, index: number): React.ReactNode {
+function renderSection({ section, index }: { section: IBlogSection; index: number }): React.ReactNode {
     switch (section.type) {
         case "paragraph":
             return (
@@ -212,7 +212,7 @@ export function BlogPostContent({ post, relatedPostLinks = [], comparisonLinks =
 
                     {/* Body */}
                     <div className={`${MEASURE} flex flex-col gap-6 border-t border-line pt-10 md:pt-12`}>
-                        {sectionsWithCta.map((section, index) => renderSection(section, index))}
+                        {sectionsWithCta.map((section, index) => renderSection({ section, index }))}
                     </div>
 
                     {/* Related design pages.

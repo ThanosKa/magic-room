@@ -13,7 +13,8 @@ import { cn, formatCredits } from "@/lib/utils";
 
 /** A pack's size in credits and its price per credit, from the same table checkout uses. */
 function pack(id: "starter" | "growth" | "premium") {
-  const pkg = PACKS.find((p) => p.id === id)!;
+  const pkg = PACKS.find((p) => p.id === id);
+  if (!pkg) throw new Error(`Missing credit package: ${id}`);
   return { credits: pkg.credits, perCredit: euros(pkg.priceCents / pkg.credits) };
 }
 

@@ -138,7 +138,7 @@ interface FaqItem {
     answer: string;
 }
 
-export function faqSchema(items: FaqItem[], pageUrl?: string) {
+export function faqSchema({ items, pageUrl }: { items: FaqItem[]; pageUrl?: string }) {
     return {
         "@context": "https://schema.org",
         "@type": "FAQPage",

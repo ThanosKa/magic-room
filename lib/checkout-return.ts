@@ -13,6 +13,7 @@ export function readCheckoutReturn(params: URLSearchParams): CheckoutReturn | nu
 }
 
 interface WaitOptions {
+  readCredits: () => Promise<number>;
   /** Pause before each re-read. The first read happens straight away. */
   delaysMs?: number[];
   sleep?: (ms: number) => Promise<void>;
@@ -27,10 +28,12 @@ const sleepFor = (ms: number) => new Promise<void>((resolve) => setTimeout(resol
  * after the buyer lands. Read the balance now, then again after each delay,
  * and stop as soon as it grows. Resolves with the last balance read.
  */
-export async function waitForPurchasedCredits(
-  readCredits: () => Promise<number>,
-  { delaysMs = [1500, 3000, 5000, 8000], sleep = sleepFor, signal }: WaitOptions = {},
-): Promise<number> {
+export async function waitForPurchasedCredits({
+  readCredits,
+  delaysMs = [1500, 3000, 5000, 8000],
+  sleep = sleepFor,
+  signal,
+}: WaitOptions): Promise<number> {
   const first = await readCredits();
   let latest = first;
   for (const delay of delaysMs) {

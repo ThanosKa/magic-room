@@ -33,9 +33,9 @@ describe("generateDesign: which model makes the image", () => {
     });
 
     it("Quick uses Nano Banana 2.1, Pro uses Nano Banana Pro, Ultra uses GPT-5.4 Image 2", async () => {
-        await generateDesign("data:image/png;base64,room", "prompt", "standard");
-        await generateDesign("data:image/png;base64,room", "prompt", "premium");
-        await generateDesign("data:image/png;base64,room", "prompt", "ultra");
+        await generateDesign({ base64Image: "data:image/png;base64,room", prompt: "prompt", quality: "standard" });
+        await generateDesign({ base64Image: "data:image/png;base64,room", prompt: "prompt", quality: "premium" });
+        await generateDesign({ base64Image: "data:image/png;base64,room", prompt: "prompt", quality: "ultra" });
 
         expect(sentModels(fetchMock)).toEqual([
             "google/gemini-nano-banana-2.1",
@@ -69,7 +69,7 @@ describe("generateDesign: how long it waits for OpenRouter", () => {
     // 280 s: under the 300 s the route had on Vercel, longer than Ultra's
     // usual 2 minutes. The route's catch refunds when this throws.
     it("gives up after 280 seconds so the route can refund", async () => {
-        const outcome = generateDesign("data:image/png;base64,room", "prompt", "ultra").then(
+        const outcome = generateDesign({ base64Image: "data:image/png;base64,room", prompt: "prompt", quality: "ultra" }).then(
             () => "answered",
             (error: Error) => error.message
         );
@@ -83,9 +83,7 @@ describe("generateDesign: how long it waits for OpenRouter", () => {
 
     it("stops waiting as soon as the caller's signal aborts", async () => {
         const browser = new AbortController();
-        const outcome = generateDesign("data:image/png;base64,room", "prompt", "ultra", {
-            signal: browser.signal,
-        }).then(
+        const outcome = generateDesign({ base64Image: "data:image/png;base64,room", prompt: "prompt", quality: "ultra", signal: browser.signal }).then(
             () => "answered",
             () => "stopped"
         );
@@ -127,7 +125,7 @@ describe("generateDesign: nothing the provider sent back reaches a log", () => {
     it("keeps the body of an HTTP error out of the logs and the thrown error", async () => {
         answerWith({ error: { message: MARKER, code: MARKER }, detail: MARKER }, 500);
 
-        const error = await generateDesign("data:image/png;base64,room", "prompt").catch((e: Error) => e);
+        const error = await generateDesign({ base64Image: "data:image/png;base64,room", prompt: "prompt" }).catch((e: Error) => e);
 
         expect(error).toBeInstanceOf(Error);
         expect((error as Error).message).not.toContain(MARKER);
@@ -137,7 +135,7 @@ describe("generateDesign: nothing the provider sent back reaches a log", () => {
     it("keeps an API error inside a 200 answer out of the logs and the thrown error", async () => {
         answerWith({ error: { message: MARKER, code: MARKER } }, 200);
 
-        const error = await generateDesign("data:image/png;base64,room", "prompt").catch((e: Error) => e);
+        const error = await generateDesign({ base64Image: "data:image/png;base64,room", prompt: "prompt" }).catch((e: Error) => e);
 
         expect(error).toBeInstanceOf(Error);
         expect((error as Error).message).not.toContain(MARKER);
@@ -147,7 +145,7 @@ describe("generateDesign: nothing the provider sent back reaches a log", () => {
     it("keeps the text of a 200 answer with no image out of the logs", async () => {
         answerWith({ choices: [{ message: { content: MARKER } }] }, 200);
 
-        const result = await generateDesign("data:image/png;base64,room", "prompt");
+        const result = await generateDesign({ base64Image: "data:image/png;base64,room", prompt: "prompt" });
 
         expect(result).toMatchObject({
             success: false,

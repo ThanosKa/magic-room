@@ -138,7 +138,7 @@ function paragraph(html: string): string {
   return `<p style="margin:0 0 28px;font-size:15px;line-height:24px;color:${INK_2};">${html}</p>`;
 }
 
-function button(text: string, href: string): string {
+function button({ text, href }: { text: string; href: string }): string {
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0;">
   <tr>
     <td bgcolor="${INK}" style="background-color:${INK};border-radius:999px;">
@@ -152,7 +152,7 @@ function button(text: string, href: string): string {
 // Step row helper (used in welcome email)
 // ---------------------------------------------------------------------------
 
-function stepRow(number: string, title: string, description: string): string {
+function stepRow({ number, title, description }: { number: string; title: string; description: string }): string {
   return `<tr>
     <td width="44" valign="top" style="padding:16px 0;border-top:1px solid ${LINE};font-family:${SERIF};font-size:24px;line-height:24px;color:${INK_2};">${number}</td>
     <td valign="top" style="padding:16px 0;border-top:1px solid ${LINE};">
@@ -182,9 +182,9 @@ export function buildWelcomeEmailHtml(params: {
     ${heading(title)}
     ${paragraph(`${SITE_NAME} is an AI interior design tool that transforms any room from a single photo. Here's how it works:`)}
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border-bottom:1px solid ${LINE};">
-      ${stepRow("1", "Upload a photo", "Take a picture of any room you want to redesign and upload it.")}
-      ${stepRow("2", "Choose a style", `Pick from ${THEME_IDS.length} design themes: Modern, Scandinavian, Bohemian and more.`)}
-      ${stepRow("3", "Get your redesign", `You get one redesign of your room. ${quick.name} and ${pro.name} take ${quick.waitText}, ${ultra.name} ${ultra.waitText}.`)}
+      ${stepRow({ number: "1", title: "Upload a photo", description: "Take a picture of any room you want to redesign and upload it." })}
+      ${stepRow({ number: "2", title: "Choose a style", description: `Pick from ${THEME_IDS.length} design themes: Modern, Scandinavian, Bohemian and more.` })}
+      ${stepRow({ number: "3", title: "Get your redesign", description: `You get one redesign of your room. ${quick.name} and ${pro.name} take ${quick.waitText}, ${ultra.name} ${ultra.waitText}.` })}
     </table>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${PAPER_2}" style="margin:0 0 28px;background-color:${PAPER_2};border-radius:14px;">
       <tr>
@@ -194,7 +194,7 @@ export function buildWelcomeEmailHtml(params: {
         </td>
       </tr>
     </table>
-    ${button("Start designing", `${SITE_URL}/generate`)}
+    ${button({ text: "Start designing", href: `${SITE_URL}/generate` })}
   `;
 
   return emailWrapper(body);
@@ -204,7 +204,7 @@ export function buildWelcomeEmailHtml(params: {
 // Purchase confirmation email HTML
 // ---------------------------------------------------------------------------
 
-function receiptRow(name: string, value: string, isLast: boolean): string {
+function receiptRow({ name, value, isLast }: { name: string; value: string; isLast: boolean }): string {
   const border = isLast ? "" : `border-bottom:1px solid ${LINE_ON_PAPER_2};`;
   return `<tr>
     <td style="padding:12px 0;${border}font-size:14px;line-height:20px;color:${INK_2};">${name}</td>
@@ -226,14 +226,14 @@ export function buildPurchaseEmailHtml(params: {
       <tr>
         <td style="padding:10px 22px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${receiptRow("Pack", escapeHtml(params.packageName), false)}
-            ${receiptRow("Credits added", `${params.credits} credits`, true)}
+            ${receiptRow({ name: "Pack", value: escapeHtml(params.packageName), isLast: false })}
+            ${receiptRow({ name: "Credits added", value: `${params.credits} credits`, isLast: true })}
           </table>
         </td>
       </tr>
     </table>
     ${paragraph(`Credits never expire, so you can use them at your own pace. A ${quick.name} design uses ${quick.credits} credit, ${pro.name} ${pro.credits} and ${ultra.name} ${ultra.credits}.`)}
-    ${button("Use your credits", `${SITE_URL}/generate`)}
+    ${button({ text: "Use your credits", href: `${SITE_URL}/generate` })}
   `;
 
   return emailWrapper(body);

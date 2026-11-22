@@ -136,18 +136,18 @@ describe("Clerk Webhook Route", () => {
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
-        expect(supabaseLib.createUser).toHaveBeenCalledWith(
-          TEST_CLERK_USER_ID,
-          TEST_EMAIL,
-          1
-        );
-        expect(supabaseLib.updateUser).toHaveBeenCalledWith(
-          TEST_CLERK_USER_ID,
-          expect.objectContaining({
+        expect(supabaseLib.createUser).toHaveBeenCalledWith({
+          clerkUserId: TEST_CLERK_USER_ID,
+          email: TEST_EMAIL,
+          initialCredits: 1,
+        });
+        expect(supabaseLib.updateUser).toHaveBeenCalledWith({
+          clerkUserId: TEST_CLERK_USER_ID,
+          updates: expect.objectContaining({
             name: "Test User",
             profileImageUrl: "https://example.com/avatar.jpg",
-          })
-        );
+          }),
+        });
       });
 
       // A slow Resend must not hold Clerk's 200, and a failed welcome email
@@ -342,10 +342,10 @@ describe("Clerk Webhook Route", () => {
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
-        expect(supabaseLib.updateUser).toHaveBeenCalledWith(
-          TEST_CLERK_USER_ID,
-          expect.objectContaining({ email: newEmail })
-        );
+        expect(supabaseLib.updateUser).toHaveBeenCalledWith({
+          clerkUserId: TEST_CLERK_USER_ID,
+          updates: expect.objectContaining({ email: newEmail }),
+        });
       });
 
       it("should update user name and profile image", async () => {
@@ -378,13 +378,13 @@ describe("Clerk Webhook Route", () => {
 
         const response = await POST(createRequest(JSON.stringify(eventPayload)));
         expect(response.status).toBe(200);
-        expect(supabaseLib.updateUser).toHaveBeenCalledWith(
-          TEST_CLERK_USER_ID,
-          expect.objectContaining({
+        expect(supabaseLib.updateUser).toHaveBeenCalledWith({
+          clerkUserId: TEST_CLERK_USER_ID,
+          updates: expect.objectContaining({
             name: "Updated Name",
             profileImageUrl: "https://example.com/newavatar.jpg",
-          })
-        );
+          }),
+        });
       });
 
       it("should return 404 if user not found", async () => {

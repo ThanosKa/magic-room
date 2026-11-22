@@ -21,13 +21,13 @@ describe("parseWebhookEvent", () => {
   it("resolves a correctly signed event through a promise", async () => {
     const header = new Stripe("sk_test_fake").webhooks.generateTestHeaderString({ payload: BODY, secret: SECRET });
 
-    const result = parseWebhookEvent(BODY, header, SECRET);
+    const result = parseWebhookEvent({ body: BODY, signature: header, secret: SECRET });
 
     expect(result).toBeInstanceOf(Promise);
     await expect(result).resolves.toMatchObject({ id: "evt_test", type: "customer.updated" });
   });
 
   it("rejects a bad signature", async () => {
-    await expect(parseWebhookEvent(BODY, "t=1,v1=bad", SECRET)).rejects.toThrow();
+    await expect(parseWebhookEvent({ body: BODY, signature: "t=1,v1=bad", secret: SECRET })).rejects.toThrow();
   });
 });

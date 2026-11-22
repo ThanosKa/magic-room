@@ -120,19 +120,19 @@ async function handleGenerate(request: Request): Promise<Response> {
     const designId = `gen_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     generationId = designId;
 
-    const spend = await spendCredits<string[], NoImage>(
-      { userId: user.id, amount: creditCost, generationId: designId },
-      async () => {
-        const design = await designRoom(
-          { photo: base64Image, roomType, theme, quality, note: customPrompt },
-          { signal: request.signal }
-        );
+    const spend = await spendCredits<string[], NoImage>({
+      charge: { userId: user.id, amount: creditCost, generationId: designId },
+      work: async () => {
+        const design = await designRoom({
+          req: { photo: base64Image, roomType, theme, quality, note: customPrompt },
+          signal: request.signal,
+        });
         if (design.ok) return { ok: true, value: design.images };
         // A provider error takes the ledger's "threw" path, as a thrown error did.
         if (design.failure.kind === "provider-error") throw design.failure.cause;
         return { ok: false, failure: design.failure };
-      }
-    );
+      },
+    });
 
     switch (spend.kind) {
       case "not-charged":
@@ -167,7 +167,7 @@ async function handleGenerate(request: Request): Promise<Response> {
       case "refunded": {
         const { failure } = spend;
         if (failure.kind === "threw") {
-          logRouteError(startTime, designId, failure.error);
+          logRouteError({ startTime, generationId: designId, err: failure.error });
           logger.warn({ generationId: designId, creditCost }, "[Generate] Route error - credits refunded");
           return new Response(
             JSON.stringify({ error: "Failed to generate images", success: false }),
@@ -196,10 +196,10 @@ async function handleGenerate(request: Request): Promise<Response> {
       case "refund-failed": {
         const { failure } = spend;
         if (failure.kind === "threw") {
-          logRouteError(startTime, designId, failure.error);
+          logRouteError({ startTime, generationId: designId, err: failure.error });
           logger.error({ generationId: designId }, "[Generate] Refund failed");
         } else {
-          logRouteError(startTime, designId);
+          logRouteError({ startTime, generationId: designId });
         }
         return internalServerError();
       }
@@ -207,12 +207,20 @@ async function handleGenerate(request: Request): Promise<Response> {
   } catch (error) {
     // Only failures before the Charge, or from the deduction itself, land here:
     // from the Charge on, the ledger catches them and refunds.
-    logRouteError(startTime, generationId, error);
+    logRouteError({ startTime, generationId, err: error });
     return internalServerError();
   }
 }
 
-function logRouteError(startTime: number, generationId: string | null, err?: unknown): void {
+function logRouteError({
+  startTime,
+  generationId,
+  err,
+}: {
+  startTime: number;
+  generationId: string | null;
+  err?: unknown;
+}): void {
   const totalDuration = Date.now() - startTime;
   logger.error({ err, totalDuration, generationId }, "[Generate] Route error");
 }

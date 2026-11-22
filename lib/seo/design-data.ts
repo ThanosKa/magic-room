@@ -2231,7 +2231,7 @@ const META_DESCRIPTION_TRUNCATE_AT = 155;
 
 // Deterministic (no Math.random / Date) char-code sum hash so variant
 // assignment is stable across builds — important for SEO consistency.
-function hashToIndex(str: string, modulo: number): number {
+function hashToIndex({ str, modulo }: { str: string; modulo: number }): number {
     let sum = 0;
     for (let i = 0; i < str.length; i++) {
         sum += str.charCodeAt(i);
@@ -2371,7 +2371,7 @@ function generateDesignPages(): IDesignPageData[] {
             const roomData = ROOM_DATA[roomType];
             const slug = `${themeData.slug}-${roomData.slug}`;
 
-            const variantIndex = hashToIndex(slug, TITLE_TEMPLATES.length);
+            const variantIndex = hashToIndex({ str: slug, modulo: TITLE_TEMPLATES.length });
             const title = TITLE_TEMPLATES[variantIndex](themeData.name, roomData.name);
 
             const combinationIntro = COMBINATION_INTROS[slug];

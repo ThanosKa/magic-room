@@ -55,7 +55,7 @@ export interface IContextualLink {
  * times across all offsets, so inbound links are distributed evenly instead of
  * piling onto whichever slugs happen to sort first.
  */
-function rotatingSlice<T>(items: T[], offset: number, count: number): T[] {
+function rotatingSlice<T>({ items, offset, count }: { items: T[]; offset: number; count: number }): T[] {
     if (items.length === 0) return [];
     const take = Math.min(count, items.length);
     const start = ((offset % items.length) + items.length) % items.length;
@@ -89,18 +89,23 @@ const SIBLING_LINKS_PER_SECTION = 6;
  * is a true round-robin: with L candidates and a window of N, every candidate
  * is linked by exactly N of the L sibling pages. No page starves, none hoards.
  */
-function roundRobinSiblings<T extends { slug: string }>(
-    candidates: T[],
-    ownSlug: string,
-    pageSlug: string,
-    size: number
-): T[] {
+function roundRobinSiblings<T extends { slug: string }>({
+    candidates,
+    ownSlug,
+    pageSlug,
+    size,
+}: {
+    candidates: T[];
+    ownSlug: string;
+    pageSlug: string;
+    size: number;
+}): T[] {
     const ownIndex = candidates.findIndex((c) => c.slug === ownSlug);
     // Non-priority combos are not in the candidate list; fall back to a stable
     // hash offset so they still link somewhere deterministic.
     const offset = ownIndex >= 0 ? ownIndex + 1 : stableHash(pageSlug);
     // `rotatingSlice` already clamps `size` to the candidate count.
-    return rotatingSlice(candidates, offset, size).filter((c) => c.slug !== ownSlug);
+    return rotatingSlice({ items: candidates, offset, count: size }).filter((c) => c.slug !== ownSlug);
 }
 
 /**
@@ -111,34 +116,42 @@ function roundRobinSiblings<T extends { slug: string }>(
  * sending crawl signal to noindex pages wastes Google's crawl budget and
  * signals scaled content.
  */
-export function getSiblingThemes(
-    designSlug: string,
-    theme: string,
-    roomType: string
-): IThemeData[] {
-    return roundRobinSiblings(
-        Object.values(THEME_DATA)
+export function getSiblingThemes({
+    designSlug,
+    theme,
+    roomType,
+}: {
+    designSlug: string;
+    theme: string;
+    roomType: string;
+}): IThemeData[] {
+    return roundRobinSiblings({
+        candidates: Object.values(THEME_DATA)
             .filter((candidate) => isPriorityDesignSlug(`${candidate.slug}-${roomType}`))
             .sort((a, b) => a.slug.localeCompare(b.slug)),
-        theme,
-        `${designSlug}:themes`,
-        SIBLING_LINKS_PER_SECTION + 1
-    );
+        ownSlug: theme,
+        pageSlug: `${designSlug}:themes`,
+        size: SIBLING_LINKS_PER_SECTION + 1,
+    });
 }
 
-export function getSiblingRooms(
-    designSlug: string,
-    theme: string,
-    roomType: string
-): IRoomData[] {
-    return roundRobinSiblings(
-        Object.values(ROOM_DATA)
+export function getSiblingRooms({
+    designSlug,
+    theme,
+    roomType,
+}: {
+    designSlug: string;
+    theme: string;
+    roomType: string;
+}): IRoomData[] {
+    return roundRobinSiblings({
+        candidates: Object.values(ROOM_DATA)
             .filter((candidate) => isPriorityDesignSlug(`${theme}-${candidate.slug}`))
             .sort((a, b) => a.slug.localeCompare(b.slug)),
-        roomType,
-        `${designSlug}:rooms`,
-        SIBLING_LINKS_PER_SECTION + 1
-    );
+        ownSlug: roomType,
+        pageSlug: `${designSlug}:rooms`,
+        size: SIBLING_LINKS_PER_SECTION + 1,
+    });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -191,12 +204,18 @@ const SPARSELY_CONNECTED_DESIGN_SLUGS: string[] = (() => {
 })();
 
 /** Rotating chips pointing at the least-connected indexable design pages. */
-export function getUnderlinkedDesignLinks(currentSlug: string, count = 4): IContextualLink[] {
-    return rotatingSlice(
-        SPARSELY_CONNECTED_DESIGN_SLUGS.filter((s) => s !== currentSlug),
-        stableHash(currentSlug),
-        count
-    ).map((slug) => ({
+export function getUnderlinkedDesignLinks({
+    currentSlug,
+    count = 4,
+}: {
+    currentSlug: string;
+    count?: number;
+}): IContextualLink[] {
+    return rotatingSlice({
+        items: SPARSELY_CONNECTED_DESIGN_SLUGS.filter((s) => s !== currentSlug),
+        offset: stableHash(currentSlug),
+        count,
+    }).map((slug) => ({
         href: `/design/${slug}`,
         label: `${humanizeDesignSlug(slug)} design ideas`,
     }));
@@ -272,12 +291,17 @@ function blogLink(slug: string): IContextualLink {
  * Guides to surface on `/design/[slug]`. Returns up to `count` blog posts,
  * most-relevant first, topped up from the evergreen pool via rotation.
  */
-export function getRelatedBlogLinksForDesign(
-    designSlug: string,
-    theme: string,
-    roomType: string,
-    count = 4
-): IContextualLink[] {
+export function getRelatedBlogLinksForDesign({
+    designSlug,
+    theme,
+    roomType,
+    count = 4,
+}: {
+    designSlug: string;
+    theme: string;
+    roomType: string;
+    count?: number;
+}): IContextualLink[] {
     const ordered: string[] = [
         ...(DESIGN_TO_BLOG[designSlug] ?? []),
         ...(ROOM_TO_BLOG[roomType] ?? []),
@@ -285,11 +309,11 @@ export function getRelatedBlogLinksForDesign(
     ];
 
     const seen = new Set(ordered);
-    const topUp = rotatingSlice(
-        EVERGREEN_BLOG.filter((s) => !seen.has(s)),
-        stableHash(designSlug),
-        count
-    );
+    const topUp = rotatingSlice({
+        items: EVERGREEN_BLOG.filter((s) => !seen.has(s)),
+        offset: stableHash(designSlug),
+        count,
+    });
 
     const slugs = Array.from(new Set([...ordered, ...topUp])).slice(0, count);
 
@@ -306,7 +330,7 @@ export function getRelatedBlogLinksForDesign(
  * Related posts scored by shared `relatedDesignSlugs` and shared keywords, then
  * topped up by rotation so no post is left with a single inbound link.
  */
-export function getRelatedBlogLinksForPost(slug: string, count = 3): IContextualLink[] {
+export function getRelatedBlogLinksForPost({ slug, count = 3 }: { slug: string; count?: number }): IContextualLink[] {
     const current = getBlogPostBySlug(slug);
     if (!current) return [];
 
@@ -325,7 +349,7 @@ export function getRelatedBlogLinksForPost(slug: string, count = 3): IContextual
 
     const strong = scored.filter((s) => s.score > 0).map((s) => s.post.slug);
     const weakPool = scored.filter((s) => s.score === 0).map((s) => s.post.slug);
-    const topUp = rotatingSlice(weakPool, stableHash(slug), count);
+    const topUp = rotatingSlice({ items: weakPool, offset: stableHash(slug), count });
 
     return Array.from(new Set([...strong, ...topUp])).slice(0, count).map(blogLink);
 }
@@ -368,16 +392,20 @@ function vsLink(competitorSlug: string): IContextualLink {
  * linked from every design page and every post with the same anchor, which
  * dilutes the anchor signal instead of concentrating it.
  */
-function comparisonLinks(
-    pageSlug: string,
-    hub: { label: string; description: string },
-    vsTargets: "first" | "all"
-): IContextualLink[] {
-    const rotated = rotatingSlice(
-        COMPETITORS.map((c) => c.slug),
-        stableHash(pageSlug),
-        2
-    );
+function comparisonLinks({
+    pageSlug,
+    hub,
+    vsTargets,
+}: {
+    pageSlug: string;
+    hub: { label: string; description: string };
+    vsTargets: "first" | "all";
+}): IContextualLink[] {
+    const rotated = rotatingSlice({
+        items: COMPETITORS.map((c) => c.slug),
+        offset: stableHash(pageSlug),
+        count: 2,
+    });
 
     return [
         { href: "/alternatives", ...hub },
@@ -393,15 +421,15 @@ function comparisonLinks(
  * than the same page being linked from all of them.
  */
 export function getComparisonLinksForDesign(designSlug: string): IContextualLink[] {
-    return comparisonLinks(
-        designSlug,
-        {
+    return comparisonLinks({
+        pageSlug: designSlug,
+        hub: {
             label: "best RoomGPT alternatives for AI interior design",
             description:
                 "All four tools compared on AI model, photo retention, pricing model and output quality.",
         },
-        "first"
-    );
+        vsTargets: "first",
+    });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -427,12 +455,18 @@ const DESIGN_LINK_POOL: { slug: string; label: string }[] = [
     { slug: "bohemian-bedroom", label: "bohemian bedroom decor ideas" },
 ];
 
-export function getDesignLinksForCompetitor(competitorSlug: string, count = 4): IContextualLink[] {
-    return rotatingSlice(
-        DESIGN_LINK_POOL.filter((d) => isPriorityDesignSlug(d.slug)),
-        stableHash(competitorSlug),
-        count
-    ).map((d) => ({
+export function getDesignLinksForCompetitor({
+    competitorSlug,
+    count = 4,
+}: {
+    competitorSlug: string;
+    count?: number;
+}): IContextualLink[] {
+    return rotatingSlice({
+        items: DESIGN_LINK_POOL.filter((d) => isPriorityDesignSlug(d.slug)),
+        offset: stableHash(competitorSlug),
+        count,
+    }).map((d) => ({
         href: `/design/${d.slug}`,
         label: d.label,
         description: "Generate this style on a photo of your own room.",
@@ -440,16 +474,22 @@ export function getDesignLinksForCompetitor(competitorSlug: string, count = 4): 
 }
 
 /** Guides worth reading from a competitor page. */
-export function getBlogLinksForCompetitor(competitorSlug: string, count = 3): IContextualLink[] {
+export function getBlogLinksForCompetitor({
+    competitorSlug,
+    count = 3,
+}: {
+    competitorSlug: string;
+    count?: number;
+}): IContextualLink[] {
     const priority = [
         "best-ai-interior-design-tools-2026",
         "ai-interior-design-tools-how-they-work",
     ];
-    const topUp = rotatingSlice(
-        EVERGREEN_BLOG.filter((s) => !priority.includes(s)),
-        stableHash(competitorSlug),
-        count
-    );
+    const topUp = rotatingSlice({
+        items: EVERGREEN_BLOG.filter((s) => !priority.includes(s)),
+        offset: stableHash(competitorSlug),
+        count,
+    });
     return Array.from(new Set([...priority, ...topUp])).slice(0, count).map(blogLink);
 }
 
@@ -464,13 +504,13 @@ export function getBlogLinksForCompetitor(competitorSlug: string, count = 3): IC
  * with identical anchors (which dilutes the anchor signal).
  */
 export function getComparisonLinksForPost(slug: string): IContextualLink[] {
-    return comparisonLinks(
-        slug,
-        {
+    return comparisonLinks({
+        pageSlug: slug,
+        hub: {
             label: "RoomGPT alternatives compared",
             description:
                 "Magic Room, RoomGPT, Interior AI, DecorAI and Reimagine Home on privacy, pricing and model quality.",
         },
-        "all"
-    );
+        vsTargets: "all",
+    });
 }

@@ -1,6 +1,6 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextFetchEvent, type NextRequest, NextResponse } from "next/server";
 
-export async function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest, event: NextFetchEvent) {
   if (
     !process.env.CLERK_SECRET_KEY ||
     !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
@@ -18,7 +18,7 @@ export async function proxy(req: NextRequest) {
       if (isProtected(request)) {
         await auth.protect();
       }
-    })(req, {} as never);
+    })(req, event);
   } catch {
     return NextResponse.next();
   }

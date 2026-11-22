@@ -34,8 +34,8 @@ interface PhotoPanelProps {
 // shape. Desktop: the frame area is a size container, so the frame fits both
 // its width and its height (cqw/cqh). Phone: full width, but a tall (portrait)
 // photo narrows so its height stays under ~58% of the screen.
-function frameStyle(photo: RoomPhoto) {
-    return { "--ratio": photo.width / photo.height } as React.CSSProperties;
+function frameStyle(photo: RoomPhoto): React.CSSProperties {
+    return { "--ratio": photo.width / photo.height };
 }
 const frameClass =
     "relative overflow-hidden rounded-2xl bg-paper w-[min(100%,calc(58svh*var(--ratio)))] lg:w-[min(100cqw,calc(100cqh*var(--ratio)))]";

@@ -62,7 +62,8 @@ export function HomeHero() {
   };
 
   const onBlur = (e: FocusEvent<HTMLDivElement>) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+    const next = e.relatedTarget;
+    if (!(next instanceof Node && e.currentTarget.contains(next))) setFocused(false);
   };
 
   const current = DIAL[active];
@@ -232,12 +233,10 @@ export function HomeHero() {
                       aria-hidden="true"
                       onAnimationEnd={() => go((active + 1) % DIAL.length)}
                       className="absolute inset-x-3.5 bottom-1.5 h-0.5 origin-left animate-bar-run rounded-full bg-accent"
-                      style={
-                        {
-                          "--cycle": `${CYCLE_MS}ms`,
-                          animationPlayState: paused ? "paused" : "running",
-                        } as CSSProperties
-                      }
+                      style={{
+                        "--cycle": `${CYCLE_MS}ms`,
+                        animationPlayState: paused ? "paused" : "running",
+                      }}
                     />
                   )}
                 </button>

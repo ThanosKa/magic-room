@@ -51,14 +51,14 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const session = await createCheckoutSession(
-      user.id,
+    const session = await createCheckoutSession({
+      userId: user.id,
       packageId,
-      pkg.stripePriceId,
-      `${appUrl}/pricing?success=true`,
-      `${appUrl}/pricing?success=false`,
-      user.email
-    );
+      stripePriceId: pkg.stripePriceId,
+      successUrl: `${appUrl}/pricing?success=true`,
+      cancelUrl: `${appUrl}/pricing?success=false`,
+      customerEmail: user.email,
+    });
 
     return new Response(
       JSON.stringify({

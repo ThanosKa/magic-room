@@ -170,7 +170,7 @@ describe("Generate Route - Prompt Baseline", () => {
 
       expect(response.status).toBe(200);
       expect(openrouterLib.generateDesign).toHaveBeenCalledTimes(1);
-      const [, sentPrompt, sentQuality] = vi.mocked(openrouterLib.generateDesign).mock.calls[0];
+      const [{ prompt: sentPrompt, quality: sentQuality }] = vi.mocked(openrouterLib.generateDesign).mock.calls[0];
       expect(sentPrompt).toBe(entry.prompt);
       expect(sentQuality).toBe(entry.quality);
     }

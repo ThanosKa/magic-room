@@ -61,7 +61,7 @@ export default function VirtualStagingPage() {
                 "AI virtual staging for real estate listings. Upload an empty or unfurnished room photo and get a photo-realistic staged image in 60 seconds, for under €1 per photo.",
             includeOffers: true,
         }),
-        faqSchema(FAQS, PAGE_URL),
+        faqSchema({ items: FAQS, pageUrl: PAGE_URL }),
     ];
 
     return (

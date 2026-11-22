@@ -119,10 +119,10 @@ function GenerateTool() {
                 await refreshUser();
                 balanceRead = true;
                 if (useUserStore.getState().credits >= cost) {
-                    setMessage(messageFor(answer, failure));
+                    setMessage(messageFor({ answer, ...failure }));
                 }
             } else {
-                setMessage(messageFor(answer, failure));
+                setMessage(messageFor({ answer, ...failure }));
             }
         } catch {
             // requestDesign never throws; this keeps a failed Balance re-read on the same message as before.
@@ -214,7 +214,7 @@ function GenerateTool() {
                     <>
                         {message && <ToolMessageView message={message} />}
                         {shortOfCredits && !isGenerating && (
-                            <ToolMessageView message={notEnoughCreditsMessage(QUALITY_NAMES[quality], cost, credits)} />
+                            <ToolMessageView message={notEnoughCreditsMessage({ qualityName: QUALITY_NAMES[quality], cost, balance: credits })} />
                         )}
                     </>
                 }

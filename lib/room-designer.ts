@@ -26,16 +26,24 @@ export type RoomDesign =
  * Turns the User's choices into one Design result. Never throws for a failed
  * Design: it returns the images or a tagged failure. `cause` is for logs only.
  */
-export async function designRoom(
-    req: RoomDesignRequest,
-    opts: { signal?: AbortSignal }
-): Promise<RoomDesign> {
+export async function designRoom({
+    req,
+    signal,
+}: {
+    req: RoomDesignRequest;
+    signal?: AbortSignal;
+}): Promise<RoomDesign> {
     try {
-        const prompt = buildDesignPrompt(req.roomType, req.theme, req.quality, req.note);
+        const prompt = buildDesignPrompt({
+            roomType: req.roomType,
+            theme: req.theme,
+            quality: req.quality,
+            customPrompt: req.note,
+        });
         logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");
 
         const generationStartTime = Date.now();
-        const result = await generateDesign(req.photo, prompt, req.quality, { signal: opts.signal });
+        const result = await generateDesign({ base64Image: req.photo, prompt, quality: req.quality, signal });
         logger.info(
             {
                 duration: Date.now() - generationStartTime,

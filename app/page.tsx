@@ -29,7 +29,7 @@ const HOME_SOFTWARE = softwareApplicationSchema({
 export default function Home() {
   return (
     <>
-      <JsonLd schemas={[HOME_SOFTWARE, faqSchema(HOME_FAQ, SITE_URL)]} />
+      <JsonLd schemas={[HOME_SOFTWARE, faqSchema({ items: HOME_FAQ, pageUrl: SITE_URL })]} />
       <HomeContent />
     </>
   );

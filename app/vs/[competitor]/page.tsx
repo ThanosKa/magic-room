@@ -91,7 +91,7 @@ export default async function VsPage({ params }: Props) {
             description: `AI interior design tool compared side-by-side with ${competitor.name}. One-time credit packages from €9.99, no subscription, photos never stored.`,
             includeOffers: true,
         }),
-        ...(competitor.faqs.length > 0 ? [faqSchema(competitor.faqs, `${SITE_URL}/vs/${slug}`)] : []),
+        ...(competitor.faqs.length > 0 ? [faqSchema({ items: competitor.faqs, pageUrl: `${SITE_URL}/vs/${slug}` })] : []),
     ];
 
     return (
@@ -103,8 +103,8 @@ export default async function VsPage({ params }: Props) {
                 vsSiblings={COMPETITORS.filter(
                     (c) => c.slug !== slug && hasVsPage(c.slug)
                 )}
-                designLinks={getDesignLinksForCompetitor(`vs-${slug}`)}
-                blogLinks={getBlogLinksForCompetitor(`vs-${slug}`)}
+                designLinks={getDesignLinksForCompetitor({ competitorSlug: `vs-${slug}` })}
+                blogLinks={getBlogLinksForCompetitor({ competitorSlug: `vs-${slug}` })}
             />
         </>
     );

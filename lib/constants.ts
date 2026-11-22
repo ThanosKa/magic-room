@@ -34,8 +34,46 @@ export const THEMES: Record<Theme, string> = {
   transitional: "Transitional",
 };
 
-export const ROOM_TYPE_IDS = Object.keys(ROOM_TYPES) as [RoomType, ...RoomType[]];
-export const THEME_IDS = Object.keys(THEMES) as [Theme, ...Theme[]];
+export const ROOM_TYPE_IDS = [
+  "living-room",
+  "bedroom",
+  "kitchen",
+  "bathroom",
+  "dining-room",
+  "office",
+  "gaming-room",
+  "nursery",
+  "laundry-room",
+  "basement",
+  "sunroom",
+  "home-theater",
+  "mudroom",
+  "walk-in-closet",
+] as const satisfies readonly [RoomType, ...RoomType[]];
+export const THEME_IDS = [
+  "modern",
+  "minimalist",
+  "scandinavian",
+  "industrial",
+  "tropical",
+  "bohemian",
+  "vintage",
+  "luxury",
+  "japandi",
+  "art-deco",
+  "coastal",
+  "farmhouse",
+  "mediterranean",
+  "transitional",
+] as const satisfies readonly [Theme, ...Theme[]];
+
+export function isRoomType(value: string): value is RoomType {
+  return Object.hasOwn(ROOM_TYPES, value);
+}
+
+export function isTheme(value: string): value is Theme {
+  return Object.hasOwn(THEMES, value);
+}
 
 /** Longest optional note ("customPrompt") the tool and the generate API accept. */
 export const NOTE_MAX_LENGTH = 500;

@@ -77,7 +77,7 @@ function useInMemoryLedger(balance: number): void {
   vi.mocked(supabaseLib.deductCreditsWithUsage).mockImplementation(inMemoryLedger.supabaseFunctions.deductCreditsWithUsage);
   vi.mocked(supabaseLib.addCredits).mockImplementation(inMemoryLedger.supabaseFunctions.addCredits);
   vi.mocked(supabaseLib.createTransaction).mockImplementation(
-    inMemoryLedger.supabaseFunctions.createTransaction as typeof supabaseLib.createTransaction
+    inMemoryLedger.supabaseFunctions.createTransaction
   );
 }
 
@@ -118,7 +118,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 1);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith({ userId: TEST_USER.id, amount: 1 });
     });
 
     it("should use gemini-3.1-flash-image model for standard quality", async () => {
@@ -143,12 +143,12 @@ describe("Generate Route - Quality Feature", () => {
 
       await POST(request);
 
-      expect(openrouterLib.generateDesign).toHaveBeenCalledWith(
-        TEST_BASE64_IMAGE,
-        "test prompt",
-        "standard",
-        { signal: expect.any(AbortSignal) }
-      );
+      expect(openrouterLib.generateDesign).toHaveBeenCalledWith({
+        base64Image: TEST_BASE64_IMAGE,
+        prompt: "test prompt",
+        quality: "standard",
+        signal: expect.any(AbortSignal),
+      });
     });
 
     it("should default to standard quality if not specified", async () => {
@@ -173,7 +173,7 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(request);
 
       expect(response.status).toBe(200);
-      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 1);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith({ userId: TEST_USER.id, amount: 1 });
     });
   });
 
@@ -203,7 +203,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 2);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith({ userId: TEST_USER.id, amount: 2 });
     });
 
     it("should use gemini-3-pro-image model for premium quality", async () => {
@@ -228,12 +228,12 @@ describe("Generate Route - Quality Feature", () => {
 
       await POST(request);
 
-      expect(openrouterLib.generateDesign).toHaveBeenCalledWith(
-        TEST_BASE64_IMAGE,
-        "test prompt",
-        "premium",
-        { signal: expect.any(AbortSignal) }
-      );
+      expect(openrouterLib.generateDesign).toHaveBeenCalledWith({
+        base64Image: TEST_BASE64_IMAGE,
+        prompt: "test prompt",
+        quality: "premium",
+        signal: expect.any(AbortSignal),
+      });
     });
 
     it("should reject premium quality when user has only 1 credit", async () => {
@@ -498,8 +498,11 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(ultraRequest());
 
       expect(response.status).toBe(200);
-      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 3);
-      expect(openrouterLib.generateDesign).toHaveBeenCalledWith(TEST_BASE64_IMAGE, "test prompt", "ultra", {
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith({ userId: TEST_USER.id, amount: 3 });
+      expect(openrouterLib.generateDesign).toHaveBeenCalledWith({
+        base64Image: TEST_BASE64_IMAGE,
+        prompt: "test prompt",
+        quality: "ultra",
         signal: expect.any(AbortSignal),
       });
     });
@@ -524,9 +527,9 @@ describe("Generate Route - Quality Feature", () => {
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
       // Like fetch: never answers on its own, rejects once its signal aborts.
       vi.mocked(openrouterLib.generateDesign).mockImplementation(
-        (_image, _prompt, _quality, options) =>
+        ({ signal }) =>
           new Promise((_resolve, reject) => {
-            options?.signal?.addEventListener("abort", () => reject(options.signal?.reason));
+            signal?.addEventListener("abort", () => reject(signal.reason));
           })
       );
 

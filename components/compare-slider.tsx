@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import { memo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -120,7 +120,7 @@ export function CompareSlider({
             ref={box}
             data-compare=""
             className={cn("compare aspect-[4/3]", className)}
-            style={{ "--pos": `${pos}%`, aspectRatio } as CSSProperties}
+            style={{ "--pos": `${pos}%`, aspectRatio }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}

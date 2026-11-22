@@ -96,7 +96,7 @@ function generateRequest(body: Record<string, unknown>): Request {
 
 function sentPrompt(): string {
   expect(openrouterLib.generateDesign).toHaveBeenCalledTimes(1);
-  return vi.mocked(openrouterLib.generateDesign).mock.calls[0][1];
+  return vi.mocked(openrouterLib.generateDesign).mock.calls[0][0].prompt;
 }
 
 describe("Generate Route - all 14 styles and 14 room types", () => {
@@ -138,7 +138,7 @@ describe("Generate Route - all 14 styles and 14 room types", () => {
     );
 
     expect(response.status).toBe(200);
-    expect(vi.mocked(openrouterLib.generateDesign).mock.calls[0][2]).toBe("premium");
+    expect(vi.mocked(openrouterLib.generateDesign).mock.calls[0][0].quality).toBe("premium");
   });
 
   it.each(["gothic", "Japandi", "", "japandi "])("rejects the unknown style %j", async (theme) => {

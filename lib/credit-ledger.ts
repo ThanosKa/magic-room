@@ -37,11 +37,14 @@ export interface Charge {
  * exception from the work) gets exactly one Refund attempt. An exception from
  * the Charge itself is not caught: nothing was charged, so the caller handles it.
  */
-export async function spendCredits<T, F>(
-  charge: Charge,
-  work: Work<T, F>
-): Promise<Spend<T, F>> {
-  const charged = await deductCreditsWithUsage(charge.userId, charge.amount);
+export async function spendCredits<T, F>({
+  charge,
+  work,
+}: {
+  charge: Charge;
+  work: Work<T, F>;
+}): Promise<Spend<T, F>> {
+  const charged = await deductCreditsWithUsage({ userId: charge.userId, amount: charge.amount });
   if (!charged) {
     logger.error({ userId: charge.userId }, "[Generate] Failed to deduct credits");
     return { kind: "not-charged" };
@@ -61,7 +64,7 @@ export async function spendCredits<T, F>(
   }
 
   try {
-    await refundCredits(charge.userId, charge.amount, charge.generationId);
+    await refundCredits({ userId: charge.userId, amount: charge.amount, generationId: charge.generationId });
   } catch {
     // Not logged here: the caller logs a failed Refund, because the generate
     // route logs it differently after a failed result and after a throw.
@@ -84,25 +87,29 @@ export interface PurchaseGrant {
 export async function grantPurchase(
   purchase: PurchaseGrant
 ): Promise<"granted" | "already-granted" | "failed"> {
-  const result = await grantPurchaseCredits(
-    purchase.userId,
-    purchase.paymentId,
-    purchase.credits,
-    purchase.metadata
-  );
+  const result = await grantPurchaseCredits({
+    userId: purchase.userId,
+    stripePaymentId: purchase.paymentId,
+    credits: purchase.credits,
+    metadata: purchase.metadata,
+  });
   if (!result) return "failed";
   return result.granted ? "granted" : "already-granted";
 }
 
 /** Gives back credits taken for a generation that produced nothing. Throws if it could not. */
-async function refundCredits(
-  userId: string,
-  amount: number,
-  generationId: string | null
-): Promise<void> {
-  const refunded = await addCredits(userId, amount);
+async function refundCredits({
+  userId,
+  amount,
+  generationId,
+}: {
+  userId: string;
+  amount: number;
+  generationId: string | null;
+}): Promise<void> {
+  const refunded = await addCredits({ userId, amount });
   if (!refunded) {
     throw new Error("Credit refund failed");
   }
-  await createTransaction(userId, "refund", amount, undefined, { generationId });
+  await createTransaction({ userId, type: "refund", amount, metadata: { generationId } });
 }

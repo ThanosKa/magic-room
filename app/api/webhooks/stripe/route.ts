@@ -6,7 +6,6 @@ import { isWebhookProcessed, markWebhookProcessed } from "@/lib/redis";
 import { logger } from "@/lib/logger";
 import { sendPurchaseEmail } from "@/lib/email";
 import { keepAliveUntilSettled } from "@/lib/keep-alive";
-import type Stripe from "stripe";
 
 // Helper to check if a string looks like a UUID
 function looksLikeUuid(str: string): boolean {
@@ -40,14 +39,14 @@ export async function POST(request: Request): Promise<Response> {
     const event = intake.event;
 
     // Check for duplicate webhook processing (but don't mark yet)
-    const isProcessed = await isWebhookProcessed("stripe", event.id);
+    const isProcessed = await isWebhookProcessed({ webhookType: "stripe", eventId: event.id });
     if (isProcessed) {
       logger.info({ eventId: event.id, eventType: event.type }, "Duplicate Stripe webhook, skipping");
       return new Response("Webhook already processed", { status: 200 });
     }
 
     if (event.type === "checkout.session.completed") {
-      const session = event.data.object as Stripe.Checkout.Session;
+      const session = event.data.object;
       const paymentStatus = session.payment_status ?? "unpaid";
       const isFreeCheckout = paymentStatus === "no_payment_required";
       const isPaid = paymentStatus === "paid";
@@ -112,7 +111,7 @@ export async function POST(request: Request): Promise<Response> {
           { userId: user.id, stripePaymentId, sessionId: session.id },
           "Payment already granted, skipping"
         );
-        await markWebhookProcessed("stripe", event.id);
+        await markWebhookProcessed({ webhookType: "stripe", eventId: event.id });
         return new Response("Payment already granted", { status: 200 });
       }
 
@@ -139,7 +138,7 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     // Reached only after a recorded grant or for events that need no work.
-    await markWebhookProcessed("stripe", event.id);
+    await markWebhookProcessed({ webhookType: "stripe", eventId: event.id });
 
     return new Response("Webhook processed", { status: 200 });
   } catch (error) {

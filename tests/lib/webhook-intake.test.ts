@@ -108,6 +108,21 @@ describe("receiveClerkEvent", () => {
     });
   });
 
+  it("keeps a user event whose optional fields have the wrong type, dropping those fields", async () => {
+    const { request, headers } = signed({
+      type: "user.updated",
+      data: { id: "user_3", first_name: 7, last_name: "Lovelace", email_addresses: "none", image_url: null, extra: "x" },
+    });
+    currentHeaders = headers;
+
+    const result = await receiveClerkEvent(request);
+
+    expect(result.ok && result.event).toEqual({
+      type: "user.updated",
+      data: { id: "user_3", last_name: "Lovelace", image_url: null },
+    });
+  });
+
   it("returns user.deleted with only the id", async () => {
     const { request, headers } = signed({ type: "user.deleted", data: { id: "user_2", deleted: true } });
     currentHeaders = headers;

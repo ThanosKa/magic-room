@@ -65,7 +65,7 @@ function createInMemoryLedger() {
     // between them. FALSE when the Balance is too low or the User does not
     // exist. A refused `usage` row raises, which rolls the subtraction back; the
     // data module turns the error into false.
-    async deductCreditsWithUsage(userId: string, amount: number): Promise<boolean> {
+    async deductCreditsWithUsage({ userId, amount }: { userId: string; amount: number }): Promise<boolean> {
       if (await roundTrip("deductCreditsWithUsage")) return false;
       const balance = balances.get(userId);
       if (balance === undefined || balance < amount) return false;
@@ -77,7 +77,7 @@ function createInMemoryLedger() {
 
     // add_credits (005): `UPDATE users SET credits = credits + p_amount WHERE
     // id = p_user_id; RETURN FOUND`. FALSE when the User does not exist.
-    async addCredits(userId: string, amount: number): Promise<boolean> {
+    async addCredits({ userId, amount }: { userId: string; amount: number }): Promise<boolean> {
       if (await roundTrip("addCredits")) return false;
       const balance = balances.get(userId);
       if (balance === undefined) return false;
@@ -87,13 +87,19 @@ function createInMemoryLedger() {
 
     // INSERT INTO transactions (001): `user_id REFERENCES users(id)`, so a row
     // for an unknown User is refused; the data module turns the error into null.
-    async createTransaction(
-      userId: string,
-      type: TransactionType,
-      amount: number,
-      stripePaymentId?: string,
-      metadata?: Record<string, unknown>
-    ): Promise<LedgerRow | null> {
+    async createTransaction({
+      userId,
+      type,
+      amount,
+      stripePaymentId,
+      metadata,
+    }: {
+      userId: string;
+      type: TransactionType;
+      amount: number;
+      stripePaymentId?: string;
+      metadata?: Record<string, unknown>;
+    }): Promise<LedgerRow | null> {
       if (await roundTrip("createTransaction")) return null;
       if (!balances.has(userId)) return null;
       if (type === "usage" && refusesUsageRow()) return null;
@@ -107,12 +113,17 @@ function createInMemoryLedger() {
     // when the payment was already granted; otherwise adds the credits and
     // returns TRUE, all in one transaction. An unknown User fails the foreign
     // key and rolls everything back; the data module turns the error into null.
-    async grantPurchaseCredits(
-      userId: string,
-      stripePaymentId: string,
-      credits: number,
-      metadata: Record<string, unknown>
-    ): Promise<{ granted: boolean } | null> {
+    async grantPurchaseCredits({
+      userId,
+      stripePaymentId,
+      credits,
+      metadata,
+    }: {
+      userId: string;
+      stripePaymentId: string;
+      credits: number;
+      metadata: Record<string, unknown>;
+    }): Promise<{ granted: boolean } | null> {
       if (await roundTrip("grantPurchaseCredits")) return null;
       const balance = balances.get(userId);
       if (balance === undefined) return null;

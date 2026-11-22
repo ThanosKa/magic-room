@@ -11,10 +11,13 @@ import { sendWelcomeEmail } from "@/lib/email";
 import { keepAliveUntilSettled } from "@/lib/keep-alive";
 import { receiveClerkEvent } from "@/lib/webhook-intake";
 
-function buildFullName(
-  firstName?: string | null,
-  lastName?: string | null
-): string | undefined {
+function buildFullName({
+  firstName,
+  lastName,
+}: {
+  firstName?: string | null;
+  lastName?: string | null;
+}): string | undefined {
   const parts = [firstName, lastName].filter(Boolean);
   return parts.length > 0 ? parts.join(" ") : undefined;
 }
@@ -43,12 +46,12 @@ export async function POST(request: Request) {
           "User already exists, skipping creation"
         );
         // Mark as processed since this is duplicate
-        await markWebhookProcessed("clerk", svixId);
+        await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
         return new Response("User already exists", { status: 200 });
       }
 
-      const fullName = buildFullName(first_name, last_name);
-      const newUser = await createUser(id, primaryEmail, FREE_SIGNUP_CREDITS);
+      const fullName = buildFullName({ firstName: first_name, lastName: last_name });
+      const newUser = await createUser({ clerkUserId: id, email: primaryEmail, initialCredits: FREE_SIGNUP_CREDITS });
 
       if (!newUser) {
         logger.error(
@@ -60,14 +63,17 @@ export async function POST(request: Request) {
 
       // Update with additional metadata if available
       if (fullName || image_url) {
-        await updateUser(id, {
-          name: fullName,
-          profileImageUrl: image_url || undefined,
+        await updateUser({
+          clerkUserId: id,
+          updates: {
+            name: fullName,
+            profileImageUrl: image_url || undefined,
+          },
         });
       }
 
       // Mark as processed AFTER successful database operations
-      await markWebhookProcessed("clerk", svixId);
+      await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
 
       // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
       // delay Clerk's 200. A failed email is only logged: it must not fail the webhook.
@@ -111,7 +117,7 @@ export async function POST(request: Request) {
       }
 
       const primaryEmail = email_addresses?.[0]?.email_address;
-      const fullName = buildFullName(first_name, last_name);
+      const fullName = buildFullName({ firstName: first_name, lastName: last_name });
 
       const updates = {
         ...(primaryEmail && { email: primaryEmail }),
@@ -120,7 +126,7 @@ export async function POST(request: Request) {
       };
 
       if (Object.keys(updates).length > 0) {
-        const updatedUser = await updateUser(id, updates);
+        const updatedUser = await updateUser({ clerkUserId: id, updates });
 
         if (!updatedUser) {
           logger.error(
@@ -142,7 +148,7 @@ export async function POST(request: Request) {
       }
 
       // Mark as processed AFTER successful database operations
-      await markWebhookProcessed("clerk", svixId);
+      await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
 
       return new Response("User updated successfully", { status: 200 });
     } catch (error) {
@@ -167,7 +173,7 @@ export async function POST(request: Request) {
           "User already deleted or never created in Supabase"
         );
         // Mark as processed since this is idempotent
-        await markWebhookProcessed("clerk", svixId);
+        await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
         return new Response("User already deleted", { status: 200 });
       }
 
@@ -179,7 +185,7 @@ export async function POST(request: Request) {
       }
 
       // Mark as processed AFTER successful database operations
-      await markWebhookProcessed("clerk", svixId);
+      await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
 
       logger.info({ clerkUserId: id }, "User deleted successfully via webhook");
       return new Response("User deleted successfully", { status: 200 });

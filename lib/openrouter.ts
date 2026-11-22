@@ -22,7 +22,10 @@ interface GenerationResult {
     error?: string;
 }
 
-interface GenerateOptions {
+interface GenerateParams {
+    base64Image: string;
+    prompt: string;
+    quality?: Quality;
     /** Aborts the request, e.g. when the browser disconnects. */
     signal?: AbortSignal;
 }
@@ -53,12 +56,12 @@ function topLevelKeys(text: string): string[] {
     }
 }
 
-export async function generateDesign(
-    base64Image: string,
-    prompt: string,
-    quality: Quality = "standard",
-    options: GenerateOptions = {}
-): Promise<GenerationResult> {
+export async function generateDesign({
+    base64Image,
+    prompt,
+    quality = "standard",
+    signal,
+}: GenerateParams): Promise<GenerationResult> {
     const apiKey = process.env.OPENROUTER_API_KEY;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -87,11 +90,11 @@ export async function generateDesign(
         () => controller.abort(new Error(`OpenRouter did not answer within ${OPENROUTER_TIMEOUT_MS / 1000} s`)),
         OPENROUTER_TIMEOUT_MS
     );
-    const stopForCaller = () => controller.abort(options.signal?.reason);
-    if (options.signal?.aborted) {
+    const stopForCaller = () => controller.abort(signal?.reason);
+    if (signal?.aborted) {
         stopForCaller();
     } else {
-        options.signal?.addEventListener("abort", stopForCaller, { once: true });
+        signal?.addEventListener("abort", stopForCaller, { once: true });
     }
 
     try {
@@ -227,16 +230,21 @@ export async function generateDesign(
         throw error;
     } finally {
         clearTimeout(timer);
-        options.signal?.removeEventListener("abort", stopForCaller);
+        signal?.removeEventListener("abort", stopForCaller);
     }
 }
 
-export function buildDesignPrompt(
-    roomType: RoomType,
-    theme: Theme,
-    quality: Quality = "standard",
-    customPrompt?: string
-): string {
+export function buildDesignPrompt({
+    roomType,
+    theme,
+    quality = "standard",
+    customPrompt,
+}: {
+    roomType: RoomType;
+    theme: Theme;
+    quality?: Quality;
+    customPrompt?: string;
+}): string {
     void quality; // Parameter used for type safety but not needed in prompt construction
     const roomDescriptions: Record<RoomType, string> = {
         "living-room": "a modern living room with comfortable seating",

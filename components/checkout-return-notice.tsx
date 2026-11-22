@@ -33,13 +33,13 @@ export function CheckoutReturnNotice() {
   useEffect(() => {
     if (status !== "success" || !clerkUserId) return;
     const leave = new AbortController();
-    void waitForPurchasedCredits(
-      async () => {
+    void waitForPurchasedCredits({
+      readCredits: async () => {
         await refreshUser();
         return useUserStore.getState().credits;
       },
-      { signal: leave.signal },
-    );
+      signal: leave.signal,
+    });
     return () => leave.abort();
   }, [status, clerkUserId, refreshUser]);
 

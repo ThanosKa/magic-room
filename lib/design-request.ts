@@ -23,7 +23,7 @@ export interface DesignChoices {
 
 type GenerateBody = Partial<IGenerateResponse> & { resetAt?: unknown };
 
-function classify(status: number, ok: boolean, body: GenerateBody): DesignAnswer {
+function classify({ status, ok, body }: { status: number; ok: boolean; body: GenerateBody }): DesignAnswer {
     if (ok && body.success && body.outputUrls && body.outputUrls.length > 0) {
         return { kind: "design", id: body.predictionId ?? "", outputUrls: body.outputUrls };
     }
@@ -57,7 +57,7 @@ export async function requestDesign({ photo, roomType, theme, quality, note }: D
         });
         // A host timeout page is not JSON: the status alone decides then.
         const body: GenerateBody = (await response.json().catch(() => null)) ?? {};
-        return classify(response.status, response.ok, body);
+        return classify({ status: response.status, ok: response.ok, body });
     } catch {
         return { kind: "offline" };
     }

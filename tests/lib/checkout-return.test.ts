@@ -45,14 +45,14 @@ describe("waitForPurchasedCredits", () => {
 
   it("keeps reading until the webhook has added the credits", async () => {
     const { read, calls } = balances(50, 50, 140, 140);
-    const result = await waitForPurchasedCredits(read, { delaysMs: [1, 1, 1, 1, 1], sleep: noWait });
+    const result = await waitForPurchasedCredits({ readCredits: read, delaysMs: [1, 1, 1, 1, 1], sleep: noWait });
     expect(result).toBe(140);
     expect(calls).toEqual([50, 50, 140]);
   });
 
   it("gives up after its last re-read when the balance never grows", async () => {
     const { read, calls } = balances(50);
-    const result = await waitForPurchasedCredits(read, { delaysMs: [1, 1, 1], sleep: noWait });
+    const result = await waitForPurchasedCredits({ readCredits: read, delaysMs: [1, 1, 1], sleep: noWait });
     expect(result).toBe(50);
     expect(calls).toHaveLength(4);
   });
@@ -61,7 +61,7 @@ describe("waitForPurchasedCredits", () => {
     const { read, calls } = balances(50);
     const leave = new AbortController();
     const sleep = async () => leave.abort();
-    await waitForPurchasedCredits(read, { delaysMs: [1, 1, 1], sleep, signal: leave.signal });
+    await waitForPurchasedCredits({ readCredits: read, delaysMs: [1, 1, 1], sleep, signal: leave.signal });
     expect(calls).toHaveLength(1);
   });
 });

@@ -102,7 +102,7 @@ describe("Generate Route - note length limit", () => {
     const response = await POST(generateRequest(note));
 
     expect(response.status).toBe(200);
-    expect(vi.mocked(openrouterLib.generateDesign).mock.calls[0][1]).toContain(note);
+    expect(vi.mocked(openrouterLib.generateDesign).mock.calls[0][0].prompt).toContain(note);
   });
 
   it("rejects a 501-character note without charging or calling the model", async () => {

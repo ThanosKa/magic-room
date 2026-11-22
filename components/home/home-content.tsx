@@ -8,11 +8,10 @@ import { FAQSection } from "@/components/faq-section";
 import { HomeHero } from "@/components/home/home-hero";
 import { HOME_FAQ } from "@/components/home/home-faq";
 import { RevealRoot } from "@/components/home/reveal-root";
-import { THEMES } from "@/lib/constants";
+import { THEME_IDS, THEMES } from "@/lib/constants";
 import { generateHref } from "@/lib/design-selection";
 import { isPriorityDesignSlug } from "@/lib/seo/priority-pages";
 import { cn } from "@/lib/utils";
-import type { Theme } from "@/types";
 
 const IMG = "/images/designs";
 
@@ -93,7 +92,8 @@ const GUIDES = [
  * design page when that page is indexable; otherwise (pruned pages are never
  * linked, see PRUNED.md) it opens the tool with the style already chosen.
  */
-const STYLE_TILES = (Object.entries(THEMES) as [Theme, string][]).map(([slug, name]) => {
+const STYLE_TILES = THEME_IDS.map((slug) => {
+  const name = THEMES[slug];
   const designSlug = `${slug}-living-room`;
   const hasPage = isPriorityDesignSlug(designSlug);
   return {
@@ -105,11 +105,11 @@ const STYLE_TILES = (Object.entries(THEMES) as [Theme, string][]).map(([slug, na
   };
 });
 
-const reveal = (delayMs = 0, y?: number): CSSProperties =>
+const reveal = ({ delayMs = 0, y }: { delayMs?: number; y?: number } = {}): CSSProperties =>
   ({
     "--reveal-delay": `${delayMs}ms`,
     ...(y !== undefined && { "--reveal-y": `${y}px` }),
-  }) as CSSProperties;
+  });
 
 const SECTION = "py-22 sm:py-26 lg:py-38";
 const H2 =
@@ -179,7 +179,7 @@ export function HomeContent() {
               <li
                 key={step.title}
                 data-reveal
-                style={reveal(i * 100)}
+                style={reveal({ delayMs: i * 100 })}
                 className="grid grid-cols-[56px_minmax(0,1fr)] gap-x-2 border-t border-line pb-5 pt-6 sm:block sm:pb-0 sm:pt-7"
               >
                 <span className="row-span-2 block font-serif text-[40px] leading-[0.9] tracking-[-0.03em] text-ink-3 sm:text-[64px]">
@@ -213,7 +213,7 @@ export function HomeContent() {
 
           <ul className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
             {STYLE_TILES.map((tile, i) => (
-              <li key={tile.slug} data-reveal style={reveal((i % 4) * 90)}>
+              <li key={tile.slug} data-reveal style={reveal({ delayMs: (i % 4) * 90 })}>
                 <Link
                   href={tile.href}
                   prefetch={tile.hasPage ? undefined : false}
@@ -238,7 +238,7 @@ export function HomeContent() {
                 </Link>
               </li>
             ))}
-            <li data-reveal style={reveal(180)}>
+            <li data-reveal style={reveal({ delayMs: 180 })}>
               <div className="flex aspect-[4/5] flex-col justify-between rounded-2xl bg-cream/[0.08] p-4 sm:rounded-xl sm:p-6">
                 <span className="font-serif text-[clamp(72px,8vw,120px)] leading-[0.85] tracking-[-0.04em]">196</span>
                 <span className="max-w-[18ch] text-[15px] leading-[1.45] text-cream-2">
@@ -246,7 +246,7 @@ export function HomeContent() {
                 </span>
               </div>
             </li>
-            <li data-reveal style={reveal(270)}>
+            <li data-reveal style={reveal({ delayMs: 270 })}>
               <Link
                 href="/generate"
                 prefetch={false}
@@ -273,7 +273,7 @@ export function HomeContent() {
               Drag the line. <em>See the difference.</em>
             </h2>
           </HeadSplit>
-          <div data-reveal style={reveal(0, 48)}>
+          <div data-reveal style={reveal({ y: 48 })}>
             <CompareSlider
               before={{ src: "/images/room-before.png", alt: "Room before AI redesign" }}
               after={{ src: "/images/room-after.png", alt: "Room after AI redesign" }}
@@ -289,7 +289,7 @@ export function HomeContent() {
         <div className="container-page">
           <ul className="grid gap-10 lg:grid-cols-3 lg:gap-12">
             {FACTS.map((fact, i) => (
-              <li key={fact.value} data-reveal style={reveal(i * 100)} className="flex flex-col gap-5">
+              <li key={fact.value} data-reveal style={reveal({ delayMs: i * 100 })} className="flex flex-col gap-5">
                 <span className="font-serif text-[clamp(72px,8.4vw,128px)] leading-[0.85] tracking-[-0.04em] text-ink tabular-nums">
                   {fact.value}
                 </span>
@@ -323,7 +323,7 @@ export function HomeContent() {
                 ))}
               </ul>
             </div>
-            <div data-reveal style={reveal(120)}>
+            <div data-reveal style={reveal({ delayMs: 120 })}>
               <div className="flex items-center justify-between gap-4 pb-2">
                 <h3 className="text-[13px] font-medium uppercase tracking-[0.14em] text-ink-3">Which AI design tool?</h3>
                 <Link
@@ -345,7 +345,7 @@ export function HomeContent() {
                 ))}
               </ul>
             </div>
-            <div data-reveal style={reveal(240)} className="lg:col-span-2 xl:col-span-1">
+            <div data-reveal style={reveal({ delayMs: 240 })} className="lg:col-span-2 xl:col-span-1">
               <div className="flex items-center justify-between gap-4 pb-2">
                 <h3 className="text-[13px] font-medium uppercase tracking-[0.14em] text-ink-3">Guides</h3>
                 <Link href="/blog" className={cn(TEXT_LINK, "text-sm text-ink decoration-ink/35 hover:decoration-ink")}>
@@ -384,7 +384,7 @@ export function HomeContent() {
           >
             Your next room is <em>one photo</em> away.
           </h2>
-          <div data-reveal style={reveal(140)} className="flex flex-wrap items-center gap-x-7 gap-y-1">
+          <div data-reveal style={reveal({ delayMs: 140 })} className="flex flex-wrap items-center gap-x-7 gap-y-1">
             <Button asChild variant="cream" size="lg" className="group gap-4 pl-6 pr-[7px]">
               <Link href="/generate" prefetch={false}>
                 Redesign my room

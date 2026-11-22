@@ -82,7 +82,7 @@ function useBarFit(bar: RefObject<HTMLDivElement | null>) {
   return fit;
 }
 
-function isCurrent(pathname: string, href: string) {
+function isCurrent({ pathname, href }: { pathname: string; href: string }) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -222,7 +222,7 @@ export function Header() {
             <Link
               key={n.href}
               href={n.href}
-              aria-current={isCurrent(pathname, n.href) ? "page" : undefined}
+              aria-current={isCurrent({ pathname, href: n.href }) ? "page" : undefined}
               className="inline-flex h-10 items-center rounded-full px-3.5 text-sm font-medium text-ink-2 transition-colors duration-200 hover:bg-ink/5 hover:text-ink aria-[current=page]:text-ink motion-reduce:transition-none"
             >
               {n.label}
@@ -307,7 +307,7 @@ export function Header() {
                 key={n.href}
                 href={n.href}
                 onClick={close}
-                aria-current={isCurrent(pathname, n.href) ? "page" : undefined}
+                aria-current={isCurrent({ pathname, href: n.href }) ? "page" : undefined}
                 style={{ animationDelay: `${60 + i * 30}ms` }}
                 className="block animate-lift-in border-b border-line py-2.5 font-serif text-[40px] leading-[1.1] tracking-[-0.02em] text-ink"
               >

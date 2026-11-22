@@ -145,10 +145,10 @@ export function ControlPanel({
                 }}
                 style={
                     keyboardInset
-                        ? ({
+                        ? {
                               bottom: keyboardInset,
                               "--kb": `${keyboardInset}px`,
-                          } as React.CSSProperties)
+                          }
                         : undefined
                 }
                 className={cn(

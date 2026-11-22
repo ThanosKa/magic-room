@@ -97,15 +97,15 @@ describe("Stripe Webhook Route", () => {
 
       const response = await POST(request);
       expect(response.status).toBe(200);
-      expect(supabaseLib.grantPurchaseCredits).toHaveBeenCalledWith(
-        TEST_USER.id,
-        "pi_paid_test",
-        TEST_PACKAGES.starter.credits,
-        { packageId: "starter", packageName: TEST_PACKAGES.starter.name }
-      );
+      expect(supabaseLib.grantPurchaseCredits).toHaveBeenCalledWith({
+        userId: TEST_USER.id,
+        stripePaymentId: "pi_paid_test",
+        credits: TEST_PACKAGES.starter.credits,
+        metadata: { packageId: "starter", packageName: TEST_PACKAGES.starter.name },
+      });
       expect(sendPurchaseEmail).toHaveBeenCalledTimes(1);
       expect(redisLib.markWebhookProcessed).toHaveBeenCalledTimes(1);
-      expect(redisLib.markWebhookProcessed).toHaveBeenCalledWith("stripe", "evt_test");
+      expect(redisLib.markWebhookProcessed).toHaveBeenCalledWith({ webhookType: "stripe", eventId: "evt_test" });
     });
 
     // A slow Resend must not hold Stripe's 200 (Stripe redelivers past its
@@ -435,7 +435,7 @@ describe("Stripe Webhook Route", () => {
         const response = await deliverPaidSession();
 
         expect(response.status).toBe(200);
-        expect(redisLib.markWebhookProcessed).toHaveBeenCalledWith("stripe", "evt_grant");
+        expect(redisLib.markWebhookProcessed).toHaveBeenCalledWith({ webhookType: "stripe", eventId: "evt_grant" });
         expect(sendPurchaseEmail).not.toHaveBeenCalled();
       });
     });

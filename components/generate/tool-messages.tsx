@@ -44,7 +44,15 @@ export const PHOTO_MESSAGES = {
 } satisfies Record<string, ToolMessage>;
 
 /** The chosen quality costs more than the balance. */
-export function notEnoughCreditsMessage(qualityName: string, cost: number, balance: number): ToolMessage {
+export function notEnoughCreditsMessage({
+    qualityName,
+    cost,
+    balance,
+}: {
+    qualityName: string;
+    cost: number;
+    balance: number;
+}): ToolMessage {
     return {
         tone: "info",
         title: "Not enough credits",
@@ -70,10 +78,15 @@ export const NETWORK_MESSAGE: ToolMessage = {
  * What to tell the user about a design answer. A delivered design needs no
  * message (null); the 402 case is for the screen to show after it re-reads the Balance.
  */
-export function messageFor(
-    answer: DesignAnswer,
-    { cost, signInAgain }: { cost: number; signInAgain: () => void }
-): ToolMessage | null {
+export function messageFor({
+    answer,
+    cost,
+    signInAgain,
+}: {
+    answer: DesignAnswer;
+    cost: number;
+    signInAgain: () => void;
+}): ToolMessage | null {
     switch (answer.kind) {
         case "design":
             return null;

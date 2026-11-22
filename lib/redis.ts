@@ -131,10 +131,13 @@ export async function getRateLimitStatus(userId: string) {
 // Webhook deduplication (24-hour TTL for webhook event IDs)
 const WEBHOOK_DEDUP_TTL = 24 * 60 * 60;
 
-export async function isWebhookProcessed(
-  webhookType: "stripe" | "clerk",
-  eventId: string
-): Promise<boolean> {
+export async function isWebhookProcessed({
+  webhookType,
+  eventId,
+}: {
+  webhookType: "stripe" | "clerk";
+  eventId: string;
+}): Promise<boolean> {
   try {
     const key = `webhook:${webhookType}:${eventId}`;
     const exists = await redis.exists(key);
@@ -149,10 +152,13 @@ export async function isWebhookProcessed(
   }
 }
 
-export async function markWebhookProcessed(
-  webhookType: "stripe" | "clerk",
-  eventId: string
-): Promise<boolean> {
+export async function markWebhookProcessed({
+  webhookType,
+  eventId,
+}: {
+  webhookType: "stripe" | "clerk";
+  eventId: string;
+}): Promise<boolean> {
   try {
     const key = `webhook:${webhookType}:${eventId}`;
     await redis.setex(key, WEBHOOK_DEDUP_TTL, "1");
