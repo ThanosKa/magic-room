@@ -12,6 +12,7 @@ export interface IPricingModel {
 export interface ICompetitorData {
     slug: string;
     name: string;
+    searchName?: string;
     website: string;
     description: string;
     pros: string[];
@@ -189,6 +190,7 @@ export const COMPETITORS: ICompetitorData[] = [
     {
         slug: "reimaginehome",
         name: "Reimagine Home",
+        searchName: "REimagineHome",
         website: "reimaginehome.ai",
         description:
             "Reimagine Home is an AI interior design tool that offers room redesign, virtual renovation, and landscape design features. It focuses on providing a range of AI-powered home transformation tools in a single platform.",

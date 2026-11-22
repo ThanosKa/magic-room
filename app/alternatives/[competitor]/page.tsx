@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     return createMetadata({
         title: {
-            absolute: `${competitor.name} Alternative — Pay Once, Photos Never Stored`,
+            absolute: `${competitor.searchName ?? competitor.name} Alternative — ${ENTRY_PRICE} Once, No Subscription`,
         },
         description: `${/^[AEIOU]/i.test(competitor.name) ? "An" : "A"} ${competitor.name} alternative you pay for once: ${ENTRY_PRICE} for ${ENTRY_PACK.credits} credits that never expire. Your room photos are never stored. 1 free design, no card.`,
         path: `/alternatives/${slug}`,
