@@ -1,6 +1,40 @@
 import { RoomType, Theme, ICreditPackage } from "@/types";
 
-export const ROOM_TYPES: Record<RoomType, string> = {
+export const ROOM_TYPE_IDS = [
+  "living-room",
+  "bedroom",
+  "kitchen",
+  "bathroom",
+  "dining-room",
+  "office",
+  "gaming-room",
+  "nursery",
+  "laundry-room",
+  "basement",
+  "sunroom",
+  "home-theater",
+  "mudroom",
+  "walk-in-closet",
+] as const satisfies readonly [RoomType, ...RoomType[]];
+
+export const THEME_IDS = [
+  "modern",
+  "minimalist",
+  "scandinavian",
+  "industrial",
+  "tropical",
+  "bohemian",
+  "vintage",
+  "luxury",
+  "japandi",
+  "art-deco",
+  "coastal",
+  "farmhouse",
+  "mediterranean",
+  "transitional",
+] as const satisfies readonly [Theme, ...Theme[]];
+
+export const ROOM_TYPES = {
   "living-room": "Living Room",
   bedroom: "Bedroom",
   kitchen: "Kitchen",
@@ -15,9 +49,9 @@ export const ROOM_TYPES: Record<RoomType, string> = {
   "home-theater": "Home Theater",
   mudroom: "Mudroom",
   "walk-in-closet": "Walk-in Closet",
-};
+} satisfies Record<(typeof ROOM_TYPE_IDS)[number], string>;
 
-export const THEMES: Record<Theme, string> = {
+export const THEMES = {
   modern: "Modern",
   minimalist: "Minimalist",
   scandinavian: "Scandinavian",
@@ -32,26 +66,24 @@ export const THEMES: Record<Theme, string> = {
   farmhouse: "Farmhouse",
   mediterranean: "Mediterranean",
   transitional: "Transitional",
-};
+} satisfies Record<(typeof THEME_IDS)[number], string>;
 
-export const ROOM_TYPE_IDS = Object.keys(ROOM_TYPES) as [RoomType, ...RoomType[]];
-export const THEME_IDS = Object.keys(THEMES) as [Theme, ...Theme[]];
+export function isRoomType(value: string): value is RoomType {
+  return Object.hasOwn(ROOM_TYPES, value);
+}
 
-/** Longest optional note ("customPrompt") the tool and the generate API accept. */
+export function isTheme(value: string): value is Theme {
+  return Object.hasOwn(THEMES, value);
+}
+
 export const NOTE_MAX_LENGTH = 500;
 
-/**
- * The three quality tiers: what each costs in credits and which OpenRouter
- * model makes the image. Ids stay "standard" / "premium" for old data; the
- * names people see are Quick / Pro / Ultra.
- */
 export const QUALITY_OPTIONS = {
   standard: {
     id: "standard" as const,
     name: "Quick",
     description: "Fast ideas for your room",
     credits: 1,
-    /** How long a design usually takes: sets the wait screen's pace and its note. */
     waitSeconds: 60,
     waitText: "30 to 60 seconds",
     model: "google/gemini-nano-banana-2.1"
@@ -78,7 +110,7 @@ export const QUALITY_OPTIONS = {
 
 export const QUALITY_IDS = ["standard", "premium", "ultra"] as const;
 
-export const CREDIT_PACKAGES: ICreditPackage[] = [
+export const CREDIT_PACKAGES = [
   {
     id: "starter",
     name: "Starter",
@@ -103,9 +135,8 @@ export const CREDIT_PACKAGES: ICreditPackage[] = [
     stripePriceId: process.env.STRIPE_PRICE_PREMIUM || "",
     active: true,
   },
-];
+] as const satisfies readonly ICreditPackage[];
 
-/** Credits a new User gets at sign-up (the Free credit), whichever path creates the row. */
 export const FREE_SIGNUP_CREDITS = 1;
 
 export const RATE_LIMIT = 100;

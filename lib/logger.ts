@@ -4,13 +4,11 @@ const isDev = process.env.NODE_ENV !== "production";
 const isWorkerRuntime =
   typeof navigator !== "undefined" &&
   navigator.userAgent === "Cloudflare-Workers";
-// Production always writes through the console, so a missed runtime match
-// cannot bring back the destination that throws on Workers.
 const useConsoleDestination = isWorkerRuntime || !isDev;
 
 const options: LoggerOptions = {
   level: process.env.LOG_LEVEL || (isDev ? "debug" : "info"),
-  // pino-pretty runs in a worker thread, which the Workers runtime does not offer.
+  // https://getpino.io/#/docs/transports (pino-pretty runs in a worker thread, which the Workers runtime does not offer)
   ...(isDev &&
     !isWorkerRuntime && {
       transport: {
@@ -34,7 +32,6 @@ const options: LoggerOptions = {
       "req.headers.cookie",
       "headers.authorization",
       "headers.cookie",
-      // One and two levels down, e.g. an SDK error's request config.
       "*.password",
       "*.token",
       "*.apiKey",
@@ -53,10 +50,7 @@ const options: LoggerOptions = {
   },
 };
 
-/**
- * Sends pino's JSON lines to the console. pino's default destination calls
- * fs.writeSync in a form the Workers runtime rejects, so every log call throws there.
- */
+// https://developers.cloudflare.com/workers/runtime-apis/nodejs/fs/ (pino's default destination calls fs.writeSync, which throws on Workers)
 const consoleDestination: DestinationStream = {
   write(line) {
     // eslint-disable-next-line no-console -- the one place server logs reach the console

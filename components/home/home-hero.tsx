@@ -9,7 +9,6 @@ import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { cn } from "@/lib/utils";
 
 const IMG = "/images/designs";
-/** One style per cycle. The timer bar's animation end advances the dial. */
 const CYCLE_MS = 3600;
 
 const DIAL = [
@@ -30,7 +29,6 @@ function subscribeVisibility(onChange: () => void) {
   return () => document.removeEventListener("visibilitychange", onChange);
 }
 
-/** True while the tab is in the background. False on the server. */
 function useDocumentHidden() {
   return useSyncExternalStore(
     subscribeVisibility,
@@ -39,13 +37,6 @@ function useDocumentHidden() {
   );
 }
 
-/**
- * The hero and its "style dial": one living room restyles itself every 3.6 s
- * with a left-edge wipe while the last line of the H1 swaps to the style name.
- * The dial pauses while the pointer is over it, while anything in it has focus
- * and while the tab is hidden. With reduced motion there is no autoplay and a
- * chosen style fades in instead of wiping (see app/motion.css).
- */
 export function HomeHero() {
   const reduced = usePrefersReducedMotion();
   const hidden = useDocumentHidden();
@@ -62,7 +53,8 @@ export function HomeHero() {
   };
 
   const onBlur = (e: FocusEvent<HTMLDivElement>) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+    const next = e.relatedTarget;
+    if (!(next instanceof Node && e.currentTarget.contains(next))) setFocused(false);
   };
 
   const current = DIAL[active];
@@ -117,7 +109,6 @@ export function HomeHero() {
               size="lg"
               className="group gap-4 pl-6 pr-[7px] max-sm:flex-[1_1_100%] max-sm:justify-between"
             >
-              {/* No prefetch: signed out, /generate redirects to Clerk (another origin, CORS error). */}
               <Link href="/generate" prefetch={false}>
                 Redesign my room
                 <span className="grid size-[38px] place-items-center rounded-full bg-cream text-ink">
@@ -136,7 +127,6 @@ export function HomeHero() {
             </Link>
           </div>
 
-          {/* Each item's divider sits on its left; the -ml + overflow clip hides it at every line start. */}
           <div
             className="mt-6 animate-rise overflow-hidden sm:mt-10 lg:[@media(max-height:760px)]:mt-7"
             style={delay(680)}
@@ -232,12 +222,10 @@ export function HomeHero() {
                       aria-hidden="true"
                       onAnimationEnd={() => go((active + 1) % DIAL.length)}
                       className="absolute inset-x-3.5 bottom-1.5 h-0.5 origin-left animate-bar-run rounded-full bg-accent"
-                      style={
-                        {
-                          "--cycle": `${CYCLE_MS}ms`,
-                          animationPlayState: paused ? "paused" : "running",
-                        } as CSSProperties
-                      }
+                      style={{
+                        "--cycle": `${CYCLE_MS}ms`,
+                        animationPlayState: paused ? "paused" : "running",
+                      }}
                     />
                   )}
                 </button>

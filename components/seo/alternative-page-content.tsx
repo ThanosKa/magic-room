@@ -35,7 +35,6 @@ import {
 interface AlternativePageContentProps {
     competitor: ICompetitorData;
     otherCompetitors?: ICompetitorData[];
-    /** Competitors that still have a live (non-redirecting) /vs page, self included. */
     vsCompetitors?: ICompetitorData[];
     designLinks?: IContextualLink[];
     blogLinks?: IContextualLink[];
@@ -58,7 +57,6 @@ export function AlternativePageContent({
         <PageTransition>
             <PageBreadcrumb items={breadcrumbItems} />
 
-            {/* Hero */}
             <ComparisonHero>
                 <h1 className={H1_CLASS}>Best {competitor.name} Alternative</h1>
                 <div className="animate-rise motion-reduce:animate-none" style={{ animationDelay: "120ms" }}>
@@ -76,7 +74,6 @@ export function AlternativePageContent({
                 </div>
             </ComparisonHero>
 
-            {/* About the competitor */}
             <Section>
                 <h2 className={H2_CLASS}>What is {competitor.name}?</h2>
                 <div className="mt-10 grid gap-10 md:grid-cols-2 md:gap-12">
@@ -115,8 +112,6 @@ export function AlternativePageContent({
                 </div>
             </Section>
 
-            {/* Why people look for an alternative — validates the searcher's
-                reason for being here before pitching anything. */}
             <Section>
                 <Split
                     heading={<>Why people look for a {competitor.name} alternative</>}
@@ -141,7 +136,6 @@ export function AlternativePageContent({
                 </Split>
             </Section>
 
-            {/* Comparison table */}
             <Section>
                 <h2 className={`${H2_CLASS} mb-10 max-w-3xl`}>
                     Feature comparison: Magic Room vs {competitor.name}
@@ -149,11 +143,6 @@ export function AlternativePageContent({
                 <FeatureComparisonTable competitor={competitor} />
             </Section>
 
-            {/* Pricing mechanics.
-                A large share of the impressions these pages already earn come
-                from pricing queries — "reimagine home pricing 2026",
-                "interior ai pricing 2026", "roomgpt pricing 2026" — which the
-                page previously answered with a single vague sentence. */}
             <Section tone="band">
                 <h2 className={`${H2_CLASS} max-w-[26ch]`}>
                     {competitor.name} pricing vs Magic Room pricing: how you actually get charged
@@ -236,7 +225,6 @@ export function AlternativePageContent({
                 </p>
             </Section>
 
-            {/* Why Magic Room */}
             <Section rule={false}>
                 <Split
                     heading={<>Why choose Magic Room over {competitor.name}?</>}
@@ -261,7 +249,6 @@ export function AlternativePageContent({
                 </Split>
             </Section>
 
-            {/* Who is it for */}
             <Section>
                 <h2 className={`${H2_CLASS} max-w-[24ch]`}>
                     Should you switch from {competitor.name} to Magic Room?
@@ -299,7 +286,6 @@ export function AlternativePageContent({
                 </div>
             </Section>
 
-            {/* FAQ */}
             {competitor.faqs.length > 0 && (
                 <Section>
                     <Split heading={<>{competitor.name} alternative: frequently asked questions</>}>
@@ -315,7 +301,6 @@ export function AlternativePageContent({
                 </Section>
             )}
 
-            {/* Migration — what switching actually involves. */}
             <Section>
                 <Split heading={<>How to switch from {competitor.name} to Magic Room</>}>
                     <p className={BODY_CLASS}>{competitor.migration}</p>
@@ -346,11 +331,6 @@ export function AlternativePageContent({
                 </Split>
             </Section>
 
-            {/* Also compare — anchors fixed.
-                These links point at /alternatives/[slug] but previously used the
-                anchor "Magic Room vs [name]", which is the /vs/[slug] page's
-                query phrase. Anchor and target now match, and the head-to-head
-                page gets its own link instead of none. */}
             {otherCompetitors.length > 0 && (
                 <Section>
                     <h2 className={H3_CLASS}>Compare other AI interior design tools</h2>
@@ -383,8 +363,6 @@ export function AlternativePageContent({
                 </Section>
             )}
 
-            {/* Comparison cluster -> design catalogue. Previously the four
-                comparison pages linked to no design page at all. */}
             {designLinks.length > 0 && <Rule />}
             <RelatedLinks
                 heading="Try these styles on your own room"
@@ -400,7 +378,6 @@ export function AlternativePageContent({
                 className="pt-16 md:pt-24"
             />
 
-            {/* CTA */}
             <CtaSection
                 heading="Try Magic Room for free"
                 subtext="Upload a photo of your room and generate your first AI redesign. One free credit included with every account."

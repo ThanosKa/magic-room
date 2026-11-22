@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Server code: a jsdom AbortSignal is not accepted by Node's Request.
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "@/app/api/generate/route";
 import * as supabaseLib from "@/lib/supabase";
@@ -15,7 +14,6 @@ vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
 }));
 
-// `after` hands a promise to the platform's waitUntil (vinext on Workers).
 vi.mock("next/server", () => ({
   after: vi.fn(),
 }));
@@ -69,15 +67,13 @@ const TEST_USER = {
 
 const TEST_BASE64_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 
-// Routes the Balance functions to the in-memory ledger, so a test can check what
-// the User ended up with instead of which helper was called.
 function useInMemoryLedger(balance: number): void {
   inMemoryLedger.reset();
   inMemoryLedger.setBalance(TEST_USER.id, balance);
   vi.mocked(supabaseLib.deductCreditsWithUsage).mockImplementation(inMemoryLedger.supabaseFunctions.deductCreditsWithUsage);
   vi.mocked(supabaseLib.addCredits).mockImplementation(inMemoryLedger.supabaseFunctions.addCredits);
   vi.mocked(supabaseLib.createTransaction).mockImplementation(
-    inMemoryLedger.supabaseFunctions.createTransaction as typeof supabaseLib.createTransaction
+    inMemoryLedger.supabaseFunctions.createTransaction
   );
 }
 
@@ -118,7 +114,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 1);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith({ userId: TEST_USER.id, amount: 1 });
     });
 
     it("should use gemini-3.1-flash-image model for standard quality", async () => {
@@ -143,12 +139,12 @@ describe("Generate Route - Quality Feature", () => {
 
       await POST(request);
 
-      expect(openrouterLib.generateDesign).toHaveBeenCalledWith(
-        TEST_BASE64_IMAGE,
-        "test prompt",
-        "standard",
-        { signal: expect.any(AbortSignal) }
-      );
+      expect(openrouterLib.generateDesign).toHaveBeenCalledWith({
+        base64Image: TEST_BASE64_IMAGE,
+        prompt: "test prompt",
+        quality: "standard",
+        signal: expect.any(AbortSignal),
+      });
     });
 
     it("should default to standard quality if not specified", async () => {
@@ -173,7 +169,7 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(request);
 
       expect(response.status).toBe(200);
-      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 1);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith({ userId: TEST_USER.id, amount: 1 });
     });
   });
 
@@ -203,7 +199,7 @@ describe("Generate Route - Quality Feature", () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 2);
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith({ userId: TEST_USER.id, amount: 2 });
     });
 
     it("should use gemini-3-pro-image model for premium quality", async () => {
@@ -228,12 +224,12 @@ describe("Generate Route - Quality Feature", () => {
 
       await POST(request);
 
-      expect(openrouterLib.generateDesign).toHaveBeenCalledWith(
-        TEST_BASE64_IMAGE,
-        "test prompt",
-        "premium",
-        { signal: expect.any(AbortSignal) }
-      );
+      expect(openrouterLib.generateDesign).toHaveBeenCalledWith({
+        base64Image: TEST_BASE64_IMAGE,
+        prompt: "test prompt",
+        quality: "premium",
+        signal: expect.any(AbortSignal),
+      });
     });
 
     it("should reject premium quality when user has only 1 credit", async () => {
@@ -299,8 +295,6 @@ describe("Generate Route - Quality Feature", () => {
       ]);
     });
 
-    // The screen tells the user "your credits were refunded" on this answer,
-    // so it must also hold when the AI call throws (network, API error).
     it("refunds the credits and says so when the AI call throws", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       useInMemoryLedger(10);
@@ -498,8 +492,11 @@ describe("Generate Route - Quality Feature", () => {
       const response = await POST(ultraRequest());
 
       expect(response.status).toBe(200);
-      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith(TEST_USER.id, 3);
-      expect(openrouterLib.generateDesign).toHaveBeenCalledWith(TEST_BASE64_IMAGE, "test prompt", "ultra", {
+      expect(supabaseLib.deductCreditsWithUsage).toHaveBeenCalledWith({ userId: TEST_USER.id, amount: 3 });
+      expect(openrouterLib.generateDesign).toHaveBeenCalledWith({
+        base64Image: TEST_BASE64_IMAGE,
+        prompt: "test prompt",
+        quality: "ultra",
         signal: expect.any(AbortSignal),
       });
     });
@@ -514,19 +511,15 @@ describe("Generate Route - Quality Feature", () => {
     });
   });
 
-  // On Workers a client disconnect cancels the request's work unless it was
-  // handed to waitUntil, which then gets about 30 s more. The tab closing must
-  // stop the AI call and give the credits back inside that window.
   describe("Browser disconnects mid-generation", () => {
     it("stops the AI call, refunds the credits and keeps the request alive until the refund is written", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       useInMemoryLedger(10);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
-      // Like fetch: never answers on its own, rejects once its signal aborts.
       vi.mocked(openrouterLib.generateDesign).mockImplementation(
-        (_image, _prompt, _quality, options) =>
+        ({ signal }) =>
           new Promise((_resolve, reject) => {
-            options?.signal?.addEventListener("abort", () => reject(options.signal?.reason));
+            signal?.addEventListener("abort", () => reject(signal.reason));
           })
       );
 
@@ -543,7 +536,6 @@ describe("Generate Route - Quality Feature", () => {
         signal: browser.signal,
       });
 
-      // Nobody reads the answer: the tab is gone.
       void POST(request);
       await vi.waitFor(() => expect(openrouterLib.generateDesign).toHaveBeenCalled());
       expect(inMemoryLedger.balanceOf(TEST_USER.id)).toBe(8);

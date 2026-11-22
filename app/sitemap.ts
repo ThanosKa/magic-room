@@ -7,42 +7,6 @@ import {
 import { BLOG_POSTS } from "@/lib/seo/blog-data";
 import { PRIORITY_DESIGN_SLUGS, TOP_DESIGN_SLUGS } from "@/lib/seo/priority-pages";
 
-/**
- * Every URL emitted here must satisfy all four of:
- *   1. It renders (no 404) — enforced by deriving slugs from the same data
- *      modules the routes use, never from a hand-maintained copy.
- *   2. It is indexable (no `robots: { index: false }` on the route).
- *   3. It self-canonicals to exactly this absolute, non-trailing-slash URL.
- *   4. It is reachable by at least one internal link.
- *
- * Deliberately ABSENT and correct to be absent:
- *   /generate            — noindex (utility/app surface behind auth)
- *   /design/<non-priority> — the 158 (theme, room) combos outside
- *                          PRIORITY_DESIGN_SLUGS are noindex on purpose
- *   /design/<pruned>     — noindex via lib/seo/pruned.ts (X-Robots-Tag header)
- *   /vs/<redirected>     — 308 to /alternatives/<slug> via lib/seo/pruned.ts
- *   /api/*               — disallowed in robots.txt
- *   404 / error routes   — noindex
- */
-
-// Honest per-surface dates. Only bump a surface when it actually changed.
-//   - BASELINE: last broad content revision (per-slug intros + FAQ blocks on
-//     the priority design pages, 2026-07-29). Surfaces untouched since then.
-//   - PASS_2026_10: surfaces edited in the 2026-10 SEO pass (HowTo JSON-LD
-//     removed, /vs consolidated into /alternatives, internal links and hub
-//     listings changed, pruned combos removed from the design hub).
-//   - LEGAL: matches the "Last Updated: November 2026" line on /privacy.
-//   - RIGHTS_2026_11: free-credit commercial rights made consistent on
-//     /pricing and /terms (matches "Last Updated: November 2026" on /terms).
-//   - HOME_2026_11: homepage Explore section gained a Guides list (11-02);
-//     comparison line names the vendors it describes (11-06).
-//   - CLAIMS_2026_11: unsourced quality claims about competitors removed from
-//     /alternatives/* and /vs/*; /virtual-staging staging figures now cite
-//     NAR's 2025 Profile of Home Staging.
-//   - MODEL_CLAIMS_2026_11: unbenchmarked "multimodal beats diffusion" claims
-//     reworded on /alternatives and /alternatives/*.
-//   - DESIGN_PAGE_DATES: per-slug dates for design pages whose body changed
-//     after the 2026-10 pass (scandinavian-bedroom gained its deep dive).
 const BASELINE_LAST_UPDATED = new Date("2026-07-29");
 const PASS_2026_10_LAST_UPDATED = new Date("2026-10-01");
 const LEGAL_LAST_UPDATED = new Date("2026-11-07");
@@ -59,10 +23,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const corePages: MetadataRoute.Sitemap = [
         {
-            // Trailing slash on purpose: the homepage <loc> must match the URL
-            // Google indexes ("https://magic-room.dev/", as it appears in the
-            // Search Console Pages report) and the canonical emitted by
-            // createMetadata({ path: "" }). The bare origin does not.
             url: `${baseUrl}/`,
             lastModified: HOME_2026_11_LAST_UPDATED,
             changeFrequency: "weekly",
@@ -115,9 +75,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
     ];
 
-    // Only ship curated, high-signal design pages to the sitemap.
-    // Other (theme, room) combos still render but are noindex — they
-    // exist for users browsing, but Google won't waste crawl budget on them.
     const designPages: MetadataRoute.Sitemap = PRIORITY_DESIGN_SLUGS.map((slug) => ({
         url: `${baseUrl}/design/${slug}`,
         lastModified: DESIGN_PAGE_DATES[slug] ?? PASS_2026_10_LAST_UPDATED,
@@ -177,9 +134,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ...blogPages,
     ];
 
-    // Guard against a duplicate <loc> ever shipping (e.g. a slug appearing in
-    // both PRIORITY_DESIGN_SLUGS tiers, or a competitor listed twice).
-    // Duplicate URLs in a sitemap are a known trigger for Google ignoring it.
     const seen = new Set<string>();
     return entries.filter((entry) => {
         if (seen.has(entry.url)) return false;

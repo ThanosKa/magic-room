@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { findPublicEnvProblems } from "@/lib/public-env";
 
-// NEXT_PUBLIC_* values are baked into the Worker build. A build made without
-// them sends every API route to 500 and paying customers to localhost.
 const COMPLETE = {
   NEXT_PUBLIC_APP_URL: "https://magic-room.dev",
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_placeholder",

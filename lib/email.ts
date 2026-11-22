@@ -3,11 +3,6 @@ import { logger } from "@/lib/logger";
 import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
 import { CREDIT_PACKAGES, QUALITY_OPTIONS, THEME_IDS } from "@/lib/constants";
 
-// ---------------------------------------------------------------------------
-// Resend client (lazy-initialised so tests that import this module don't
-// crash when RESEND_API_KEY is not set)
-// ---------------------------------------------------------------------------
-
 let _resend: Resend | null = null;
 
 function getResend(): Resend {
@@ -19,10 +14,6 @@ function getResend(): Resend {
 
 const FROM_EMAIL = "Magic Room <hello@notifications.app-whisper.com>";
 
-/**
- * Webhooks send emails after answering, inside the ~30 s waitUntil window on
- * Workers, so a hung Resend must end as a logged failure well before that.
- */
 const EMAIL_TIMEOUT_MS = 10_000;
 
 function sendWithTimeout(
@@ -40,18 +31,7 @@ function sendWithTimeout(
   );
 }
 
-// ---------------------------------------------------------------------------
-// Logo URL (absolute so it works in email clients). A small copy of the icon:
-// the 1024px original is too heavy to load quickly in an inbox.
-// ---------------------------------------------------------------------------
-
 const LOGO_URL = `${SITE_URL}/email-logo.png`;
-
-// ---------------------------------------------------------------------------
-// Design tokens. Email clients cannot read the CSS variables in
-// app/globals.css, so these are its values as solid colours. Keep them in step
-// with that file. Purple stays on small dots only, as on the site.
-// ---------------------------------------------------------------------------
 
 const PAPER = "#f4f0e9";
 const PAPER_2 = "#ebe5da";
@@ -62,15 +42,9 @@ const LINE_ON_PAPER_2 = "#d6d0c5";
 const CREAM = "#efe8dc";
 const ACCENT = "#7c3aed";
 
-// Many clients (Gmail included) drop web fonts, so the fallbacks must read well too.
 const SANS = "'Geist','Helvetica Neue',Helvetica,Arial,sans-serif";
 const SERIF = "'Instrument Serif',Georgia,'Times New Roman',serif";
 
-// ---------------------------------------------------------------------------
-// Shared email layout helpers (inline-style, table-based, email-safe HTML)
-// ---------------------------------------------------------------------------
-
-/** Names come from the sign-up form, so escape them before they reach the HTML. */
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -138,7 +112,7 @@ function paragraph(html: string): string {
   return `<p style="margin:0 0 28px;font-size:15px;line-height:24px;color:${INK_2};">${html}</p>`;
 }
 
-function button(text: string, href: string): string {
+function button({ text, href }: { text: string; href: string }): string {
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0;">
   <tr>
     <td bgcolor="${INK}" style="background-color:${INK};border-radius:999px;">
@@ -148,11 +122,7 @@ function button(text: string, href: string): string {
 </table>`;
 }
 
-// ---------------------------------------------------------------------------
-// Step row helper (used in welcome email)
-// ---------------------------------------------------------------------------
-
-function stepRow(number: string, title: string, description: string): string {
+function stepRow({ number, title, description }: { number: string; title: string; description: string }): string {
   return `<tr>
     <td width="44" valign="top" style="padding:16px 0;border-top:1px solid ${LINE};font-family:${SERIF};font-size:24px;line-height:24px;color:${INK_2};">${number}</td>
     <td valign="top" style="padding:16px 0;border-top:1px solid ${LINE};">
@@ -161,10 +131,6 @@ function stepRow(number: string, title: string, description: string): string {
     </td>
   </tr>`;
 }
-
-// ---------------------------------------------------------------------------
-// Welcome email HTML
-// ---------------------------------------------------------------------------
 
 export function buildWelcomeEmailHtml(params: {
   firstName?: string | null;
@@ -182,9 +148,9 @@ export function buildWelcomeEmailHtml(params: {
     ${heading(title)}
     ${paragraph(`${SITE_NAME} is an AI interior design tool that transforms any room from a single photo. Here's how it works:`)}
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border-bottom:1px solid ${LINE};">
-      ${stepRow("1", "Upload a photo", "Take a picture of any room you want to redesign and upload it.")}
-      ${stepRow("2", "Choose a style", `Pick from ${THEME_IDS.length} design themes: Modern, Scandinavian, Bohemian and more.`)}
-      ${stepRow("3", "Get your redesign", `You get one redesign of your room. ${quick.name} and ${pro.name} take ${quick.waitText}, ${ultra.name} ${ultra.waitText}.`)}
+      ${stepRow({ number: "1", title: "Upload a photo", description: "Take a picture of any room you want to redesign and upload it." })}
+      ${stepRow({ number: "2", title: "Choose a style", description: `Pick from ${THEME_IDS.length} design themes: Modern, Scandinavian, Bohemian and more.` })}
+      ${stepRow({ number: "3", title: "Get your redesign", description: `You get one redesign of your room. ${quick.name} and ${pro.name} take ${quick.waitText}, ${ultra.name} ${ultra.waitText}.` })}
     </table>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${PAPER_2}" style="margin:0 0 28px;background-color:${PAPER_2};border-radius:14px;">
       <tr>
@@ -194,17 +160,13 @@ export function buildWelcomeEmailHtml(params: {
         </td>
       </tr>
     </table>
-    ${button("Start designing", `${SITE_URL}/generate`)}
+    ${button({ text: "Start designing", href: `${SITE_URL}/generate` })}
   `;
 
   return emailWrapper(body);
 }
 
-// ---------------------------------------------------------------------------
-// Purchase confirmation email HTML
-// ---------------------------------------------------------------------------
-
-function receiptRow(name: string, value: string, isLast: boolean): string {
+function receiptRow({ name, value, isLast }: { name: string; value: string; isLast: boolean }): string {
   const border = isLast ? "" : `border-bottom:1px solid ${LINE_ON_PAPER_2};`;
   return `<tr>
     <td style="padding:12px 0;${border}font-size:14px;line-height:20px;color:${INK_2};">${name}</td>
@@ -226,22 +188,18 @@ export function buildPurchaseEmailHtml(params: {
       <tr>
         <td style="padding:10px 22px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${receiptRow("Pack", escapeHtml(params.packageName), false)}
-            ${receiptRow("Credits added", `${params.credits} credits`, true)}
+            ${receiptRow({ name: "Pack", value: escapeHtml(params.packageName), isLast: false })}
+            ${receiptRow({ name: "Credits added", value: `${params.credits} credits`, isLast: true })}
           </table>
         </td>
       </tr>
     </table>
     ${paragraph(`Credits never expire, so you can use them at your own pace. A ${quick.name} design uses ${quick.credits} credit, ${pro.name} ${pro.credits} and ${ultra.name} ${ultra.credits}.`)}
-    ${button("Use your credits", `${SITE_URL}/generate`)}
+    ${button({ text: "Use your credits", href: `${SITE_URL}/generate` })}
   `;
 
   return emailWrapper(body);
 }
-
-// ---------------------------------------------------------------------------
-// Send helpers (they throw on failure: callers await them and catch)
-// ---------------------------------------------------------------------------
 
 export async function sendWelcomeEmail(params: {
   to: string;

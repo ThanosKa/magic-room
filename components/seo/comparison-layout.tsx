@@ -2,20 +2,9 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 
-/**
- * Layout pieces shared by the comparison pages (/alternatives hub,
- * /alternatives/<competitor>, /vs/<competitor>). Look only: none of these add
- * text, so the pages' copy and SEO stay exactly what each page passes in.
- *
- * Everything sits on a 5xl measure inside `container-page`, the same measure
- * RelatedLinks uses, so all blocks share one left edge.
- */
-
-/** Ink text link with a hairline underline that firms up on hover. */
 export const LINK_CLASS =
     "text-ink underline decoration-ink/30 decoration-1 underline-offset-4 transition-[text-decoration-color] duration-200 ease-out hover:decoration-ink motion-reduce:transition-none";
 
-/** Soft pill for rows of cross-links (same as RelatedLinks "inline"). */
 export const CHIP_CLASS =
     "inline-flex min-h-10 items-center rounded-full bg-ink/5 px-4 text-sm tracking-[-0.005em] text-ink transition-[background-color,transform] duration-160 ease-out hover:bg-ink/10 active:scale-[0.97] motion-reduce:transition-none";
 
@@ -25,11 +14,9 @@ export const H1_CLASS =
 export const H2_CLASS =
     "font-serif text-[clamp(32px,3.4vw,48px)] font-normal leading-[1.04] tracking-[-0.02em] text-ink text-balance";
 
-/** Smaller serif heading for blocks inside a section (h3 level). */
 export const H3_CLASS =
     "font-serif text-[24px] font-normal leading-tight tracking-[-0.01em] text-ink md:text-[26px]";
 
-/** Small uppercase label, used for h4 column labels. */
 export const LABEL_CLASS =
     "text-[11px] font-medium uppercase tracking-[0.18em] text-ink-3";
 
@@ -37,7 +24,6 @@ export const LEAD_CLASS = "text-[19px] leading-[1.55] tracking-[-0.01em] text-in
 
 export const BODY_CLASS = "text-base leading-relaxed text-ink-2 text-pretty";
 
-/** 6px accent dot, the Magic Room marker in tables and cards. */
 export function AccentDot({ className }: { className?: string }) {
     return (
         <span
@@ -66,7 +52,6 @@ export function PageBreadcrumb({ items }: { items: { name: string; href: string 
     );
 }
 
-/** Opening block: the page passes its own H1 and intro. Copy column stays at reading width. */
 export function ComparisonHero({ children }: { children: React.ReactNode }) {
     return (
         <section className="pb-16 pt-6 md:pb-24 md:pt-12">
@@ -79,9 +64,7 @@ export function ComparisonHero({ children }: { children: React.ReactNode }) {
 
 interface SectionProps {
     children: React.ReactNode;
-    /** "band" = paper-2 rounded band inset from the page edges. Holds CompareTable (its tints work on paper-2); FeatureComparisonTable belongs on paper, its phone layout uses paper-2 boxes. */
     tone?: "paper" | "band";
-    /** Hairline above the content (paper sections that follow another paper section). */
     rule?: boolean;
     className?: string;
 }
@@ -106,7 +89,6 @@ export function Section({ children, tone = "paper", rule = true, className }: Se
     );
 }
 
-/** A hairline on the shared measure, for blocks that bring their own section (RelatedLinks). */
 export function Rule() {
     return (
         <Measure>
@@ -121,10 +103,6 @@ interface SplitProps {
     children: React.ReactNode;
 }
 
-/**
- * Editorial two-column block: heading and intro on the left (sticky on
- * desktop), the content on the right at reading width. One column on phones.
- */
 export function Split({ heading, intro, children }: SplitProps) {
     return (
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.55fr)] lg:gap-16">
@@ -139,9 +117,7 @@ export function Split({ heading, intro, children }: SplitProps) {
 
 export interface CompareColumn {
     label: React.ReactNode;
-    /** Shown above each cell on phones (CSS only, so it is not page text). */
     mobileLabel: string;
-    /** The Magic Room column: tinted, with an accent dot in the header. */
     highlight?: boolean;
     className?: string;
 }
@@ -149,24 +125,15 @@ export interface CompareColumn {
 export interface CompareRow {
     key: string;
     cells: React.ReactNode[];
-    /** The Magic Room row (hub table): tinted. */
     highlight?: boolean;
 }
 
 interface CompareTableProps {
     columns: CompareColumn[];
     rows: CompareRow[];
-    /** Below this width (≥768px) the table scrolls inside its own box. */
     minWidthClass?: string;
 }
 
-/**
- * Comparison table in the look of FeatureComparisonTable. From 768px it is a
- * real table in a hairline box that scrolls inside itself if it gets too
- * narrow. Below 768px the same cells restack into one block per row (first
- * cell as the serif title, each other cell under a small column label drawn
- * by CSS), so the text in the page is the same at every width.
- */
 export function CompareTable({ columns, rows, minWidthClass = "md:min-w-[640px]" }: CompareTableProps) {
     return (
         <div className="max-md:border-t max-md:border-line md:overflow-x-auto md:overscroll-x-contain md:rounded-xl md:border md:border-line md:bg-background">

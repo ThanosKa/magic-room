@@ -5,13 +5,6 @@ import * as redisLib from "@/lib/redis";
 import * as openrouterLib from "@/lib/openrouter";
 import { auth } from "@clerk/nextjs/server";
 
-/**
- * The tool offers all 14 styles and 14 room types promised on the homepage and
- * the /design pages. The 8 styles and 7 room types that existed before are
- * locked by prompt-baseline.test.ts; this file covers the 6 styles and 7 room
- * types added on top, and the rejection of anything outside the two lists.
- */
-
 type AuthResult = Awaited<ReturnType<typeof auth>>;
 
 vi.mock("@clerk/nextjs/server", () => ({
@@ -37,7 +30,6 @@ vi.mock("@/lib/redis", async () => {
   };
 });
 
-// Only the network call to OpenRouter is mocked; the real prompt builder runs.
 vi.mock("@/lib/openrouter", async () => {
   const actual = await vi.importActual("@/lib/openrouter");
   return {
@@ -96,7 +88,7 @@ function generateRequest(body: Record<string, unknown>): Request {
 
 function sentPrompt(): string {
   expect(openrouterLib.generateDesign).toHaveBeenCalledTimes(1);
-  return vi.mocked(openrouterLib.generateDesign).mock.calls[0][1];
+  return vi.mocked(openrouterLib.generateDesign).mock.calls[0][0].prompt;
 }
 
 describe("Generate Route - all 14 styles and 14 room types", () => {
@@ -120,7 +112,6 @@ describe("Generate Route - all 14 styles and 14 room types", () => {
     const response = await POST(generateRequest({ roomType: "living-room", theme }));
 
     expect(response.status).toBe(200);
-    // Without a modifier the builder falls back to the raw slug ("with art-deco style").
     expect(sentPrompt()).not.toContain(`with ${theme} style`);
   });
 
@@ -128,7 +119,6 @@ describe("Generate Route - all 14 styles and 14 room types", () => {
     const response = await POST(generateRequest({ roomType, theme: "modern" }));
 
     expect(response.status).toBe(200);
-    // Without a description the builder falls back to the raw slug ("into walk-in-closet with").
     expect(sentPrompt()).not.toContain(`into ${roomType} with`);
   });
 
@@ -138,7 +128,7 @@ describe("Generate Route - all 14 styles and 14 room types", () => {
     );
 
     expect(response.status).toBe(200);
-    expect(vi.mocked(openrouterLib.generateDesign).mock.calls[0][2]).toBe("premium");
+    expect(vi.mocked(openrouterLib.generateDesign).mock.calls[0][0].quality).toBe("premium");
   });
 
   it.each(["gothic", "Japandi", "", "japandi "])("rejects the unknown style %j", async (theme) => {

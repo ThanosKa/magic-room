@@ -30,7 +30,6 @@ export function AboutContent() {
         <h1 className={H1_CLASS}>About Magic Room</h1>
       </ComparisonHero>
 
-      {/* Mission */}
       <Section>
         <div className="max-w-3xl">
           <h2 className={H2_CLASS}>Our Mission</h2>
@@ -48,7 +47,6 @@ export function AboutContent() {
         </div>
       </Section>
 
-      {/* Founder */}
       <Section tone="band">
         <div className="max-w-3xl">
           <h2 className={H2_CLASS}>The Founder</h2>
@@ -94,7 +92,6 @@ export function AboutContent() {
         </div>
       </Section>
 
-      {/* How it works */}
       <Section rule={false}>
         <div className="max-w-3xl">
           <h2 className={H2_CLASS}>How It Works</h2>
@@ -115,7 +112,6 @@ export function AboutContent() {
         </div>
       </Section>
 
-      {/* Why build this */}
       <Section>
         <div className="max-w-3xl">
           <h2 className={H2_CLASS}>Why Build This?</h2>

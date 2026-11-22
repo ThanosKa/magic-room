@@ -33,7 +33,7 @@ describe("designRoom", () => {
         const fetchMock = answer({ images: [{ type: "image_url", image_url: { url: "data:image/png;base64,out" } }] });
         vi.stubGlobal("fetch", fetchMock);
 
-        expect(await designRoom(request, {})).toEqual({ ok: true, images: ["data:image/png;base64,out"] });
+        expect(await designRoom({ req: request })).toEqual({ ok: true, images: ["data:image/png;base64,out"] });
 
         const body = JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string);
         expect(body.model).toBe(QUALITY_OPTIONS.premium.model);
@@ -44,7 +44,7 @@ describe("designRoom", () => {
         const fetchMock = answer({ images: [{ type: "image_url", image_url: { url: "data:image/png;base64,out" } }] });
         vi.stubGlobal("fetch", fetchMock);
 
-        await designRoom({ ...request, note: "add a big plant" }, {});
+        await designRoom({ req: { ...request, note: "add a big plant" } });
 
         const body = JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string);
         expect(body.messages[0].content[0].text).toContain("add a big plant");
@@ -53,7 +53,7 @@ describe("designRoom", () => {
     it("returns no-image with the provider's message when it answers with text only", async () => {
         vi.stubGlobal("fetch", answer({ content: "I cannot do that" }));
 
-        expect(await designRoom(request, {})).toEqual({
+        expect(await designRoom({ req: request })).toEqual({
             ok: false,
             failure: { kind: "no-image", message: "No images generated. The AI may have returned only text." },
         });
@@ -62,7 +62,7 @@ describe("designRoom", () => {
     it("returns provider-error with the cause when OpenRouter answers 502", async () => {
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 502 })));
 
-        const result = await designRoom(request, {});
+        const result = await designRoom({ req: request });
 
         expect(result).toMatchObject({ ok: false, failure: { kind: "provider-error" } });
         if (!result.ok && result.failure.kind === "provider-error") {
@@ -82,7 +82,7 @@ describe("designRoom", () => {
         const controller = new AbortController();
         controller.abort(new Error("browser left"));
 
-        const result = await designRoom(request, { signal: controller.signal });
+        const result = await designRoom({ req: request, signal: controller.signal });
 
         expect(result).toMatchObject({ ok: false, failure: { kind: "provider-error" } });
         if (!result.ok && result.failure.kind === "provider-error") {
@@ -94,7 +94,7 @@ describe("designRoom", () => {
         vi.stubEnv("OPENROUTER_API_KEY", "");
         vi.stubGlobal("fetch", vi.fn());
 
-        expect(await designRoom(request, {})).toMatchObject({ ok: false, failure: { kind: "provider-error" } });
+        expect(await designRoom({ req: request })).toMatchObject({ ok: false, failure: { kind: "provider-error" } });
         expect(fetch).not.toHaveBeenCalled();
     });
 });

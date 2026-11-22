@@ -9,18 +9,11 @@ import { cn } from "@/lib/utils";
 interface ErrorScreenProps {
   title: string;
   message: string;
-  /** Re-renders the failed segment (the `reset` from an error boundary). */
   onRetry: () => void;
-  /** Shown small under the buttons when present. */
   digest?: string;
   className?: string;
 }
 
-/*
- * Shared body for the error boundaries (app/error.tsx, app/generate/error.tsx):
- * serif headline, the message, "Try Again" (ink pill) and "Go Home".
- * Error screens are never indexed; React hoists the <meta> into <head>.
- */
 export function ErrorScreen({
   title,
   message,

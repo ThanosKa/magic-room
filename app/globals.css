@@ -2,11 +2,6 @@
 @import "tw-animate-css";
 @import "./motion.css";
 
-/*
- * Hover effects only on devices that can really hover (mouse, trackpad).
- * This redefines Tailwind's `hover:` (and `group-hover:` / `peer-hover:`),
- * so touch screens never get a stuck hover state.
- */
 @custom-variant hover {
   @media (hover: hover) and (pointer: fine) {
     &:hover {
@@ -15,23 +10,20 @@
   }
 }
 
-/* ───────── Design tokens (the one place the look is defined) ───────── */
 :root {
   color-scheme: light;
 
-  /* Palette */
-  --paper: #f4f0e9; /* page background */
-  --paper-2: #ebe5da; /* cards, bands */
-  --ink: #17140f; /* text, primary buttons */
-  --ink-2: rgb(23 20 15 / 0.68); /* secondary text */
-  --ink-3: rgb(23 20 15 / 0.48); /* tertiary text, numerals, labels */
-  --line: rgb(23 20 15 / 0.12); /* hairlines, borders */
-  --night: #14110d; /* dark bands */
-  --cream: #efe8dc; /* text and buttons on night */
-  --cream-2: rgb(239 232 220 / 0.66); /* secondary text on night */
-  --accent: #7c3aed; /* brand purple: focus ring, dots, credit pill, small highlights only */
+  --paper: #f4f0e9;
+  --paper-2: #ebe5da;
+  --ink: #17140f;
+  --ink-2: rgb(23 20 15 / 0.68);
+  --ink-3: rgb(23 20 15 / 0.48);
+  --line: rgb(23 20 15 / 0.12);
+  --night: #14110d;
+  --cream: #efe8dc;
+  --cream-2: rgb(239 232 220 / 0.66);
+  --accent: #7c3aed;
 
-  /* shadcn semantic names, pointed at the palette */
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);
@@ -48,7 +40,7 @@
   --destructive: #b42318;
   --destructive-foreground: var(--paper);
   --border: var(--line);
-  --input: rgb(23 20 15 / 0.24); /* form field borders: stronger than a hairline */
+  --input: rgb(23 20 15 / 0.24);
   --ring: var(--accent);
 
   --radius: 0.875rem;
@@ -98,15 +90,12 @@
   --radius-4xl: 40px;
 }
 
-/* Values hand-written CSS also reads (motion.css), so always emitted. */
 @theme static {
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-wipe: cubic-bezier(0.76, 0, 0.24, 1);
 
   --shadow-button: 0 1px 2px rgb(23 20 15 / 0.12), 0 8px 24px rgb(23 20 15 / 0.14);
-  /* Same shadows as filters, for the primary button: a hover change of a
-   * drop-shadow filter can be composited, a box-shadow change repaints. */
   --drop-shadow-button: 0 1px 2px rgb(23 20 15 / 0.12), 0 8px 24px rgb(23 20 15 / 0.14);
   --drop-shadow-button-hover: 0 1px 2px rgb(23 20 15 / 0.12), 0 14px 30px rgb(23 20 15 / 0.2);
   --shadow-float: 0 10px 30px rgb(23 20 15 / 0.18);
@@ -114,7 +103,6 @@
   --container-page: 1240px;
 }
 
-/* Page container: 1240px max, gutters 20 / 24 / 48px. */
 @utility container-page {
   width: 100%;
   max-width: var(--container-page);
@@ -128,7 +116,6 @@
   }
 }
 
-/* Old container, still used by pages until they are restyled. */
 @utility container {
   margin-inline: auto;
   width: 100%;
@@ -155,10 +142,6 @@
     @apply border-border;
   }
 
-  /*
-   * `clip`, not `hidden`: `hidden` on both html and body turns body into its
-   * own scroll container, which stops the sticky site header from sticking.
-   */
   html {
     overflow-x: clip;
   }
@@ -174,7 +157,6 @@
     background: rgb(124 58 237 / 0.18);
   }
 
-  /* A visible keyboard focus ring on every interactive element. */
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;

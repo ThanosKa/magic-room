@@ -6,16 +6,6 @@ import * as openrouterLib from "@/lib/openrouter";
 import { auth } from "@clerk/nextjs/server";
 import baseline from "./__fixtures__/prompt-baseline.json";
 
-/**
- * Prompt baseline: locks the exact prompt the generate route sends to the
- * model for every existing style x room type x quality, with and without a
- * custom note.
- *
- * The fixture was recorded once from the prompt builder as it was before the
- * app redesign (commit d3d80fb). Never regenerate it to make this test pass:
- * a failure here means generation output for an existing option changed.
- */
-
 type AuthResult = Awaited<ReturnType<typeof auth>>;
 
 interface BaselineEntry {
@@ -49,7 +39,6 @@ vi.mock("@/lib/redis", async () => {
   };
 });
 
-// Only the network call to OpenRouter is mocked; the real prompt builder runs.
 vi.mock("@/lib/openrouter", async () => {
   const actual = await vi.importActual("@/lib/openrouter");
   return {
@@ -170,7 +159,7 @@ describe("Generate Route - Prompt Baseline", () => {
 
       expect(response.status).toBe(200);
       expect(openrouterLib.generateDesign).toHaveBeenCalledTimes(1);
-      const [, sentPrompt, sentQuality] = vi.mocked(openrouterLib.generateDesign).mock.calls[0];
+      const [{ prompt: sentPrompt, quality: sentQuality }] = vi.mocked(openrouterLib.generateDesign).mock.calls[0];
       expect(sentPrompt).toBe(entry.prompt);
       expect(sentQuality).toBe(entry.quality);
     }

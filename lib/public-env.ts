@@ -1,8 +1,3 @@
-/**
- * Public values the app reads. They are baked into the Worker at build time,
- * so a build without them ships broken: `lib/supabase.ts` throws at import
- * and checkout returns customers to localhost.
- */
 const REQUIRED_PUBLIC_ENV = [
   "NEXT_PUBLIC_APP_URL",
   "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",

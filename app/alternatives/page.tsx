@@ -30,10 +30,6 @@ import {
 } from "@/components/seo/comparison-layout";
 
 export const metadata: Metadata = createMetadata({
-    // Was: "Switching from RoomGPT? 4 Better Alternatives Tested (May 2026)
-    // | Magic Room" — 76 chars, so the SERP cut it mid-phrase, it never
-    // contained the query ("roomgpt alternatives"), and it carried a month that
-    // is now stale on a query where recency is the whole intent.
     title: { absolute: "RoomGPT Alternatives (2026): 4 Tools Compared Head-to-Head" },
     description:
         "RoomGPT, Interior AI, DecorAI and Reimagine Home compared on AI model, whether they keep your room photos, and real cost. One charges once, not monthly.",
@@ -61,8 +57,6 @@ const product = softwareApplicationSchema({
 });
 
 const itemList = itemListSchema({
-    // Was "…Alternatives to Magic Room", which described the page backwards:
-    // these are alternatives to the four competitors, not to us.
     name: "AI Interior Design Tool Alternatives Compared",
     description: "Comparison of Magic Room versus RoomGPT, DecorAI, Reimagine Home, and Interior AI on privacy, AI model, pricing, and output quality.",
     items: COMPETITORS.map((c, i) => ({
@@ -85,11 +79,6 @@ export default function AlternativesHubPage() {
                     ]}
                 />
 
-                {/* Hero + verdict.
-                    This page took 887 impressions and zero clicks at position
-                    12.2 while consisting of nothing but two lists of links.
-                    Everything below is the substance a "roomgpt alternatives"
-                    searcher is actually looking for. */}
                 <ComparisonHero>
                     <h1 className={H1_CLASS}>
                         RoomGPT Alternatives: 4 AI Interior Design Tools Compared
@@ -158,7 +147,6 @@ export default function AlternativesHubPage() {
                     </p>
                 </ComparisonHero>
 
-                {/* Why people leave */}
                 <Section>
                     <Split
                         heading="Why people look for a RoomGPT alternative"
@@ -192,7 +180,6 @@ export default function AlternativesHubPage() {
                     </Split>
                 </Section>
 
-                {/* Evaluation criteria */}
                 <Section>
                     <Split
                         heading="What to actually compare"
@@ -241,7 +228,6 @@ export default function AlternativesHubPage() {
                     </Split>
                 </Section>
 
-                {/* Master comparison table */}
                 <Section tone="band">
                     <h2 className={`${H2_CLASS} max-w-3xl`}>
                         RoomGPT alternatives compared at a glance
@@ -322,7 +308,6 @@ export default function AlternativesHubPage() {
                     />
                 </Section>
 
-                {/* Per-tool breakdown */}
                 <Section rule={false}>
                     <h2 className={H2_CLASS}>Each tool in detail</h2>
                     <div className="mt-10 border-b border-line">
@@ -389,7 +374,6 @@ export default function AlternativesHubPage() {
                     </div>
                 </Section>
 
-                {/* Recommendation by use case */}
                 <Section>
                     <h2 className={H2_CLASS}>Which alternative should you pick?</h2>
                     <div className="mt-10 grid gap-4 md:grid-cols-2">
@@ -429,7 +413,6 @@ export default function AlternativesHubPage() {
                     </div>
                 </Section>
 
-                {/* FAQ */}
                 <Section>
                     <Split heading="RoomGPT alternatives: frequently asked questions">
                         <div className="border-b border-line">
@@ -470,7 +453,6 @@ export default function AlternativesHubPage() {
                     </Split>
                 </Section>
 
-                {/* Cross-links to other content sections */}
                 <Section className="pb-0 md:pb-0">
                     <h2 className={H2_CLASS}>Explore more</h2>
                     <div className="mt-8 grid gap-x-10 sm:grid-cols-2">

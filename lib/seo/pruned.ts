@@ -1,18 +1,3 @@
-/**
- * Reversible SEO pruning list. One typed list drives four behaviours:
- *
- *   1. `X-Robots-Tag: noindex, follow` response header (next.config.ts headers())
- *   2. Exclusion from app/sitemap.ts
- *   3. Permanent redirects (next.config.ts redirects())
- *   4. Removal from hub listings and internal-link pools (via PRIORITY_DESIGN_SLUGS
- *      and VS_SLUGS, which are derived from this list)
- *
- * To revert an entry, delete it. See PRUNED.md at the repo root.
- *
- * Keep thresholds (never prune): >= 1 click in either GSC export, or
- * >= 30 impressions in the 2026-10-01 export.
- */
-
 export interface IPrunedGsc {
     clicks: number;
     impressions: number;
@@ -21,9 +6,7 @@ export interface IPrunedGsc {
 interface IPrunedBase {
     path: string;
     reason: string;
-    /** 2026-10-01 export (92 days to 2026-09-28). */
     gsc: IPrunedGsc;
-    /** July 2026 export, kept so the keep-threshold can be audited. */
     gscJuly: IPrunedGsc;
 }
 
@@ -69,7 +52,6 @@ function vsRedirect(input: {
     };
 }
 
-// /vs/reimaginehome is intentionally NOT listed: it earned 1 click in each export.
 export const PRUNED: readonly PrunedEntry[] = [
     designPrune({ slug: "minimalist-living-room", clicks: 0, impressions: 0, julyClicks: 0, julyImpressions: 0 }),
     designPrune({ slug: "modern-bedroom", clicks: 0, impressions: 0, julyClicks: 0, julyImpressions: 0 }),

@@ -5,11 +5,6 @@ import GenerateContent from "@/components/generate-content";
 import { useUserStore } from "@/stores/user-store";
 import { useGenerationStore } from "@/stores/generation-store";
 
-/**
- * The design tool as a signed-in user sees it. Clerk, the URL and the network
- * are the outside world here; everything else is the real screen.
- */
-
 let search = "";
 const signOut = vi.fn();
 
@@ -32,7 +27,6 @@ function render() {
     });
 }
 
-/** The radio (or checkbox) whose visible label is exactly `text`, within a group. */
 function option(group: string, text: string): HTMLInputElement {
     const fieldset = groupNamed(group);
     const label = Array.from(fieldset.querySelectorAll("label")).find(
@@ -50,7 +44,6 @@ function groupNamed(name: string): HTMLFieldSetElement {
     return fieldset;
 }
 
-/** The room type control: one compact select in the panel. */
 function roomSelect(): HTMLSelectElement {
     const select = container.querySelector("select#generate-room") as HTMLSelectElement | null;
     if (!select) throw new Error("No room type select");
@@ -81,8 +74,6 @@ function stepHeadings(): string[] {
     return Array.from(container.querySelectorAll("h2, legend, label[for]")).map((h) => h.textContent?.trim() ?? "");
 }
 
-
-/** Waits (inside act) until `check` stops throwing. */
 async function waitFor(check: () => void, timeout = 1000) {
     const start = Date.now();
     for (;;) {
@@ -96,7 +87,6 @@ async function waitFor(check: () => void, timeout = 1000) {
     }
 }
 
-// jsdom never decodes images: this one "loads" as a 1200 x 900 photo.
 class LoadedImage {
     width = 1200;
     height = 900;
@@ -112,7 +102,6 @@ class LoadedImage {
     }
 }
 
-/** Picks `file` in the photo step's file picker. */
 async function chooseFile(file: File) {
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
     Object.defineProperty(input, "files", { value: [file], configurable: true });
@@ -132,38 +121,32 @@ function button(name: string): HTMLButtonElement {
     return found;
 }
 
-/** The control panel beside the photo (a bottom sheet on phones): every choice, then the message slot and Generate. */
 function panel(): HTMLElement {
     const found = container.querySelector("[data-control-panel]") as HTMLElement | null;
     if (!found) throw new Error("No control panel");
     return found;
 }
 
-/** The part of the panel that scrolls (and, on a phone, folds away): the choices. */
 function panelBody(): HTMLElement {
     return panel().querySelector("[data-panel-body]") as HTMLElement;
 }
 
-/** The part of the panel that always stays on screen: the message slot and Generate. */
 function panelFooter(): HTMLElement {
     return panel().querySelector("[data-panel-footer]") as HTMLElement;
 }
 
-/** On a phone: the summary row that opens and closes the sheet. */
 function sheetToggle(): HTMLButtonElement {
     const found = panel().querySelector(`button[aria-controls="${panelBody().id}"]`) as HTMLButtonElement | null;
     if (!found) throw new Error("No sheet toggle");
     return found;
 }
 
-/** The main button (Generate, Generating…, Regenerate): the one the message slot describes. */
 function generateButton(): HTMLButtonElement {
     const found = container.querySelector('button[aria-describedby="generate-message"]') as HTMLButtonElement | null;
     if (!found) throw new Error("No Generate button");
     return found;
 }
 
-/** Opens the note field in the panel. */
 function openNote(): HTMLTextAreaElement {
     if (!container.querySelector("textarea")) click(button("Add a note"));
     const note = container.querySelector("textarea");
@@ -171,7 +154,6 @@ function openNote(): HTMLTextAreaElement {
     return note;
 }
 
-/** The message shown above the Generate button. */
 function message(): HTMLElement {
     return container.querySelector("#generate-message") as HTMLElement;
 }
@@ -190,11 +172,9 @@ function type(el: HTMLTextAreaElement, value: string) {
     });
 }
 
-// The uploaded file's bytes (a PNG signature) and what the API sends back.
 const PHOTO = "data:image/png;base64,iVBORw==";
 const RESULT = "data:image/png;base64,UkVTVUxU";
 
-/** The network: /api/generate answers when `finish()` is called; /api/user reports 4 credits left. */
 function stubNetwork() {
     const requests: { url: string; body?: Record<string, unknown> }[] = [];
     let finish: () => void = () => {};
@@ -222,7 +202,6 @@ function stubNetwork() {
 beforeEach(() => {
     (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     search = "";
-    // jsdom has no matchMedia: the screen asks it about reduced motion.
     vi.stubGlobal("matchMedia", (query: string) => ({
         matches: false,
         media: query,
@@ -265,7 +244,6 @@ describe("Generate tool", () => {
         const body = panelBody();
         const parts = [roomSelect(), groupNamed("Style"), groupNamed("Quality"), button("Add a note")];
         for (const part of parts) expect(body.contains(part)).toBe(true);
-        // Top to bottom: room type, style, quality, note.
         for (let i = 1; i < parts.length; i++) {
             expect(parts[i - 1].compareDocumentPosition(parts[i]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
         }
@@ -274,10 +252,8 @@ describe("Generate tool", () => {
         expect(body.contains(footer)).toBe(false);
         expect(footer.contains(message())).toBe(true);
         expect(footer.contains(generateButton())).toBe(true);
-        // The message slot comes right before the button.
         const slotThenButton = message().compareDocumentPosition(generateButton()) & Node.DOCUMENT_POSITION_FOLLOWING;
         expect(slotThenButton).toBeTruthy();
-        // The photo comes before the panel.
         const photo = container.querySelector("#step-photo")!;
         expect(photo.compareDocumentPosition(panel()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     });
@@ -292,7 +268,6 @@ describe("Generate tool", () => {
         expect(toggle.textContent).toContain("Bedroom · Japandi · Quick");
         expect(toggle.getAttribute("aria-expanded")).toBe("false");
         expect(panel().dataset.sheet).toBe("collapsed");
-        // Collapsed, the summary and Generate stay outside the folding part.
         expect(panelBody().contains(toggle)).toBe(false);
         expect(panelBody().contains(generateButton())).toBe(false);
 
@@ -303,7 +278,6 @@ describe("Generate tool", () => {
         click(toggle);
         expect(panel().dataset.sheet).toBe("collapsed");
 
-        // Generating closes the sheet so the wait shows on the photo.
         click(toggle);
         click(generateButton());
         expect(panel().dataset.sheet).toBe("collapsed");
@@ -418,7 +392,6 @@ describe("Generate tool", () => {
     });
 
     it("keeps the Generate button above the phone keyboard while writing the note", () => {
-        // The keyboard covers the bottom 320 px of an 844 px tall screen.
         const viewport = Object.assign(new EventTarget(), { height: 844, offsetTop: 0 });
         vi.stubGlobal("visualViewport", viewport);
         vi.stubGlobal("innerHeight", 844);
@@ -506,7 +479,6 @@ describe("Generate tool", () => {
         await waitFor(() => expect(useUserStore.getState().credits).toBe(4));
         expect(network.requests.some((r) => r.url.startsWith("/api/user"))).toBe(true);
 
-        // The choices unlock, so the next run can use another style.
         click(option("Style", "Coastal"));
         expect(generateButton().textContent).toContain("Regenerate");
         expect(generateButton().textContent).toContain("1 credit");
@@ -517,7 +489,6 @@ describe("Generate tool", () => {
     });
 });
 
-/** /api/generate answers with `answer` (a Response, or a rejection for a network error). */
 function stubGenerate(answer: () => Promise<Response>, { creditsAfter = 5 } = {}) {
     const requests: string[] = [];
     vi.stubGlobal("fetch", (url: string) => {
@@ -595,7 +566,6 @@ describe("Generate tool when something goes wrong", () => {
         click(button("Sign in again"));
         expect(signOut).toHaveBeenCalledWith({ redirectUrl: "/generate?style=japandi&room=bedroom" });
 
-        // Choices changed after the message keep their new values.
         click(option("Style", "Coastal"));
         click(button("Sign in again"));
         expect(signOut).toHaveBeenLastCalledWith({ redirectUrl: "/generate?style=coastal&room=bedroom" });
@@ -618,13 +588,11 @@ describe("Generate tool when something goes wrong", () => {
         click(generateButton());
         expect(network.requests).not.toContain("/api/generate");
 
-        // Quick fits the balance again.
         click(option("Quality", "Quick"));
         expect(message().textContent).toBe("");
     });
 
     it("shows the real balance and a way to buy credits when the API says the balance is too low", async () => {
-        // The screen thought there were 5 credits; the account has none left.
         stubGenerate(json(402, { error: "Insufficient credits" }), { creditsAfter: 0 });
         useUserStore.getState().setUser({ id: "u1", credits: 5 } as never);
         render();

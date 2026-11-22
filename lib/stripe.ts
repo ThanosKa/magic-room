@@ -9,14 +9,21 @@ if (!stripeSecretKey) {
 
 export const stripe = new Stripe(stripeSecretKey);
 
-export async function createCheckoutSession(
-  userId: string,
-  packageId: string,
-  stripePriceId: string,
-  successUrl: string,
-  cancelUrl: string,
-  customerEmail?: string
-) {
+export async function createCheckoutSession({
+  userId,
+  packageId,
+  stripePriceId,
+  successUrl,
+  cancelUrl,
+  customerEmail,
+}: {
+  userId: string;
+  packageId: string;
+  stripePriceId: string;
+  successUrl: string;
+  cancelUrl: string;
+  customerEmail?: string;
+}) {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -63,11 +70,15 @@ export async function getCheckoutSession(sessionId: string) {
 }
 
 /** Async on purpose: the sync constructEvent throws on Workers, whose crypto is async only. */
-export function parseWebhookEvent(
-  body: string,
-  signature: string,
-  secret: string
-): Promise<Stripe.Event> {
+export function parseWebhookEvent({
+  body,
+  signature,
+  secret,
+}: {
+  body: string;
+  signature: string;
+  secret: string;
+}): Promise<Stripe.Event> {
   return stripe.webhooks.constructEventAsync(body, signature, secret);
 }
 

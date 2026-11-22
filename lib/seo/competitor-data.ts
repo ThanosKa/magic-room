@@ -1,38 +1,17 @@
-/**
- * Pricing mechanics, stated as *model* rather than as a euro figure.
- *
- * Search Console shows a large, consistent pricing-intent cluster against these
- * competitor names — roughly 40 impressions on "reimagine home pricing 2026" and
- * its variants, 26 on "interior ai pricing 2026" variants, 15 on "roomgpt
- * pricing 2026" variants — and the pages currently answer none of it.
- *
- * Deliberately no scraped price figures: vendor pricing changes without notice
- * and a stale number on a comparison page destroys the trust the page exists to
- * build. What is captured here is the part that does not churn — how you are
- * billed, whether credits survive the billing period, what happens when you stop
- * paying — plus a link to the vendor's own page for the current rate.
- */
 import { isPrunedPath } from "@/lib/seo/pruned";
 
 export interface IPricingModel {
-    /** How the vendor bills: subscription, one-time, hybrid. */
     billing: string;
-    /** What you get without paying. */
     freeTier: string;
-    /** Whether unused credits survive the billing period. */
     creditsExpire: string;
-    /** Whether outputs can be used commercially, and on which tier. */
     commercialRights: string;
-    /** What happens to access and to past outputs when you stop paying. */
     ifYouStopPaying: string;
-    /** Vendor's own pricing page, for the current rate. */
     officialPricingUrl: string;
 }
 
 export interface ICompetitorData {
     slug: string;
     name: string;
-    /** The name as searchers type it, when it differs from `name` (Search Console). Used in the page title. */
     searchName?: string;
     website: string;
     description: string;
@@ -40,13 +19,9 @@ export interface ICompetitorData {
     cons: string[];
     pricing: string;
     pricingModel: IPricingModel;
-    /** What the vendor says it does with uploaded photos, with source and date. */
     imageStorage: string;
-    /** Which model the vendor says it uses, with source and date. */
     aiModel: string;
-    /** Concrete reasons people give for moving off this tool. */
     whySwitch: string[];
-    /** What switching actually involves. */
     migration: string;
     magicRoomAdvantages: string[];
     faqs: { question: string; answer: string }[];
@@ -372,15 +347,6 @@ export function getAllCompetitorSlugs(): string[] {
     return COMPETITORS.map((c) => c.slug);
 }
 
-/**
- * Single source of truth for which competitors have a `/vs/[competitor]` page.
- *
- * This list was previously duplicated in both `app/vs/[competitor]/page.tsx`
- * and `app/sitemap.ts`. Any drift between the two would have shipped a
- * sitemap URL that returns 404 (adding a slug to the sitemap copy only) or an
- * orphaned indexable page (adding it to the route copy only). Both routes now
- * import this constant.
- */
 export const VS_SLUGS: string[] = getAllCompetitorSlugs().filter(
     (slug) => !isPrunedPath(`/vs/${slug}`)
 );

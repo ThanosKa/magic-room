@@ -4,7 +4,6 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Read OPENROUTER_API_KEY from .env.local
 const envContent = fs.readFileSync(path.join(__dirname, "../.env.local"), "utf8");
 const apiKey = envContent.match(/OPENROUTER_API_KEY=(.+)/)?.[1]?.trim();
 
@@ -62,7 +61,6 @@ if (!message) {
     process.exit(1);
 }
 
-// Extract image from response (same logic as lib/openrouter.ts)
 let imageUrl = null;
 
 if (message.images?.length > 0) {
@@ -84,19 +82,16 @@ if (!imageUrl) {
     process.exit(1);
 }
 
-// Save the image
 const outputDir = path.join(__dirname, "../public/images/designs");
 fs.mkdirSync(outputDir, { recursive: true });
 
 const outputPath = path.join(outputDir, "modern-living-room-test.png");
 
-// Handle base64 or URL
 if (imageUrl.startsWith("data:")) {
     const base64Data = imageUrl.split(",")[1];
     fs.writeFileSync(outputPath, Buffer.from(base64Data, "base64"));
     console.log(`💾 Saved to: ${outputPath}`);
 } else {
-    // Download the image URL
     const imgResponse = await fetch(imageUrl);
     const buffer = Buffer.from(await imgResponse.arrayBuffer());
     fs.writeFileSync(outputPath, buffer);

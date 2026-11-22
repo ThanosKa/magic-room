@@ -26,7 +26,6 @@ interface DesignPageContentProps {
     otherRooms: IRoomData[];
     relatedBlogLinks?: IContextualLink[];
     comparisonLinks?: IContextualLink[];
-    /** Rotating chips into the indexable design pages with the fewest siblings. */
     moreDesignLinks?: IContextualLink[];
 }
 
@@ -51,20 +50,12 @@ const STEPS = [
     },
 ];
 
-// Shared type for the section headings below the hero.
 const H2 = "font-serif text-[clamp(34px,4vw,56px)] font-normal leading-none tracking-[-0.022em] text-ink text-balance";
-// Long-form copy (design principles, deep dive): ink at 82% like the blog body.
 const BODY_TEXT = "text-[17px] leading-[1.7] text-ink/[0.82]";
-// Sibling tiles: 2 columns on phones, 3 from 640px (up to 1144px wide).
 const TILE_SIZES = "(min-width: 1024px) 370px, (min-width: 640px) 31vw, 47vw";
 const TEXT_LINK =
     "inline-flex min-h-11 items-center text-[15px] font-medium tracking-[-0.01em] text-ink underline decoration-ink/30 decoration-1 underline-offset-[6px] transition-[text-decoration-color] duration-300 hover:decoration-ink motion-reduce:transition-none";
 
-/**
- * Two-column editorial block: heading and lead paragraph on the left (sticky on
- * desktop), a hairline list of titled items on the right. Used for the style's
- * design principles and the room's considerations.
- */
 function PrinciplesSection({
     heading,
     lead,
@@ -74,7 +65,6 @@ function PrinciplesSection({
     heading: string;
     lead: string;
     items: { title: string; description: string }[];
-    /** Hairline above the block; off when it follows a band. */
     divider?: boolean;
 }) {
     return (
@@ -126,7 +116,6 @@ export function DesignPageContent({
                 </div>
             </div>
 
-            {/* Hero: copy left, the before/after slider right (stacked on phones). */}
             <section className="container-page pb-16 pt-6 md:pb-24 md:pt-10">
                 <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
                     <div>
@@ -160,7 +149,6 @@ export function DesignPageContent({
                             {page.intro}
                         </p>
                         <div className="mt-8 animate-rise" style={{ animationDelay: "180ms" }}>
-                            {/* "Try it": opens the tool with this style and room chosen (ticket 14). */}
                             <Button asChild size="lg" className="group h-auto min-h-[52px] gap-4 whitespace-normal py-[7px] pl-7 pr-[7px] text-left">
                                 <Link href={tryItHref}>
                                     Generate {page.themeName} {page.roomName} Design
@@ -201,7 +189,6 @@ export function DesignPageContent({
                 </div>
             </section>
 
-            {/* How it works */}
             <section className="mx-3 rounded-3xl bg-paper-2 py-16 sm:mx-4 sm:rounded-4xl md:py-24">
                 <div className="container-page">
                     <div className="mx-auto max-w-5xl">
@@ -227,7 +214,6 @@ export function DesignPageContent({
                 </div>
             </section>
 
-            {/* Theme Tips */}
             <PrinciplesSection
                 heading={`${page.themeName} design principles`}
                 lead={themeData.description}
@@ -235,15 +221,12 @@ export function DesignPageContent({
                 divider={false}
             />
 
-            {/* Room Considerations */}
             <PrinciplesSection
                 heading={`${page.roomName} design considerations`}
                 lead={roomData.description}
                 items={roomData.considerations}
             />
 
-            {/* Deep dive — bespoke, page-specific depth for the combinations
-                that already earn impressions but rank too low to earn clicks. */}
             {page.deepDive && page.deepDive.length > 0 && (
                 <section className="container-page">
                     <div className="mx-auto max-w-5xl border-t border-line py-16 md:py-24">
@@ -266,7 +249,6 @@ export function DesignPageContent({
                                         </ul>
                                     )}
                                     {section.table && (
-                                        // Scrolls inside its own hairline box on narrow screens, never the page.
                                         <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-background">
                                             <table className="w-full min-w-[560px] border-collapse text-left text-[15px] leading-snug">
                                                 <thead className="bg-paper-2">
@@ -309,7 +291,6 @@ export function DesignPageContent({
                 </section>
             )}
 
-            {/* FAQ, in the homepage FAQ layout (title left and sticky, list right). */}
             {page.faqs.length > 0 && (
                 <section className="container-page">
                     <div className="mx-auto grid max-w-5xl items-start gap-8 border-t border-line py-16 md:py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] lg:gap-[72px]">
@@ -330,14 +311,6 @@ export function DesignPageContent({
                 </section>
             )}
 
-            {/*
-              Rendered only when there is something to render. Five priority
-              slugs are the sole indexable page for their theme or room
-              (vintage-bedroom, mediterranean-living-room, farmhouse-gaming-room,
-              coastal-walk-in-closet, japandi-mudroom), so this list comes back
-              empty for them. Shipping a heading above an empty grid is a
-              thin-content signal on exactly the pages that can least afford one.
-            */}
             {otherThemes.length > 0 && (
                 <section className="container-page">
                     <div className="mx-auto max-w-5xl border-t border-line py-16 md:py-24">
@@ -359,7 +332,6 @@ export function DesignPageContent({
                 </section>
             )}
 
-            {/* More rooms for this theme */}
             <section className="container-page">
                 <div className="mx-auto max-w-5xl border-t border-line py-16 md:py-24">
                     {otherRooms.length > 0 && (
@@ -396,10 +368,6 @@ export function DesignPageContent({
                 </div>
             </section>
 
-            {/* Top-up links into the indexable design pages that have the
-                fewest structural siblings — some are the only priority
-                combination for their room type, so no sibling block can reach
-                them. */}
             <RelatedLinks
                 heading="More AI design ideas"
                 links={moreDesignLinks}
@@ -407,7 +375,6 @@ export function DesignPageContent({
                 className="mx-3 rounded-3xl bg-paper-2 py-14 sm:mx-4 sm:rounded-4xl md:py-20"
             />
 
-            {/* Contextual links out of the design cluster into the blog */}
             <RelatedLinks
                 heading={`${page.themeName} ${page.roomName} guides worth reading`}
                 intro={`Practical write-ups that go deeper than a single ${page.roomName.toLowerCase()} page — how to photograph the room, how to pick a style, and what AI redesign actually changes.`}
@@ -415,7 +382,6 @@ export function DesignPageContent({
                 className="py-16 md:py-24"
             />
 
-            {/* Contextual links into the comparison cluster */}
             <RelatedLinks
                 heading="Before you pick an AI interior design tool"
                 intro="Magic Room is not the only way to generate these designs. Here is how it compares to the tools most people evaluate alongside it."
@@ -423,7 +389,6 @@ export function DesignPageContent({
                 className="py-16 md:py-24"
             />
 
-            {/* CTA */}
             <CtaSection
                 heading={`Ready to redesign your ${page.roomName.toLowerCase()}?`}
                 subtext={`Generate ${page.themeName.toLowerCase()} ${page.roomName.toLowerCase()} design ideas from a single photo. No design experience required.`}

@@ -10,7 +10,6 @@ import { WaitState } from "@/components/generate/wait-state";
 import { cn } from "@/lib/utils";
 import type { RoomPhoto } from "@/lib/room-photo";
 
-/** What the tool is doing. Also set as `data-tool-state` on the tool's root. */
 export type ToolState = "empty" | "ready" | "generating" | "result";
 
 interface PhotoPanelProps {
@@ -18,33 +17,22 @@ interface PhotoPanelProps {
     photo: RoomPhoto | null;
     resultUrl: string | null;
     styleName: string;
-    /** The chosen tier's usual wait, in seconds and in words. */
     wait: { seconds: number; text: string };
     generationStartedAt: number | null;
     fullscreen: boolean;
     onFullscreenChange: (open: boolean) => void;
     onFile: (file: File) => void;
-    /** A dropped or picked file the tool cannot take (not an image, or several). */
     onReject: (reason: "wrong-type" | "too-many") => void;
     onDownload: () => void;
     className?: string;
 }
 
-// The photo's frame: as large as the canvas allows while keeping the photo's
-// shape. Desktop: the frame area is a size container, so the frame fits both
-// its width and its height (cqw/cqh). Phone: full width, but a tall (portrait)
-// photo narrows so its height stays under ~58% of the screen.
-function frameStyle(photo: RoomPhoto) {
-    return { "--ratio": photo.width / photo.height } as React.CSSProperties;
+function frameStyle(photo: RoomPhoto): React.CSSProperties {
+    return { "--ratio": photo.width / photo.height };
 }
 const frameClass =
     "relative overflow-hidden rounded-2xl bg-paper w-[min(100%,calc(58svh*var(--ratio)))] lg:w-[min(100cqw,calc(100cqh*var(--ratio)))]";
 
-/**
- * The canvas: the large photo area beside the control panel. Empty, it is the
- * drop zone; with a photo it shows the photo, the wait state on it, or the
- * before/after result, with full screen, download and replace below.
- */
 export function PhotoPanel({
     state,
     photo,
@@ -67,7 +55,6 @@ export function PhotoPanel({
             const tooMany = rejections.some((r) => r.errors.some((e) => e.code === "too-many-files"));
             onReject(tooMany ? "too-many" : "wrong-type");
         },
-        // Exactly the types the copy promises (an `image/*` key would let any image through).
         accept: { "image/jpeg": [".jpeg", ".jpg"], "image/png": [".png"], "image/webp": [".webp"] },
         maxFiles: 1,
         noClick: true,
@@ -79,7 +66,6 @@ export function PhotoPanel({
         <section
             aria-labelledby="step-photo"
             {...getRootProps({
-                // react-dropzone would make the root role="presentation"; the canvas is a labelled region.
                 role: "region",
                 className: cn(
                     "relative flex min-w-0 flex-col rounded-2xl bg-paper-2 p-3 outline-offset-4 transition-[outline-color] duration-160 sm:rounded-3xl sm:p-4 lg:min-h-0 lg:p-6",
@@ -119,8 +105,6 @@ export function PhotoPanel({
                 <>
                     <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center gap-3 lg:[container-type:size]">
                         {state === "result" && resultUrl ? (
-                            // The result wipes in from the right edge over the photo it
-                            // came from (the homepage dial's wipe; a fade under reduced motion).
                             <div className={frameClass} style={frameStyle(photo)}>
                                 <Image
                                     src={photo.dataUrl}
@@ -159,7 +143,6 @@ export function PhotoPanel({
                             </div>
                         )}
 
-                        {/* On the photo on desktop; under it on a phone, where the photo is small. */}
                         {state === "generating" && generationStartedAt !== null && (
                             <div className="flex w-full justify-center lg:absolute lg:inset-0 lg:items-center lg:p-6">
                                 <WaitState
@@ -172,7 +155,6 @@ export function PhotoPanel({
                         )}
                     </div>
 
-                    {/* Hidden (not removed) while waiting on desktop, so the photo does not jump. */}
                     <div
                         className={cn(
                             "mt-3 flex shrink-0 flex-wrap items-center justify-center gap-2 lg:mt-4",

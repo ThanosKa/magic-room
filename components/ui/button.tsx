@@ -4,11 +4,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
-/*
- * Pill buttons. Primary is ink on paper; `cream` is the primary for night
- * bands. Purple is never a button colour (accent only).
- * Press: scale 0.97 on :active. Hover only on real pointers (see globals.css).
- */
 const buttonVariants = cva(
   "inline-flex cursor-pointer select-none items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium tracking-[-0.01em] transition-[transform,filter,background-color,color,text-decoration-color] duration-160 ease-out active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none [&_svg]:shrink-0",
   {

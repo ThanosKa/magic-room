@@ -8,7 +8,6 @@ vi.stubEnv("STRIPE_WEBHOOK_SECRET", "whsec_fake_for_intake");
 const CLERK_SECRET = `whsec_${Buffer.from("clerk-intake-test-secret").toString("base64")}`;
 vi.stubEnv("CLERK_WEBHOOK_SECRET", CLERK_SECRET);
 
-// next/headers needs a Next request scope; feed it the test request's headers.
 let currentHeaders = new Headers();
 vi.mock("next/headers", () => ({ headers: async () => currentHeaders }));
 vi.mock("@/lib/logger", () => ({
@@ -105,6 +104,21 @@ describe("receiveClerkEvent", () => {
       ok: true,
       event: { type: "user.created", data: { id: "user_1", first_name: "Ada" } },
       deliveryId: "msg_1",
+    });
+  });
+
+  it("keeps a user event whose optional fields have the wrong type, dropping those fields", async () => {
+    const { request, headers } = signed({
+      type: "user.updated",
+      data: { id: "user_3", first_name: 7, last_name: "Lovelace", email_addresses: "none", image_url: null, extra: "x" },
+    });
+    currentHeaders = headers;
+
+    const result = await receiveClerkEvent(request);
+
+    expect(result.ok && result.event).toEqual({
+      type: "user.updated",
+      data: { id: "user_3", last_name: "Lovelace", image_url: null },
     });
   });
 

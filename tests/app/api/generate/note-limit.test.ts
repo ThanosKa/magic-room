@@ -5,12 +5,6 @@ import * as redisLib from "@/lib/redis";
 import * as openrouterLib from "@/lib/openrouter";
 import { auth } from "@clerk/nextjs/server";
 
-/**
- * The optional note ("customPrompt") is capped at 500 characters. The tool's
- * note field enforces the same limit; this checks the API refuses a longer
- * note before any credit is spent or the model is called.
- */
-
 type AuthResult = Awaited<ReturnType<typeof auth>>;
 
 vi.mock("@clerk/nextjs/server", () => ({
@@ -36,7 +30,6 @@ vi.mock("@/lib/redis", async () => {
   };
 });
 
-// Only the network call to OpenRouter is mocked; the real prompt builder runs.
 vi.mock("@/lib/openrouter", async () => {
   const actual = await vi.importActual("@/lib/openrouter");
   return {
@@ -102,7 +95,7 @@ describe("Generate Route - note length limit", () => {
     const response = await POST(generateRequest(note));
 
     expect(response.status).toBe(200);
-    expect(vi.mocked(openrouterLib.generateDesign).mock.calls[0][1]).toContain(note);
+    expect(vi.mocked(openrouterLib.generateDesign).mock.calls[0][0].prompt).toContain(note);
   });
 
   it("rejects a 501-character note without charging or calling the model", async () => {

@@ -2,17 +2,9 @@
 
 import Image from "next/image";
 import { Check, ChevronDown } from "lucide-react";
-import { QUALITY_OPTIONS, ROOM_TYPES, THEMES } from "@/lib/constants";
+import { isRoomType, QUALITY_OPTIONS, ROOM_TYPE_IDS, ROOM_TYPES, THEME_IDS, THEMES } from "@/lib/constants";
 import { cn, formatCredits } from "@/lib/utils";
 import type { Quality, RoomType, Theme } from "@/types";
-
-/*
- * The tool's choices, as they sit in the control panel: room type (a native
- * select, compact and the phone's own picker), style (a picture grid) and
- * quality (a segmented control). Style and quality are native radio groups
- * (arrow keys move the choice, one tab stop per group); their inputs are
- * visually hidden and the labels carry the look, including the focus ring.
- */
 
 export const groupTitleClass = "text-[14px] font-medium tracking-[-0.01em] text-ink";
 const focusRingClass =
@@ -34,15 +26,17 @@ export function RoomTypePicker({
                 <select
                     id="generate-room"
                     value={value}
-                    onChange={(e) => onChange(e.target.value as RoomType)}
+                    onChange={(e) => {
+                        if (isRoomType(e.target.value)) onChange(e.target.value);
+                    }}
                     className={cn(
                         "h-11 w-full cursor-pointer appearance-none truncate rounded-full border border-input bg-paper pl-4 pr-10 text-[15px] tracking-[-0.01em] text-ink transition-[border-color] duration-160 ease-out hover:border-ink/40 motion-reduce:transition-none",
                         "disabled:cursor-not-allowed disabled:opacity-60"
                     )}
                 >
-                    {(Object.entries(ROOM_TYPES) as [RoomType, string][]).map(([id, label]) => (
+                    {ROOM_TYPE_IDS.map((id) => (
                         <option key={id} value={id}>
-                            {label}
+                            {ROOM_TYPES[id]}
                         </option>
                     ))}
                 </select>
@@ -55,7 +49,6 @@ export function RoomTypePicker({
     );
 }
 
-// Every style card shows that style's living-room design image.
 function styleImage(theme: Theme): string {
     return `/images/designs/${theme}-living-room.jpg`;
 }
@@ -68,7 +61,8 @@ export function StylePicker({ value, onChange }: { value: Theme; onChange: (valu
                 <span className="text-[13px] font-normal text-ink-2">{THEMES[value]}</span>
             </legend>
             <div className="grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-4 lg:grid-cols-3">
-                {(Object.entries(THEMES) as [Theme, string][]).map(([id, label]) => {
+                {THEME_IDS.map((id) => {
+                    const label = THEMES[id];
                     const selected = value === id;
                     return (
                         <label
@@ -128,7 +122,6 @@ export const QUALITY_NAMES: Record<Quality, string> = {
     ultra: QUALITY_OPTIONS.ultra.name,
 };
 
-/** Quick / Pro / Ultra as one segmented control (a native radio group), each with its cost. */
 export function QualitySwitch({ value, onChange }: { value: Quality; onChange: (value: Quality) => void }) {
     return (
         <fieldset className="min-w-0">
@@ -141,8 +134,6 @@ export function QualitySwitch({ value, onChange }: { value: Quality; onChange: (
                             key={q.id}
                             title={q.description}
                             className={cn(
-                                // `relative` keeps the hidden radio inside the label: without it the radio
-                                // sits outside the panel's scroll area and focusing it scrolls the page.
                                 "relative inline-flex h-11 cursor-pointer select-none flex-col items-center justify-center rounded-full px-2 text-[14px] leading-tight tracking-[-0.01em] transition-[background-color,color,box-shadow] duration-160 ease-out motion-reduce:transition-none",
                                 "has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60",
                                 focusRingClass,

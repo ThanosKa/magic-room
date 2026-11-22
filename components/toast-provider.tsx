@@ -3,12 +3,7 @@
 import React from "react";
 import { Toaster } from "sonner";
 
-/*
- * Light theme only, coloured with the design tokens. Sonner's own CSS reads
- * these variables from the toaster element, so the inline style wins over it.
- * Errors get a light destructive tint; everything else is paper and ink.
- */
-const toastTokens = {
+const toastTokens: React.CSSProperties = {
   fontFamily: "var(--font-sans)",
   "--border-radius": "16px",
   "--normal-bg": "var(--paper)",
@@ -26,7 +21,7 @@ const toastTokens = {
   "--error-bg": "color-mix(in oklab, var(--destructive) 7%, var(--paper))",
   "--error-border": "color-mix(in oklab, var(--destructive) 25%, transparent)",
   "--error-text": "var(--destructive)",
-} as React.CSSProperties;
+};
 
 export function ToastProvider() {
   return (

@@ -4,22 +4,14 @@ import { Button } from "@/components/ui/button";
 import type { DesignAnswer } from "@/lib/design-request";
 import { cn, formatCredits } from "@/lib/utils";
 
-/**
- * A message shown in the slot above the Generate button (`#generate-message`).
- * The slot is always on screen next to the main action, on desktop and phone.
- * Each message has a short title and an icon, so its meaning never rests on
- * colour alone.
- */
 export interface ToolMessage {
     tone: "error" | "info";
     title: string;
     text: string;
-    /** A button after the text: a link, or something to run. */
     action?: { label: string; href: string } | { label: string; onClick: () => void };
 }
 
 
-/** Why a chosen file was not used. The current photo stays. */
 export const PHOTO_MESSAGES = {
     tooLarge: {
         tone: "error",
@@ -43,8 +35,15 @@ export const PHOTO_MESSAGES = {
     },
 } satisfies Record<string, ToolMessage>;
 
-/** The chosen quality costs more than the balance. */
-export function notEnoughCreditsMessage(qualityName: string, cost: number, balance: number): ToolMessage {
+export function notEnoughCreditsMessage({
+    qualityName,
+    cost,
+    balance,
+}: {
+    qualityName: string;
+    cost: number;
+    balance: number;
+}): ToolMessage {
     return {
         tone: "info",
         title: "Not enough credits",
@@ -59,21 +58,21 @@ export const DOWNLOAD_FAILED_MESSAGE: ToolMessage = {
     text: "The download didn't work. Try again, or open Full screen and save the image from there.",
 };
 
-/** The request never got an answer (offline, connection dropped). */
 export const NETWORK_MESSAGE: ToolMessage = {
     tone: "error",
     title: "No connection",
     text: "We couldn't reach Magic Room. Check your connection and try again.",
 };
 
-/**
- * What to tell the user about a design answer. A delivered design needs no
- * message (null); the 402 case is for the screen to show after it re-reads the Balance.
- */
-export function messageFor(
-    answer: DesignAnswer,
-    { cost, signInAgain }: { cost: number; signInAgain: () => void }
-): ToolMessage | null {
+export function messageFor({
+    answer,
+    cost,
+    signInAgain,
+}: {
+    answer: DesignAnswer;
+    cost: number;
+    signInAgain: () => void;
+}): ToolMessage | null {
     switch (answer.kind) {
         case "design":
             return null;

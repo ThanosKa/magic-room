@@ -1,11 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { generateHref, readDesignSelection } from "@/lib/design-selection";
 
-/**
- * The deep link into the tool: design pages build it, the tool reads it back
- * to preselect a style and room type.
- */
-
 function selectionFrom(href: string) {
   return readDesignSelection(new URL(href, "https://magic-room.test").searchParams);
 }

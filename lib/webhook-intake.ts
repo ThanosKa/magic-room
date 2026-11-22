@@ -1,33 +1,26 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import type Stripe from "stripe";
+import { z } from "zod";
 import { parseWebhookEvent } from "@/lib/stripe";
 import { logger } from "@/lib/logger";
-
-/*
- * Webhook intake: the one place that reads a webhook's raw body, verifies its
- * signature and returns either a verified, typed event or a ready rejection.
- *
- * It unifies verification only. The duplicate rules stay in each route because
- * they really differ (Stripe marks after the grant, Clerk marks per event
- * outcome). One shared webhook flow was rejected because the two providers'
- * handling shares nothing past verification; a generic
- * `verifyWebhook(provider, ...)` was rejected because the providers differ in
- * where headers come from, which library checks them and which statuses they
- * answer, so one signature would only hide those differences behind a switch.
- */
 
 export type Intake<E> =
   | { ok: true; event: E; deliveryId: string }
   | { ok: false; response: Response };
 
-export interface ClerkUserData {
-  id: string;
-  email_addresses?: Array<{ email_address?: string }>;
-  first_name?: string | null;
-  last_name?: string | null;
-  image_url?: string | null;
-}
+const clerkUserDataSchema = z.object({
+  id: z.string(),
+  email_addresses: z
+    .array(z.object({ email_address: z.string().optional().catch(undefined) }))
+    .optional()
+    .catch(undefined),
+  first_name: z.string().nullable().optional().catch(undefined),
+  last_name: z.string().nullable().optional().catch(undefined),
+  image_url: z.string().nullable().optional().catch(undefined),
+});
+
+export type ClerkUserData = z.infer<typeof clerkUserDataSchema>;
 
 export type ClerkEvent =
   | { type: "user.created"; data: ClerkUserData }
@@ -44,16 +37,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function toClerkEvent(value: unknown): ClerkEvent {
   if (isRecord(value)) {
     const type = value["type"];
-    const data = value["data"];
+    const data = clerkUserDataSchema.safeParse(value["data"]);
     if (
-      isRecord(data) &&
-      typeof data["id"] === "string" &&
+      data.success &&
       (type === "user.created" || type === "user.updated" || type === "user.deleted")
     ) {
       if (type === "user.deleted") {
-        return { type, data: { id: data["id"] } };
+        return { type, data: { id: data.data.id } };
       }
-      return { type, data: data as unknown as ClerkUserData };
+      return { type, data: data.data };
     }
   }
   return { type: "other", rawType: isRecord(value) ? value["type"] : "unknown" };
@@ -76,7 +68,7 @@ export async function receiveStripeEvent(
   const secret = process.env.STRIPE_WEBHOOK_SECRET || "";
 
   try {
-    const event = await parseWebhookEvent(body, signature, secret);
+    const event = await parseWebhookEvent({ body, signature, secret });
     return { ok: true, event, deliveryId: event.id };
   } catch (error) {
     logger.warn({ err: error }, "Stripe webhook signature verification failed");

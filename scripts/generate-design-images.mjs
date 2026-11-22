@@ -4,7 +4,6 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Read OPENROUTER_API_KEY from .env.local
 const envContent = fs.readFileSync(path.join(__dirname, "../.env.local"), "utf8");
 const apiKey = envContent.match(/OPENROUTER_API_KEY=(.+)/)?.[1]?.trim();
 
@@ -13,7 +12,6 @@ if (!apiKey) {
     process.exit(1);
 }
 
-// All 14 themes (8 UI + 6 SEO-only)
 const ALL_THEMES = {
     modern: "Modern",
     minimalist: "Minimalist",
@@ -31,7 +29,6 @@ const ALL_THEMES = {
     transitional: "Transitional",
 };
 
-// All 14 room types (7 UI + 7 SEO-only)
 const ALL_ROOMS = {
     "living-room": "Living Room",
     bedroom: "Bedroom",
@@ -49,7 +46,6 @@ const ALL_ROOMS = {
     "walk-in-closet": "Walk-in Closet",
 };
 
-// Style-specific prompt modifiers
 const THEME_MODIFIERS = {
     modern: "modern contemporary design, clean geometric lines, neutral palette with bold accents, minimal clutter, open plan feel",
     minimalist: "minimalist design, extremely clean and uncluttered, white and off-white palette, only essential furniture, serene and calming",
@@ -67,7 +63,6 @@ const THEME_MODIFIERS = {
     transitional: "transitional design, classic meets contemporary, warm neutral palette, traditional furniture forms with modern finishes, timeless",
 };
 
-// Room-specific prompt modifiers
 const ROOM_MODIFIERS = {
     "living-room": "living room, comfortable seating arrangement, focal point fireplace or feature wall, ample natural light through large windows",
     bedroom: "bedroom, king size bed with styled bedding, nightstands, calm restful atmosphere, blackout curtains, good ambient lighting",
@@ -85,7 +80,6 @@ const ROOM_MODIFIERS = {
     "walk-in-closet": "walk-in closet dressing room, organised hanging rails and shelves, full-length mirror, elegant lighting, boutique-style",
 };
 
-// Before-image prompts — neutral, unstaged versions per room type
 const BEFORE_PROMPTS = {
     "living-room": "An average unstaged living room with plain walls, generic furniture, mismatched pieces, no particular style, realistic interior photo",
     bedroom: "A plain unstaged bedroom with basic bed and furniture, white walls, no styling, ordinary and generic, realistic photo",
@@ -188,7 +182,6 @@ function sleep(ms) {
 const outputDir = path.join(__dirname, "../public/images/designs");
 fs.mkdirSync(outputDir, { recursive: true });
 
-// Parse CLI args
 const args = process.argv.slice(2);
 const onlyBefore = args.includes("--before-only");
 const onlyAfter = args.includes("--after-only");
@@ -200,7 +193,6 @@ let totalGenerated = 0;
 let totalSkipped = 0;
 let totalFailed = 0;
 
-// ─── BEFORE images (one per room type) ───────────────────────────────────────
 if (!onlyAfter) {
     console.log("\n📷 Generating BEFORE images (neutral rooms)...\n");
 
@@ -220,12 +212,10 @@ if (!onlyAfter) {
         if (ok) totalGenerated++;
         else totalFailed++;
 
-        // Rate limit delay
         await sleep(2000);
     }
 }
 
-// ─── AFTER images (one per theme+room combination) ───────────────────────────
 if (!onlyBefore) {
     const themeEntries = Object.entries(ALL_THEMES);
     const roomEntries = Object.entries(ALL_ROOMS);
@@ -256,7 +246,6 @@ if (!onlyBefore) {
             if (ok) totalGenerated++;
             else totalFailed++;
 
-            // Rate limit delay between calls
             await sleep(2000);
         }
     }

@@ -2,13 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-/**
- * How many pixels at the bottom of the layout viewport the on-screen keyboard
- * covers, while `enabled`. Phones (iOS Safari, and Chrome on Android by
- * default) open the keyboard over the page instead of shrinking it, so a bar
- * stuck to `bottom: 0` ends up behind the keyboard. Setting the bar's `bottom`
- * to this value keeps it just above the keyboard.
- */
 export function useKeyboardInset(enabled: boolean): number {
     const [inset, setInset] = useState(0);
 

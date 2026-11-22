@@ -1,11 +1,4 @@
 // @vitest-environment node
-//
-// Runs the real SQL of the credit functions (migrations 004, 005 and 006) on an
-// in-memory Postgres (PGlite) inside the test process: no database connection,
-// no network, no secrets.
-//
-// Not covered: two connections writing at the same time. PGlite has one
-// connection, so that stays guarded by the row lock in the SQL's UPDATE.
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { PGlite } from "@electric-sql/pglite";
@@ -15,8 +8,6 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 const MIGRATIONS_DIR = path.resolve(__dirname, "../../supabase/migrations");
 
-// What Supabase provides before any migration runs: the three API roles and
-// auth.uid(), which the row-level-security policies of migration 001 mention.
 const SUPABASE_STAND_INS = `
   CREATE ROLE anon NOLOGIN;
   CREATE ROLE authenticated NOLOGIN;

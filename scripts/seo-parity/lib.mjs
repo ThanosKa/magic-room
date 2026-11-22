@@ -1,27 +1,13 @@
-// Pure logic for the SEO parity check: turn a fetched page into a record,
-// and diff two snapshots of records. No network or file access here, so it
-// can be tested directly (tests/seo-parity/seo-parity.test.ts).
 import { JSDOM } from "jsdom";
 
-// Origins whose links count as internal, besides the server being crawled.
 const SITE_ORIGINS = ["https://magic-room.dev", "https://www.magic-room.dev"];
 
-// Elements whose text is never visible.
 const INVISIBLE = "script, style, noscript, template";
 
 function clean(text) {
     return (text ?? "").replace(/\s+/g, " ").trim();
 }
 
-/**
- * @param {{
- *   path: string,
- *   baseOrigin: string,
- *   hops: { url: string, status: number, location: string | null }[],
- *   headers: Record<string, string>,
- *   html: string,
- * }} input
- */
 export function extractPageRecord({ path, baseOrigin, hops, headers, html }) {
     const doc = new JSDOM(html).window.document;
     const redirects = hops
@@ -49,21 +35,12 @@ export function extractPageRecord({ path, baseOrigin, hops, headers, html }) {
     }, baseOrigin);
 }
 
-// Internal redirects keep path + query; external ones (e.g. Clerk sign-in)
-// keep only origin + path, since their query echoes the crawled server.
 function redirectTarget(location, baseOrigin) {
     const url = new URL(location, `${baseOrigin}/`);
     if (url.origin === baseOrigin) return url.pathname + url.search;
     return url.origin + url.pathname;
 }
 
-/**
- * Strip values that change between builds or servers but not for Google:
- * the crawled server's origin, hashed /_next/static asset names, build ids,
- * next/image size params, Vercel deployment ids and metadata-image hashes.
- * @param {string} value
- * @param {string} baseOrigin
- */
 export function normaliseString(value, baseOrigin) {
     return value
         .split(baseOrigin).join("")
@@ -90,12 +67,6 @@ const PAGE_FIELDS = [
     "bodyText",
 ];
 
-/**
- * @typedef {{ path: string, fields: string[], reason?: string }} AllowEntry
- * @param {{ sitemap: string[], robotsTxt: string, pages: Record<string, any> }} baseline
- * @param {{ sitemap: string[], robotsTxt: string, pages: Record<string, any> }} current
- * @param {AllowEntry[]} allowList
- */
 export function diffSnapshots(baseline, current, allowList) {
     const differences = [];
     const report = (path, field, before, after) =>
@@ -125,8 +96,6 @@ export function diffSnapshots(baseline, current, allowList) {
     return { differences, failed: differences.some((d) => !d.allowed) };
 }
 
-// Text fields compare without whitespace: a restyle that moves words between
-// block and inline elements changes spacing, not what the page says.
 const WHITESPACE_INSENSITIVE = new Set(["h1", "bodyText"]);
 
 function sameValue(field, before, after) {
@@ -165,21 +134,17 @@ function internalLinks(doc, baseOrigin) {
             continue;
         }
         if (!internal.has(url.origin)) continue;
-        // The tool is noindex and behind sign-in; its query only preselects a
-        // style/room (ticket 14), so it is not an SEO-relevant difference.
         const keepQuery = !QUERY_INSENSITIVE_PATHS.has(url.pathname);
         paths.add(url.pathname + (keepQuery ? url.search : ""));
     }
     return [...paths].sort();
 }
 
-// Text nodes joined with spaces, so the result does not depend on whether a
-// restyle wraps words in block or inline elements.
 function visibleText(body) {
     if (!body) return "";
     const root = body.cloneNode(true);
     for (const el of root.querySelectorAll(INVISIBLE)) el.remove();
-    const walker = root.ownerDocument.createTreeWalker(root, 4 /* SHOW_TEXT */);
+    const walker = root.ownerDocument.createTreeWalker(root, 4);
     const parts = [];
     while (walker.nextNode()) parts.push(walker.currentNode.nodeValue);
     return clean(parts.join(" "));
