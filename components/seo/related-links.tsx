@@ -7,26 +7,11 @@ interface RelatedLinksProps {
     heading: string;
     intro?: string;
     links: IContextualLink[];
-    /** "cards" for a grid with descriptions, "inline" for a compact chip row. */
     variant?: "cards" | "inline";
-    /**
-     * Required, not defaulted: the section's background has to match whatever
-     * sits above it on the page, and every call site already passes one. A
-     * default here would only ever be silently wrong.
-     */
     className: string;
 }
 
-/**
- * Contextual internal-link block.
- *
- * Every anchor carries the target page's real query phrase — no "learn more",
- * no "click here". Used to spread link equity out of the header/footer template
- * and into the long tail of design, blog and comparison pages.
- *
- * Look: serif heading, then either hairline rows with an arrow that slides on
- * hover ("cards", from the test page's Explore lists) or soft pills ("inline").
- */
+/** Every anchor carries the target page's real query phrase, never "learn more" or "click here". */
 export function RelatedLinks({
     heading,
     intro,

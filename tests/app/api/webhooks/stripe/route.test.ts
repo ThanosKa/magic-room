@@ -33,7 +33,6 @@ vi.mock("@/lib/redis", async () => {
     markWebhookProcessed: vi.fn(),
   };
 });
-// `after` hands a promise to the platform's waitUntil (vinext on Workers).
 vi.mock("next/server", () => ({
   after: vi.fn(),
 }));
@@ -108,8 +107,6 @@ describe("Stripe Webhook Route", () => {
       expect(redisLib.markWebhookProcessed).toHaveBeenCalledWith({ webhookType: "stripe", eventId: "evt_test" });
     });
 
-    // A slow Resend must not hold Stripe's 200 (Stripe redelivers past its
-    // timeout), and a failed receipt must leave a trace in the logs.
     it("answers Stripe without waiting for the receipt, and logs a receipt that fails", async () => {
       const session = createMockCheckoutSession({
         payment_status: "paid",
@@ -238,7 +235,7 @@ describe("Stripe Webhook Route", () => {
     it("should handle missing userId in metadata", async () => {
       const session = createMockCheckoutSession({
         payment_status: "paid",
-        client_reference_id: undefined, // Missing userId (from client_reference_id)
+        client_reference_id: undefined,
         metadata: {
           packageId: "starter",
         },
@@ -390,7 +387,6 @@ describe("Stripe Webhook Route", () => {
 
       const response = await POST(request);
       expect(response.status).toBe(200);
-      // Verify that no credits were granted (webhook was skipped)
       expect(supabaseLib.grantPurchaseCredits).not.toHaveBeenCalled();
     });
 

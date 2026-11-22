@@ -6,23 +6,17 @@ import {
 } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
 
-/** Paid work. A failure it expects is a result, not an exception. */
 export type Work<T, F> = () => Promise<{ ok: true; value: T } | { ok: false; failure: F }>;
 
-/** The work threw instead of returning a result. */
 export interface Threw {
   kind: "threw";
   error: unknown;
 }
 
 export type Spend<T, F> =
-  /** Nothing was charged and no `usage` row written: the Balance was too low, or the database failed. */
   | { kind: "not-charged" }
-  /** The work succeeded and the Charge stands. */
   | { kind: "delivered"; value: T }
-  /** The work failed, the credits were added back and a `refund` row was written. */
   | { kind: "refunded"; failure: F | Threw }
-  /** The work failed and so did the Refund: the caller must never say "refunded". */
   | { kind: "refund-failed"; failure: F | Threw };
 
 export interface Charge {
@@ -66,8 +60,6 @@ export async function spendCredits<T, F>({
   try {
     await refundCredits({ userId: charge.userId, amount: charge.amount, generationId: charge.generationId });
   } catch {
-    // Not logged here: the caller logs a failed Refund, because the generate
-    // route logs it differently after a failed result and after a throw.
     return { kind: "refund-failed", failure };
   }
   return { kind: "refunded", failure };
@@ -97,7 +89,6 @@ export async function grantPurchase(
   return result.granted ? "granted" : "already-granted";
 }
 
-/** Gives back credits taken for a generation that produced nothing. Throws if it could not. */
 async function refundCredits({
   userId,
   amount,

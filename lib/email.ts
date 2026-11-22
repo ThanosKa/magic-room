@@ -3,11 +3,6 @@ import { logger } from "@/lib/logger";
 import { SITE_URL, SITE_NAME } from "@/lib/seo/config";
 import { CREDIT_PACKAGES, QUALITY_OPTIONS, THEME_IDS } from "@/lib/constants";
 
-// ---------------------------------------------------------------------------
-// Resend client (lazy-initialised so tests that import this module don't
-// crash when RESEND_API_KEY is not set)
-// ---------------------------------------------------------------------------
-
 let _resend: Resend | null = null;
 
 function getResend(): Resend {
@@ -19,10 +14,6 @@ function getResend(): Resend {
 
 const FROM_EMAIL = "Magic Room <hello@notifications.app-whisper.com>";
 
-/**
- * Webhooks send emails after answering, inside the ~30 s waitUntil window on
- * Workers, so a hung Resend must end as a logged failure well before that.
- */
 const EMAIL_TIMEOUT_MS = 10_000;
 
 function sendWithTimeout(
@@ -40,18 +31,7 @@ function sendWithTimeout(
   );
 }
 
-// ---------------------------------------------------------------------------
-// Logo URL (absolute so it works in email clients). A small copy of the icon:
-// the 1024px original is too heavy to load quickly in an inbox.
-// ---------------------------------------------------------------------------
-
 const LOGO_URL = `${SITE_URL}/email-logo.png`;
-
-// ---------------------------------------------------------------------------
-// Design tokens. Email clients cannot read the CSS variables in
-// app/globals.css, so these are its values as solid colours. Keep them in step
-// with that file. Purple stays on small dots only, as on the site.
-// ---------------------------------------------------------------------------
 
 const PAPER = "#f4f0e9";
 const PAPER_2 = "#ebe5da";
@@ -62,15 +42,9 @@ const LINE_ON_PAPER_2 = "#d6d0c5";
 const CREAM = "#efe8dc";
 const ACCENT = "#7c3aed";
 
-// Many clients (Gmail included) drop web fonts, so the fallbacks must read well too.
 const SANS = "'Geist','Helvetica Neue',Helvetica,Arial,sans-serif";
 const SERIF = "'Instrument Serif',Georgia,'Times New Roman',serif";
 
-// ---------------------------------------------------------------------------
-// Shared email layout helpers (inline-style, table-based, email-safe HTML)
-// ---------------------------------------------------------------------------
-
-/** Names come from the sign-up form, so escape them before they reach the HTML. */
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -148,10 +122,6 @@ function button({ text, href }: { text: string; href: string }): string {
 </table>`;
 }
 
-// ---------------------------------------------------------------------------
-// Step row helper (used in welcome email)
-// ---------------------------------------------------------------------------
-
 function stepRow({ number, title, description }: { number: string; title: string; description: string }): string {
   return `<tr>
     <td width="44" valign="top" style="padding:16px 0;border-top:1px solid ${LINE};font-family:${SERIF};font-size:24px;line-height:24px;color:${INK_2};">${number}</td>
@@ -161,10 +131,6 @@ function stepRow({ number, title, description }: { number: string; title: string
     </td>
   </tr>`;
 }
-
-// ---------------------------------------------------------------------------
-// Welcome email HTML
-// ---------------------------------------------------------------------------
 
 export function buildWelcomeEmailHtml(params: {
   firstName?: string | null;
@@ -200,10 +166,6 @@ export function buildWelcomeEmailHtml(params: {
   return emailWrapper(body);
 }
 
-// ---------------------------------------------------------------------------
-// Purchase confirmation email HTML
-// ---------------------------------------------------------------------------
-
 function receiptRow({ name, value, isLast }: { name: string; value: string; isLast: boolean }): string {
   const border = isLast ? "" : `border-bottom:1px solid ${LINE_ON_PAPER_2};`;
   return `<tr>
@@ -238,10 +200,6 @@ export function buildPurchaseEmailHtml(params: {
 
   return emailWrapper(body);
 }
-
-// ---------------------------------------------------------------------------
-// Send helpers (they throw on failure: callers await them and catch)
-// ---------------------------------------------------------------------------
 
 export async function sendWelcomeEmail(params: {
   to: string;

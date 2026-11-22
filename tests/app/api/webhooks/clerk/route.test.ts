@@ -38,7 +38,6 @@ vi.mock("next/headers", () => ({
   headers: vi.fn(),
 }));
 
-// `after` hands a promise to the platform's waitUntil (vinext on Workers).
 vi.mock("next/server", () => ({
   after: vi.fn(),
 }));
@@ -150,8 +149,6 @@ describe("Clerk Webhook Route", () => {
         });
       });
 
-      // A slow Resend must not hold Clerk's 200, and a failed welcome email
-      // must leave a trace in the logs.
       it("answers Clerk without waiting for the welcome email, and logs one that fails", async () => {
         const eventPayload = {
           type: "user.created",
@@ -182,7 +179,6 @@ describe("Clerk Webhook Route", () => {
         );
       });
 
-      // Logs are kept in Workers Logs: identify users by id, not by email.
       it("never writes the user's email address to the logs", async () => {
         const eventPayload = {
           type: "user.created",
@@ -235,8 +231,6 @@ describe("Clerk Webhook Route", () => {
         expect(supabaseLib.createUser).not.toHaveBeenCalled();
       });
 
-      // Clerk redelivers with the same svix id. The outcome rests on the User
-      // lookup, never on the Redis helper's answer.
       it("answers a second delivery of the same svix id with 200 and creates the User once", async () => {
         const eventPayload = {
           type: "user.created",
@@ -522,7 +516,6 @@ describe("Clerk Webhook Route", () => {
         data: { id: TEST_CLERK_USER_ID },
       };
 
-      // Runs the real lookup against a Supabase client that answers `result`.
       async function stubSupabaseLookup(result: {
         data: unknown;
         error: { code: string; message: string } | null;
@@ -602,7 +595,6 @@ describe("Clerk Webhook Route", () => {
         mockSingle.mockReset();
       });
 
-      // Runs the real lookup against a Supabase client that fails.
       async function failTheLookup() {
         const actual =
           await vi.importActual<typeof import("@/lib/supabase")>(

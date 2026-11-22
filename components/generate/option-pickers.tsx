@@ -6,14 +6,6 @@ import { isRoomType, QUALITY_OPTIONS, ROOM_TYPE_IDS, ROOM_TYPES, THEME_IDS, THEM
 import { cn, formatCredits } from "@/lib/utils";
 import type { Quality, RoomType, Theme } from "@/types";
 
-/*
- * The tool's choices, as they sit in the control panel: room type (a native
- * select, compact and the phone's own picker), style (a picture grid) and
- * quality (a segmented control). Style and quality are native radio groups
- * (arrow keys move the choice, one tab stop per group); their inputs are
- * visually hidden and the labels carry the look, including the focus ring.
- */
-
 export const groupTitleClass = "text-[14px] font-medium tracking-[-0.01em] text-ink";
 const focusRingClass =
     "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring";
@@ -57,7 +49,6 @@ export function RoomTypePicker({
     );
 }
 
-// Every style card shows that style's living-room design image.
 function styleImage(theme: Theme): string {
     return `/images/designs/${theme}-living-room.jpg`;
 }
@@ -131,7 +122,6 @@ export const QUALITY_NAMES: Record<Quality, string> = {
     ultra: QUALITY_OPTIONS.ultra.name,
 };
 
-/** Quick / Pro / Ultra as one segmented control (a native radio group), each with its cost. */
 export function QualitySwitch({ value, onChange }: { value: Quality; onChange: (value: Quality) => void }) {
     return (
         <fieldset className="min-w-0">
@@ -144,8 +134,6 @@ export function QualitySwitch({ value, onChange }: { value: Quality; onChange: (
                             key={q.id}
                             title={q.description}
                             className={cn(
-                                // `relative` keeps the hidden radio inside the label: without it the radio
-                                // sits outside the panel's scroll area and focusing it scrolls the page.
                                 "relative inline-flex h-11 cursor-pointer select-none flex-col items-center justify-center rounded-full px-2 text-[14px] leading-tight tracking-[-0.01em] transition-[background-color,color,box-shadow] duration-160 ease-out motion-reduce:transition-none",
                                 "has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60",
                                 focusRingClass,

@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-// SEO parity check. See scripts/seo-parity/README.md.
-//
-//   node scripts/seo-parity/seo-parity.mjs baseline <dir> <baseUrl>
-//   node scripts/seo-parity/seo-parity.mjs diff <dir> <baseUrl> [--allow-list <file>] [--out <dir>]
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,8 +36,6 @@ function parseArgs(argv) {
 async function get(url) {
     return fetch(url, {
         redirect: "manual",
-        // Not "text/html": with the dev Clerk keys in .env.local, Clerk answers
-        // document requests with a 307 "dev-browser" handshake on every page.
         headers: { "User-Agent": USER_AGENT, Accept: "*/*" },
     });
 }
@@ -64,7 +58,6 @@ function extraPaths() {
         .flatMap(([, paths]) => paths);
 }
 
-// Follows same-origin redirects only; an external Location is recorded, not fetched.
 async function crawlPage(baseOrigin, pagePath) {
     const hops = [];
     let url = new URL(pagePath, baseOrigin);
@@ -100,7 +93,6 @@ async function crawl(baseOrigin, paths) {
         }
     }
     await Promise.all(Array.from({ length: CONCURRENCY }, worker));
-    // Stable key order so snapshot files diff cleanly.
     return Object.fromEntries(Object.keys(pages).sort().map((key) => [key, pages[key]]));
 }
 
@@ -118,8 +110,6 @@ function writeSnapshot(dir, snapshot, baseOrigin) {
     const meta = { takenAt: new Date().toISOString(), baseOrigin, urlCount: Object.keys(snapshot.pages).length };
     fs.writeFileSync(path.join(dir, SNAPSHOT_FILE), JSON.stringify({ meta, ...snapshot }, null, 2) + "\n");
 }
-
-// ---------- reporting ----------
 
 function excerpt(text, at) {
     const start = Math.max(0, at - 60);

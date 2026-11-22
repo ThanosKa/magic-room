@@ -23,7 +23,18 @@ Copy has to keep saying what these earlier fixes settled:
 
 - `robots.txt` is the static `public/robots.txt`: a dynamic `app/robots.ts` failed on Vercel cold starts and Google reported it unreachable.
 - `proxy.ts` falls through with `NextResponse.next()` when Clerk errors, so `robots.txt` and `sitemap.xml` stay reachable. Keep that `try/catch`.
-- `app/sitemap.ts` uses hand-set per-surface dates: bump only the surface you changed, and never use `new Date()`. The rules at the top of that file say which URLs may be listed.
+- `app/sitemap.ts` uses hand-set per-surface dates: bump only the surface you changed, and never use `new Date()`. Every URL it lists must:
+  1. render (no 404): derive slugs from the same data modules the routes use, never from a hand-kept copy;
+  2. be indexable (no `robots: { index: false }` on the route);
+  3. self-canonical to exactly this absolute, non-trailing-slash URL (the homepage is the exception: its `<loc>` is `https://magic-room.dev/`, matching the Search Console Pages report and `createMetadata({ path: "" })`);
+  4. be reachable by at least one internal link.
+- Left out on purpose: `/generate` (noindex, behind auth), `/design/<non-priority>` (the combos outside `PRIORITY_DESIGN_SLUGS` are noindex), `/design/<pruned>` (noindex via `lib/seo/pruned.ts`), `/vs/<redirected>` (308 to `/alternatives/<slug>`), `/api/*` (disallowed in `robots.txt`), 404 and error routes.
+- Duplicate `<loc>` values make Google ignore a sitemap; `app/sitemap.ts` drops them, so a slug in both `PRIORITY_DESIGN_SLUGS` tiers is harmless.
+
+- Design page meta descriptions come from the rotated templates in `lib/seo/design-data.ts`, never from the intro's first sentence: that reads like an encyclopedia entry and gives searchers no reason to click.
+- A page-level `robots` replaces the root layout's `robots` object, it is not merged, so `createMetadata` repeats the `googleBot` directives (`max-image-preview:large`, `max-snippet:-1`).
+- The footer's column order, headings and link text are part of every page's visible text and internal links, and the SEO parity check compares them: change them only on purpose.
+- The `SoftwareApplication` JSON-LD has no `aggregateRating`, because there are no collected reviews; an invented rating breaks Google's structured-data policy.
 
 ## Pruning and redirects
 

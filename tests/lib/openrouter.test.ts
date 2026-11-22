@@ -6,7 +6,6 @@ vi.mock("@/lib/logger", () => ({
     logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn() },
 }));
 
-/** The model id each request asked OpenRouter for. */
 function sentModels(fetchMock: ReturnType<typeof vi.fn>): string[] {
     return fetchMock.mock.calls.map(([, init]) => JSON.parse((init as RequestInit).body as string).model);
 }
@@ -46,7 +45,6 @@ describe("generateDesign: which model makes the image", () => {
 });
 
 describe("generateDesign: how long it waits for OpenRouter", () => {
-    /** Like fetch to a provider that hangs: rejects only when its signal aborts. */
     const hangingFetch = vi.fn((_url: string, init?: RequestInit) =>
         new Promise<Response>((_resolve, reject) => {
             init?.signal?.addEventListener("abort", () => reject(init.signal?.reason));
@@ -66,8 +64,6 @@ describe("generateDesign: how long it waits for OpenRouter", () => {
         vi.unstubAllGlobals();
     });
 
-    // 280 s: under the 300 s the route had on Vercel, longer than Ultra's
-    // usual 2 minutes. The route's catch refunds when this throws.
     it("gives up after 280 seconds so the route can refund", async () => {
         const outcome = generateDesign({ base64Image: "data:image/png;base64,room", prompt: "prompt", quality: "ultra" }).then(
             () => "answered",
@@ -109,7 +105,6 @@ describe("generateDesign: nothing the provider sent back reaches a log", () => {
         vi.unstubAllGlobals();
     });
 
-    /** Every logger call (all levels) as one string. */
     function everythingLogged(): string {
         return JSON.stringify([
             ...vi.mocked(logger.error).mock.calls,

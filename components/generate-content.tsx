@@ -39,7 +39,6 @@ function GenerateTool() {
     const { activeGeneration, setActiveGeneration } = useGenerationStore();
     const reducedMotion = usePrefersReducedMotion();
 
-    // A deep link (/generate?style=japandi&room=bedroom) sets the starting choices.
     const preselected = readDesignSelection(useSearchParams());
 
     const [photo, setPhoto] = useState<RoomPhoto | null>(null);
@@ -58,12 +57,9 @@ function GenerateTool() {
     const state: ToolState = !photo ? "empty" : isGenerating ? "generating" : resultUrl ? "result" : "ready";
 
     const cost = QUALITY_OPTIONS[quality].credits;
-    // Only once the balance has loaded, so it never flashes "you have 0".
     const shortOfCredits = user !== null && credits < cost;
     const canGenerate = photo !== null && !isGenerating && credits >= cost;
 
-    // "Sign in again" sends the user through sign-in and back to the tool
-    // with the room type and style chosen at the moment of the click.
     const choicesRef = useRef({ theme, roomType });
     useEffect(() => {
         choicesRef.current = { theme, roomType };
@@ -73,8 +69,6 @@ function GenerateTool() {
         [signOut]
     );
 
-    // On a phone the page may be scrolled past the photo: bring it (wait
-    // state, then result) back into view when it changes.
     const showPhoto = useCallback(() => {
         const el = photoRef.current;
         if (!el || el.getBoundingClientRect().top >= 0) return;
@@ -114,8 +108,6 @@ function GenerateTool() {
             if (answer.kind === "design") {
                 setActiveGeneration({ id: answer.id, status: "succeeded", outputUrls: answer.outputUrls });
             } else if (answer.kind === "not-enough-credits" && clerkUser?.id) {
-                // Re-read the balance first: once it is below the cost, the
-                // "Not enough credits" message shows it with the real number.
                 await refreshUser();
                 balanceRead = true;
                 if (useUserStore.getState().credits >= cost) {
@@ -125,11 +117,9 @@ function GenerateTool() {
                 setMessage(messageFor({ answer, ...failure }));
             }
         } catch {
-            // requestDesign never throws; this keeps a failed Balance re-read on the same message as before.
             setMessage(NETWORK_MESSAGE);
         } finally {
             setGenerationStartedAt(null);
-            // The balance may have changed either way (charged, or refunded).
             if (!balanceRead && clerkUser?.id) refreshUser();
         }
     }, [photo, isGenerating, credits, cost, note, roomType, theme, quality, setActiveGeneration, clerkUser?.id, refreshUser, showPhoto, signInAgain]);
@@ -152,17 +142,9 @@ function GenerateTool() {
     }, [resultUrl, theme, roomType]);
 
     return (
-        /*
-          Desktop (>= 1024): the photo canvas on the left and the control panel
-          on the right fill the screen under the header; the title sits above
-          the panel. Phone: title, canvas, then the panel as a bottom sheet that
-          sticks to the bottom of the screen (it is the tool's last child, so it
-          stays inside the tool and never covers the site footer).
-        */
         <div
             data-tool-state={state}
             className={cn(
-                // Phone: at least a screen tall, so the sheet (pushed to the end) starts at the bottom of the screen.
                 "mx-auto flex min-h-[calc(100svh-66px)] w-full max-w-[1440px] flex-col gap-4 px-5 pt-3 sm:min-h-[calc(100svh-76px)] sm:px-6 sm:pt-4",
                 "lg:grid lg:h-[calc(100svh-76px)] lg:min-h-[600px] lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-5 lg:gap-y-5 lg:px-12 lg:pb-6 xl:grid-cols-[minmax(0,1fr)_392px]"
             )}

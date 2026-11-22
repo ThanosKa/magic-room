@@ -8,7 +8,6 @@ vi.stubEnv("STRIPE_WEBHOOK_SECRET", "whsec_fake_for_intake");
 const CLERK_SECRET = `whsec_${Buffer.from("clerk-intake-test-secret").toString("base64")}`;
 vi.stubEnv("CLERK_WEBHOOK_SECRET", CLERK_SECRET);
 
-// next/headers needs a Next request scope; feed it the test request's headers.
 let currentHeaders = new Headers();
 vi.mock("next/headers", () => ({ headers: async () => currentHeaders }));
 vi.mock("@/lib/logger", () => ({

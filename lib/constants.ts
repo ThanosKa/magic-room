@@ -75,21 +75,14 @@ export function isTheme(value: string): value is Theme {
   return Object.hasOwn(THEMES, value);
 }
 
-/** Longest optional note ("customPrompt") the tool and the generate API accept. */
 export const NOTE_MAX_LENGTH = 500;
 
-/**
- * The three quality tiers: what each costs in credits and which OpenRouter
- * model makes the image. Ids stay "standard" / "premium" for old data; the
- * names people see are Quick / Pro / Ultra.
- */
 export const QUALITY_OPTIONS = {
   standard: {
     id: "standard" as const,
     name: "Quick",
     description: "Fast ideas for your room",
     credits: 1,
-    /** How long a design usually takes: sets the wait screen's pace and its note. */
     waitSeconds: 60,
     waitText: "30 to 60 seconds",
     model: "google/gemini-nano-banana-2.1"
@@ -143,7 +136,6 @@ export const CREDIT_PACKAGES: ICreditPackage[] = [
   },
 ];
 
-/** Credits a new User gets at sign-up (the Free credit), whichever path creates the row. */
 export const FREE_SIGNUP_CREDITS = 1;
 
 export const RATE_LIMIT = 100;

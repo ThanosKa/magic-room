@@ -3,14 +3,6 @@
 import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 
-/**
- * Shown over the user's photo while the redesign is being made (30 to 60 s,
- * about 2 minutes on Ultra). Status lines appear on a schedule measured from
- * the start time and stretched to the tier's usual wait, so the screen is right
- * again as soon as a background tab comes back to the front.
- */
-
-// The step times below are written for a one-minute wait.
 const BASE_SECONDS = 60;
 
 function waitSteps(styleName: string) {
@@ -50,9 +42,7 @@ export function WaitState({
 }: {
     startedAt: number;
     styleName: string;
-    /** The tier's usual wait. */
     expectedSeconds?: number;
-    /** The same wait in words: "30 to 60 seconds", "about 2 minutes". */
     expectedText?: string;
 }) {
     const elapsed = useElapsedSeconds(startedAt);
@@ -97,7 +87,6 @@ export function WaitState({
                 })}
             </ol>
 
-            {/* One polite announcement per new line, not per second. */}
             <p className="sr-only" role="status" aria-live="polite">
                 {current.text}
             </p>

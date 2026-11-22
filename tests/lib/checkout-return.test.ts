@@ -1,11 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { readCheckoutReturn, waitForPurchasedCredits } from "@/lib/checkout-return";
 
-/**
- * Stripe sends the buyer back to /pricing?success=true (paid) or
- * /pricing?success=false (cancelled), see app/api/checkout/route.ts.
- */
-
 function returnFrom(href: string) {
   return readCheckoutReturn(new URL(href, "https://magic-room.test").searchParams);
 }
@@ -26,10 +21,6 @@ describe("readCheckoutReturn", () => {
   });
 });
 
-/**
- * Credits are added by the Stripe webhook, which can land a few seconds after
- * the buyer is back on /pricing. The page re-reads the balance until it grows.
- */
 describe("waitForPurchasedCredits", () => {
   const noWait = async () => {};
 

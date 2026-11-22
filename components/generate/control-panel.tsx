@@ -10,22 +10,7 @@ import { useKeyboardInset } from "@/components/generate/use-keyboard-inset";
 import { QualitySwitch, RoomTypePicker, StylePicker } from "@/components/generate/option-pickers";
 import type { Quality, RoomType, Theme } from "@/types";
 
-/*
- * Every choice of the tool in one panel: room type, style, quality and the
- * note in a body that scrolls on its own, then a footer that never leaves the
- * screen with the message slot and the Generate button (with its cost).
- *
- * Desktop (>= 1024): a column beside the photo canvas, as tall as the canvas.
- * Phone: a bottom sheet. Collapsed it is only the footer (a summary of the
- * choices, the message slot and Generate); tapping or swiping the summary up
- * slides the body up from behind the footer. The body moves with `transform`
- * only (CSS transition); while a finger drags, it follows the finger directly
- * and the release snaps it open or shut with the same transition, so no
- * animation library is needed.
- */
-
 const DESKTOP = "(min-width: 1024px)";
-// A drag past a quarter of the body, or a flick faster than this (px/ms), opens or closes the sheet.
 const FLICK_VELOCITY = 0.11;
 const DRAG_SLOP = 6;
 
@@ -38,14 +23,11 @@ interface ControlPanelProps {
     onQualityChange: (value: Quality) => void;
     note: string;
     onNoteChange: (value: string) => void;
-    /** "Bedroom · Japandi · Standard" */
     summary: string;
-    /** Locked while a design is being made. */
     generating: boolean;
     hasResult: boolean;
     canGenerate: boolean;
     onGenerate: () => void;
-    /** What goes in the message slot right above the button. */
     messages: React.ReactNode;
     className?: string;
 }
@@ -68,8 +50,6 @@ export function ControlPanel({
     className,
 }: ControlPanelProps) {
     const [expanded, setExpandedState] = useState(false);
-    // The open sheet is `fixed` to the bottom of the screen (wherever the page
-    // was scrolled); its slot keeps the height it had so the page does not move.
     const [slotHeight, setSlotHeight] = useState<number | undefined>(undefined);
     const slotRef = useRef<HTMLDivElement>(null);
     const setExpanded = (open: boolean) => {
@@ -82,7 +62,6 @@ export function ControlPanel({
     const backdropRef = useRef<HTMLDivElement>(null);
     const noteRef = useRef<HTMLTextAreaElement>(null);
     const toggleRef = useRef<HTMLButtonElement>(null);
-    // Where focus goes after the note opens or closes (only after a click).
     const focusNext = useRef<"note" | "toggle" | null>(null);
     const keyboardInset = useKeyboardInset(noteOpen && noteFocused);
     const cost = QUALITY_OPTIONS[quality].credits;
@@ -95,7 +74,6 @@ export function ControlPanel({
         if (target === noteRef.current) noteRef.current?.scrollIntoView?.({ block: "nearest" });
     }, [noteOpen]);
 
-    // The open sheet holds the page still (the page behind is dimmed), on phones only.
     useEffect(() => {
         if (!expanded || window.matchMedia?.(DESKTOP).matches) return;
         const html = document.documentElement;
@@ -117,7 +95,6 @@ export function ControlPanel({
     };
 
     const generate = () => {
-        // The wait shows on the photo: get the sheet out of its way.
         setExpanded(false);
         onGenerate();
     };
@@ -129,7 +106,6 @@ export function ControlPanel({
             ref={slotRef}
             style={expanded ? { minHeight: slotHeight } : undefined}
             className={cn(
-                // Phone: stuck to the bottom of the screen, at the end of the tool.
                 "sticky bottom-0 -mx-5 mt-auto sm:-mx-6",
                 expanded ? "z-50" : "z-30",
                 "lg:static lg:z-auto lg:mx-0 lg:mt-0 lg:flex lg:min-h-0 lg:flex-col",
@@ -157,7 +133,6 @@ export function ControlPanel({
                     "lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-clip lg:rounded-3xl lg:border lg:border-line lg:bg-paper",
                 )}
             >
-                {/* Phone only: dims the page behind the open sheet; a tap closes it. */}
                 <div
                     ref={backdropRef}
                     aria-hidden="true"
@@ -173,14 +148,12 @@ export function ControlPanel({
                     id="generate-choices"
                     data-panel-body
                     className={cn(
-                        // Phone: a layer resting on top of the footer, slid down behind it when collapsed.
                         "absolute inset-x-0 bottom-full flex max-h-[calc(100svh-100%-76px-var(--kb,0px))] flex-col rounded-t-3xl bg-paper shadow-float",
                         "transition-[transform,visibility] duration-[360ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-[visibility]",
                         !expanded && "translate-y-full invisible",
                         "lg:visible lg:static lg:max-h-none lg:min-h-0 lg:flex-1 lg:translate-y-0 lg:rounded-none lg:shadow-none lg:transition-none",
                     )}
                 >
-                    {/* Drag down (or tap) to close. */}
                     <div
                         aria-hidden="true"
                         {...drag.handleProps}
@@ -191,7 +164,6 @@ export function ControlPanel({
                     </div>
 
                     <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-6 sm:px-6 lg:px-5 lg:pt-5">
-                        {/* Locked while a design is being made. */}
                         <fieldset disabled={generating} className="min-w-0 space-y-7">
                             <legend className="sr-only">Your choices</legend>
                             <RoomTypePicker value={roomType} onChange={onRoomTypeChange} />
@@ -263,7 +235,6 @@ export function ControlPanel({
                                             onBlur={() => setNoteFocused(false)}
                                             onKeyDown={(e) => {
                                                 if (e.key === "Escape") {
-                                                    // Closes the note only, not the sheet around it.
                                                     e.stopPropagation();
                                                     closeNote();
                                                 }
@@ -291,7 +262,6 @@ export function ControlPanel({
                         "lg:rounded-none lg:px-5 lg:pb-5 lg:pt-4 lg:shadow-none",
                     )}
                 >
-                    {/* Phone only: the summary is the sheet's handle (tap, or swipe up and down). */}
                     <button
                         type="button"
                         {...drag.handleProps}
@@ -304,7 +274,6 @@ export function ControlPanel({
                             aria-hidden="true"
                             className={cn(
                                 "mx-auto mb-2 h-1 w-10 rounded-full bg-ink/20 transition-opacity duration-200 ease-out motion-reduce:transition-none",
-                                // Open, the body's own handle is the one at the top.
                                 expanded && "opacity-0"
                             )}
                         />
@@ -356,13 +325,6 @@ export function ControlPanel({
     );
 }
 
-/**
- * Swipe on the sheet's handles (phone only). While a finger drags, the body
- * follows it (inline transform, no transition, no re-render); on release a
- * quarter of the way or a flick decides open or shut, and removing the inline
- * styles lets the class transition carry the body from where the finger left it.
- * A press that does not move stays a tap (the handle's click).
- */
 function useSheetDrag({
     bodyRef,
     backdropRef,
@@ -394,7 +356,6 @@ function useSheetDrag({
     };
 
     const onPointerDown = (e: ReactPointerEvent) => {
-        // One finger at a time; the desktop panel does not move.
         if (drag.current || e.button !== 0 || window.matchMedia?.(DESKTOP).matches) return;
         const body = bodyRef.current;
         if (!body) return;
@@ -415,7 +376,6 @@ function useSheetDrag({
         const dy = e.clientY - d.y0;
         if (!d.moved && Math.abs(dy) < DRAG_SLOP) return;
         d.moved = true;
-        // The body stays attached to the footer: between fully open (0) and fully behind it (its height).
         const offset = Math.min(d.height, Math.max(0, (expanded ? 0 : d.height) + dy));
         body.style.transition = "none";
         body.style.visibility = "visible";
@@ -449,7 +409,6 @@ function useSheetDrag({
             onPointerUp: onPointerEnd,
             onPointerCancel: onPointerEnd,
         },
-        /** Runs a handle's tap action, unless the click is the end of a drag. */
         tap: (action: () => void) => {
             if (swallowClick.current) {
                 swallowClick.current = false;

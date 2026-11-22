@@ -1,8 +1,3 @@
-// Why this is not inside lib/openrouter.ts: calls inside one module do not pass
-// through `vi.mock`. If designRoom lived there, it would call the real
-// generateDesign and buildDesignPrompt, hiding the mocked generateDesign from
-// the route tests and blinding the prompt-baseline test. So it imports both
-// through the OpenRouter module's exports.
 import { buildDesignPrompt, generateDesign } from "@/lib/openrouter";
 import { logger } from "@/lib/logger";
 import type { Quality, RoomType, Theme } from "@/types";
@@ -37,7 +32,6 @@ export async function designRoom({
         const prompt = buildDesignPrompt({
             roomType: req.roomType,
             theme: req.theme,
-            quality: req.quality,
             customPrompt: req.note,
         });
         logger.info({ promptLength: prompt.length }, "[Generate] Prompt built");

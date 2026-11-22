@@ -15,12 +15,6 @@ import { cn } from "@/lib/utils";
 
 const IMG = "/images/designs";
 
-/*
- * Links to /generate don't prefetch: for signed-out visitors the tool
- * redirects to the Clerk sign-in on another origin, and every prefetch of
- * that redirect fails with a CORS error in the console.
- */
-
 const STEPS = [
   {
     title: "Upload one photo",
@@ -71,11 +65,6 @@ const COMPARE = [
   { href: "/virtual-staging", label: "AI virtual staging for real estate" },
 ];
 
-/*
- * Guides linked from the homepage body (not only from /blog), so Google finds
- * the posts it had not crawled yet (GSC URL inspection, 2026-11-01). Anchors
- * carry each post's target query.
- */
 const GUIDES = [
   { slug: "how-to-redesign-living-room-with-ai", label: "How to redesign a living room with AI" },
   { slug: "bedroom-redesign-with-ai", label: "Bedroom redesign with AI: 8 styles" },
@@ -87,11 +76,6 @@ const GUIDES = [
   { slug: "modern-vs-minimalist-interior-design", label: "Modern vs minimalist interior design" },
 ];
 
-/**
- * Every style tile shows that style's living room. It links to the style's
- * design page when that page is indexable; otherwise (pruned pages are never
- * linked, see PRUNED.md) it opens the tool with the style already chosen.
- */
 const STYLE_TILES = THEME_IDS.map((slug) => {
   const name = THEMES[slug];
   const designSlug = `${slug}-living-room`;
@@ -167,7 +151,6 @@ export function HomeContent() {
     <RevealRoot>
       <HomeHero />
 
-      {/* How it works */}
       <section aria-labelledby="how-title" className={SECTION}>
         <div className="container-page">
           <Label>How it works</Label>
@@ -195,7 +178,6 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Styles (night band) */}
       <section
         aria-labelledby="styles-title"
         className={cn(SECTION, "mx-2 rounded-3xl bg-night text-cream sm:mx-4 sm:rounded-4xl")}
@@ -264,7 +246,6 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Before and after */}
       <section aria-labelledby="cmp-title" className={SECTION}>
         <div className="container-page">
           <HeadSplit note="One run, one photo. The window, the corner and the room's proportions stay put; the tired furniture and peeling walls don't.">
@@ -284,7 +265,6 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Facts */}
       <section aria-label="Privacy, price and speed" className="bg-paper-2 py-22 lg:py-30">
         <div className="container-page">
           <ul className="grid gap-10 lg:grid-cols-3 lg:gap-12">
@@ -300,7 +280,6 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Explore */}
       <section aria-labelledby="explore-title" className={SECTION}>
         <div className="container-page">
           <Label>Explore</Label>
@@ -366,7 +345,6 @@ export function HomeContent() {
 
       <FAQSection items={HOME_FAQ} />
 
-      {/* Closing */}
       <section
         aria-labelledby="close-title"
         className="relative isolate mx-2 mb-2 flex min-h-[78vh] items-end overflow-hidden rounded-3xl sm:mx-4 sm:mb-4 sm:min-h-[86vh] sm:rounded-4xl"

@@ -5,12 +5,11 @@ export default defineConfig({
     name: "magic-room",
     entrypoint: "vinext/server/fetch-handler",
     compatibilityDate: "2026-11-07",
-    // enable_request_signal: request.signal aborts when the client disconnects,
-    // which /api/generate uses to stop the AI call and refund the credits.
+    // https://developers.cloudflare.com/workers/configuration/compatibility-flags/ (enable_request_signal: request.signal aborts when the client disconnects)
     compatibilityFlags: ["nodejs_compat", "enable_request_signal"],
     observability: { enabled: true },
     domains: ["magic-room.dev"],
-    // Declaring a domain would otherwise switch workers.dev off.
+    // https://developers.cloudflare.com/workers/configuration/routing/workers-dev/ (workers.dev is off once a domain is declared)
     workersDev: true,
     assets: {
       htmlHandling: "none",
@@ -20,8 +19,6 @@ export default defineConfig({
     env: {
       ASSETS: bindings.assets(),
       IMAGES: bindings.images(),
-      // Only declared names reach the Worker's process.env. Values come from
-      // .env.<mode>.local locally and from Worker secrets once deployed.
       CLERK_SECRET_KEY: bindings.secret(),
       CLERK_WEBHOOK_SECRET: bindings.secret(),
       LOG_LEVEL: bindings.secret(),

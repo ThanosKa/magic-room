@@ -54,8 +54,6 @@ export async function checkRateLimit(
       resetAt,
     };
   } catch (error) {
-    // Fails closed: the generate route answers 500 before charging anything,
-    // rather than running without its limit during a Redis outage.
     logger.error({ err: error }, "Redis error, rate limit unavailable");
     throw error;
   }
@@ -128,7 +126,6 @@ export async function getRateLimitStatus(userId: string) {
   }
 }
 
-// Webhook deduplication (24-hour TTL for webhook event IDs)
 const WEBHOOK_DEDUP_TTL = 24 * 60 * 60;
 
 export async function isWebhookProcessed({
@@ -147,7 +144,6 @@ export async function isWebhookProcessed({
       { err: error, webhookType, eventId },
       "Redis error checking webhook status; allowing processing"
     );
-    // On Redis error, allow processing (fail open for webhook safety)
     return false;
   }
 }

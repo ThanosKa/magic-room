@@ -110,7 +110,7 @@ describe("Checkout Route", () => {
       expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith({
         userId: TEST_USER.id,
         packageId: "starter",
-        stripePriceId: "", // stripePriceId is empty from env in tests
+        stripePriceId: "",
         successUrl: "http://localhost:3000/pricing?success=true",
         cancelUrl: "http://localhost:3000/pricing?success=false",
         customerEmail: TEST_USER.email,
@@ -136,7 +136,7 @@ describe("Checkout Route", () => {
       expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith({
         userId: TEST_USER.id,
         packageId: "growth",
-        stripePriceId: "", // stripePriceId is empty from env in tests
+        stripePriceId: "",
         successUrl: "http://localhost:3000/pricing?success=true",
         cancelUrl: "http://localhost:3000/pricing?success=false",
         customerEmail: TEST_USER.email,
@@ -162,7 +162,7 @@ describe("Checkout Route", () => {
       expect(stripeLib.createCheckoutSession).toHaveBeenCalledWith({
         userId: TEST_USER.id,
         packageId: "premium",
-        stripePriceId: "", // stripePriceId is empty from env in tests
+        stripePriceId: "",
         successUrl: "http://localhost:3000/pricing?success=true",
         cancelUrl: "http://localhost:3000/pricing?success=false",
         customerEmail: TEST_USER.email,

@@ -3,8 +3,9 @@ import { SITE_URL, SITE_NAME } from "./config";
 export function graphSchema(schemas: Record<string, unknown>[]) {
     return {
         "@context": "https://schema.org",
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        "@graph": schemas.map(({ "@context": _ctx, ...rest }) => rest),
+        "@graph": schemas.map((schema) =>
+            Object.fromEntries(Object.entries(schema).filter(([key]) => key !== "@context")),
+        ),
     };
 }
 
@@ -58,12 +59,6 @@ export function blogPostingSchema(input: BlogPostingSchemaInput) {
         headline: input.title,
         description: input.description,
         image: input.image ?? `${SITE_URL}/opengraph-image.png`,
-        // The author's `url` now points at the on-site /about page rather than
-        // straight out to LinkedIn, and `@id` matches the Person node declared
-        // there. That gives Google one author entity resolvable across the site
-        // instead of a bare name per post — the difference between an
-        // attributable author and an anonymous byline for E-E-A-T. Off-site
-        // profiles move to sameAs, where they belong.
         author: {
             "@type": "Person",
             "@id": `${SITE_URL}/about#person`,
@@ -286,18 +281,6 @@ interface SoftwareApplicationSchemaInput {
     description?: string;
     applicationCategory?: string;
     operatingSystem?: string;
-    /**
-     * Attach the €9.99–€29.99 AggregateOffer.
-     *
-     * Defaults to FALSE, and deliberately so. This entity is rendered sitewide
-     * from the root layout, which previously put a price range on all ~230
-     * pages including `/design/art-deco-bedroom` and every blog post. That is
-     * what produced the "Product snippets: 82 impressions, 0 clicks, position
-     * 13.09" row in Search Console: a price badge attached to purely
-     * informational results, where it reads as an ad and suppresses the click.
-     * Only pages where buying is the actual intent should pass `true`.
-     */
-    includeOffers?: boolean;
 }
 
 export function softwareApplicationSchema(input?: SoftwareApplicationSchemaInput) {
@@ -311,18 +294,14 @@ export function softwareApplicationSchema(input?: SoftwareApplicationSchemaInput
         operatingSystem: input?.operatingSystem ?? "Web",
         url: SITE_URL,
         publisher: { "@id": `${SITE_URL}#organization` },
-        ...(input?.includeOffers
-            ? {
-                offers: {
-                    "@type": "AggregateOffer",
-                    lowPrice: 9.99,
-                    highPrice: 29.99,
-                    priceCurrency: "EUR",
-                    offerCount: 3,
-                    availability: "https://schema.org/InStock",
-                    url: `${SITE_URL}/pricing`,
-                },
-            }
-            : {}),
+        offers: {
+            "@type": "AggregateOffer",
+            lowPrice: 9.99,
+            highPrice: 29.99,
+            priceCurrency: "EUR",
+            offerCount: 3,
+            availability: "https://schema.org/InStock",
+            url: `${SITE_URL}/pricing`,
+        },
     };
 }

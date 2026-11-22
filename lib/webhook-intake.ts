@@ -5,19 +5,6 @@ import { z } from "zod";
 import { parseWebhookEvent } from "@/lib/stripe";
 import { logger } from "@/lib/logger";
 
-/*
- * Webhook intake: the one place that reads a webhook's raw body, verifies its
- * signature and returns either a verified, typed event or a ready rejection.
- *
- * It unifies verification only. The duplicate rules stay in each route because
- * they really differ (Stripe marks after the grant, Clerk marks per event
- * outcome). One shared webhook flow was rejected because the two providers'
- * handling shares nothing past verification; a generic
- * `verifyWebhook(provider, ...)` was rejected because the providers differ in
- * where headers come from, which library checks them and which statuses they
- * answer, so one signature would only hide those differences behind a switch.
- */
-
 export type Intake<E> =
   | { ok: true; event: E; deliveryId: string }
   | { ok: false; response: Response };

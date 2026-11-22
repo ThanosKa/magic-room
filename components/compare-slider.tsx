@@ -7,40 +7,25 @@ import { cn } from "@/lib/utils";
 export interface CompareImage {
     src: string;
     alt: string;
-    /** Shown instead if `src` fails to load. */
     fallback?: string;
 }
 
 export interface CompareSliderProps {
     before: CompareImage;
     after: CompareImage;
-    /**
-     * Aspect ratio of the frame as a number (`width / height` of the photo, e.g.
-     * a portrait upload). Without it the frame is 4:3, or whatever an `aspect-*`
-     * class in `className` says (responsive classes work).
-     */
     aspectRatio?: number;
-    /** next/image `sizes` for both images. */
     sizes?: string;
-    /** Preload both images (above-the-fold sliders only). */
     priority?: boolean;
-    /** Accessible name of the slider. */
     label?: string;
-    /** Width, radius, aspect, margins. The slider fills its width; the aspect ratio sets the height. */
     className?: string;
 }
 
 const STEP = 5;
 const BIG_STEP = 10;
-const TOUCH_SLOP = 6; // px a finger must move sideways (more than up/down) to start dragging
-const TAP_RADIUS = 10; // px a finger may wobble and still count as a tap
+const TOUCH_SLOP = 6;
+const TAP_RADIUS = 10;
 const clamp = (n: number) => Math.min(100, Math.max(0, n));
 
-/**
- * Before/after comparison. Drag (mouse, pen or one finger), tap, or use the
- * keyboard on the hidden native range: arrows move 5%, Shift+arrows and
- * Page Up/Down 10%, Home/End jump to the edges. Styles live in app/motion.css.
- */
 export function CompareSlider({
     before,
     after,
@@ -52,8 +37,6 @@ export function CompareSlider({
 }: CompareSliderProps) {
     const [pos, setPos] = useState(50);
     const box = useRef<HTMLDivElement>(null);
-    // The one pointer allowed to drag; any other finger is ignored until it lifts.
-    // `engaged` is false while a finger has not yet shown it is moving sideways.
     const drag = useRef<{ id: number; x0: number; y0: number; engaged: boolean } | null>(null);
     const value = Math.round(pos);
 
@@ -69,9 +52,6 @@ export function CompareSlider({
 
     const onPointerDown = (e: PointerEvent) => {
         if (drag.current || e.button !== 0) return;
-        // A mouse or pen jumps straight to the press. A finger waits for a
-        // sideways move or a tap, so starting a page scroll on the image does
-        // not jump the divider (the browser keeps vertical pans: touch-action: pan-y).
         const touch = e.pointerType === "touch";
         drag.current = { id: e.pointerId, x0: e.clientX, y0: e.clientY, engaged: !touch };
         e.currentTarget.setPointerCapture?.(e.pointerId);
@@ -111,7 +91,7 @@ export function CompareSlider({
             End: 100,
         };
         if (!(e.key in next)) return;
-        e.preventDefault(); // the native range would step by 1 on top of ours
+        e.preventDefault();
         setPos(clamp(next[e.key]));
     };
 
@@ -160,7 +140,6 @@ export function CompareSlider({
     );
 }
 
-// Memoised: a drag re-renders the slider on every move, the images must not.
 const CompareLayer = memo(function CompareLayer({
     image,
     sizes,
@@ -170,7 +149,6 @@ const CompareLayer = memo(function CompareLayer({
     sizes: string;
     priority: boolean;
 }) {
-    // Remember which src failed, so a new src (e.g. a new result) is tried again.
     const [failed, setFailed] = useState<string | null>(null);
     const src = failed === image.src && image.fallback ? image.fallback : image.src;
     return (

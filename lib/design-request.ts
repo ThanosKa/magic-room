@@ -1,6 +1,5 @@
 import type { IGenerateResponse, Quality, RoomType, Theme } from "@/types";
 
-/** What /api/generate answered, sorted into the cases the screen tells apart. */
 export type DesignAnswer =
     | { kind: "design"; id: string; outputUrls: string[] }
     | { kind: "signed-out" }
@@ -9,9 +8,9 @@ export type DesignAnswer =
     | { kind: "timed-out" }
     | { kind: "not-enough-credits" }
     | { kind: "too-many"; resetAt?: number }
-    | { kind: "failed-refunded" } // status >= 500 with success: false
-    | { kind: "failed" } // anything else, including 2xx without an image
-    | { kind: "offline" }; // fetch rejected, no answer
+    | { kind: "failed-refunded" }
+    | { kind: "failed" }
+    | { kind: "offline" };
 
 export interface DesignChoices {
     photo: string;
@@ -30,7 +29,6 @@ function classify({ status, ok, body }: { status: number; ok: boolean; body: Gen
     if (status === 401) return { kind: "signed-out" };
     if (status === 404) return { kind: "account-missing" };
     if (status === 400) return { kind: "photo-rejected" };
-    // The host gave up before the server answered (no JSON body).
     if (status === 408 || status === 502 || status === 503 || status === 504) return { kind: "timed-out" };
     if (status === 402) return { kind: "not-enough-credits" };
     if (status === 429) {
@@ -55,7 +53,6 @@ export async function requestDesign({ photo, roomType, theme, quality, note }: D
                 ...(customPrompt ? { customPrompt } : {}),
             }),
         });
-        // A host timeout page is not JSON: the status alone decides then.
         const body: GenerateBody = (await response.json().catch(() => null)) ?? {};
         return classify({ status: response.status, ok: response.ok, body });
     } catch {

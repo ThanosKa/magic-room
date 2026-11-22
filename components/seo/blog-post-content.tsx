@@ -28,12 +28,8 @@ function formatDate(dateStr: string): string {
     });
 }
 
-// Reading column: about 68 characters per line, the measure long-form type is
-// comfortable at. Header, body and related designs share the same left edge.
 const MEASURE = "max-w-[68ch]";
 
-// Body copy is ink at 82% rather than ink-2 (68%): long articles read better
-// with a little more contrast than the short secondary text elsewhere.
 const BODY_TEXT = "text-[17px] leading-[1.72] text-ink/[0.82] md:text-[18px]";
 
 function renderSection({ section, index }: { section: IBlogSection; index: number }): React.ReactNode {
@@ -107,7 +103,6 @@ function renderSection({ section, index }: { section: IBlogSection; index: numbe
             );
         case "table":
             return (
-                // Scrolls inside its own hairline box on narrow screens, never the page.
                 <div key={index} className="my-2 overflow-x-auto rounded-xl border border-line bg-background">
                     <table className="w-full min-w-[600px] border-collapse text-left text-[15px] leading-snug">
                         <thead className="bg-paper-2">
@@ -164,26 +159,20 @@ export function BlogPostContent({ post, relatedPostLinks = [], comparisonLinks =
         { name: post.title, href: `/blog/${post.slug}` },
     ];
 
-    // Only link indexable design pages (pruned combos are noindex; lib/seo/pruned.ts).
     const linkedDesignSlugs = post.relatedDesignSlugs.filter(isPriorityDesignSlug);
 
-    // Insert CTA after the 4th section
     const sectionsWithCta = post.sections;
 
     return (
         <PageTransition>
-            {/* Every block sits in the same centred 5xl column as RelatedLinks,
-                so breadcrumb, article, link lists and FAQ share one left edge. */}
             <div className="container-page">
                 <div className="mx-auto max-w-5xl">
                     <BreadcrumbNav items={breadcrumbItems} />
                 </div>
             </div>
 
-            {/* Article */}
             <article className="container-page pb-16 pt-8 md:pb-24 md:pt-14">
                 <div className="mx-auto max-w-5xl">
-                    {/* Header */}
                     <header className="mb-10 max-w-4xl md:mb-14">
                         <h1 className="animate-rise font-serif text-[clamp(42px,5.6vw,80px)] font-normal leading-[0.98] tracking-[-0.025em] text-ink text-balance">
                             {post.title}
@@ -210,15 +199,10 @@ export function BlogPostContent({ post, relatedPostLinks = [], comparisonLinks =
                         </div>
                     </header>
 
-                    {/* Body */}
                     <div className={`${MEASURE} flex flex-col gap-6 border-t border-line pt-10 md:pt-12`}>
                         {sectionsWithCta.map((section, index) => renderSection({ section, index }))}
                     </div>
 
-                    {/* Related design pages.
-                    Anchor now carries the target page's real query phrase
-                    ("Modern Living Room design ideas") rather than a
-                    generic call to action. */}
                     {linkedDesignSlugs.length > 0 && (
                         <div className={`${MEASURE} mt-14 border-t border-line pt-8`}>
                             <h3 className="text-[11px] font-medium uppercase tracking-[0.18em] text-ink-3">
@@ -241,16 +225,8 @@ export function BlogPostContent({ post, relatedPostLinks = [], comparisonLinks =
                 </div>
             </article>
 
-            {/* Blog -> blog. Every post previously had exactly one inbound
-                internal link (the /blog index), which is the reason the whole
-                blog cluster sat in "Discovered - currently not indexed". */}
             <RelatedLinks heading="Related guides" links={relatedPostLinks} className="bg-paper-2 py-16 md:py-24" />
 
-            {/* Blog -> comparison cluster, with query-phrase anchors.
-                The old block linked to /alternatives/[slug] using the anchor
-                "Magic Room vs [name]", which is the /vs/[slug] page's query
-                phrase — the anchor text and the target were mismatched on every
-                one of the 13 posts. */}
             <RelatedLinks
                 heading="Compare AI interior design tools"
                 intro="Magic Room is one of several AI room redesign tools. These pages break down the differences in AI model, photo retention, and what a given number of designs actually costs."
@@ -258,7 +234,6 @@ export function BlogPostContent({ post, relatedPostLinks = [], comparisonLinks =
                 className="bg-background py-16 md:py-24"
             />
 
-            {/* FAQ, in the homepage FAQ layout (title left and sticky, list right). */}
             {post.faqs && post.faqs.length > 0 && (
                 <section className="border-t border-line bg-background py-16 md:py-24">
                     <div className="container-page">

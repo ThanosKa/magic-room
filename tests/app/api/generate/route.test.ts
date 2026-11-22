@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Server code: a jsdom AbortSignal is not accepted by Node's Request.
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "@/app/api/generate/route";
 import * as supabaseLib from "@/lib/supabase";
@@ -15,7 +14,6 @@ vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
 }));
 
-// `after` hands a promise to the platform's waitUntil (vinext on Workers).
 vi.mock("next/server", () => ({
   after: vi.fn(),
 }));
@@ -69,8 +67,6 @@ const TEST_USER = {
 
 const TEST_BASE64_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 
-// Routes the Balance functions to the in-memory ledger, so a test can check what
-// the User ended up with instead of which helper was called.
 function useInMemoryLedger(balance: number): void {
   inMemoryLedger.reset();
   inMemoryLedger.setBalance(TEST_USER.id, balance);
@@ -299,8 +295,6 @@ describe("Generate Route - Quality Feature", () => {
       ]);
     });
 
-    // The screen tells the user "your credits were refunded" on this answer,
-    // so it must also hold when the AI call throws (network, API error).
     it("refunds the credits and says so when the AI call throws", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       useInMemoryLedger(10);
@@ -517,15 +511,11 @@ describe("Generate Route - Quality Feature", () => {
     });
   });
 
-  // On Workers a client disconnect cancels the request's work unless it was
-  // handed to waitUntil, which then gets about 30 s more. The tab closing must
-  // stop the AI call and give the credits back inside that window.
   describe("Browser disconnects mid-generation", () => {
     it("stops the AI call, refunds the credits and keeps the request alive until the refund is written", async () => {
       vi.mocked(supabaseLib.ensureUserExists).mockResolvedValue(TEST_USER);
       useInMemoryLedger(10);
       vi.mocked(openrouterLib.buildDesignPrompt).mockReturnValue("test prompt");
-      // Like fetch: never answers on its own, rejects once its signal aborts.
       vi.mocked(openrouterLib.generateDesign).mockImplementation(
         ({ signal }) =>
           new Promise((_resolve, reject) => {
@@ -546,7 +536,6 @@ describe("Generate Route - Quality Feature", () => {
         signal: browser.signal,
       });
 
-      // Nobody reads the answer: the tab is gone.
       void POST(request);
       await vi.waitFor(() => expect(openrouterLib.generateDesign).toHaveBeenCalled());
       expect(inMemoryLedger.balanceOf(TEST_USER.id)).toBe(8);

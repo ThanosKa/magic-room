@@ -1,20 +1,13 @@
-/*
- * Motion: only what Tailwind can't express on its own.
- * Keyframes (exposed as Tailwind `animate-*` utilities), reveal-on-scroll,
- * the before/after compare slider, and their reduced-motion fallbacks.
- * Everything else (hover, press, fades, menus, dialogs) is Tailwind classes.
- * Values ported from the approved test-page design (now the homepage).
- */
 
 @theme static {
-  --animate-rise: rise 0.9s var(--ease-out) both; /* hero entrance */
-  --animate-frame-in: frame-in 1.2s var(--ease-expo) 0.2s both; /* hero image frame */
-  --animate-word-in: word-in 0.7s var(--ease-expo) both; /* rotating word */
-  --animate-wipe: wipe 0.9s var(--ease-wipe) both; /* style-change wipe, left edge */
-  --animate-settle: settle 1.6s var(--ease-expo) both; /* image inside a wipe */
+  --animate-rise: rise 0.9s var(--ease-out) both;
+  --animate-frame-in: frame-in 1.2s var(--ease-expo) 0.2s both;
+  --animate-word-in: word-in 0.7s var(--ease-expo) both;
+  --animate-wipe: wipe 0.9s var(--ease-wipe) both;
+  --animate-settle: settle 1.6s var(--ease-expo) both;
   --animate-fade: fade 300ms ease both;
-  --animate-bar-run: bar-run var(--cycle, 3600ms) linear both; /* timer hairline */
-  --animate-lift-in: lift-in 250ms var(--ease-out) both; /* UI entrance: menu items, the wait card */
+  --animate-bar-run: bar-run var(--cycle, 3600ms) linear both;
+  --animate-lift-in: lift-in 250ms var(--ease-out) both;
 
   @keyframes rise {
     from {
@@ -99,14 +92,7 @@
   }
 }
 
-/* In the components layer, so Tailwind utilities can still override. */
 @layer components {
-  /* ───────── Reveal on scroll ─────────
-   * Mark elements with `data-reveal` and call useReveal(ref) on a wrapper.
-   * The hook adds `.reveal-ready` to the wrapper (so content stays visible
-   * without JS) and `.is-in` to each element once it scrolls into view.
-   * Per element: style={{ "--reveal-delay": "120ms", "--reveal-y": "48px" }}.
-   */
   .reveal-ready [data-reveal] {
     opacity: 0;
     transform: translate3d(0, var(--reveal-y, 28px), 0);
@@ -120,12 +106,6 @@
     transform: none;
   }
 
-  /* ───────── Before/after compare slider ─────────
-   * Markup: .compare (set --pos: 0–100%) > after image, .compare-before > before
-   * image, .compare-tag (+ -left / -right), .compare-handle > .compare-knob,
-   * and a native range input.compare-range for keyboard and screen readers.
-   * Size, aspect ratio and radius are set with Tailwind on .compare.
-   */
   .compare {
     --pos: 50%;
     position: relative;
@@ -148,9 +128,6 @@
     clip-path: inset(0 calc(100% - var(--pos)) 0 0);
   }
 
-  /* The handle is a frame-sized layer whose right edge is the divider. It moves
-   * with transform (its own width = the frame's, so the % lands on --pos),
-   * not `left`, so dragging never re-runs layout. */
   .compare-handle {
     position: absolute;
     inset: 0;
@@ -228,11 +205,6 @@
   }
 }
 
-/* ───────── Reduced motion ─────────
- * Built in, so every use of the utilities above gets it for free.
- * The wipe becomes a short fade; entrances, timers and reveals stop.
- * (The timer bar not running also stops anything that advances on its end.)
- */
 @media (prefers-reduced-motion: reduce) {
   .animate-rise,
   .animate-frame-in,

@@ -10,7 +10,6 @@ function subscribe(onChange: () => void) {
   return () => mq.removeEventListener("change", onChange);
 }
 
-/** True when the visitor asked for reduced motion. False on the server. */
 export function usePrefersReducedMotion() {
   return useSyncExternalStore(
     subscribe,

@@ -41,17 +41,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         return {};
     }
 
-    // Non-priority (theme, room) combos still render so users browsing the
-    // catalogue see a real page, but are kept out of the index. This pulls
-    // the site below Google's scaled-content threshold and concentrates
-    // ranking signals on the pages we actually want to win.
     const indexable = isPriorityDesignSlug(slug);
 
     return createMetadata({
-        // Absolute: the root layout's "%s | Magic Room" template costs 12
-        // characters of an already-truncated SERP title, spent on a brand no
-        // non-brand searcher recognises. The domain is shown above the title
-        // anyway.
         title: { absolute: page.title },
         description: page.metaDescription,
         path: `/design/${slug}`,
@@ -74,10 +66,6 @@ export default async function DesignSlugPage({ params }: Props) {
     const otherThemes = getSiblingThemes({ designSlug: slug, theme: page.theme, roomType: page.roomType });
     const otherRooms = getSiblingRooms({ designSlug: slug, theme: page.theme, roomType: page.roomType });
 
-    // Contextual (non-nav) links out of the design cluster. Before this, every
-    // design page linked only to siblings, /design, /blog and /pricing — the
-    // blog posts and comparison pages had no inbound links except their own
-    // index page.
     const relatedBlogLinks = getRelatedBlogLinksForDesign({ designSlug: slug, theme: page.theme, roomType: page.roomType });
     const comparisonLinks = getComparisonLinksForDesign(slug);
     const moreDesignLinks = getUnderlinkedDesignLinks({ currentSlug: slug });

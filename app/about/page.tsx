@@ -10,10 +10,6 @@ import { SITE_URL } from "@/lib/seo/config";
 export const metadata: Metadata = aboutMetadata();
 
 const jsonLd = graphSchema([
-  // url is the on-site /about page, not LinkedIn. personSchema derives its @id
-  // from this url, and every BlogPosting author now references
-  // `${SITE_URL}/about#person` — the two must resolve to the same node or the
-  // author entity fragments across the site. LinkedIn stays in sameAs below.
   personSchema({
     name: "Thanos Kazakis",
     url: `${SITE_URL}/about`,

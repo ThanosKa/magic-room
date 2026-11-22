@@ -31,9 +31,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return createMetadata({
-        // Absolute: blog titles are already written to fill the ~60 visible
-        // SERP characters. Appending "| Magic Room" only pushes the
-        // differentiator past the truncation point.
         title: { absolute: post.title },
         description: post.metaDescription,
         path: `/blog/${slug}`,

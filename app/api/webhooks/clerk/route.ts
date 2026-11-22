@@ -27,7 +27,6 @@ export async function POST(request: Request) {
   if (!intake.ok) return intake.response;
   const { event: evt, deliveryId: svixId } = intake;
 
-  // Handle user.created event
   if (evt.type === "user.created") {
     const { id, email_addresses, first_name, last_name, image_url } = evt.data;
     const primaryEmail = email_addresses?.[0]?.email_address || "";
@@ -45,7 +44,6 @@ export async function POST(request: Request) {
           { clerkUserId: id },
           "User already exists, skipping creation"
         );
-        // Mark as processed since this is duplicate
         await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
         return new Response("User already exists", { status: 200 });
       }
@@ -61,7 +59,6 @@ export async function POST(request: Request) {
         return new Response("Error creating user", { status: 500 });
       }
 
-      // Update with additional metadata if available
       if (fullName || image_url) {
         await updateUser({
           clerkUserId: id,
@@ -72,11 +69,8 @@ export async function POST(request: Request) {
         });
       }
 
-      // Mark as processed AFTER successful database operations
       await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
 
-      // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
-      // delay Clerk's 200. A failed email is only logged: it must not fail the webhook.
       keepAliveUntilSettled(
         sendWelcomeEmail({
           to: primaryEmail,
@@ -101,7 +95,6 @@ export async function POST(request: Request) {
     }
   }
 
-  // Handle user.updated event
   if (evt.type === "user.updated") {
     const { id, email_addresses, first_name, last_name, image_url } = evt.data;
 
@@ -147,7 +140,6 @@ export async function POST(request: Request) {
         );
       }
 
-      // Mark as processed AFTER successful database operations
       await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
 
       return new Response("User updated successfully", { status: 200 });
@@ -160,7 +152,6 @@ export async function POST(request: Request) {
     }
   }
 
-  // Handle user.deleted event
   if (evt.type === "user.deleted") {
     const { id } = evt.data;
 
@@ -172,7 +163,6 @@ export async function POST(request: Request) {
           { clerkUserId: id },
           "User already deleted or never created in Supabase"
         );
-        // Mark as processed since this is idempotent
         await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
         return new Response("User already deleted", { status: 200 });
       }
@@ -184,7 +174,6 @@ export async function POST(request: Request) {
         return new Response("Error deleting user", { status: 500 });
       }
 
-      // Mark as processed AFTER successful database operations
       await markWebhookProcessed({ webhookType: "clerk", eventId: svixId });
 
       logger.info({ clerkUserId: id }, "User deleted successfully via webhook");
@@ -198,7 +187,6 @@ export async function POST(request: Request) {
     }
   }
 
-  // Unknown event type - return 200 to prevent retry
   logger.info(
     { eventType: evt.rawType },
     "Unknown Clerk webhook event type, ignoring"

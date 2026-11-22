@@ -7,26 +7,22 @@ import { logger } from "@/lib/logger";
 import { sendPurchaseEmail } from "@/lib/email";
 import { keepAliveUntilSettled } from "@/lib/keep-alive";
 
-// Helper to check if a string looks like a UUID
 function looksLikeUuid(str: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
 }
 
-// Helper to resolve user by identifier (UUID or Clerk ID)
 async function resolveUser(identifier: string | undefined) {
   if (!identifier) {
     return null;
   }
 
   if (looksLikeUuid(identifier)) {
-    // Try to fetch by Supabase UUID first
     const user = await getUserById(identifier);
     if (user) {
       return user;
     }
   }
 
-  // Fallback: treat as Clerk ID
   return ensureUserExists(identifier);
 }
 
@@ -38,7 +34,6 @@ export async function POST(request: Request): Promise<Response> {
     }
     const event = intake.event;
 
-    // Check for duplicate webhook processing (but don't mark yet)
     const isProcessed = await isWebhookProcessed({ webhookType: "stripe", eventId: event.id });
     if (isProcessed) {
       logger.info({ eventId: event.id, eventType: event.type }, "Duplicate Stripe webhook, skipping");
@@ -58,7 +53,6 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Session not paid", { status: 200 });
       }
 
-      // Resolve user by looking at metadata.userId or client_reference_id (should be Supabase UUID)
       const rawUserId = session.metadata?.userId ?? session.client_reference_id ?? undefined;
       const packageId = session.metadata?.packageId ?? undefined;
 
@@ -76,7 +70,6 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Package not found", { status: 404 });
       }
 
-      // Resolve user: try UUID first, then fallback to Clerk ID
       const user = await resolveUser(rawUserId);
       if (!user) {
         logger.error(
@@ -86,7 +79,6 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("User not found", { status: 404 });
       }
 
-      // Use payment_intent if available, else use session.id as the stable idempotency key
       const stripePaymentId = typeof session.payment_intent === "string"
         ? session.payment_intent
         : session.id;
@@ -115,8 +107,6 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Payment already granted", { status: 200 });
       }
 
-      // Sent after the answer (waitUntil on Workers), so a slow Resend cannot
-      // delay Stripe's 200. A failed email is only logged: it must not fail the webhook.
       const customerEmail =
         session.customer_details?.email ?? session.customer_email ?? user.email;
       if (customerEmail) {
@@ -137,7 +127,6 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
 
-    // Reached only after a recorded grant or for events that need no work.
     await markWebhookProcessed({ webhookType: "stripe", eventId: event.id });
 
     return new Response("Webhook processed", { status: 200 });

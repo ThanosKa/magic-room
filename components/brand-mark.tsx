@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-/** Logo + "Magic Room", linking home. Used by the site header and footer. */
 export function BrandMark({ priority = false }: { priority?: boolean }) {
   return (
     <Link

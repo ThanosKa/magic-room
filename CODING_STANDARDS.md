@@ -1,6 +1,6 @@
 # Coding Standards
 
-The rules every diff in this repo is checked against. Writing code: every rule that touches the files you change holds before you finish. Reviewing: check the diff against every rule in turn. `@ts-ignore` is a lint error too. Lint enforces `any`, type assertions (`as const` aside), non-null `!`, `console`, exhaustive `switch` and positional parameters: resolve each lint error in the code itself. `pnpm lint` stays at zero warnings.
+The rules every diff in this repo is checked against. Writing code: every rule that touches the files you change holds before you finish. Reviewing: check the diff against every rule in turn. `@ts-ignore` is a lint error too. Lint enforces `any`, type assertions (`as const` aside), non-null `!`, `console`, exhaustive `switch`, positional parameters and comments: resolve each lint error in the code itself. `pnpm lint` stays at zero warnings.
 
 ## API routes
 

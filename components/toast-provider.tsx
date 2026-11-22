@@ -3,11 +3,6 @@
 import React from "react";
 import { Toaster } from "sonner";
 
-/*
- * Light theme only, coloured with the design tokens. Sonner's own CSS reads
- * these variables from the toaster element, so the inline style wins over it.
- * Errors get a light destructive tint; everything else is paper and ink.
- */
 const toastTokens: React.CSSProperties = {
   fontFamily: "var(--font-sans)",
   "--border-radius": "16px",

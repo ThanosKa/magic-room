@@ -12,7 +12,6 @@ vi.mock("next/navigation", () => ({
     useSearchParams: () => new URLSearchParams(),
 }));
 
-/** The pricing page as plain text, the way a reader (or a crawler) sees it. */
 function pageText(): string {
     const html = renderToString(<PricingContent />);
     const doc = new DOMParser().parseFromString(html, "text/html");

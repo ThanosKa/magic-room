@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Server code: the ledger runs only in API routes.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { grantPurchase, spendCredits } from "@/lib/credit-ledger";
 import { inMemoryLedger } from "./__fixtures__/in-memory-ledger";

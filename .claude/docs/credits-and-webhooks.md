@@ -48,7 +48,7 @@ Money and credit rules. Each one exists to keep a user from being charged twice,
 
 ## Models and prompts (`lib/room-designer.ts`, `lib/openrouter.ts`)
 
-- The generate route reaches the model only through the room designer (`designRoom` in `lib/room-designer.ts`), which builds the prompt, calls `generateDesign` and returns the images or a tagged failure. A provider, model or fallback change happens behind it; the route never imports the prompt builder or `generateDesign`.
+- The generate route reaches the model only through the room designer (`designRoom` in `lib/room-designer.ts`), which builds the prompt, calls `generateDesign` and returns the images or a tagged failure. A provider, model or fallback change happens behind it; the route never imports the prompt builder or `generateDesign`. `designRoom` stays out of `lib/openrouter.ts` on purpose: calls inside one module do not pass through `vi.mock`, so it would call the real `generateDesign` and `buildDesignPrompt` and hide the mocked ones from the route tests and the prompt-baseline test.
 - OpenRouter retires model slugs. A swap touches `QUALITY_OPTIONS`, `tests/lib/openrouter.test.ts`, `tests/app/api/generate/route.test.ts`, `public/pricing.md`, `public/llms.txt` and `public/llms-full.txt`.
 - `tests/app/api/generate/prompt-baseline.test.ts` locks every prompt to the character. A failure means generation output changed for an existing option: change the prompt back. Its fixture stays as recorded. Options added since then are covered by `tests/app/api/generate/all-options.test.ts`.
 

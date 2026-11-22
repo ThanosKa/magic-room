@@ -5,8 +5,6 @@ import { imagesOptimizer } from "@vinext/cloudflare/images/images-optimizer";
 import { findPublicEnvProblems } from "./lib/public-env";
 
 export default defineConfig(({ command, mode }) => {
-  // NEXT_PUBLIC_* values are baked in here, so a Worker build without them
-  // (no .env.production.local) must stop instead of shipping a broken site.
   if (command === "build") {
     const problems = findPublicEnvProblems(loadEnv(mode, process.cwd(), "NEXT_PUBLIC_"));
     if (problems.length > 0) {

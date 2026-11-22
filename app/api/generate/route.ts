@@ -9,10 +9,6 @@ import { keepAliveUntilSettled } from "@/lib/keep-alive";
 import { logger } from "@/lib/logger";
 import { NOTE_MAX_LENGTH, QUALITY_IDS, QUALITY_OPTIONS, ROOM_TYPE_IDS, THEME_IDS } from "@/lib/constants";
 
-// No `maxDuration`: Workers ignore it. A request runs as long as the client
-// stays connected; `generateDesign` gives up after OPENROUTER_TIMEOUT_MS.
-
-/** The AI answered without an image; `message` is the provider's, if any. */
 interface NoImage {
   kind: "no-image";
   message?: string;
@@ -28,9 +24,6 @@ const GenerateSchema = z.object({
 
 export async function POST(request: Request): Promise<Response> {
   const handled = handleGenerate(request);
-  // If the tab closes mid-generation, `request.signal` aborts the AI call
-  // (Workers flag `enable_request_signal`) and the ledger's Refund must still be
-  // written, so the whole request is kept alive until it settles.
   keepAliveUntilSettled(handled);
   return handled;
 }
@@ -116,7 +109,6 @@ async function handleGenerate(request: Request): Promise<Response> {
     }
     logger.info({}, "[Generate] Rate limit check passed");
 
-    // `generationId` is set before the Charge so the outer catch can log it.
     const designId = `gen_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     generationId = designId;
 
@@ -128,7 +120,6 @@ async function handleGenerate(request: Request): Promise<Response> {
           signal: request.signal,
         });
         if (design.ok) return { ok: true, value: design.images };
-        // A provider error takes the ledger's "threw" path, as a thrown error did.
         if (design.failure.kind === "provider-error") throw design.failure.cause;
         return { ok: false, failure: design.failure };
       },
@@ -163,7 +154,6 @@ async function handleGenerate(request: Request): Promise<Response> {
         });
       }
 
-      // `success: false` tells the screen the credits were given back.
       case "refunded": {
         const { failure } = spend;
         if (failure.kind === "threw") {
@@ -191,8 +181,6 @@ async function handleGenerate(request: Request): Promise<Response> {
         );
       }
 
-      // Never `success: false` here. The ledger does not hand back the Refund's
-      // error, so these lines are logged without it.
       case "refund-failed": {
         const { failure } = spend;
         if (failure.kind === "threw") {
@@ -205,8 +193,6 @@ async function handleGenerate(request: Request): Promise<Response> {
       }
     }
   } catch (error) {
-    // Only failures before the Charge, or from the deduction itself, land here:
-    // from the Charge on, the ledger catches them and refunds.
     logRouteError({ startTime, generationId, err: error });
     return internalServerError();
   }

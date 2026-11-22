@@ -1,8 +1,3 @@
-/**
- * What the buyer sees when Stripe sends them back to /pricing.
- * The return URLs are set in app/api/checkout/route.ts:
- * `?success=true` after payment, `?success=false` when they cancel.
- */
 export type CheckoutReturn = "success" | "cancelled";
 
 export function readCheckoutReturn(params: URLSearchParams): CheckoutReturn | null {
@@ -14,10 +9,8 @@ export function readCheckoutReturn(params: URLSearchParams): CheckoutReturn | nu
 
 interface WaitOptions {
   readCredits: () => Promise<number>;
-  /** Pause before each re-read. The first read happens straight away. */
   delaysMs?: number[];
   sleep?: (ms: number) => Promise<void>;
-  /** Abort when the page goes away, so no reads happen after unmount. */
   signal?: AbortSignal;
 }
 
@@ -25,8 +18,8 @@ const sleepFor = (ms: number) => new Promise<void>((resolve) => setTimeout(resol
 
 /**
  * After a paid return, the Stripe webhook may add the credits a few seconds
- * after the buyer lands. Read the balance now, then again after each delay,
- * and stop as soon as it grows. Resolves with the last balance read.
+ * after the buyer lands. Reads the balance now, then again after each delay,
+ * and stops as soon as it grows. Resolves with the last balance read.
  */
 export async function waitForPurchasedCredits({
   readCredits,

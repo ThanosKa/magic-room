@@ -17,10 +17,6 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-/*
- * Shown only when the root layout itself crashes, so it has to bring its own
- * <html> and <body>. Same screen as the other error pages (noindex included).
- */
 export default function GlobalError({
   error,
   reset,

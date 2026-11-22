@@ -12,11 +12,48 @@ const testFiles = [
   "**/__tests__/**",
 ];
 
+const ALLOWED_COMMENTS = [
+  /^\s*prettier-ignore\s*$/,
+  /^\s*eslint-(disable|enable)/,
+  /^\s*@(vitest|jest)-environment\s/,
+  /^\s*(@vite-ignore|webpackIgnore:)/,
+  /^\/\s*<reference\s/,
+  /https?:\/\/\S+/,
+  /\b(copyright|license|SPDX-License-Identifier)\b/i,
+];
+
+function isDocOnExport(comment, source) {
+  if (comment.type !== "Block" || !comment.value.startsWith("*")) return false;
+  return source.getTokenAfter(comment, { includeComments: false })?.value === "export";
+}
+
+const noComments = {
+  meta: {
+    type: "suggestion",
+    messages: {
+      banned:
+        "Delete this comment and let the code say it. Allowed: a license header, prettier-ignore, /** */ on an export, or a link to the issue, RFC or vendor doc that forces the behaviour.",
+    },
+  },
+  create(context) {
+    const source = context.sourceCode;
+    return {
+      Program() {
+        for (const comment of source.getAllComments()) {
+          if (comment.type === "Shebang") continue;
+          if (isDocOnExport(comment, source)) continue;
+          if (ALLOWED_COMMENTS.some((pattern) => pattern.test(comment.value))) continue;
+          context.report({ loc: comment.loc, messageId: "banned" });
+        }
+      },
+    };
+  },
+};
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
-    // TypeScript rules from CODING_STANDARDS.md.
     files: tsFiles,
     languageOptions: {
       parserOptions: {
@@ -55,7 +92,6 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    // Server code logs through lib/logger.ts. Other lib files are imported by client code.
     files: [
       "app/api/**",
       "lib/email.ts",
@@ -68,6 +104,11 @@ const eslintConfig = defineConfig([
     rules: {
       "no-console": "error",
     },
+  },
+  {
+    files: ["**/*.{js,mjs,cjs,ts,tsx,mts,cts}"],
+    plugins: { local: { rules: { "no-comments": noComments } } },
+    rules: { "local/no-comments": "error" },
   },
   globalIgnores([
     ".next/**",

@@ -2,11 +2,9 @@ import type { NextConfig } from "next";
 import { PRUNED_NOINDEX_PATHS, PRUNED_REDIRECTS } from "./lib/seo/pruned";
 
 const nextConfig: NextConfig = {
-  // Keeps generateMetadata output in the initial <head>; vinext otherwise
-  // streams it into the body.
+  // https://nextjs.org/docs/app/api-reference/config/next-config-js/htmlLimitedBots (generateMetadata output stays in the initial <head>)
   htmlLimitedBots: /.*/,
-  // One quality only. vinext otherwise accepts any q from 1 to 100 on
-  // /_next/image, and each new value is a paid Cloudflare Images transformation.
+  // https://nextjs.org/docs/app/api-reference/components/image#qualities (one quality only: each new q on /_next/image is a paid Cloudflare Images transformation)
   images: { qualities: [75] },
   serverExternalPackages: [
     "pino",
@@ -29,7 +27,6 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // Reversible pruning (lib/seo/pruned.ts): one header rule per noindex path.
       ...PRUNED_NOINDEX_PATHS.map((path) => ({
         source: path,
         headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
@@ -37,7 +34,6 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
-    // permanent: true => HTTP 308.
     return PRUNED_REDIRECTS.map((entry) => ({
       source: entry.path,
       destination: entry.target,

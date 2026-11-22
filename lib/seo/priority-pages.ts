@@ -1,22 +1,5 @@
 import { isPrunedPath } from "@/lib/seo/pruned";
 
-/**
- * Curated set of design pages that:
- *   - Are exposed in the XML sitemap
- *   - Are indexable by search engines
- *
- * Every other (theme, room) combination still renders for users browsing
- * the catalogue, but is served with `robots: { index: false }` so Google
- * stops treating the site as scaled programmatic content (the March-April
- * 2026 core + spam updates penalised that signal heavily).
- *
- * Rule of thumb when adding to this list:
- *   1. The page has visible search demand (impressions/clicks in GSC), or
- *   2. The (theme, room) combination is a recognised head term, or
- *   3. We have a unique hero image and bespoke intro/FAQ content for it.
- */
-
-// Highest priority — boosted sitemap priority and crawl frequency.
 export const TOP_DESIGN_SLUGS = new Set([
     "modern-living-room",
     "scandinavian-living-room",
@@ -35,8 +18,6 @@ export const TOP_DESIGN_SLUGS = new Set([
     "industrial-kitchen",
 ]);
 
-// Secondary tier — kept indexable because of measured impressions, strong head terms,
-// or because they're cross-linked from blog content (blog → design hub-and-spoke).
 const SECONDARY_DESIGN_SLUGS = new Set([
     "minimalist-bedroom",
     "farmhouse-home-theater",
@@ -63,8 +44,6 @@ const SECONDARY_DESIGN_SLUGS = new Set([
     "scandinavian-office",
 ]);
 
-// The curated list before the 2026-10 prune. Entries listed in lib/seo/pruned.ts
-// are dropped below, which is what makes them noindex, unsitemapped and unlinked.
 const CURATED_DESIGN_SLUGS: string[] = Array.from(
     new Set<string>([...TOP_DESIGN_SLUGS, ...SECONDARY_DESIGN_SLUGS])
 );

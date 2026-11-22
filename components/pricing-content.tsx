@@ -11,7 +11,6 @@ import { useHydratedUser } from "@/hooks/use-hydrated-user";
 import { CREDIT_PACKAGES as PACKS, QUALITY_OPTIONS } from "@/lib/constants";
 import { cn, formatCredits } from "@/lib/utils";
 
-/** A pack's size in credits and its price per credit, from the same table checkout uses. */
 function pack(id: "starter" | "growth" | "premium") {
   const pkg = PACKS.find((p) => p.id === id);
   if (!pkg) throw new Error(`Missing credit package: ${id}`);
@@ -193,7 +192,6 @@ export default function PricingContent() {
               )}
             >
               <div className="flex min-h-7 items-center justify-between gap-3">
-                {/* Badge stays before the name in the markup (reading order), shown on the right. */}
                 {pkg.popular && (
                   <span className="order-last inline-flex items-center gap-1.5 rounded-full bg-cream/10 px-2.5 py-1 text-xs font-medium text-cream">
                     <span aria-hidden className="size-1.5 rounded-full bg-accent" />

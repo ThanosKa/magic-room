@@ -18,7 +18,6 @@ import {
 import { cn } from "@/lib/utils";
 import { isPriorityDesignSlug } from "@/lib/seo/priority-pages";
 
-// Cross-link card, repeated once per card in the grid below.
 const RELATED_CARD_CLASS =
     "group block rounded-xl border border-line p-5 transition-[border-color,background-color,transform] duration-200 ease-out hover:border-ink/30 hover:bg-paper-2 active:scale-[0.98] motion-reduce:transition-none";
 
@@ -31,7 +30,6 @@ interface GalleryItem {
 }
 
 const ALL_ITEMS: GalleryItem[] = [
-    // Top priority items first
     { slug: "modern-living-room", theme: "modern", themeName: "Modern", roomType: "living-room", roomName: "Living Room" },
     { slug: "scandinavian-bedroom", theme: "scandinavian", themeName: "Scandinavian", roomType: "bedroom", roomName: "Bedroom" },
     { slug: "minimalist-living-room", theme: "minimalist", themeName: "Minimalist", roomType: "living-room", roomName: "Living Room" },
@@ -40,47 +38,35 @@ const ALL_ITEMS: GalleryItem[] = [
     { slug: "luxury-bathroom", theme: "luxury", themeName: "Luxury", roomType: "bathroom", roomName: "Bathroom" },
     { slug: "coastal-living-room", theme: "coastal", themeName: "Coastal", roomType: "living-room", roomName: "Living Room" },
     { slug: "farmhouse-kitchen", theme: "farmhouse", themeName: "Farmhouse", roomType: "kitchen", roomName: "Kitchen" },
-    // Modern
     { slug: "modern-kitchen", theme: "modern", themeName: "Modern", roomType: "kitchen", roomName: "Kitchen" },
     { slug: "modern-bedroom", theme: "modern", themeName: "Modern", roomType: "bedroom", roomName: "Bedroom" },
     { slug: "modern-bathroom", theme: "modern", themeName: "Modern", roomType: "bathroom", roomName: "Bathroom" },
     { slug: "modern-office", theme: "modern", themeName: "Modern", roomType: "office", roomName: "Office" },
-    // Scandinavian
     { slug: "scandinavian-living-room", theme: "scandinavian", themeName: "Scandinavian", roomType: "living-room", roomName: "Living Room" },
     { slug: "scandinavian-kitchen", theme: "scandinavian", themeName: "Scandinavian", roomType: "kitchen", roomName: "Kitchen" },
     { slug: "scandinavian-bathroom", theme: "scandinavian", themeName: "Scandinavian", roomType: "bathroom", roomName: "Bathroom" },
-    // Minimalist
     { slug: "minimalist-bedroom", theme: "minimalist", themeName: "Minimalist", roomType: "bedroom", roomName: "Bedroom" },
     { slug: "minimalist-kitchen", theme: "minimalist", themeName: "Minimalist", roomType: "kitchen", roomName: "Kitchen" },
     { slug: "minimalist-bathroom", theme: "minimalist", themeName: "Minimalist", roomType: "bathroom", roomName: "Bathroom" },
-    // Bohemian
     { slug: "bohemian-living-room", theme: "bohemian", themeName: "Bohemian", roomType: "living-room", roomName: "Living Room" },
     { slug: "bohemian-dining-room", theme: "bohemian", themeName: "Bohemian", roomType: "dining-room", roomName: "Dining Room" },
-    // Industrial
     { slug: "industrial-living-room", theme: "industrial", themeName: "Industrial", roomType: "living-room", roomName: "Living Room" },
     { slug: "industrial-bedroom", theme: "industrial", themeName: "Industrial", roomType: "bedroom", roomName: "Bedroom" },
     { slug: "industrial-office", theme: "industrial", themeName: "Industrial", roomType: "office", roomName: "Office" },
-    // Luxury
     { slug: "luxury-living-room", theme: "luxury", themeName: "Luxury", roomType: "living-room", roomName: "Living Room" },
     { slug: "luxury-bedroom", theme: "luxury", themeName: "Luxury", roomType: "bedroom", roomName: "Bedroom" },
     { slug: "luxury-dining-room", theme: "luxury", themeName: "Luxury", roomType: "dining-room", roomName: "Dining Room" },
-    // Coastal
     { slug: "coastal-bedroom", theme: "coastal", themeName: "Coastal", roomType: "bedroom", roomName: "Bedroom" },
     { slug: "coastal-bathroom", theme: "coastal", themeName: "Coastal", roomType: "bathroom", roomName: "Bathroom" },
-    // Farmhouse
     { slug: "farmhouse-living-room", theme: "farmhouse", themeName: "Farmhouse", roomType: "living-room", roomName: "Living Room" },
     { slug: "farmhouse-bedroom", theme: "farmhouse", themeName: "Farmhouse", roomType: "bedroom", roomName: "Bedroom" },
-    // Japandi
     { slug: "japandi-living-room", theme: "japandi", themeName: "Japandi", roomType: "living-room", roomName: "Living Room" },
     { slug: "japandi-bedroom", theme: "japandi", themeName: "Japandi", roomType: "bedroom", roomName: "Bedroom" },
     { slug: "japandi-bathroom", theme: "japandi", themeName: "Japandi", roomType: "bathroom", roomName: "Bathroom" },
-    // Art Deco
     { slug: "art-deco-living-room", theme: "art-deco", themeName: "Art Deco", roomType: "living-room", roomName: "Living Room" },
     { slug: "art-deco-bedroom", theme: "art-deco", themeName: "Art Deco", roomType: "bedroom", roomName: "Bedroom" },
-    // Mediterranean
     { slug: "mediterranean-living-room", theme: "mediterranean", themeName: "Mediterranean", roomType: "living-room", roomName: "Living Room" },
     { slug: "mediterranean-kitchen", theme: "mediterranean", themeName: "Mediterranean", roomType: "kitchen", roomName: "Kitchen" },
-    // Transitional
     { slug: "transitional-living-room", theme: "transitional", themeName: "Transitional", roomType: "living-room", roomName: "Living Room" },
     { slug: "transitional-bedroom", theme: "transitional", themeName: "Transitional", roomType: "bedroom", roomName: "Bedroom" },
 ];
@@ -102,10 +88,6 @@ const FILTERS = [
 ];
 
 function GalleryCard({ item }: { item: GalleryItem }) {
-    // Only indexable design pages are linked; pruned/noindex combos still show
-    // their before/after image but are not a crawl path (lib/seo/pruned.ts).
-    // The link sits on the caption, not the whole card, so dragging the slider
-    // never follows it (and the slider's range input is not nested in a link).
     const linked = isPriorityDesignSlug(item.slug);
 
     const caption = (
@@ -170,7 +152,6 @@ export function GalleryContent() {
                 ]}
             />
 
-            {/* Hero */}
             <section className="pb-12 pt-6 md:pb-16 md:pt-12">
                 <div className="container-page">
                     <div className="mx-auto max-w-3xl text-center">
@@ -182,8 +163,6 @@ export function GalleryContent() {
                 </div>
             </section>
 
-            {/* Filter tabs */}
-            {/* Sticks just under the site header (66px tall, 76px from 640px). */}
             <section className="sticky top-[66px] z-20 border-y border-line bg-paper/90 backdrop-blur sm:top-[76px]">
                 <div className="container-page">
                     <div className="flex gap-2 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -205,7 +184,6 @@ export function GalleryContent() {
                 </div>
             </section>
 
-            {/* Gallery grid */}
             <section className="py-10 md:py-14">
                 <div className="container-page">
                     <p className="mb-6 text-sm text-ink-2">
@@ -223,7 +201,6 @@ export function GalleryContent() {
 
             <Rule />
 
-            {/* Cross-links */}
             <section className="py-16 md:py-24">
                 <div className="container-page">
                     <div className="mx-auto max-w-5xl">
@@ -263,9 +240,6 @@ export function GalleryContent() {
                             </Link>
                         </div>
 
-                        {/* Gallery was a complete orphan — zero inbound internal
-                            links despite being in the sitemap. These give it a
-                            reason to pass equity onward as well. */}
                         <h3 className="mt-12 font-serif text-[24px] font-normal leading-tight text-ink">
                             Popular styles from the gallery
                         </h3>
@@ -292,7 +266,6 @@ export function GalleryContent() {
                 </div>
             </section>
 
-            {/* CTA */}
             <CtaSection
                 heading="Transform your room with AI"
                 subtext="Upload a photo of any room and get stunning design variations in under 60 seconds. No design experience required."
