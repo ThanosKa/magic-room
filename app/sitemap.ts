@@ -14,7 +14,9 @@ const RIGHTS_2026_11_LAST_UPDATED = new Date("2026-11-01");
 const HOME_2026_11_LAST_UPDATED = new Date("2026-11-06");
 const CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-09");
 const MODEL_CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-13");
+const STAGING_COST_2026_11_LAST_UPDATED = new Date("2026-11-23");
 const DESIGN_PAGE_DATES: Record<string, Date> = {
+    "art-deco-bedroom": new Date("2026-11-23"),
     "scandinavian-bedroom": new Date("2026-11-18"),
 };
 
@@ -36,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/virtual-staging`,
-            lastModified: CLAIMS_2026_11_LAST_UPDATED,
+            lastModified: STAGING_COST_2026_11_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
