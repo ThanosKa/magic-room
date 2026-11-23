@@ -24,7 +24,7 @@ const FAQS = [
     {
         question: "How much does AI virtual staging cost compared to traditional staging?",
         answer:
-            "Traditional professional staging typically costs $2,000 to $5,000 per property, covering a staging consultation, furniture rental, and moving fees. AI virtual staging with Magic Room costs less than $1 per photo. A pack of 10 credits covers ten staged images for a few dollars — a fraction of what you would pay a staging company even for a single room.",
+            "In the National Association of Realtors 2025 Profile of Home Staging, hiring a staging service cost a median of $1,500, before the furniture is delivered and collected. AI virtual staging with Magic Room costs one credit per Quick photo, €0.25 to €0.50 depending on the pack: the €9.99 Starter pack's 20 credits stage 20 photos, several listings' worth.",
     },
     {
         question: "Can I use the staged images in my MLS listing?",
@@ -44,7 +44,7 @@ const FAQS = [
     {
         question: "How many photos can I stage per listing?",
         answer:
-            "There is no per-listing limit. Each generation uses one credit. A typical listing might require 3 to 8 key room photos. You can buy credit packs that work out to well under $1 per staged image, making it practical to stage every important room in a property.",
+            "There is no per-listing limit. Each Quick generation uses one credit (Pro uses 2, Ultra 3). A typical listing might require 3 to 8 key room photos. At €0.25 to €0.50 per Quick photo, staging every important room in a property costs a few euros.",
     },
 ];
 

@@ -51,9 +51,9 @@ const STEPS = [
 const BENEFITS = [
     {
         icon: DollarSign,
-        title: "Under $1 per staged photo",
+        title: "From €0.25 per staged photo",
         description:
-            "Traditional home staging runs $2,000 to $5,000 per property and requires furniture rentals, movers, and a staging consultant. Magic Room costs a fraction of one credit.",
+            "Hiring a staging service cost a median of $1,500 in the NAR 2025 Profile of Home Staging, with furniture rentals and movers on top. One Quick photo on Magic Room costs one credit.",
     },
     {
         icon: Clock,
@@ -84,7 +84,7 @@ const FAQS = [
     {
         question: "How much does AI virtual staging cost compared to traditional staging?",
         answer:
-            "Traditional professional staging typically costs $2,000 to $5,000 per property, covering a staging consultation, furniture rental, and moving fees. AI virtual staging with Magic Room costs less than $1 per photo. A pack of 10 credits covers ten staged images for a few dollars — a fraction of what you would pay a staging company even for a single room.",
+            "In the National Association of Realtors 2025 Profile of Home Staging, hiring a staging service cost a median of $1,500, before the furniture is delivered and collected. AI virtual staging with Magic Room costs one credit per Quick photo, €0.25 to €0.50 depending on the pack: the €9.99 Starter pack's 20 credits stage 20 photos, several listings' worth.",
     },
     {
         question: "Can I use the staged images in my MLS listing?",
@@ -104,7 +104,7 @@ const FAQS = [
     {
         question: "How many photos can I stage per listing?",
         answer:
-            "There is no per-listing limit. Each generation uses one credit. A typical listing might require 3 to 8 key room photos. You can buy credit packs that work out to well under $1 per staged image, making it practical to stage every important room in a property.",
+            "There is no per-listing limit. Each Quick generation uses one credit (Pro uses 2, Ultra 3). A typical listing might require 3 to 8 key room photos. At €0.25 to €0.50 per Quick photo, staging every important room in a property costs a few euros.",
     },
 ];
 
@@ -125,8 +125,8 @@ export function VirtualStagingContent() {
                 </div>
                 <h1 className={H1_CLASS}>AI Virtual Staging for Real Estate</h1>
                 <p className={cn(LEAD_CLASS, "mt-6")}>
-                    Stage any listing photo in 60 seconds for under $1. Replace $2,000–$5,000 traditional staging
-                    costs with AI that furnishes rooms photo-realistically — no furniture trucks, no scheduling, no waiting.
+                    Stage any listing photo in 30 to 60 seconds from €0.25. Compare the $1,500 median for a staging service (NAR 2025)
+                    with AI that furnishes rooms photo-realistically — no furniture trucks, no scheduling, no waiting.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                     <Button asChild size="lg">
@@ -144,15 +144,15 @@ export function VirtualStagingContent() {
             <Section>
                 <div className="grid gap-4 sm:grid-cols-3">
                     <div className="rounded-xl border border-line p-6">
-                        <p className="font-serif text-[34px] leading-none tracking-[-0.02em] text-ink">$2,000–$5,000</p>
-                        <p className="mt-3 text-sm text-ink-2">Traditional staging cost per property</p>
+                        <p className="font-serif text-[34px] leading-none tracking-[-0.02em] text-ink">$1,500</p>
+                        <p className="mt-3 text-sm text-ink-2">Median staging service cost (NAR 2025)</p>
                     </div>
                     <div className="rounded-xl border border-line bg-paper-2 p-6">
                         <p className="font-serif text-[34px] leading-none tracking-[-0.02em] text-ink">
                             <span aria-hidden="true" className="mr-2 inline-block size-1.5 -translate-y-1.5 rounded-full bg-accent align-middle" />
-                            Under $1
+                            €0.25–€0.50
                         </p>
-                        <p className="mt-3 text-sm text-ink-2">AI virtual staging cost per photo</p>
+                        <p className="mt-3 text-sm text-ink-2">AI staging cost per Quick photo</p>
                     </div>
                     <div className="rounded-xl border border-line p-6">
                         <p className="font-serif text-[34px] leading-none tracking-[-0.02em] text-ink">60 seconds</p>
