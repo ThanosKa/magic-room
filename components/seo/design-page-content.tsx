@@ -17,6 +17,7 @@ import { RelatedLinks } from "@/components/seo/related-links";
 import { IDesignPageData, IThemeData, IRoomData } from "@/lib/seo/design-data";
 import { IContextualLink } from "@/lib/seo/internal-links";
 import { generateHref } from "@/lib/design-selection";
+import { FREE_SIGNUP_CREDITS, QUALITY_OPTIONS } from "@/lib/constants";
 
 interface DesignPageContentProps {
     page: IDesignPageData;
@@ -34,7 +35,7 @@ const STEPS = [
         icon: Upload,
         title: "Upload your photo",
         description:
-            "Take a photo of your room in good daylight and upload it directly from your phone or computer. No account required to try.",
+            `Take a photo of your room in good daylight and upload it from your phone or computer. Sign up free: new accounts get ${FREE_SIGNUP_CREDITS} credit, enough for one ${QUALITY_OPTIONS.standard.name} design.`,
     },
     {
         icon: Palette,
@@ -46,7 +47,7 @@ const STEPS = [
         icon: Download,
         title: "Download your designs",
         description:
-            "The AI generates your redesigned room in 30 to 60 seconds. Review the result, and download or share as needed.",
+            `The AI returns one redesign of your room in ${QUALITY_OPTIONS.standard.waitText} (${QUALITY_OPTIONS.ultra.waitText} on ${QUALITY_OPTIONS.ultra.name}). Review it, then download or share it.`,
     },
 ];
 
