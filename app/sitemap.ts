@@ -17,6 +17,7 @@ const MODEL_CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-13");
 const STAGING_COST_2026_11_LAST_UPDATED = new Date("2026-11-23");
 const DESIGN_PAGE_DATES: Record<string, Date> = {
     "art-deco-bedroom": new Date("2026-11-23"),
+    "modern-sunroom": new Date("2026-11-25"),
     "scandinavian-bedroom": new Date("2026-11-18"),
 };
 
