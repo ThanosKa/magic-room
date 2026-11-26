@@ -7,7 +7,11 @@ export default defineConfig({
     compatibilityDate: "2026-11-07",
     // https://developers.cloudflare.com/workers/configuration/compatibility-flags/ (enable_request_signal: request.signal aborts when the client disconnects)
     compatibilityFlags: ["nodejs_compat", "enable_request_signal"],
-    observability: { enabled: true },
+    observability: {
+      enabled: true,
+      // https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/ (logs also go to Better Stack, source "Magic Room (Cloudflare Worker)")
+      logs: { enabled: true, destinations: ["betterstack-magic-room"] },
+    },
     domains: ["magic-room.dev"],
     // https://developers.cloudflare.com/workers/configuration/routing/workers-dev/ (workers.dev is off once a domain is declared)
     workersDev: true,
