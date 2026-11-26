@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { BrandMark } from "@/components/brand-mark";
+import { SiteStatus } from "@/components/site-status";
 
 interface FooterLink {
   href: string;
@@ -137,6 +138,7 @@ export function Footer() {
 
       <div className="mx-auto mt-6 flex max-w-[1240px] flex-wrap justify-between gap-x-6 gap-y-2 border-t border-line pt-5 text-[13px] text-ink-3">
         <p>&copy; 2026 Thaka — All rights reserved.</p>
+        <SiteStatus />
       </div>
     </footer>
   );
