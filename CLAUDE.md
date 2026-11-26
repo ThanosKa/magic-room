@@ -35,6 +35,7 @@ AI interior design web app: upload one room photo, pick a room type and a style,
 - `main` is the released code; `dev` collects work and is released by a PR `dev` → `main` titled `release: ...`.
 - Merging to `main` updates the live site: `.github/workflows/deploy.yml` deploys once CI passes, and stops if `supabase/migrations/` changed, so apply the migration first and then press Run workflow.
 - Logs: `npx wrangler tail magic-room --format pretty` streams live requests through the owner's `wrangler login`, so start it before the request you want to see.
+- Errors: Better Stack Errors (Sentry SDK, `lib/error-tracking.ts`) gets server and browser errors from the live site only; a build without `NEXT_PUBLIC_ERROR_TRACKING_ENV` sends nothing.
 - Branch from `dev` as `<type>/<slug>` (`fix/header-scope-selector`, `seo/model-facts`) and open the PR against `dev`.
 - The scheduled SEO autopilot is the exception: its runbook lives in the private `ThanosKa/seo-hub` repo and it opens `autopilot/seo-YYYY-MM-DD` PRs against `main`.
 - Commits are Conventional Commits with a scope, lowercase and imperative: `fix(copy): ...`, `feat(generate): ...`. Types in use: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `chore`, `seo`.
