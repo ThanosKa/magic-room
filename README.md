@@ -245,6 +245,10 @@ Magic Room runs on Cloudflare Workers through [vinext](https://github.com/cloudf
 
 Merging to `main` updates the Worker: `.github/workflows/deploy.yml` builds and deploys once CI passes on `main`. If `supabase/migrations/` changed it stops: apply the migration, then press Run workflow in the Actions tab. To deploy by hand, run `pnpm build:vinext`, then `pnpm exec cf deploy --prebuilt`, on Node 24.22 or newer.
 
+### Error tracking
+
+Server and browser errors go to Better Stack Errors through the Sentry SDK (`lib/error-tracking.ts`, `worker/index.ts`, `instrumentation.ts`, `instrumentation-client.ts`). It is off unless the build sets `NEXT_PUBLIC_ERROR_TRACKING_ENV`: the deploy workflow sets `production` and the commit SHA as the release. Set `development` in `.env.local` to send local errors, and `production` in `.env.production.local` before a manual deploy. Events carry no user, cookies, headers, bodies, query strings or image data. Uptime: [status page](https://thanoska.betteruptime.com).
+
 ### Manual Deploy
 
 Build locally and run on Node 20+:
@@ -262,7 +266,6 @@ pnpm start
 - [ ] Enable Stripe live mode with webhook endpoints
 - [ ] Set up Upstash Redis production instance
 - [ ] Configure custom domain and SSL
-- [ ] Enable error tracking and monitoring
 - [ ] Test all payment flows and webhooks
 - [ ] Verify AI model integration works in production
 

@@ -3,7 +3,7 @@ import { bindings, defineConfig, defineWorker } from "cf/config";
 export default defineConfig({
   worker: defineWorker({
     name: "magic-room",
-    entrypoint: "vinext/server/fetch-handler",
+    entrypoint: "./worker/index.ts",
     compatibilityDate: "2026-11-07",
     // https://developers.cloudflare.com/workers/configuration/compatibility-flags/ (enable_request_signal: request.signal aborts when the client disconnects)
     compatibilityFlags: ["nodejs_compat", "enable_request_signal"],
