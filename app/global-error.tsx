@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { captureException } from "@sentry/browser";
 import { Geist, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { ErrorScreen } from "@/components/error-screen";
@@ -24,6 +26,10 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    captureException(error);
+  }, [error]);
+
   return (
     <html lang="en">
       <body

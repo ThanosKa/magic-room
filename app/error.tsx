@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { captureException } from "@sentry/browser";
 import { ErrorScreen } from "@/components/error-screen";
 
 export default function Error({
@@ -9,6 +11,10 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    captureException(error);
+  }, [error]);
+
   return (
     <ErrorScreen
       className="min-h-[70vh]"

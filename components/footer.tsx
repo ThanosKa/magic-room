@@ -5,8 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { BrandMark } from "@/components/brand-mark";
+import { SiteStatus } from "@/components/site-status";
 
-type FooterLink = { href: string; label: string };
+interface FooterLink {
+  href: string;
+  label: string;
+  newTab?: true;
+}
 
 const PRODUCT: FooterLink[] = [
   { href: "/", label: "Home" },
@@ -48,6 +53,7 @@ const COLUMNS: { title: string; links: FooterLink[] }[] = [
       { href: "https://github.com/ThanosKa/magic-room", label: "GitHub" },
       { href: "https://x.com/KazakisThanos", label: "Twitter / X" },
       { href: "mailto:kazakis.th@gmail.com", label: "Support" },
+      { href: "https://thanoska.betteruptime.com", label: "Status", newTab: true },
     ],
   },
 ];
@@ -68,7 +74,11 @@ function LinkList({ links, children }: { links: FooterLink[]; children?: ReactNo
     <ul className="grid gap-1">
       {links.map((l) => (
         <li key={l.href}>
-          <Link href={l.href} className={linkClass}>
+          <Link
+            href={l.href}
+            className={linkClass}
+            {...(l.newTab && { target: "_blank", rel: "noopener noreferrer" })}
+          >
             {l.label}
           </Link>
         </li>
@@ -128,6 +138,7 @@ export function Footer() {
 
       <div className="mx-auto mt-6 flex max-w-[1240px] flex-wrap justify-between gap-x-6 gap-y-2 border-t border-line pt-5 text-[13px] text-ink-3">
         <p>&copy; 2026 Thaka — All rights reserved.</p>
+        <SiteStatus />
       </div>
     </footer>
   );
