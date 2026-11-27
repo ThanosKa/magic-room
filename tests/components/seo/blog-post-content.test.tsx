@@ -14,7 +14,7 @@ beforeAll(() => {
 
 let root: Root | null = null;
 afterEach(() => {
-    root?.unmount();
+    act(() => root?.unmount());
     root = null;
     document.body.innerHTML = "";
     process.env.TZ = originalTimezone;
