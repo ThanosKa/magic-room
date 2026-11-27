@@ -37,6 +37,7 @@ The rules every diff in this repo is checked against. Writing code: every rule t
 ## React and state
 
 - Read Clerk's user with `useHydratedUser` (`hooks/use-hydrated-user.ts`) for anything that changes rendered markup. Plain `useUser` reports the user on the first client render and causes hydration error #418.
+- Format a date that appears in markup with a fixed `timeZone` (post dates: `formatPostDate` in `lib/seo/post-date.ts`). The Worker renders in UTC and the browser in the visitor's zone, so `toLocaleDateString` without one printed the day before for every visitor in the Americas and caused hydration error #418 on every blog post.
 - Keep one Zustand store per domain in `stores/`, as plain `create()` with no middleware. Persistent data lives in Supabase and component-only state in React hooks.
 
 ## Tests

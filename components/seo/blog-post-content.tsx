@@ -6,6 +6,7 @@ import { IBlogPost, IBlogSection } from "@/lib/seo/blog-data";
 import { IContextualLink } from "@/lib/seo/internal-links";
 import { humanizeDesignSlug } from "@/lib/seo/slug-format";
 import { isPriorityDesignSlug } from "@/lib/seo/priority-pages";
+import { formatPostDate } from "@/lib/seo/post-date";
 import { BreadcrumbNav } from "@/components/seo/breadcrumb-nav";
 import { CtaSection } from "@/components/seo/cta-section";
 import { RelatedLinks } from "@/components/seo/related-links";
@@ -18,14 +19,6 @@ interface BlogPostContentProps {
     post: IBlogPost;
     relatedPostLinks?: IContextualLink[];
     comparisonLinks?: IContextualLink[];
-}
-
-function formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString("en-GB", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
 }
 
 const MEASURE = "max-w-[68ch]";
@@ -184,13 +177,13 @@ export function BlogPostContent({ post, relatedPostLinks = [], comparisonLinks =
                             <span className="whitespace-nowrap text-ink-2">{post.authorName ?? "Thanos Kazakis"}</span>
                             <span aria-hidden="true">·</span>
                             <time dateTime={post.publishedDate} className="whitespace-nowrap">
-                                {formatDate(post.publishedDate)}
+                                {formatPostDate(post.publishedDate)}
                             </time>
                             {post.updatedDate && post.updatedDate !== post.publishedDate && (
                                 <>
                                     <span aria-hidden="true">·</span>
                                     <span className="whitespace-nowrap">
-                                        Updated <time dateTime={post.updatedDate}>{formatDate(post.updatedDate)}</time>
+                                        Updated <time dateTime={post.updatedDate}>{formatPostDate(post.updatedDate)}</time>
                                     </span>
                                 </>
                             )}
