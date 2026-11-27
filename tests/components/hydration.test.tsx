@@ -1,4 +1,4 @@
-import { startTransition, type ReactNode } from "react";
+import { act, startTransition, type ReactNode } from "react";
 import { renderToString } from "react-dom/server";
 import { hydrateRoot, type Root } from "react-dom/client";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -20,6 +20,7 @@ vi.mock("@clerk/nextjs", () => ({
 vi.mock("next/navigation", () => ({ usePathname: () => "/pricing" }));
 
 beforeAll(() => {
+    Reflect.set(globalThis, "IS_REACT_ACT_ENVIRONMENT", true);
     window.matchMedia ??= ((query: string) => ({
         matches: false,
         media: query,
@@ -35,7 +36,7 @@ beforeAll(() => {
 
 let root: Root | null = null;
 afterEach(() => {
-    root?.unmount();
+    act(() => root?.unmount());
     root = null;
     document.body.innerHTML = "";
     vi.restoreAllMocks();
@@ -53,12 +54,13 @@ async function hydrate(server: ReactNode, client: ReactNode, beforeHydrate?: () 
     });
 
     beforeHydrate?.();
-    startTransition(() => {
-        root = hydrateRoot(container, client, {
-            onRecoverableError: (error) => problems.push(String((error as Error).message ?? error)),
+    await act(async () => {
+        startTransition(() => {
+            root = hydrateRoot(container, client, {
+                onRecoverableError: (error) => problems.push(String((error as Error).message ?? error)),
+            });
         });
     });
-    await new Promise((resolve) => setTimeout(resolve, 100));
     return { problems, container };
 }
 
