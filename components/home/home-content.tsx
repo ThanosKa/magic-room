@@ -26,7 +26,7 @@ const STEPS = [
   },
   {
     title: "Get your redesign",
-    body: "Magic Room keeps your walls, windows and layout, and restyles everything else in 30–60 seconds. Run it again for another take.",
+    body: "Magic Room keeps your walls, windows and layout, and restyles everything else in 30–60 seconds (about 2 minutes on Ultra). Run it again for another take.",
   },
 ];
 
