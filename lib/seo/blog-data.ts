@@ -1301,7 +1301,7 @@ export const BLOG_POSTS: IBlogPost[] = [
         metaDescription:
             "How to redesign your bedroom with AI: photograph the room the right way, pick styles that translate well, and turn the AI result into what to buy.",
         publishedDate: "2026-02-18",
-        updatedDate: "2026-11-11",
+        updatedDate: "2026-11-27",
         readingTime: 6,
         keywords: [
             "bedroom redesign AI",
@@ -1374,7 +1374,7 @@ export const BLOG_POSTS: IBlogPost[] = [
             {
                 question: "How long does AI bedroom redesign take?",
                 answer:
-                    "With Magic Room, AI bedroom redesigns are generated in 30 to 60 seconds from a single uploaded photo. You receive a redesign in the style you selected.",
+                    "With Magic Room, AI bedroom redesigns are generated in 30 to 60 seconds (about 2 minutes at Ultra quality) from a single uploaded photo. You receive a redesign in the style you selected.",
             },
             {
                 question: "Can AI redesign a small bedroom effectively?",

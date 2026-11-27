@@ -44,7 +44,7 @@ const STEPS = [
         icon: Download,
         title: "Download your staged photo",
         description:
-            "The AI returns a professionally staged version of your room in 30 to 60 seconds. Download and drop straight into your MLS listing.",
+            "The AI returns a professionally staged version of your room in 30 to 60 seconds (about 2 minutes on Ultra). Download and drop straight into your MLS listing.",
     },
 ];
 
@@ -155,8 +155,8 @@ export function VirtualStagingContent() {
                         <p className="mt-3 text-sm text-ink-2">AI staging cost per Quick photo</p>
                     </div>
                     <div className="rounded-xl border border-line p-6">
-                        <p className="font-serif text-[34px] leading-none tracking-[-0.02em] text-ink">60 seconds</p>
-                        <p className="mt-3 text-sm text-ink-2">Time to a staged photo with AI</p>
+                        <p className="font-serif text-[34px] leading-none tracking-[-0.02em] text-ink">30–60 seconds</p>
+                        <p className="mt-3 text-sm text-ink-2">Time to a staged photo at Quick and Pro (about 2 minutes on Ultra)</p>
                     </div>
                 </div>
             </Section>
