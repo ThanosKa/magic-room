@@ -2,17 +2,10 @@ import React from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { IBlogPost } from "@/lib/seo/blog-data";
+import { formatPostDate } from "@/lib/seo/post-date";
 
 interface BlogCardProps {
     post: IBlogPost;
-}
-
-function formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString("en-GB", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
 }
 
 export function BlogCard({ post }: BlogCardProps) {
@@ -30,7 +23,7 @@ export function BlogCard({ post }: BlogCardProps) {
                         {post.excerpt}
                     </p>
                     <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-line pt-4 text-xs font-medium tracking-[0.02em] text-ink-3">
-                        <time dateTime={post.publishedDate} className="whitespace-nowrap">{formatDate(post.publishedDate)}</time>
+                        <time dateTime={post.publishedDate} className="whitespace-nowrap">{formatPostDate(post.publishedDate)}</time>
                         <span aria-hidden="true">·</span>
                         <span className="whitespace-nowrap">{post.readingTime} min read</span>
                     </div>
