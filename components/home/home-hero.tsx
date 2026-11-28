@@ -20,7 +20,7 @@ const DIAL = [
   { slug: "mediterranean", name: "Mediterranean" },
 ];
 
-const STRIP = ["1 free design, no card", "30–60 s per run", "from €0.25 a design"];
+const STRIP = ["1 free design, no card", "30 s to 2 min per run", "from €0.25 a design"];
 
 const delay = (ms: number): CSSProperties => ({ animationDelay: `${ms}ms` });
 

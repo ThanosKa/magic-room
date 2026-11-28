@@ -77,7 +77,7 @@ A user uploads one photo of a real room, picks a design theme and a room type, a
 | Photos are never stored | The image is sent as base64 straight to the model API, held in request memory, then discarded. There is no bucket write and no image column in the database. |
 | Credits never expire | Credits are an integer balance on the user row that only decrements on use. There is no monthly reset job. |
 | No subscription exists | Stripe Checkout is configured for one-time payments only; no recurring subscription object is ever created. |
-| Room geometry is preserved | The model processes the photo and the prompt together, reasoning about the room's spatial structure rather than overlaying a style. |
+| The redesign starts from your own photo | The photo and the instruction (room type, style, optional note) go to the model in one request; nothing guarantees exact geometry, so compare the result with the original. |
 | Failed generations are refunded | If the model call fails, the credit is returned to the account automatically. |
 
 ## Honest limitations
@@ -85,7 +85,6 @@ A user uploads one photo of a real room, picks a design theme and a room type, a
 - Magic Room redesigns interior rooms only. It does not do exterior, landscape, or floor-plan generation.
 - Output is a visualisation, not a construction document or a furniture shopping list.
 - Because photos are never stored, generations are not retained in an account history after the session.
-- Free-credit output carries no commercial rights.
 
 ## Contact and profiles
 

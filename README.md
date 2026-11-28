@@ -247,7 +247,7 @@ Merging to `main` updates the Worker: `.github/workflows/deploy.yml` builds and 
 
 ### Error tracking
 
-Server and browser errors go to Better Stack Errors through the Sentry SDK (`lib/error-tracking.ts`, `worker/index.ts`, `instrumentation.ts`, `instrumentation-client.ts`). It is off unless the build sets `NEXT_PUBLIC_ERROR_TRACKING_ENV`: the deploy workflow sets `production` and the commit SHA as the release. Set `development` in `.env.local` to send local errors, and `production` in `.env.production.local` before a manual deploy. Events carry no user, cookies, headers, bodies, query strings or image data. Uptime: [status page](https://thanoska.betteruptime.com).
+Server and browser errors go to Better Stack Errors through the Sentry SDK (`lib/error-tracking.ts`, `worker/index.ts`, `instrumentation.ts`, `instrumentation-client.ts`). It is off unless the build sets `NEXT_PUBLIC_ERROR_TRACKING_ENV`: the deploy workflow sets `production` and the commit SHA as the release. Set `development` in `.env.local` to send local errors, and `production` in `.env.production.local` before a manual deploy. Events carry no user, cookies, headers, bodies, query strings or image data. The browser drops errors that say nothing about our code (`lib/error-noise.ts`): it does not start for crawlers and automated browsers, ignores scripts from browser extensions, drops a script download cut off because the visitor left the page, and drops a hydration mismatch on a page Chrome translated. Uptime: [status page](https://thanoska.betteruptime.com).
 
 ### Manual Deploy
 

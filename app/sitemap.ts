@@ -11,10 +11,12 @@ const BASELINE_LAST_UPDATED = new Date("2026-07-29");
 const PASS_2026_10_LAST_UPDATED = new Date("2026-10-01");
 const LEGAL_LAST_UPDATED = new Date("2026-11-07");
 const RIGHTS_2026_11_LAST_UPDATED = new Date("2026-11-01");
-const HOME_2026_11_LAST_UPDATED = new Date("2026-11-06");
 const CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-09");
 const MODEL_CLAIMS_2026_11_LAST_UPDATED = new Date("2026-11-13");
+const WAIT_TIME_2026_11_LAST_UPDATED = new Date("2026-11-27");
 const DESIGN_PAGE_DATES: Record<string, Date> = {
+    "art-deco-bedroom": new Date("2026-11-23"),
+    "modern-sunroom": new Date("2026-11-25"),
     "scandinavian-bedroom": new Date("2026-11-18"),
 };
 
@@ -24,7 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const corePages: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/`,
-            lastModified: HOME_2026_11_LAST_UPDATED,
+            lastModified: WAIT_TIME_2026_11_LAST_UPDATED,
             changeFrequency: "weekly",
             priority: 1,
         },
@@ -36,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/virtual-staging`,
-            lastModified: CLAIMS_2026_11_LAST_UPDATED,
+            lastModified: WAIT_TIME_2026_11_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.8,
         },
@@ -69,7 +71,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const designHub: MetadataRoute.Sitemap = [
         {
             url: `${baseUrl}/design`,
-            lastModified: PASS_2026_10_LAST_UPDATED,
+            lastModified: WAIT_TIME_2026_11_LAST_UPDATED,
             changeFrequency: "monthly",
             priority: 0.9,
         },

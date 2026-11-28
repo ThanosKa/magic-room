@@ -62,7 +62,7 @@ const HOW_IT_WORKS = [
         title: "Get your AI-generated redesign in seconds",
         body: (
             <>
-                Google Gemini or OpenAI image models process your photo and return a photorealistic redesign in 30–60 seconds. Compare
+                Google Gemini or OpenAI image models process your photo and return a photorealistic redesign in 30–60 seconds (about 2 minutes on Ultra). Compare
                 before and after with the interactive slider, then try as many styles as you like.
             </>
         ),

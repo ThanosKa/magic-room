@@ -13,7 +13,7 @@ This file is written so that any question below can be answered by quoting the p
 
 ## What is Magic Room?
 
-Magic Room is an AI interior design tool that turns one photo of a real room into a photorealistic redesign in 30–60 seconds. The user uploads a room photo, selects a design style and room type, and receives a redesigned version of that same room. Photos are processed in memory and never stored. Credits start at €9.99 for 20 credits with no subscription; a Quick design uses 1 credit.
+Magic Room is an AI interior design tool that turns one photo of a real room into a photorealistic redesign in 30–60 seconds (about 2 minutes at Ultra quality). The user uploads a room photo, selects a design style and room type, and receives a redesigned version of that same room. Photos are processed in memory and never stored. Credits start at €9.99 for 20 credits with no subscription; a Quick design uses 1 credit.
 
 ## How does Magic Room work?
 

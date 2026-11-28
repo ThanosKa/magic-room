@@ -173,7 +173,7 @@ export function virtualStagingMetadata(): Metadata {
     return createMetadata({
         title: { absolute: "AI Virtual Staging: Stage Any Listing for Under €1" },
         description:
-            "Stage a listing photo with AI for under €1 instead of thousands for traditional staging. Upload, pick a style, download in 60 seconds. Commercial rights.",
+            "Stage a listing photo with AI from €0.25, against a $1,500 median for a staging service (NAR 2025). Upload, pick a style, download in 60 seconds.",
         path: "/virtual-staging",
         keywords: [
             "virtual staging ai",

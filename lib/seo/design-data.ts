@@ -1093,7 +1093,7 @@ export const COMBINATION_INTROS: Record<string, string> = {
     "modern-home-theater":
         "A modern home theater applies the style's discipline of restraint to a room with significant technical requirements, treating the screen, speakers, and seating as integrated elements within a coherent visual composition rather than equipment placed into a generic room. Continuous matte-painted walls in a deep neutral, recessed linear lighting calibrated to dim cleanly with the projector, a tiered seating row in single-tone leather, and acoustic panels integrated flush with the wall plane define the look. The practical benefit of the modern approach is that the room performs as a cinema without looking like one between viewings.",
     "modern-sunroom":
-        "A modern sunroom uses the style's emphasis on architectural clarity to produce a room that frames the landscape rather than competing with it. Slim-profile aluminium glazing maximising the apparent glass area, a single-tone flooring that runs continuously to the threshold, low-profile upholstery in a neutral linen or boucle, and a deliberate absence of decorative pattern direct attention outward through the glass. A modern sunroom rewards careful editing — fewer, larger pieces of furniture, no scattered accessories — because the view does most of the visual work.",
+        "A modern sunroom is a glass room kept deliberately quiet so the view does the decorating: slim dark window frames, one continuous pale floor, a few low pieces of furniture in one neutral, and shading you can close when the sun is strong. Everything that is not frame, floor, seating or light is optional, and most modern sunrooms look better with less of it. Seeing those choices on a photo of your own sunroom or conservatory makes it easier to decide what to change first.",
     "farmhouse-kitchen":
         "The farmhouse kitchen is the room the style was effectively invented for, which is why it survives contact with daily cooking better than almost any other aesthetic. A deep apron-front Belfast sink, painted shaker cabinetry in a muted sage or off-white, open shelving carrying everyday crockery rather than styled props, a butcher-block or honed stone worktop that accepts marks, and a freestanding range under a plastered chimney breast form the working vocabulary. The most common execution error is treating it as a decorative layer — adding sliding barn hardware and printed signage to an otherwise contemporary kitchen — rather than as a set of material choices, so visualising the cabinet colour and worktop pairing against your actual room geometry is worth doing before any joinery is ordered.",
     "coastal-living-room":
@@ -2284,7 +2284,7 @@ export const COMBINATION_DEEP_DIVES: Record<string, IDeepDiveSection[]> = {
             paragraphs: [
                 "This is worth saying plainly because we run the generations. Art Deco is the style where AI image models most reliably overshoot, and knowing the failure modes in advance is the difference between one usable output and five wasted attempts.",
                 "The three consistent failures: the model adds metallic surfaces to everything it can find, so a request for brass hardware comes back with a brass bed frame, brass skirting, and a brass ceiling trim; it defaults to full-envelope 1920s ornament when you asked for the modern interpretation; and it converts geometric motifs into wallpaper, which is almost never what a contemporary Deco bedroom should have.",
-                "The fix is to specify what should stay plain, not only what should change. Prompts that name the restraint — \"Art Deco bedroom, channel-tufted emerald velvet headboard, brass wall sconces, plain warm off-white walls, no patterned wallpaper, dark timber floor\" — produce a usable first result far more often than \"Art Deco bedroom\" on its own. Naming the metal once, and stating that walls stay unpatterned, removes both of the dominant failure modes in a single sentence. Because Magic Room preserves the existing room geometry rather than regenerating the space, what you get back is your actual bedroom with those specific changes applied, which makes it a planning reference rather than a mood board.",
+                "The fix is to specify what should stay plain, not only what should change. Prompts that name the restraint — \"Art Deco bedroom, channel-tufted emerald velvet headboard, brass wall sconces, plain warm off-white walls, no patterned wallpaper, dark timber floor\" — produce a usable first result far more often than \"Art Deco bedroom\" on its own. Naming the metal once, and stating that walls stay unpatterned, removes both of the dominant failure modes in a single sentence. Magic Room sends your own bedroom photo to the model together with that instruction, so the result starts from your room rather than a stock image, which makes it a planning reference rather than a mood board. Check the windows, doors and bed wall against the original before you plan around it.",
             ],
         },
     ],
@@ -2318,6 +2318,47 @@ export const COMBINATION_DEEP_DIVES: Record<string, IDeepDiveSection[]> = {
                 "The dominant failure mode is that the model reads \"Scandinavian\" as \"white and grey minimal\" and strips out exactly the warmth that distinguishes the style. Outputs come back with a cool-white envelope, a grey sofa, no visible timber grain and no textiles — technically clean, and indistinguishable from a stock minimal render.",
                 "The second failure is wood tone. Left unspecified, models default to a mid-brown that reads as generic contemporary rather than the pale oak or ash the style depends on.",
                 "Naming the warmth explicitly fixes both. A prompt like \"Scandinavian living room, warm white walls, pale oak flooring and furniture, wool throw and linen cushions, layered lighting with floor lamp, two plants\" reliably produces the correct register on the first attempt, where \"Scandinavian living room\" alone does not. Specifying the wood species and the wall temperature is worth more than any other instruction you can add.",
+            ],
+        },
+    ],
+    "modern-sunroom": [
+        {
+            heading: "Modern sunroom design: what actually makes it modern",
+            paragraphs: [
+                "Five things make a sunroom read as modern, and they are listed here in the order in which they change how the room looks, so it is also the order in which to spend. A sunroom with the first three already looks modern; one with only the last two looks like an older conservatory with new cushions.",
+            ],
+            bullets: [
+                "Frames: slim and dark (anthracite, bronze or black) rather than wide and white. The frames are the largest lines in the room, so they set the style before any furniture does.",
+                "Floor: one pale, plain material such as large-format porcelain, polished concrete or wide pale boards, running straight through from the adjoining room where the levels allow it.",
+                "Seating: a low sofa or a pair of low chairs on slim legs, in one neutral (linen, boucle or an outdoor-grade weave). Keep anything tall away from the glass so the view stays open from the door.",
+                "Shading: plain roller or pleated blinds that disappear when open. Ruched or patterned blinds are the fastest way to make a modern sunroom look dated.",
+                "Evening light: two or three warm lamps at seat height and no bright ceiling light. After dark the glass turns into a mirror, and a single overhead light fills every pane with reflections.",
+            ],
+        },
+        {
+            heading: "Modernising an existing sunroom or conservatory without rebuilding it",
+            paragraphs: [
+                "Most people searching for modern sunroom ideas already have the room, often with white frames, a translucent roof and tiled floor from an earlier decade. You do not need to rebuild it to make it modern; you need to change the few surfaces that dominate it.",
+            ],
+            bullets: [
+                "Change the colour of the frames. White uPVC and aluminium frames can be professionally spray-painted or foil-wrapped in a dark colour, which changes the room more than any furniture purchase.",
+                "Treat the floor as one surface. If replacing it is not an option, a large plain rug in a pale neutral covering most of the floor does much of the same job.",
+                "Hide the roof rather than replace it. A translucent roof is what makes an older conservatory read as an add-on; fitted pleated roof blinds in a plain pale colour hide it and cut glare. Replacing the roof itself is a building project, so check with your local building control before planning one.",
+                "Remove before you add. Clear the room down to the seating, one table and the plants, then add back only what you use in there.",
+            ],
+        },
+        {
+            heading: "Planning a modern sunroom for year-round use",
+            paragraphs: [
+                "A room that is mainly glass gets hotter in summer and colder in winter than the rest of the house, and modern design makes both worse if you follow the look and ignore the conditions: dark fabric heats up in direct sun, and hard floors feel cold in winter. Choose fabrics rated for sunlight, which fade far less than ordinary upholstery, and put a wool or outdoor-grade rug where your feet rest. Plan where a heater can sit out of sight, and keep the seating a short distance back from the glass so it is out of the strongest sun and the worst winter draught.",
+                "If you will use the room to work, place the desk so the screen faces away from the largest pane rather than towards it.",
+            ],
+        },
+        {
+            heading: "Trying a modern look on your own sunroom",
+            paragraphs: [
+                "When you pick Modern and Sunroom in Magic Room, the instruction sent with your photo asks for a bright sunroom with plenty of natural light in a contemporary, sleek, minimalist style with clean lines. That is the general direction; the details above are what you add yourself. The optional note on the generate screen (up to 500 characters) is added to the same instruction, so a note such as \"slim black window frames, pale porcelain floor, low linen sofa, plain white roller blinds, two floor lamps, no ceiling light\" steers the result towards the room you have in mind.",
+                "Photograph the room on a bright overcast day or with the blinds half down. In full sun the windows turn pure white in the photo, so there is no frame or view left for the redesign to work with. If you only want to see furniture and finishes, say what has to stay, such as \"keep the existing windows and roof\". Each run returns one image of your room, so changing one detail between runs is the quickest way to compare two frame colours or two floors.",
             ],
         },
     ],
